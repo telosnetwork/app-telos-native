@@ -1,27 +1,47 @@
-import { store } from 'quasar/wrappers'
-import { createStore } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
+import Gravatar from 'vue-gravatar'
 
-// import example from './module-example'
+import accounts from './accounts'
+import profiles from './profiles'
+import works from './works'
+import notifications from './notifications'
+import trails from './trails'
+import transfers from './transfers'
+import tokens from './tokens'
+import validators from './validators'
+import testnet from './testnet'
+import poc from './poc'
+import general from './general'
+
+Vue.use(Vuex)
+Vue.component('v-gravatar', Gravatar)
 
 /*
  * If not building with SSR mode, you can
- * directly export the Store instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Store instance.
+ * directly export the Store instantiation
  */
 
-export default store(function (/* { ssrContext } */) {
-  const Store = createStore({
+export default function (/* { ssrContext } */) {
+  const Store = new Vuex.Store({
     modules: {
-      // example
+      accounts,
+      profiles,
+      works,
+      notifications,
+      poc,
+      testnet,
+      tokens,
+      trails,
+      transfers,
+      validators,
+      general
     },
 
     // enable strict mode (adds overhead!)
-    // for dev mode and --debug builds only
-    strict: process.env.DEBUGGING
+    // for dev mode only
+    strict: process.env.DEV
   })
 
   return Store
-})
+}
