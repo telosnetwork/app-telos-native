@@ -1,33 +1,35 @@
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: 'login',
-  data () {
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: "login",
+  data() {
     return {
       show: false,
-      error: null
-    }
+      error: null,
+    };
   },
   computed: {
-    ...mapGetters('accounts', ['loading', 'isAutoLoading'])
+    ...mapGetters("accounts", ["loading", "isAutoLoading"]),
   },
   methods: {
-    ...mapActions('accounts', ['login']),
-    async onLogin (idx) {
-      this.error = null
-      const error = await this.login(idx)
+    ...mapActions("accounts", ["login"]),
+    async onLogin(idx) {
+      debugger;
+      this.error = null;
+      const error = await this.login(idx);
       if (!error) {
-        this.show = false
+        this.show = false;
       } else {
-        this.error = error
+        this.error = error;
       }
     },
-    openUrl (url) {
-      window.open(url)
-    }
-  }
-}
+    openUrl(url) {
+      window.open(url);
+    },
+  },
+};
 </script>
 
 <template lang="pug">

@@ -71,7 +71,6 @@ q-layout(view="lHh lpR lFr")
     :breakpoint="500"
     overlay
   )
-    left-menu(@close="closeMenu" @goToHomePage="toLanding" @set-active-filter="setActiveFilter" :activeFilter="activeFilter")
   q-page-container
     router-view(:activeFilter="activeFilter")
 </template>

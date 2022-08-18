@@ -35,6 +35,10 @@ export default {
       window.open(url);
     },
   },
+  created() {
+    debugger;
+    console.log(this.$ual.authenticators);
+  },
   mounted() {
     debugger;
     console.log(this.$ual.authenticators);
@@ -50,7 +54,6 @@ div
       :key="wallet.getStyle().text"
       v-ripple
       :style="{ background: wallet.getStyle().background, color: wallet.getStyle().textColor }"
-      v-if="wallet.shouldRender()"
     )
       q-item-section.cursor-pointer(
         avatar
