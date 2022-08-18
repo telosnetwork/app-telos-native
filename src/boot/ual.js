@@ -1,7 +1,27 @@
-import { boot } from 'quasar/wrappers'
+import { boot } from "quasar/wrappers";
+import { UAL } from "universal-authenticator-library";
+import { Anchor } from "ual-anchor";
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
-export default boot(async (/* { app, router, ... } */) => {
-  // something to do
-})
+export default boot(async ({ app, store }) => {
+  const mainChain = {
+    chainId: process.env.NETWORK_CHAIN_ID,
+    origin: process.env.TELOS_ORIGIN,
+    rpcEndpoints: [
+      {
+        protocol: process.env.NETWORK_PROTOCOL,
+        host: process.env.NETWORK_HOST,
+        port: process.env.NETWORK_PORT,
+      },
+    ],
+  };
+
+  const authenticators = [
+    new Anchor([mainChain], { appName: process.env.APP_NAME }),
+  ];
+
+  const ual = new UAL([mainChain], "tet-ual", authenticators);
+  store["$ual"] = ual;
+  app.config.globalProperties.$ual = ual;
+});

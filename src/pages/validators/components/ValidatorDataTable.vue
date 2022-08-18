@@ -376,42 +376,45 @@ export default {
     },
   },
 };
-// need to add in sass block
-// @import url('../../../../node_modules/flag-icon-css/sass/flag-icons.scss')
 </script>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
+@import url("../../../../node_modules/flag-icon-css/sass/flag-icons.scss");
 
-.testnet-indicator
-  font-size: 12px
-  margin-right: .5rem
-
-.flag-column
-  text-align: center
-
-.producer-card
-  padding: .2rem .2rem .2rem .5rem
-  height: 2rem
-  line-height: 1.6rem
-  i
-    cursor: pointer
-    padding-bottom: .4rem
-    padding-left: .2rem
-
-.voting-stats
-  display: flex
-  justify-content: space-between
-  min-height: 2rem
-  margin-top: 1rem
-  margin-bottom: 1rem
-  line-height: 2rem
-  padding-left: 1rem
-  span
-    margin-left: .25rem
-    &.full-selection
-      margin-left: .25rem
-      font-weight: 600
-
-.count-field
-  display: inline-block
-  margin-right: 2rem
+.testnet-indicator {
+  font-size: 12px;
+  margin-right: 0.5rem;
+}
+.flag-column {
+  text-align: center;
+}
+.producer-card {
+  padding: 0.2rem 0.2rem 0.2rem 0.5rem;
+  height: 2rem;
+  line-height: 1.6rem;
+  i {
+    cursor: pointer;
+    padding-bottom: 0.4rem;
+    padding-left: 0.2rem;
+  }
+}
+.voting-stats {
+  display: flex;
+  justify-content: space-between;
+  min-height: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  line-height: 2rem;
+  padding-left: 1rem;
+  span {
+    margin-left: 0.25rem;
+    &.full-selection {
+      margin-left: 0.25rem;
+      font-weight: 600;
+    }
+  }
+}
+.count-field {
+  display: inline-block;
+  margin-right: 2rem;
+}
 </style>

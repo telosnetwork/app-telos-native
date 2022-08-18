@@ -35,6 +35,10 @@ export default {
       window.open(url);
     },
   },
+  mounted() {
+    debugger;
+    console.log(this.$ual.authenticators);
+  },
 };
 </script>
 
