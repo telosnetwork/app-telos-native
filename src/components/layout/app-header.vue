@@ -1,89 +1,101 @@
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex'
-import HeaderMenu from '~/components/layout/header-menu'
-import RightMenuAuthenticated from '~/components/layout/right-menu-authenticated'
-import RightMenuGuest from '~/components/layout/right-menu-guest'
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import HeaderMenu from "~/components/layout/header-menu";
+import RightMenuAuthenticated from "~/components/layout/right-menu-authenticated";
+import RightMenuGuest from "~/components/layout/right-menu-guest";
 
 export default {
-  name: 'app-header',
+  name: "app-header",
   components: {
     HeaderMenu,
     RightMenuAuthenticated,
-    RightMenuGuest
+    RightMenuGuest,
   },
-  data () {
+  data() {
     return {
       scrollPosition: null,
-      isMenuOpened: false
-    }
+      isMenuOpened: false,
+    };
   },
   props: {
-    activeFilter: {}
+    activeFilter: {},
   },
   computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-    ...mapGetters('notifications', ['successCount', 'errorCount'])
+    ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters("notifications", ["successCount", "errorCount"]),
   },
   methods: {
-    ...mapMutations('notifications', ['initNotifications', 'unmarkRead', 'unmarkNew']),
-    ...mapActions('accounts', ['autoLogin']),
-    openMenu () { this.$emit('open') },
-    goToHomePage () { this.$emit('goToHomePage') },
-    toggleNote () { this.$emit('toggleNote') },
-    updateScroll () { this.scrollPosition = window.scrollY },
-    setActiveFilter (filter) {
-      this.$emit('set-active-filter', filter)
-    }
+    ...mapMutations("notifications", [
+      "initNotifications",
+      "unmarkRead",
+      "unmarkNew",
+    ]),
+    ...mapActions("accounts", ["autoLogin"]),
+    openMenu() {
+      this.$emit("open");
+    },
+    goToHomePage() {
+      this.$emit("goToHomePage");
+    },
+    toggleNote() {
+      this.$emit("toggleNote");
+    },
+    updateScroll() {
+      this.scrollPosition = window.scrollY;
+    },
+    setActiveFilter(filter) {
+      this.$emit("set-active-filter", filter);
+    },
   },
-  mounted () {
-    window.addEventListener('scroll', this.updateScroll)
-  }
-}
+  mounted() {
+    window.addEventListener("scroll", this.updateScroll);
+  },
+};
 </script>
 
 <template lang="pug">
-    q-header(:class="{scrolled: scrollPosition > 50}")
-      q-toolbar(content-center)
-        q-btn.burger(
-          flat
-          dense
-          round
-          @click="openMenu"
-          icon="img:statics/stroke.svg"
-          aria-label="Menu"
-          text-color="black"
+q-header(:class="{scrolled: scrollPosition > 50}")
+  q-toolbar(content-center)
+    q-btn.burger(
+      flat
+      dense
+      round
+      @click="openMenu"
+      icon="img:statics/stroke.svg"
+      aria-label="Menu"
+      text-color="black"
+    )
+    q-toolbar-title.flex.items-center.logo-wrapper(shrink)
+      img.logo(@click="goToHomePage" src="statics/telos-logo-new.svg")
+    q-separator.title-separator(vertical inset)
+    header-menu(@set-active-filter="setActiveFilter" :activeFilter="activeFilter")
+    div.right-menu.col-grow.row.justify-end
+      q-btn.notification-btn(
+        v-if="isAuthenticated"
+        dense
+        flat
+        round
+        icon="img:statics/notification-icon.svg"
+        @click="toggleNote"
+        color="black"
+      )
+        q-badge.notification-badge(
+          v-if="successCount"
+          rounded
+          color="primary"
+          :label="successCount"
+          floating
         )
-        q-toolbar-title.flex.items-center.logo-wrapper(shrink)
-          img.logo(@click="goToHomePage" src="statics/telos-logo-new.svg")
-        q-separator.title-separator(vertical inset)
-        header-menu(@set-active-filter="setActiveFilter" :activeFilter="activeFilter")
-        div.right-menu.col-grow.row.justify-end
-          q-btn.notification-btn(
-            v-if="isAuthenticated"
-            dense
-            flat
-            round
-            icon="img:statics/notification-icon.svg"
-            @click="toggleNote"
-            color="black"
-          )
-            q-badge.notification-badge(
-              v-if="successCount"
-              rounded
-              color="primary"
-              :label="successCount"
-              floating
-            )
-            q-badge.notification-badge.badge-left(
-              v-if="errorCount"
-              rounded
-              color="red"
-              :label="errorCount"
-              floating
-            )
-          right-menu-authenticated(landing-page=false v-if="isAuthenticated")
-          right-menu-guest(landing-page=false v-if="!isAuthenticated")
-      div.header-bottom.absolute-bottom
+        q-badge.notification-badge.badge-left(
+          v-if="errorCount"
+          rounded
+          color="red"
+          :label="errorCount"
+          floating
+        )
+      right-menu-authenticated(landing-page=false v-if="isAuthenticated")
+      right-menu-guest(landing-page=false v-if="!isAuthenticated")
+  div.header-bottom.absolute-bottom
 </template>
 
 <style lang="sass">

@@ -1,20 +1,20 @@
 <script>
-import Btn from './btn'
-import { mapActions, mapMutations, mapGetters } from 'vuex'
-import { scroll } from 'quasar'
+import Btn from "./btn";
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import { scroll } from "quasar";
 
 export default {
-  name: 'action-bar',
+  name: "action-bar",
   components: { Btn },
   props: {
     treasuriesOptions: {},
     activeFilter: {
-      type: String
-    }
+      type: String,
+    },
   },
-  data () {
+  data() {
     return {
-      model: 'one',
+      model: "one",
       isTypeMenuOpen: false,
       isStatusMenuOpen: false,
       isGroupMenuOpen: false,
@@ -27,236 +27,259 @@ export default {
       isFilterMenu320Open: false,
       typeGroup: [],
       typeOptions: [
-        { label: 'Election', value: 'election' },
-        { label: 'Referendum', value: 'referendum' },
-        { label: 'Leaderboard', value: 'leaderboard' },
-        { label: 'Poll', value: 'poll' },
-        { label: 'Proposal', value: 'proposal' }
+        { label: "Election", value: "election" },
+        { label: "Referendum", value: "referendum" },
+        { label: "Leaderboard", value: "leaderboard" },
+        { label: "Poll", value: "poll" },
+        { label: "Proposal", value: "proposal" },
       ],
       statusGroup: [],
       statusOptions: [
-        { label: 'Active', value: 'active' },
-        { value: 'not_started', label: 'Not started' },
-        { label: 'Expired', value: 'expired' },
-        { label: 'Closed', value: 'closed' },
-        { label: 'Cancelled', value: 'cancelled' },
-        { label: 'Archived', value: 'archived' },
-        { label: 'Setup', value: 'setup' }
+        { label: "Active", value: "active" },
+        { value: "not_started", label: "Not started" },
+        { label: "Expired", value: "expired" },
+        { label: "Closed", value: "closed" },
+        { label: "Cancelled", value: "cancelled" },
+        { label: "Archived", value: "archived" },
+        { label: "Setup", value: "setup" },
       ],
-      sortMode: '',
+      sortMode: "",
       sortOptions: [
-        { label: 'A-Z', value: 'A-Z' },
-        { label: 'Z-A', value: 'Z-A' },
-        { label: 'Most popular', value: 'Most popular' },
-        { label: 'Least popular', value: 'Least popular' }
+        { label: "A-Z", value: "A-Z" },
+        { label: "Z-A", value: "Z-A" },
+        { label: "Most popular", value: "Most popular" },
+        { label: "Least popular", value: "Least popular" },
       ],
       submitTypesResult: [],
       submitStatusesResult: [],
-      treasuryBar: '',
+      treasuryBar: "",
       isBallotListRowDirection: true,
-      notice: false
-    }
+      notice: false,
+    };
   },
   methods: {
-    ...mapActions('trails', ['fetchFees', 'fetchBallots', 'castVote', 'fetchTreasuries', 'fetchBallotsByStatus']),
-    ...mapMutations('trails', ['resetBallots', 'stopAddBallots']),
-    addToLocalStorage () {
-      localStorage.isNewUser = false
-      this.isNewUser = false
+    ...mapActions("trails", [
+      "fetchFees",
+      "fetchBallots",
+      "castVote",
+      "fetchTreasuries",
+      "fetchBallotsByStatus",
+    ]),
+    ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
+    addToLocalStorage() {
+      localStorage.isNewUser = false;
+      this.isNewUser = false;
     },
-    openBallotForm () {
-      this.$emit('open-ballot-form')
+    openBallotForm() {
+      this.$emit("open-ballot-form");
     },
-    toggleMenu (isMenuOpen, group, submitResult) {
+    toggleMenu(isMenuOpen, group, submitResult) {
       if (this[submitResult]) {
-        this[group] = this[submitResult]
+        this[group] = this[submitResult];
       }
-      this[isMenuOpen] = !this[isMenuOpen]
+      this[isMenuOpen] = !this[isMenuOpen];
     },
-    onSubmitTypes (evt) {
-      console.log('submiteTypes')
-      const formData = new FormData(evt.target)
-      const submitResult = []
+    onSubmitTypes(evt) {
+      console.log("submiteTypes");
+      const formData = new FormData(evt.target);
+      const submitResult = [];
 
-      for (const [ name, value ] of formData.entries()) {
+      for (const [name, value] of formData.entries()) {
         submitResult.push({
           name,
-          value
-        })
+          value,
+        });
       }
 
-      this.submitTypesResult = JSON.parse(JSON.stringify(submitResult)).reduce((typeValues, item) => {
-        return [...typeValues, item.value]
-      }, [])
-      this.$refs.typesMenu.hide()
+      this.submitTypesResult = JSON.parse(JSON.stringify(submitResult)).reduce(
+        (typeValues, item) => {
+          return [...typeValues, item.value];
+        },
+        []
+      );
+      this.$refs.typesMenu.hide();
     },
-    onSubmitStatuses (evt) {
-      const formData = new FormData(evt.target)
-      const submitResult = []
+    onSubmitStatuses(evt) {
+      const formData = new FormData(evt.target);
+      const submitResult = [];
 
-      for (const [ name, value ] of formData.entries()) {
+      for (const [name, value] of formData.entries()) {
         submitResult.push({
           name,
-          value
-        })
+          value,
+        });
       }
 
-      this.submitStatusesResult = JSON.parse(JSON.stringify(submitResult)).reduce((statusesValues, item) => {
-        return [...statusesValues, item.value]
-      }, [])
-      this.$refs.statusesMenu.hide()
+      this.submitStatusesResult = JSON.parse(
+        JSON.stringify(submitResult)
+      ).reduce((statusesValues, item) => {
+        return [...statusesValues, item.value];
+      }, []);
+      this.$refs.statusesMenu.hide();
     },
-    clearFilter (filter, isMenuOpen) {
-      this[filter] = []
-      this[isMenuOpen] = false
+    clearFilter(filter, isMenuOpen) {
+      this[filter] = [];
+      this[isMenuOpen] = false;
     },
-    discardFilter (filter, group) {
-      this[group] = []
-      this[filter] = []
+    discardFilter(filter, group) {
+      this[group] = [];
+      this[filter] = [];
     },
-    discardAllFilter () {
-      this.treasuryBar = null
-      this.submitTypesResult = []
-      this.submitStatusesResult = []
+    discardAllFilter() {
+      this.treasuryBar = null;
+      this.submitTypesResult = [];
+      this.submitStatusesResult = [];
     },
-    clearGroupFilter () {
-      this.treasuryBar = null
-      this.isGroupMenuOpen = false
+    clearGroupFilter() {
+      this.treasuryBar = null;
+      this.isGroupMenuOpen = false;
     },
-    clearSort () {
-      this.sortMode = ''
-      this.isSortingMenuOpen = false
+    clearSort() {
+      this.sortMode = "";
+      this.isSortingMenuOpen = false;
     },
-    isFiltersApplied () {
-      return this.treasuryBar !== null || this.submitTypesResult.length || this.submitStatusesResult.length
+    isFiltersApplied() {
+      return (
+        this.treasuryBar !== null ||
+        this.submitTypesResult.length ||
+        this.submitStatusesResult.length
+      );
     },
-    getFilterBtnLabel (filter, submitResult, options) {
+    getFilterBtnLabel(filter, submitResult, options) {
       if (this[submitResult].length === 1) {
-        const label = this[options].find((option) => option.value === this[submitResult][0]).label
-        return label
+        const label = this[options].find(
+          (option) => option.value === this[submitResult][0]
+        ).label;
+        return label;
       }
 
-      return `${filter}: ${this[submitResult].length}`
+      return `${filter}: ${this[submitResult].length}`;
     },
-    handleScroll () {
-      const obj = this.$el.querySelector('.scroll-anim')
-      const filter320 = this.$el.querySelector('.bar-filter-menu-320-wrapper')
-      const { bottom } = obj.getBoundingClientRect()
-      const height = document.documentElement.clientHeight
-      this.isFilterMenu320Open = bottom + height < height && window.getComputedStyle(filter320).display !== 'none'
+    handleScroll() {
+      const obj = this.$el.querySelector(".scroll-anim");
+      const filter320 = this.$el.querySelector(".bar-filter-menu-320-wrapper");
+      const { bottom } = obj.getBoundingClientRect();
+      const height = document.documentElement.clientHeight;
+      this.isFilterMenu320Open =
+        bottom + height < height &&
+        window.getComputedStyle(filter320).display !== "none";
     },
-    handleFilterBtnClick () {
-      const { getScrollTarget, setScrollPosition } = scroll
-      const filter = this.$el.querySelector('.bar-filter-menu-320-wrapper')
-      const offset = filter.offsetTop
-      const target = getScrollTarget(filter)
-      setScrollPosition(target, offset, 0)
+    handleFilterBtnClick() {
+      const { getScrollTarget, setScrollPosition } = scroll;
+      const filter = this.$el.querySelector(".bar-filter-menu-320-wrapper");
+      const offset = filter.offsetTop;
+      const target = getScrollTarget(filter);
+      setScrollPosition(target, offset, 0);
     },
-    showFilter () {
-      this.isFilterOpen = true
+    showFilter() {
+      this.isFilterOpen = true;
     },
-    openNotice () {
-      this.notice = true
+    openNotice() {
+      this.notice = true;
     },
-    setFilterParams (path) {
-      if (path === 'amend-ballots') {
-        this.typeGroup = []
-        this.submitTypesResult = []
-        this.statusGroup = [ 'active' ]
-        this.submitStatusesResult = [ 'active' ]
-        this.treasuryBar = 'VOTE'
-      } else if (path === 'worker-proposals') {
-        this.typeGroup = ['proposal']
-        this.submitTypesResult = ['proposal']
-        this.statusGroup = [ 'active' ]
-        this.submitStatusesResult = [ 'active' ]
-        this.treasuryBar = 'VOTE'
-      } else if (path === 't-f-election') {
-        this.typeGroup = ['election']
-        this.submitTypesResult = ['election']
-        this.statusGroup = [ 'active' ]
-        this.submitStatusesResult = [ 'active' ]
-        this.treasuryBar = 'VOTE'
-      } else if (path === 'polls') {
-        this.typeGroup = ['poll']
-        this.submitTypesResult = ['poll']
-        this.statusGroup = [ 'active' ]
-        this.submitStatusesResult = [ 'active' ]
-        this.treasuryBar = 'VOTE'
+    setFilterParams(path) {
+      if (path === "amend-ballots") {
+        this.typeGroup = [];
+        this.submitTypesResult = [];
+        this.statusGroup = ["active"];
+        this.submitStatusesResult = ["active"];
+        this.treasuryBar = "VOTE";
+      } else if (path === "worker-proposals") {
+        this.typeGroup = ["proposal"];
+        this.submitTypesResult = ["proposal"];
+        this.statusGroup = ["active"];
+        this.submitStatusesResult = ["active"];
+        this.treasuryBar = "VOTE";
+      } else if (path === "t-f-election") {
+        this.typeGroup = ["election"];
+        this.submitTypesResult = ["election"];
+        this.statusGroup = ["active"];
+        this.submitStatusesResult = ["active"];
+        this.treasuryBar = "VOTE";
+      } else if (path === "polls") {
+        this.typeGroup = ["poll"];
+        this.submitTypesResult = ["poll"];
+        this.statusGroup = ["active"];
+        this.submitStatusesResult = ["active"];
+        this.treasuryBar = "VOTE";
       }
-      this.$emit('update-cards', { type: this.typeGroup, status: this.statusGroup, treasury: this.treasuryBar })
-    }
+      this.$emit("update-cards", {
+        type: this.typeGroup,
+        status: this.statusGroup,
+        treasury: this.treasuryBar,
+      });
+    },
   },
-  mounted () {
-    this.setFilterParams(this.activeFilter)
+  mounted() {
+    this.setFilterParams(this.activeFilter);
   },
-  created () {
-    window.addEventListener('scroll', this.handleScroll)
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
   },
-  destroyed () {
-    window.removeEventListener('scroll', this.handleScroll)
+  unmounted() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
   computed: {
-    ...mapGetters('accounts', ['isAuthenticated'])
+    ...mapGetters("accounts", ["isAuthenticated"]),
   },
   watch: {
-    '$route' (to, from) {
-      console.log(`watching $route`)
+    $route(to, from) {
+      console.log(`watching $route`);
       if (to.params.id !== undefined) {
-        this.showBallot = true
+        this.showBallot = true;
       } else {
-        this.showBallot = false
+        this.showBallot = false;
       }
     },
     activeFilter: function () {
-      this.setFilterParams(this.activeFilter)
+      this.setFilterParams(this.activeFilter);
     },
     treasuryBar: function (val, old) {
-      console.log(`watching treasury`)
+      console.log(`watching treasury`);
       if (val !== old) {
-        this.resetBallots()
+        this.resetBallots();
       }
-      this.$emit('update-treasury', this.treasuryBar)
+      this.$emit("update-treasury", this.treasuryBar);
     },
     submitStatusesResult: function (val, old) {
-      console.log(`watching statuses`)
+      console.log(`watching statuses`);
       if (val !== old) {
-        this.statusGroup = this.submitStatusesResult
-        this.resetBallots()
-        this.$emit('update-statuses', this.submitStatusesResult)
+        this.statusGroup = this.submitStatusesResult;
+        this.resetBallots();
+        this.$emit("update-statuses", this.submitStatusesResult);
       }
     },
     submitTypesResult: function (val, old) {
-      console.log(`watching types`)
+      console.log(`watching types`);
       if (val !== old) {
-        this.typeGroup = this.submitTypesResult
-        this.resetBallots()
-        this.$emit('update-categories', this.submitTypesResult)
+        this.typeGroup = this.submitTypesResult;
+        this.resetBallots();
+        this.$emit("update-categories", this.submitTypesResult);
       }
     },
     treasuriesOptions: {
       immediate: true,
       handler: async function (val) {
-        console.log(`watching treasuriesOptions`)
+        console.log(`watching treasuriesOptions`);
         if (!val.length) {
           // TODO past 100 groups we need to switch to autocomplete search
-          await this.fetchTreasuries()
+          await this.fetchTreasuries();
         }
-      }
+      },
     },
     isBallotListRowDirection: function (val, old) {
       if (val !== old) {
-        this.$emit('change-diraction', this.isBallotListRowDirection)
+        this.$emit("change-diraction", this.isBallotListRowDirection);
       }
     },
     sortMode: function () {
-      this.$emit('change-sort-option', this.sortMode)
-    }
-  }
-}
+      this.$emit("change-sort-option", this.sortMode);
+    },
+  },
+};
 </script>
 <template lang="pug">
-  div.bar-filter-wrapper
+div.bar-filter-wrapper
     div.column.bar-filter-menu-320-wrapper
       div.bar-filter-menu-320.column
         div.menu-320-title-wrapper.row.items-center
@@ -871,247 +894,247 @@ export default {
           q-btn(flat label="OK" v-close-popup)
 </template>
 <style lang="sass">
-  .bar-filter-wrapper
-    margin: 40px 0 8px 0
-  .bar-wrapper
-    position: relative
-    width: 100%
-    height: 88px
-    background: white
-    box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
-    border-radius: 12px
+.bar-filter-wrapper
+  margin: 40px 0 8px 0
+.bar-wrapper
+  position: relative
+  width: 100%
+  height: 88px
+  background: white
+  box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+  border-radius: 12px
+.bar-linear-gradient-left,
+.bar-linear-gradient-right
+  display: none
+  position: absolute
+  width: 36px
+  height: 100%
+  background: linear-gradient(270deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)
+  z-index: 2
+.bar-linear-gradient-left
+  transform: rotate(180deg)
+  border-radius: 0 12px 12px 0
+.q-btn-group
+  margin-left: 24px
+  gap: 4px
+.q-btn-group > .q-btn-item
+  width: 40px
+  height: 40px
+  border-radius: 6px !important
+.bar-custom-separator
+  width: 4px
+  height: 4px
+  background: rgba(0, 0, 0, 0.12)
+  border-radius: 2px
+  margin: 0 26px
+.bar-separator-vertical
+  margin: 2px 0 2px 20px
+  height: 84px
+  margin-right: 32px
+.separator-320
+  margin: 2px 20px
+  display: none
+  width: 4px
+  height: 4px
+  background: rgba(0, 9, 26, 0.1)
+  border-radius: 2px
+.create-poll-btn
+  height: 40px
+  margin-right: 27px
+.bar-filter-btns-wrapper
+  gap: 16px
+.bar-filter-btn
+  height: 40px
+  font-size: 16px
+  & .q-btn__wrapper
+    padding: 0 12px
+  & .q-btn__wrapper::before
+    border: 1px solid #F2F3F4
+  & .q-icon
+    margin-top: 4px
+  & .on-right
+    margin-left: 16px
+.bar-filter-menu-form
+  padding: 12px
+.left-btn
+  height: 40px
+  padding: 0
+  margin-right: 1px
+  border-radius: 6px 0 0 6px
+  & .q-btn__wrapper::before
+    border: none
+.right-btn
+  height: 40px
+  width: 40px
+  padding: 0
+  border-radius: 0 6px 6px 0
+  font-size: 12px
+  & .q-btn__wrapper::before
+    border: none
+.bar-filter-btn-320
+  display: none
+  margin-left: 12px
+.q-btn__wrapper
+  padding: 4px 12px
+.bar-filter-menu-320
+  padding: 24px 12px 20px 12px
+  background: white
+  box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+  border-radius: 12px
+.menu-320-title-wrapper
+  margin-bottom: 20px
+.menu-320-title
+  font-size: 22px
+  font-weight: 600
+  line-height: 150%
+.filter-icon
+  margin: 8px
+  font-size: 22px
+  color: var(--q-color-primary)
+.dialog-btn-wrapper
+  margin-bottom: 24px
+.btn-320
+  margin: 0 !important
+.filter-type-btn-320 > .q-btn__wrapper > .q-btn__content
+  text-align: left
+  font-size: 16px
+.filter-type-btn-320 > .q-btn__wrapper > .q-btn__content > .block
+  width: 58px
+.btn-320-wrapper
+  margin: 24px 0
+  width: 100%
+  height: 64px
+  justify-content: center
+.menu-visible
+  display: flex !important
+  position: fixed !important
+  left: 0
+  right: 0
+.bar-filter-menu-320-wrapper
+  display: none
+.bar-filter-menu-options
+  box-shadow: none !important
+  margin: 0 0 20px 0
+.options-320 > div
+  border: 1px solid #F2F3F4
+  border-radius: 6px !important
+  margin: 0
+  border-radius: 0 !important
+  &:first-child
+    border-radius: 6px 6px 0 0 !important
+    border-bottom: 1px solid #F2F3F4
+  &:last-child
+    border-radius: 0 0 6px 6px !important
+.q-scrollarea
+  height: 200px
+.left-btn-320
+  height: 40px
+  width: -webkit-fill-available
+  border-radius: none
+.right-btn-320
+  height: 40px
+  width: 40px
+  font-size: 12px
+  border-radius: none
+.dialog-form
+  padding: 0
+.q-menu
+  min-width: 170px !important
+@media (max-width: 1280px)
+  .bar-btn-toggle,
+  .bar-btns-toggle,
+  .bar-custom-separator
+    display: none !important
+  .bar-filter-btns-wrapper
+    margin-left: 16px
+@media (max-width: 1130px)
   .bar-linear-gradient-left,
   .bar-linear-gradient-right
-    display: none
-    position: absolute
-    width: 36px
-    height: 100%
-    background: linear-gradient(270deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)
-    z-index: 2
-  .bar-linear-gradient-left
-    transform: rotate(180deg)
-    border-radius: 0 12px 12px 0
-  .q-btn-group
-    margin-left: 24px
-    gap: 4px
-  .q-btn-group > .q-btn-item
-    width: 40px
-    height: 40px
-    border-radius: 6px !important
-  .bar-custom-separator
-    width: 4px
-    height: 4px
-    background: rgba(0, 0, 0, 0.12)
-    border-radius: 2px
-    margin: 0 26px
+    display: block
+  .bar-wrapper
+    height: 72px
   .bar-separator-vertical
-    margin: 2px 0 2px 20px
-    height: 84px
-    margin-right: 32px
-  .separator-320
-    margin: 2px 20px
-    display: none
-    width: 4px
-    height: 4px
-    background: rgba(0, 9, 26, 0.1)
-    border-radius: 2px
-  .create-poll-btn
-    height: 40px
-    margin-right: 27px
+    height: 60px
   .bar-filter-btns-wrapper
-    gap: 16px
-  .bar-filter-btn
-    height: 40px
-    font-size: 16px
-    & .q-btn__wrapper
-      padding: 0 12px
-    & .q-btn__wrapper::before
-      border: 1px solid #F2F3F4
-    & .q-icon
-      margin-top: 4px
-    & .on-right
-      margin-left: 16px
-  .bar-filter-menu-form
-    padding: 12px
-  .left-btn
-    height: 40px
-    padding: 0
-    margin-right: 1px
-    border-radius: 6px 0 0 6px
-    & .q-btn__wrapper::before
-      border: none
-  .right-btn
-    height: 40px
-    width: 40px
-    padding: 0
-    border-radius: 0 6px 6px 0
-    font-size: 12px
-    & .q-btn__wrapper::before
-      border: none
-  .bar-filter-btn-320
+    min-width: 690px
+  .bar-filters
+    max-width: 73%
+    overflow-x: scroll
+  .bar-filters::-webkit-scrollbar
+    width: 0
     display: none
-    margin-left: 12px
-  .q-btn__wrapper
-    padding: 4px 12px
-  .bar-filter-menu-320
-    padding: 24px 12px 20px 12px
-    background: white
-    box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252);
-    border-radius: 12px
-  .menu-320-title-wrapper
-    margin-bottom: 20px
-  .menu-320-title
-    font-size: 22px
-    font-weight: 600
-    line-height: 150%
-  .filter-icon
-    margin: 8px
-    font-size: 22px
-    color: var(--q-color-primary)
-  .dialog-btn-wrapper
-    margin-bottom: 24px
-  .btn-320
-    margin: 0 !important
-  .filter-type-btn-320 > .q-btn__wrapper > .q-btn__content
-    text-align: left
-    font-size: 16px
-  .filter-type-btn-320 > .q-btn__wrapper > .q-btn__content > .block
-    width: 58px
-  .btn-320-wrapper
-    margin: 24px 0
-    width: 100%
-    height: 64px
-    justify-content: center
-  .menu-visible
-    display: flex !important
-    position: fixed !important
-    left: 0
-    right: 0
+  .bar-linear-gradient-right
+    left: 70%
+@media (max-width: 1070px)
+  .bar-filters
+    max-width: 68%
+  .bar-linear-gradient-right
+    left: 65%
+@media (max-width: 940px)
+  .bar-filters
+    max-width: 63%
+  .bar-linear-gradient-right
+    left: 60%
+@media (max-width: 750px)
+  .bar-filters
+    max-width: 60%
+  .bar-linear-gradient-right
+    left: 55%
+@media (max-width: 660px)
+  .bar-filters
+    max-width: 55%
+  .bar-linear-gradient-right
+    left: 50%
+@media (max-width: 600px)
   .bar-filter-menu-320-wrapper
+    display: flex
+  .bar-wrapper
     display: none
-  .bar-filter-menu-options
-    box-shadow: none !important
-    margin: 0 0 20px 0
-  .options-320 > div
+    justify-content: space-between
+    margin-bottom: 0
+    bottom: 12px
+    z-index: 10
+
+  .dialog-btn-wrapper
+    border: none
+
+  .dialog-btn-wrapper button
     border: 1px solid #F2F3F4
     border-radius: 6px !important
-    margin: 0
-    border-radius: 0 !important
-    &:first-child
-      border-radius: 6px 6px 0 0 !important
-      border-bottom: 1px solid #F2F3F4
-    &:last-child
-      border-radius: 0 0 6px 6px !important
-  .q-scrollarea
-    height: 200px
-  .left-btn-320
-    height: 40px
-    width: -webkit-fill-available
-    border-radius: none
-  .right-btn-320
-    height: 40px
-    width: 40px
-    font-size: 12px
-    border-radius: none
-  .dialog-form
-    padding: 0
-  .q-menu
-    min-width: 170px !important
-  @media (max-width: 1280px)
-    .bar-btn-toggle,
-    .bar-btns-toggle,
-    .bar-custom-separator
-      display: none !important
-    .bar-filter-btns-wrapper
-      margin-left: 16px
-  @media (max-width: 1130px)
-    .bar-linear-gradient-left,
-    .bar-linear-gradient-right
-      display: block
-    .bar-wrapper
-      height: 72px
-    .bar-separator-vertical
-      height: 60px
-    .bar-filter-btns-wrapper
-      min-width: 690px
-    .bar-filters
-      max-width: 73%
-      overflow-x: scroll
-    .bar-filters::-webkit-scrollbar
-      width: 0
-      display: none
-    .bar-linear-gradient-right
-      left: 70%
-  @media (max-width: 1070px)
-    .bar-filters
-      max-width: 68%
-    .bar-linear-gradient-right
-      left: 65%
-  @media (max-width: 940px)
-    .bar-filters
-      max-width: 63%
-    .bar-linear-gradient-right
-      left: 60%
-  @media (max-width: 750px)
-    .bar-filters
-      max-width: 60%
-    .bar-linear-gradient-right
-      left: 55%
-  @media (max-width: 660px)
-    .bar-filters
-      max-width: 55%
-    .bar-linear-gradient-right
-      left: 50%
-  @media (max-width: 600px)
-    .bar-filter-menu-320-wrapper
-      display: flex
-    .bar-wrapper
-      display: none
-      justify-content: space-between
-      margin-bottom: 0
-      bottom: 12px
-      z-index: 10
+    margin-bottom: 10px
 
-    .dialog-btn-wrapper
-      border: none
+  .dialog-btn-wrapper button.left-btn-320
+    border-right: none
+    border-top-right-radius: 0 !important
+    border-bottom-right-radius: 0 !important
 
-    .dialog-btn-wrapper button
-      border: 1px solid #F2F3F4
-      border-radius: 6px !important
-      margin-bottom: 10px
+  .dialog-btn-wrapper button.right-btn-320
+    border-left: none
+    border-top-left-radius: 0 !important
+    border-bottom-left-radius: 0 !important
 
-    .dialog-btn-wrapper button.left-btn-320
-      border-right: none
-      border-top-right-radius: 0 !important
-      border-bottom-right-radius: 0 !important
-
-    .dialog-btn-wrapper button.right-btn-320
-      border-left: none
-      border-top-left-radius: 0 !important
-      border-bottom-left-radius: 0 !important
-
-    .bar-linear-gradient-left,
-    .bar-linear-gradient-right,
-    .bar-filters,
-    .bar-separator-vertical
-      display: none
-    .separator-320,
-    .bar-filter-btn-320
-      display: block
-    .right-bar-section
-      flex: none
-    .create-poll-btn
-      margin-right: 12px
-  @media (max-width: 400px)
-    .bar-wrapper
-      width: auto
-      margin: 0 12px
-    .bar-filter-menu-320
-      margin-top: 24px
-      border-radius: 0
-    .btn-320-wrapper
-      background: white
-      box-shadow: 0px 7px 15px rgba(21, 0, 77, 0.05), 0px 3px 6px rgba(21, 0, 77, 0.04)
-    .btn-320
-      width: 296px !important
+  .bar-linear-gradient-left,
+  .bar-linear-gradient-right,
+  .bar-filters,
+  .bar-separator-vertical
+    display: none
+  .separator-320,
+  .bar-filter-btn-320
+    display: block
+  .right-bar-section
+    flex: none
+  .create-poll-btn
+    margin-right: 12px
+@media (max-width: 400px)
+  .bar-wrapper
+    width: auto
+    margin: 0 12px
+  .bar-filter-menu-320
+    margin-top: 24px
+    border-radius: 0
+  .btn-320-wrapper
+    background: white
+    box-shadow: 0px 7px 15px rgba(21, 0, 77, 0.05), 0px 3px 6px rgba(21, 0, 77, 0.04)
+  .btn-320
+    width: 296px !important
 </style>
