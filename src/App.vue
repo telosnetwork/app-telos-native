@@ -45,9 +45,9 @@ export default {
 </script>
 
 <template lang="pug">
-  .q-app
-    component(:is="layout")
-      router-view
-    q-inner-loading(:showing="isAutoLoading")
-      q-spinner(size="3em")
+.q-app
+  component(:is="layout")
+    router-view
+  q-inner-loading(:showing="isAutoLoading")
+    q-spinner(size="3em")
 </template>

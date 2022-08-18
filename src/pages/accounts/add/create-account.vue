@@ -79,90 +79,90 @@ export default {
 </script>
 
 <template lang="pug">
-  .flex.column.send-otp
-    .col-9
-      q-card.q-mb-lg(
-        flat
-        v-show="!generating"
-      )
-        q-card-section
-          h2 {{ $t('pages.accounts.add.createAccountTitle') }}
-          q-input.q-mb-lg(
-            ref="account"
-            v-model="form.account"
-            color="accent"
-            :label="$t('pages.accounts.add.forms.account')"
-            :hint="$t('pages.accounts.add.forms.accountHint')"
-            outlined
-            maxlength="12"
-            :rules="[rules.required, rules.accountFormatBasic, rules.accountLength, rules.isAccountAvailable]"
+.flex.column.send-otp
+  .col-9
+    q-card.q-mb-lg(
+      flat
+      v-show="!generating"
+    )
+      q-card-section
+        h2 {{ $t('pages.accounts.add.createAccountTitle') }}
+        q-input.q-mb-lg(
+          ref="account"
+          v-model="form.account"
+          color="accent"
+          :label="$t('pages.accounts.add.forms.account')"
+          :hint="$t('pages.accounts.add.forms.accountHint')"
+          outlined
+          maxlength="12"
+          :rules="[rules.required, rules.accountFormatBasic, rules.accountLength, rules.isAccountAvailable]"
+          lazy-rules
+          :debounce="200"
+          @blur="form.account = (form.account || '').toLowerCase()"
+        )
+      q-card-section
+        .text-red {{ $t('pages.accounts.add.saveKeys') }}
+        div
+          q-input(
+            ref="publicKey"
+            v-model="form.publicKey"
+            label="Public Key"
+            :rules="[() => copy || $t('forms.errors.copyKey')]"
+            type="textarea"
+            readonly=true
+            autogrow
             lazy-rules
-            :debounce="200"
-            @blur="form.account = (form.account || '').toLowerCase()"
+            @click="$refs['publicKey'].select()"
           )
-        q-card-section
-          .text-red {{ $t('pages.accounts.add.saveKeys') }}
-          div
-            q-input(
-              ref="publicKey"
-              v-model="form.publicKey"
-              label="Public Key"
-              :rules="[() => copy || $t('forms.errors.copyKey')]"
-              type="textarea"
-              readonly=true
-              autogrow
-              lazy-rules
-              @click="$refs['publicKey'].select()"
+            template(v-slot:after)
+              q-btn(
+              round
+              color="primary"
+              icon="fas fa-clipboard"
+              size="sm"
+              @click="() => { copyToClipboard(form.publicKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
             )
-              template(v-slot:after)
-                q-btn(
+          q-input(
+            ref="privateKey"
+            v-model="form.privateKey"
+            label="Private Key"
+            :rules="[() => copy || $t('forms.errors.copyKey')]"
+            readonly=true
+            type="textarea"
+            autogrow
+            lazy-rules
+            @click="$refs['privateKey'].select()"
+          )
+            template(v-slot:after)
+              q-btn(
                 round
                 color="primary"
                 icon="fas fa-clipboard"
                 size="sm"
-                @click="() => { copyToClipboard(form.publicKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
+                @click="() => { copyToClipboard(form.privateKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
               )
-            q-input(
-              ref="privateKey"
-              v-model="form.privateKey"
-              label="Private Key"
-              :rules="[() => copy || $t('forms.errors.copyKey')]"
-              readonly=true
-              type="textarea"
-              autogrow
-              lazy-rules
-              @click="$refs['privateKey'].select()"
-            )
-              template(v-slot:after)
-                q-btn(
-                  round
-                  color="primary"
-                  icon="fas fa-clipboard"
-                  size="sm"
-                  @click="() => { copyToClipboard(form.privateKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
-                )
-          q-card-section
-            q-checkbox(
-              v-model="copy"
-              label="I have copied my keys somewhere safe"
-            )
-          vue-recaptcha(
-            ref='recaptcha'
-            :sitekey="'6Ld-_eIZAAAAAF6JsrFudo_uQjRL4eqPAZE40I3o'"
-            @verify="onVerify"
-            @expired="onExpire"
+        q-card-section
+          q-checkbox(
+            v-model="copy"
+            label="I have copied my keys somewhere safe"
           )
-          .text-red(v-if="error && !generating") {{ error }}
-          .col-3
-            .hint {{ $t('pages.accounts.add.verifyAccountHint') }}
-            q-btn.full-width(
-              color="primary"
-              :label="$t('pages.accounts.add.buttons.continue')"
-              size="lg"
-              unelevated
-              :loading="submitting"
-              @click="onCreateAccount"
-            )
+        vue-recaptcha(
+          ref='recaptcha'
+          :sitekey="'6Ld-_eIZAAAAAF6JsrFudo_uQjRL4eqPAZE40I3o'"
+          @verify="onVerify"
+          @expired="onExpire"
+        )
+        .text-red(v-if="error && !generating") {{ error }}
+        .col-3
+          .hint {{ $t('pages.accounts.add.verifyAccountHint') }}
+          q-btn.full-width(
+            color="primary"
+            :label="$t('pages.accounts.add.buttons.continue')"
+            size="lg"
+            unelevated
+            :loading="submitting"
+            @click="onCreateAccount"
+          )
 </template>
 
 <style lang="sass" scoped>

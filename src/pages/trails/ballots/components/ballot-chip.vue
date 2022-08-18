@@ -16,13 +16,13 @@ export default {
 </script>
 
 <template lang="pug">
-  q-chip(square text-color="white" :class="`${type}-chip`").capitalize.no-margin.text-weight-bold.ballot-type
-    q-avatar
-      template(v-if="isBallotOpened")
-        img(:src="`statics/app-icons/${type.toLowerCase()}-icon.svg`").poll-icon
-      template(v-else)
-        img(:src="`statics/app-icons/${type.toLowerCase()}-icon-black.svg`").poll-icon
-    span.type-text {{ ucFirst(type) }}
+q-chip(square text-color="white" :class="`${type}-chip`").capitalize.no-margin.text-weight-bold.ballot-type
+  q-avatar
+    template(v-if="isBallotOpened")
+      img(:src="`statics/app-icons/${type.toLowerCase()}-icon.svg`").poll-icon
+    template(v-else)
+      img(:src="`statics/app-icons/${type.toLowerCase()}-icon-black.svg`").poll-icon
+  span.type-text {{ ucFirst(type) }}
 </template>
 
 <style lang="sass">

@@ -1,5 +1,5 @@
 <template lang="pug">
- main
+main
   q-input.send-input(@keypress.enter="onSearch", bottom-slots, v-model='search', :label="$t('pages.general.search')")
     template(v-slot:append)
       q-btn(round, dense, flat, icon='search', @click='onSearch')
@@ -19,59 +19,67 @@
 </template>
 
 <script>
-import ContactItem from '~/pages/profiles/list/contact-item.vue'
-import { mapActions } from 'vuex'
+import ContactItem from "~/pages/profiles/list/contact-item.vue";
+import { mapActions } from "vuex";
 export default {
-  name: 'contact-list',
+  name: "contact-list",
   components: { ContactItem },
-  data () {
+  data() {
     return {
-      search: '',
+      search: "",
       limit: 10,
       isLoading: true,
-      isFirst: true
-    }
+      isFirst: true,
+    };
   },
   computed: {
-    profileList () {
-      return this.$store.state.profiles.profilesList
-    }
+    profileList() {
+      return this.$store.state.profiles.profilesList;
+    },
   },
   watch: {
-    search () {
-      this.isFirst = true
-    }
+    search() {
+      this.isFirst = true;
+    },
   },
-  beforeDestroy: function () {
-    this.clearProfilesList()
+  beforeUnmount: function () {
+    this.clearProfilesList();
   },
   methods: {
-    ...mapActions('profiles', ['searchProfiles', 'clearProfilesList']),
-    async onLoad (index, done) {
-      if (this.isFirst || (this.profileList.lastEvaluatedKey !== undefined && this.profileList.count === this.limit)) {
-        this.isFirst = false
-        this.isLoading = true
-        await this.searchProfiles({ search: this.search, limit: this.limit, lastEvaluatedKey: this.profileList.lastEvaluatedKey })
-        this.isLoading = false
-        done()
+    ...mapActions("profiles", ["searchProfiles", "clearProfilesList"]),
+    async onLoad(index, done) {
+      if (
+        this.isFirst ||
+        (this.profileList.lastEvaluatedKey !== undefined &&
+          this.profileList.count === this.limit)
+      ) {
+        this.isFirst = false;
+        this.isLoading = true;
+        await this.searchProfiles({
+          search: this.search,
+          limit: this.limit,
+          lastEvaluatedKey: this.profileList.lastEvaluatedKey,
+        });
+        this.isLoading = false;
+        done();
       } else {
-        this.$refs.infiniteScroll.stop()
+        this.$refs.infiniteScroll.stop();
       }
     },
-    async onSearch (v) {
+    async onSearch(v) {
       // await this.searchProfiles({ search: this.search, clean: true, lastEvaluatedKey: this.profileList.lastEvaluatedKey })
-      this.clearProfilesList()
-      this.isFirst = true
-      this.$refs.infiniteScroll.reset()
-      this.$refs.infiniteScroll.resume()
-      this.$refs.infiniteScroll.poll()
+      this.clearProfilesList();
+      this.isFirst = true;
+      this.$refs.infiniteScroll.reset();
+      this.$refs.infiniteScroll.resume();
+      this.$refs.infiniteScroll.poll();
       // v.preventDefault()
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style scoped lang='sass'>
+<style scoped lang="sass">
 .infiniteScroll
   width: 100%
   height: calc(100vh - 200px)

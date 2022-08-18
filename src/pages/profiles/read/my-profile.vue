@@ -1,15 +1,15 @@
 <template lang="pug">
-    profile-detail(owner=true)
+profile-detail(owner=true)
 </template>
 
 <script>
-import ProfileDetail from '~/pages/profiles/read/profile-detail'
-import { mapActions } from 'vuex'
+import ProfileDetail from "~/pages/profiles/read/profile-detail";
+import { mapActions } from "vuex";
 export default {
-  name: 'my-profile',
+  name: "my-profile",
   components: { ProfileDetail },
   methods: {
-    ...mapActions('profiles', ['getProfile'])
-  }
-}
+    ...mapActions("profiles", ["getProfile"]),
+  },
+};
 </script>

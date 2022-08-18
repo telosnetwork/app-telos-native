@@ -11,21 +11,21 @@ export default {
 </script>
 
 <template lang="pug">
-  q-page.flex.align-center.column.q-pa-lg.congratulations
-    .col-3
-      h1 {{ $t('pages.accounts.add.congratulationsTitle') }}
-      i18n(path="pages.accounts.add.congratulationsSubtitle" tag="h2")
-        strong(slot="account") {{ signUpAccount }}
-    .col-6
-      img(src="statics/accounts/congratulations.jpg" alt="congratulations")
-    .col-3
-      q-btn.full-width(
-        color="primary"
-        :label="$t('pages.accounts.add.buttons.goToProfile')"
-        size="lg"
-        unelevated
-        to="/"
-      )
+q-page.flex.align-center.column.q-pa-lg.congratulations
+  .col-3
+    h1 {{ $t('pages.accounts.add.congratulationsTitle') }}
+    i18n(path="pages.accounts.add.congratulationsSubtitle" tag="h2")
+      strong(slot="account") {{ signUpAccount }}
+  .col-6
+    img(src="statics/accounts/congratulations.jpg" alt="congratulations")
+  .col-3
+    q-btn.full-width(
+      color="primary"
+      :label="$t('pages.accounts.add.buttons.goToProfile')"
+      size="lg"
+      unelevated
+      to="/"
+    )
 </template>
 
 <style lang="sass" scoped>
