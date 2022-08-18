@@ -41,26 +41,26 @@ main.column.items-center.back(v-if="this.Profile")
 // import { CommMethods } from '@smontero/ppp-common'
 // import S3Img from '~/components/s3-image.vue'
 // import { countriesLang } from '~/mixins/countries'
-import { mapActions } from 'vuex'
-import gravatar from '../gravatar'
+import { mapActions } from "vuex";
+import gravatar from "../gravatar";
 export default {
-  name: 'profile-detail',
+  name: "profile-detail",
   props: { owner: Boolean },
   components: {
-    gravatar
+    gravatar,
   },
   computed: {
-    Profile () {
+    Profile() {
       if (this.owner) {
-        return this.$store.state.profiles.myProfile
-      } else return this.$store.state.profiles.selectedProfile
+        return this.$store.state.profiles.myProfile;
+      } else return this.$store.state.profiles.selectedProfile;
     },
-    missingProfile () {
-      return this.owner && !this.$store.state.profiles.myProfile
+    missingProfile() {
+      return this.owner && !this.$store.state.profiles.myProfile;
     },
-    fullName () {
-      return this.Profile.display_name
-    }
+    fullName() {
+      return this.Profile.display_name;
+    },
     /*
     verifySMSUrl () {
       return `/profiles/myProfile/verify/${CommMethods.SMS.value}`
@@ -77,16 +77,16 @@ export default {
     }
     */
   },
-  async beforeMount () {
+  async beforeMount() {
     try {
-      this.showIsLoading(true)
-      await this.getProfile()
+      this.showIsLoading(true);
+      await this.getProfile();
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    this.showIsLoading(false)
+    this.showIsLoading(false);
     if (this.missingProfile) {
-      this.$router.push({ name: 'userRegister' })
+      this.$router.push({ name: "userRegister" });
     }
     /*
     if (!this.$store.getters['profiles/isRegistered']) {
@@ -94,19 +94,19 @@ export default {
     }
     */
   },
-  beforeDestroy: function () {
-    this.$store.commit('profiles/setSelectedProfile', [])
+  beforeMount: function () {
+    this.$store.commit("profiles/setSelectedProfile", []);
   },
   methods: {
-    ...mapActions('profiles', ['getProfile'])
+    ...mapActions("profiles", ["getProfile"]),
     /*
     goToChat () {
       this.$store.commit('messages/setActiveChat', { activeChat: this.Profile.eosAccount, avatarImage: this.Profile.publicData.avatarImage, s3Identity: this.Profile.publicData.s3Identity })
       this.$router.push({ name: 'chat' })
     }
     */
-  }
-}
+  },
+};
 </script>
 
 <style lang="sass">

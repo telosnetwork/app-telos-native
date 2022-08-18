@@ -6,27 +6,28 @@
 </template>
 
 <script>
-import TokenList from './components/token-list.vue'
-import TokenEdit from './components/token-edit.vue'
-import { mapActions, mapState } from 'vuex'
+import TokenList from "./components/token-list.vue";
+import TokenEdit from "./components/token-edit.vue";
+import { mapActions, mapState } from "vuex";
 
 export default {
-  name: 'tokens',
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: "tokens",
   components: {
     TokenList,
-    TokenEdit
+    TokenEdit,
   },
   computed: {
-    ...mapState('tokens', ['createToken', 'editingToken'])
+    ...mapState("tokens", ["createToken", "editingToken"]),
   },
-  mounted () {
-    this.loadConfig()
-    this.loadTokens()
+  mounted() {
+    this.loadConfig();
+    this.loadTokens();
   },
   methods: {
-    ...mapActions('tokens', ['loadTokens', 'loadConfig'])
-  }
-}
+    ...mapActions("tokens", ["loadTokens", "loadConfig"]),
+  },
+};
 </script>
 
 <style lang="sass" scoped>

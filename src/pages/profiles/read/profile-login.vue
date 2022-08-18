@@ -9,7 +9,7 @@ main
     p.fixed-center(
       v-if='!loading'
     ) {{ $t('pages.profileLogin.failed') }}
-</q-banner>
+<q-banner></q-banner>
 </template>
 
 <script>

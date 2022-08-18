@@ -6,7 +6,7 @@ q-card(:class="{ own: isOwn }")
       q-item-section(clickable,  @click='goToProfileDetail')
           q-item-label {{contact.account_name}}
           q-item-label(caption='', lines='1') {{contact.display_name}}
-          q-item-label(caption='', lines='1' v-html='`Bio: ${contact.bio}`') Bio: {{contact.bio}}
+          q-item-label(caption='', lines='1' v-html='`Bio: ${contact.bio}`') 
           q-item-label(caption='', lines='1') Status: {{contact.status}}
 </template>
 
