@@ -57,8 +57,10 @@ export default {
   methods: {
     async getData() {
       try {
+        debugger;
         const objectList = await axios.get(BUCKET_URL);
         const lastKey = this.getLastKey(objectList);
+        this.producerData = ["test"];
         this.producerData = (await axios.get(`${BUCKET_URL}/${lastKey}`)).data;
         await this.getVotes();
       } catch (err) {

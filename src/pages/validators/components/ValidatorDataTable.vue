@@ -21,7 +21,7 @@
   q-table(
     :title= 'tableHeader'
     :pagination.sync="pagination"
-    :data="producerData"
+    :rows="producerData"
     :columns="producerColumns"
     row-key="__index"
   )
@@ -252,6 +252,10 @@ export default {
     this.resetVotes();
   },
   watch: {
+    producerData(val) {
+      debugger;
+      console.log(val);
+    },
     producerVotes(val) {
       this.$emit("vote-changed", false);
       if (this.currentVote.length === 0) {

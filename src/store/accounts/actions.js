@@ -18,6 +18,7 @@ export const login = async function (
   debugger;
   const authenticator = this.$ual.authenticators[idx];
   try {
+    debugger;
     commit("setLoadingWallet", authenticator.getStyle().text);
     await authenticator.init();
     if (!account) {
