@@ -2,7 +2,7 @@
 import { mapActions } from "vuex";
 
 import { validation } from "~/mixins/validation";
-import VueRecaptcha from "vue-recaptcha";
+import { VueRecaptcha } from "vue-recaptcha";
 
 import { generateKeys } from "~/utils/eosio";
 
