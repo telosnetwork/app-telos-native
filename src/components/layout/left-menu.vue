@@ -54,6 +54,8 @@ export default {
     },
   },
   created() {
+    debugger;
+    console.log(this.$t("menu.trailsTreasuries"));
     window.addEventListener("resize", this.updateWidth);
   },
   beforeUnmount() {
