@@ -1,29 +1,30 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import Gravatar from 'vue-gravatar'
+// import Vue from "vue";
+import Vuex, { createStore } from "vuex";
+// import Gravatar from "vue-gravatar";
 
-import accounts from './accounts'
-import profiles from './profiles'
-import works from './works'
-import notifications from './notifications'
-import trails from './trails'
-import transfers from './transfers'
-import tokens from './tokens'
-import validators from './validators'
-import testnet from './testnet'
-import poc from './poc'
-import general from './general'
+import accounts from "./accounts";
+import profiles from "./profiles";
+import works from "./works";
+import notifications from "./notifications";
+import trails from "./trails";
+import transfers from "./transfers";
+import tokens from "./tokens";
+import validators from "./validators";
+import testnet from "./testnet";
+import poc from "./poc";
+import general from "./general";
+import { store } from "quasar/wrappers";
 
-Vue.use(Vuex)
-Vue.component('v-gravatar', Gravatar)
+// Vue.use(Vuex);
+// Vue.component("v-gravatar", Gravatar);
 
 /*
  * If not building with SSR mode, you can
  * directly export the Store instantiation
  */
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
+export default store(function (/* { ssrContext } */) {
+  const Store = createStore({
     modules: {
       accounts,
       profiles,
@@ -35,13 +36,13 @@ export default function (/* { ssrContext } */) {
       trails,
       transfers,
       validators,
-      general
+      general,
     },
 
     // enable strict mode (adds overhead!)
     // for dev mode only
-    strict: process.env.DEV
-  })
+    strict: process.env.DEV,
+  });
 
-  return Store
-}
+  return Store;
+});

@@ -1,5 +1,5 @@
 import { boot } from "quasar/wrappers";
-import axios from "./axios";
+import axios from "axios";
 
 export const http = axios.create({
   baseURL: process.env.HYPERION_URL,

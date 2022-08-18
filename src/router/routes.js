@@ -125,7 +125,7 @@ const routes = [
 // Always leave this as last one
 if (process.env.MODE !== "ssr") {
   routes.push({
-    path: "*",
+    path: "/(.*)*",
     component: () => import("pages/404.vue"),
     meta: { layout: "empty" },
   });
