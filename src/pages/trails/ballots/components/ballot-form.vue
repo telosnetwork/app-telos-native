@@ -1,132 +1,152 @@
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import { validation } from '~/mixins/validation'
-
-const IPFS = require('ipfs-core')
+import { mapActions, mapGetters } from "vuex";
+import { validation } from "~/mixins/validation";
+import * as IPFS from "ipfs-core";
 
 export default {
-  name: 'ballot-form',
+  name: "ballot-form",
   mixins: [validation],
   props: {
-    show: { type: Boolean, required: true }
+    show: { type: Boolean, required: true },
   },
-  data () {
+  data() {
     return {
       form: {
         title: null,
-        category: 'poll',
+        category: "poll",
         description: null,
         imageUrl: null,
         IPFSString: null,
         treasurySymbol: null,
-        votingMethod: '1token1vote',
+        votingMethod: "1token1vote",
         maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
         endDate: null,
-        config: 'votestake'
+        config: "votestake",
       },
       prompt: false,
       userBalance: null,
       votingMethodOptions: [
-        { value: '1acct1vote', label: 'One vote per account' },
-        { value: '1tokennvote', label: 'All tokens to each vote' },
-        { value: '1token1vote', label: 'All tokens split to each vote' },
-        { value: '1tsquare1v', label: 'One token equals one square vote' },
-        { value: 'quadratic', label: 'Quadratic' }
+        { value: "1acct1vote", label: "One vote per account" },
+        { value: "1tokennvote", label: "All tokens to each vote" },
+        { value: "1token1vote", label: "All tokens split to each vote" },
+        { value: "1tsquare1v", label: "One token equals one square vote" },
+        { value: "quadratic", label: "Quadratic" },
       ],
       categoryOptions: [
-        { value: 'election', label: 'Election' },
-        { value: 'leaderboard', label: 'Leaderboard' },
-        { value: 'poll', label: 'Poll' },
-        { value: 'proposal', label: 'Proposal' },
-        { value: 'referendum', label: 'Referendum' }
+        { value: "election", label: "Election" },
+        { value: "leaderboard", label: "Leaderboard" },
+        { value: "poll", label: "Poll" },
+        { value: "proposal", label: "Proposal" },
+        { value: "referendum", label: "Referendum" },
       ],
       submitting: false,
       file: null,
       cid: null,
-      fee: null
-    }
+      fee: null,
+    };
   },
   computed: {
-    ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees']),
-    ...mapGetters('accounts', ['account']),
-    getTreasurySymbols () {
+    ...mapGetters("trails", ["treasuries", "userTreasury", "ballotFees"]),
+    ...mapGetters("accounts", ["account"]),
+    getTreasurySymbols() {
       if (this.userTreasury) {
-        const symbols = this.userTreasury.map(treasury => ({
-          symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, '')
-        }))
-        return this.treasuries.filter((v) => {
-          return symbols.some(v2 => { return v.symbol === v2.symbol })
-        }).map(treasury => ({
-          label: treasury.title ? `${treasury.title} (${treasury.supply})` : treasury.supply,
-          value: treasury.supply,
-          symbol: treasury.supply.replace(/[^a-zA-Z]/gi, '')
-        }))
+        const symbols = this.userTreasury.map((treasury) => ({
+          symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, ""),
+        }));
+        return this.treasuries
+          .filter((v) => {
+            return symbols.some((v2) => {
+              return v.symbol === v2.symbol;
+            });
+          })
+          .map((treasury) => ({
+            label: treasury.title
+              ? `${treasury.title} (${treasury.supply})`
+              : treasury.supply,
+            value: treasury.supply,
+            symbol: treasury.supply.replace(/[^a-zA-Z]/gi, ""),
+          }));
       } else {
-        return null
+        return null;
       }
     },
-    isStakeable () {
-      let selectedTreasurySettings = this.treasuries.find(t => (t.access === 'public' || t.manager === this.account) && t.symbol === this.form.treasurySymbol?.symbol)?.settings
-      return selectedTreasurySettings ? selectedTreasurySettings.find(i => i.key === 'stakeable').value : null
+    isStakeable() {
+      let selectedTreasurySettings = this.treasuries.find(
+        (t) =>
+          (t.access === "public" || t.manager === this.account) &&
+          t.symbol === this.form.treasurySymbol?.symbol
+      )?.settings;
+      return selectedTreasurySettings
+        ? selectedTreasurySettings.find((i) => i.key === "stakeable").value
+        : null;
     },
-    configEnable () {
-      return this.form.treasurySymbol?.symbol !== 'VOTE' && this.isStakeable
+    configEnable() {
+      return this.form.treasurySymbol?.symbol !== "VOTE" && this.isStakeable;
     },
-    available () {
+    available() {
       if (this.userBalance) {
-        const ballotFee = this.onlyNumbers(this.ballotFees.value)
-        return this.userBalance >= ballotFee
+        const ballotFee = this.onlyNumbers(this.ballotFees.value);
+        return this.userBalance >= ballotFee;
       } else {
-        return null
+        return null;
       }
-    }
+    },
   },
   methods: {
-    ...mapActions('trails', ['addBallot', 'fetchTreasuriesForUser', 'fetchFees']),
-    async onAddBallot () {
-      this.submitting = true
-      const success = await this.addBallot(this.createBallotObject())
-      this.submitting = false
+    ...mapActions("trails", [
+      "addBallot",
+      "fetchTreasuriesForUser",
+      "fetchFees",
+    ]),
+    async onAddBallot() {
+      this.submitting = true;
+      const success = await this.addBallot(this.createBallotObject());
+      this.submitting = false;
       if (success) {
-        this.$emit('update:show', false)
-        this.resetBallot()
+        this.$emit("update:show", false);
+        this.resetBallot();
       }
     },
-    async openConfirmation () {
-      this.resetValidation(this.form)
-      if (!(await this.validate(this.form))) return
-      this.prompt = true
+    async openConfirmation() {
+      this.resetValidation(this.form);
+      if (!(await this.validate(this.form))) return;
+      this.prompt = true;
     },
-    resetBallot () {
+    resetBallot() {
       this.form = {
         title: null,
         category: null,
         description: null,
         imageUrl: null,
         treasurySymbol: null,
-        votingMethod: '1token1vote',
+        votingMethod: "1token1vote",
         initialOptions: [],
         endDate: null,
-        IPFSString: null
-      }
-      this.file = null
-      this.cid = null
+        IPFSString: null,
+      };
+      this.file = null;
+      this.cid = null;
     },
-    onCansel () {
-      this.$emit('update:show', false)
-      this.resetBallot()
+    onCansel() {
+      this.$emit("update:show", false);
+      this.resetBallot();
     },
-    addBallotOption (val, done) {
-      done(val.toLowerCase(), 'add-unique')
+    addBallotOption(val, done) {
+      done(val.toLowerCase(), "add-unique");
     },
-    createBallotObject () {
+    createBallotObject() {
       return {
         title: this.form.title,
         category: this.form.category,
-        description: (this.form.IPFSString && this.form.IPFSString.trim() !== '') ? `${this.form.description} ${this.form.IPFSString}` : this.form.description,
-        content: this.form.imageUrl ? `{\"imageUrl\":\"${this.form.imageUrl}\"}` : '',
+        description:
+          this.form.IPFSString && this.form.IPFSString.trim() !== ""
+            ? `${this.form.description} ${this.form.IPFSString}`
+            : this.form.description,
+        content: this.form.imageUrl
+          ? `{\"imageUrl\":\"${this.form.imageUrl}\"}`
+          : "",
         treasurySymbol: this.form.treasurySymbol,
         votingMethod: this.form.votingMethod,
         maxOptions: this.form.maxOptions,
@@ -134,32 +154,32 @@ export default {
         initialOptions: this.form.initialOptions,
         endDate: this.form.endDate,
         config: this.form.config,
-        settings: this.isStakeable
-      }
+        settings: this.isStakeable,
+      };
     },
-    async convertToIFPS (file) {
-      const ipfs = await IPFS.create()
-      this.cid = await ipfs.add(file)
-    }
+    async convertToIFPS(file) {
+      const ipfs = await IPFS.create();
+      this.cid = await ipfs.add(file);
+    },
   },
   watch: {
     file: function () {
-      this.convertToIFPS(this.file)
+      this.convertToIFPS(this.file);
     },
     account: async function (account) {
-      this.fetchTreasuriesForUser(account)
-      const getAccount = await this.$store.$api.getAccount(this.account)
-      this.userBalance = this.onlyNumbers(getAccount.core_liquid_balance)
-      this.fee = this.ballotFees.value
+      this.fetchTreasuriesForUser(account);
+      const getAccount = await this.$store.$api.getAccount(this.account);
+      this.userBalance = this.onlyNumbers(getAccount.core_liquid_balance);
+      this.fee = this.ballotFees.value;
     },
     cid: function () {
-      this.form.IPFSString = this.cid.path
-    }
+      this.form.IPFSString = this.cid.path;
+    },
   },
-  mounted () {
-    this.fetchFees()
-  }
-}
+  mounted() {
+    this.fetchFees();
+  },
+};
 </script>
 
 <template lang="pug">
@@ -334,6 +354,4 @@ q-dialog(
             @click="onAddBallot()"
           )
 </template>
-<style scoped>
-
-</style>
+<style scoped></style>
