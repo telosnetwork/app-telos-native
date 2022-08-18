@@ -7,12 +7,11 @@
 
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
-
-const ESLintPlugin = require("eslint-webpack-plugin");
-
 require("dotenv").config();
 const path = require("path");
 const { configure } = require("quasar/wrappers");
+const ESLintPlugin = require("eslint-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = configure(function (ctx) {
   return {
@@ -97,6 +96,39 @@ module.exports = configure(function (ctx) {
         chain
           .plugin("eslint-webpack-plugin")
           .use(ESLintPlugin, [{ extensions: ["js", "vue"] }]);
+      },
+
+      // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
+      extendWebpack(cfg) {
+        cfg.module.rules.push({
+          test: /\.pug$/,
+          loader: "pug-plain-loader",
+        });
+
+        cfg.module.rules.push({
+          test: /\.mjs$/,
+          type: "javascript/auto",
+        });
+
+        cfg.plugins.push(
+          new CopyWebpackPlugin(
+            {
+              patterns: [
+                {
+                  from: "./src/statics/*.json",
+                  to: "./",
+                  force: true,
+                },
+              ],
+            },
+            { copyUnmodified: true }
+          )
+        );
+
+        cfg.resolve.alias = {
+          ...cfg.resolve.alias,
+          "~": path.resolve(__dirname, "src"),
+        };
       },
     },
 
