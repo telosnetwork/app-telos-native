@@ -155,6 +155,7 @@ export const createAccount = async function (
   { state },
   { account, recaptchaResponse, publicKey }
 ) {
+  debugger;
   try {
     console.log(account);
     await this.$axios.post("/v1/recaptchaCreate", {

@@ -25,6 +25,7 @@ export default {
     };
   },
   async created() {
+    debugger;
     this.generating = true;
     const keyPairs = await generateKeys();
     this.form.privateKey = keyPairs.privateKey;
@@ -32,6 +33,7 @@ export default {
     this.generating = false;
   },
   mounted() {
+    debugger;
     let recaptchaScript = document.createElement("script");
     recaptchaScript.setAttribute(
       "src",

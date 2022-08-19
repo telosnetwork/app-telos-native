@@ -16,6 +16,7 @@ export default {
   },
   methods: {
     clickBtn: function () {
+      debugger;
       this.$emit("clickBtn");
     },
   },

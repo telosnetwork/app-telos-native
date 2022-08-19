@@ -8,10 +8,12 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 require("dotenv").config();
+const webpack = require("webpack");
 const path = require("path");
 const { configure } = require("quasar/wrappers");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = configure(function (ctx) {
   return {
@@ -98,6 +100,11 @@ module.exports = configure(function (ctx) {
           .use(ESLintPlugin, [{ extensions: ["js", "vue"] }]);
       },
 
+      chainWebpack(chain) {
+        const nodePolyfillWebpackPlugin = require("node-polyfill-webpack-plugin");
+        chain.plugin("node-polyfill").use(nodePolyfillWebpackPlugin);
+      },
+
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack(cfg) {
         cfg.module.rules.push({
@@ -129,6 +136,13 @@ module.exports = configure(function (ctx) {
           ...cfg.resolve.alias,
           "~": path.resolve(__dirname, "src"),
         };
+
+        cfg.plugins.push(
+          new webpack.ProvidePlugin({
+            process: "process/browser",
+            Buffer: ["buffer", "Buffer"],
+          })
+        );
       },
     },
 
