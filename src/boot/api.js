@@ -36,6 +36,7 @@ const signTransaction = async function (actions) {
 };
 
 const getTableRows = async function (options) {
+  debugger;
   if (this.$type === "ual") {
     return this.$ualUser.rpc.get_table_rows({
       json: true,
