@@ -24,24 +24,12 @@ export default {
       copy: false,
     };
   },
-  async created() {
-    // debugger;
-    // this.generating = true;
-    // const keyPairs = await generateKeys();
-    // debugger;
-    // this.form.privateKey = keyPairs.privateKey;
-    // this.form.publicKey = keyPairs.publicKey;
-    // this.generating = false;
-  },
   async mounted() {
-    debugger;
     this.generating = true;
     const keyPairs = await generateKeys();
-    debugger;
     this.form.privateKey = keyPairs.privateKey;
     this.form.publicKey = keyPairs.publicKey;
     this.generating = false;
-    debugger;
     let recaptchaScript = document.createElement("script");
     recaptchaScript.setAttribute(
       "src",

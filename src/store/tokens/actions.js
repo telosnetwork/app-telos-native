@@ -1,5 +1,4 @@
 export async function loadTokens({ commit }) {
-  debugger;
   let tokens = [];
   let more = true;
   let nextKey;
@@ -24,7 +23,6 @@ export async function loadTokens({ commit }) {
 }
 
 export async function loadConfig({ commit }) {
-  debugger;
   let response = await this.$api.getTableRows({
     code: process.env.TOKENMANAGER_CONTRACT,
     scope: process.env.TOKENMANAGER_CONTRACT,

@@ -80,7 +80,6 @@ export default {
       this[isMenuOpen] = !this[isMenuOpen];
     },
     onSubmitTypes(evt) {
-      console.log("submiteTypes");
       const formData = new FormData(evt.target);
       const submitResult = [];
 
@@ -224,7 +223,6 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log(`watching $route`);
       if (to.params.id !== undefined) {
         this.showBallot = true;
       } else {
@@ -235,14 +233,12 @@ export default {
       this.setFilterParams(this.activeFilter);
     },
     treasuryBar: function (val, old) {
-      console.log(`watching treasury`);
       if (val !== old) {
         this.resetBallots();
       }
       this.$emit("update-treasury", this.treasuryBar);
     },
     submitStatusesResult: function (val, old) {
-      console.log(`watching statuses`);
       if (val !== old) {
         this.statusGroup = this.submitStatusesResult;
         this.resetBallots();
@@ -250,7 +246,6 @@ export default {
       }
     },
     submitTypesResult: function (val, old) {
-      console.log(`watching types`);
       if (val !== old) {
         this.typeGroup = this.submitTypesResult;
         this.resetBallots();
@@ -260,7 +255,6 @@ export default {
     treasuriesOptions: {
       immediate: true,
       handler: async function (val) {
-        console.log(`watching treasuriesOptions`);
         if (!val.length) {
           // TODO past 100 groups we need to switch to autocomplete search
           await this.fetchTreasuries();

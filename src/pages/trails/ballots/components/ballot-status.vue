@@ -11,9 +11,6 @@ export default {
     getStartTime: { type: Number, required: true },
     getEndTime: { type: Number, required: true },
   },
-  mounted() {
-    debugger;
-  },
 };
 </script>
 

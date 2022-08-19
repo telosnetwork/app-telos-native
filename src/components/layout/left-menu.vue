@@ -54,8 +54,6 @@ export default {
     },
   },
   created() {
-    debugger;
-    console.log(this.menuItems.length);
     window.addEventListener("resize", this.updateWidth);
   },
   beforeUnmount() {

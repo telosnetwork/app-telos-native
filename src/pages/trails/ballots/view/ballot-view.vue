@@ -34,7 +34,6 @@ export default {
     };
   },
   async mounted() {
-    debugger;
     await this.fetchBallot(this.$route.params.id);
     window.addEventListener("scroll", this.updateScroll);
 
@@ -66,7 +65,6 @@ export default {
           winner = index;
         }
       });
-      // console.log('winner', winner)
       return this.ballot.options[winner];
     },
     ballotDescription() {

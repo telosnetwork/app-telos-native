@@ -1,55 +1,70 @@
 <script>
-import { mapActions } from 'vuex'
-import { Notify } from 'quasar'
+import { mapActions } from "vuex";
+import { Notify } from "quasar";
 
 export default {
-  name: 'page-developers',
-  data () {
+  name: "page-developers",
+  data() {
     return {
       form: {
         send_to: null,
         account_name: null,
         owner_key: null,
-        active_key: null
+        active_key: null,
       },
       transactionId: null,
-      submitting: false
-    }
+      submitting: false,
+    };
   },
   methods: {
-    ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
-    async onFaucet () {
-      this.submitting = true
-      const result = await this.faucet(this.form.send_to)
+    ...mapActions("testnet", ["faucet", "evmFaucet", "account"]),
+    async onFaucet() {
+      this.submitting = true;
+      const result = await this.faucet(this.form.send_to);
       if (result) {
-        Notify.create({ message: result, position: 'top', color: 'primary', textColor: 'white', actions: [{ label: 'Dismiss', color: 'white' }] })
-        this.transactionId = result.transactionId
-        console.log(result)
+        Notify.create({
+          message: result,
+          position: "top",
+          color: "primary",
+          textColor: "white",
+          actions: [{ label: "Dismiss", color: "white" }],
+        });
+        this.transactionId = result.transactionId;
       }
-      this.submitting = false
+      this.submitting = false;
     },
-    async onEvmFaucet () {
-      this.submitting = true
-      const result = await this.evmFaucet(this.form.send_to_evm)
+    async onEvmFaucet() {
+      this.submitting = true;
+      const result = await this.evmFaucet(this.form.send_to_evm);
       if (result) {
-        Notify.create({ message: result, position: 'top', color: 'primary', textColor: 'white', actions: [{ label: 'Dismiss', color: 'white' }] })
-        this.transactionId = result.transactionId
-        console.log(result)
+        Notify.create({
+          message: result,
+          position: "top",
+          color: "primary",
+          textColor: "white",
+          actions: [{ label: "Dismiss", color: "white" }],
+        });
+        this.transactionId = result.transactionId;
       }
-      this.submitting = false
+      this.submitting = false;
     },
-    async onAccount () {
-      this.submitting = true
-      const result = await this.account(this.form)
+    async onAccount() {
+      this.submitting = true;
+      const result = await this.account(this.form);
       if (result) {
-        Notify.create({ message: result, position: 'top', color: 'primary', textColor: 'white', actions: [{ label: 'Dismiss', color: 'white' }] })
-        this.transactionId = result.transactionId
-        console.log(result)
+        Notify.create({
+          message: result,
+          position: "top",
+          color: "primary",
+          textColor: "white",
+          actions: [{ label: "Dismiss", color: "white" }],
+        });
+        this.transactionId = result.transactionId;
       }
-      this.submitting = false
-    }
-  }
-}
+      this.submitting = false;
+    },
+  },
+};
 </script>
 
 <template lang="pug">

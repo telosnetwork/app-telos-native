@@ -16,7 +16,6 @@ export default {
       const result = await this.toggleLock("locksafe");
       if (result) {
         this.transactionId = result.transactionId;
-        console.log(result);
       }
       this.submitting = false;
     },
@@ -25,7 +24,6 @@ export default {
       const result = await this.toggleLock("unlocksafe");
       if (result) {
         this.transactionId = result.transactionId;
-        console.log(result);
       }
       this.submitting = false;
     },

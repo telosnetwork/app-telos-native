@@ -1,45 +1,44 @@
 <script>
-import { mapActions, mapMutations } from 'vuex'
-import { validation } from '~/mixins/validation'
+import { mapActions, mapMutations } from "vuex";
+import { validation } from "~/mixins/validation";
 
 export default {
-  name: 'page-send-tokens',
+  name: "page-send-tokens",
   mixins: [validation],
-  data () {
+  data() {
     return {
       form: {
         to: null,
         quantity: null,
-        memo: null
+        memo: null,
       },
       transactionId: null,
-      submitting: false
-    }
+      submitting: false,
+    };
   },
   methods: {
-    ...mapActions('transfers', ['sendTokens']),
-    ...mapMutations('general', ['setErrorMsg']),
-    async onSendTokens () {
-      this.resetValidation(this.form)
-      if (!(await this.validate(this.form))) return
-      this.submitting = true
+    ...mapActions("transfers", ["sendTokens"]),
+    ...mapMutations("general", ["setErrorMsg"]),
+    async onSendTokens() {
+      this.resetValidation(this.form);
+      if (!(await this.validate(this.form))) return;
+      this.submitting = true;
       try {
-        const result = await this.sendTokens(this.form)
+        const result = await this.sendTokens(this.form);
         if (result) {
-          this.transactionId = result.transactionId
-          console.log(result)
+          this.transactionId = result.transactionId;
         }
       } catch (e) {
-        const error = new Error(e)
-        this.setErrorMsg(error.message)
+        const error = new Error(e);
+        this.setErrorMsg(error.message);
       }
-      this.submitting = false
+      this.submitting = false;
     },
-    openUrl (url) {
-      window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`)
-    }
-  }
-}
+    openUrl(url) {
+      window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`);
+    },
+  },
+};
 </script>
 
 <template lang="pug">

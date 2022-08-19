@@ -15,10 +15,8 @@ export const login = async function (
   { commit, dispatch },
   { idx, account, returnUrl }
 ) {
-  debugger;
   const authenticator = this.$ual.authenticators[idx];
   try {
-    debugger;
     commit("setLoadingWallet", authenticator.getStyle().text);
     await authenticator.init();
     if (!account) {
@@ -39,7 +37,6 @@ export const login = async function (
       const defaultReturnUrl = localStorage.getItem("returning")
         ? "/"
         : "/profiles/myProfile";
-      // console.log('LOGIN defaultReturnUrl:', defaultReturnUrl)
       localStorage.setItem("autoLogin", authenticator.constructor.name);
       localStorage.setItem("account", accountName);
       localStorage.setItem("returning", true);
@@ -155,9 +152,7 @@ export const createAccount = async function (
   { state },
   { account, recaptchaResponse, publicKey }
 ) {
-  debugger;
   try {
-    console.log(account);
     await this.$axios.post("/v1/recaptchaCreate", {
       recaptchaResponse: recaptchaResponse,
       accountName: account,

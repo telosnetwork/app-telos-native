@@ -35,14 +35,6 @@ export default {
       window.open(url);
     },
   },
-  created() {
-    debugger;
-    console.log(this.$ual.authenticators);
-  },
-  mounted() {
-    debugger;
-    console.log(this.$ual.authenticators);
-  },
 };
 </script>
 

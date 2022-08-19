@@ -1,30 +1,29 @@
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 
 export default {
-  name: 'page-rotation',
-  data () {
+  name: "page-rotation",
+  data() {
     return {
       form: {
-        producer: null
+        producer: null,
       },
       transactionId: null,
-      submitting: false
-    }
+      submitting: false,
+    };
   },
   methods: {
-    ...mapActions('testnet', ['produce']),
-    async onProduce () {
-      this.submitting = true
-      const result = await this.produce(this.form.producer)
+    ...mapActions("testnet", ["produce"]),
+    async onProduce() {
+      this.submitting = true;
+      const result = await this.produce(this.form.producer);
       if (result) {
-        this.transactionId = result.transactionId
-        console.log(result)
+        this.transactionId = result.transactionId;
       }
-      this.submitting = false
-    }
-  }
-}
+      this.submitting = false;
+    },
+  },
+};
 </script>
 
 <template lang="pug">

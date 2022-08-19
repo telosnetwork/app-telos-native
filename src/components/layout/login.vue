@@ -16,7 +16,6 @@ export default {
   methods: {
     ...mapActions("accounts", ["login"]),
     async onLogin(idx) {
-      debugger;
       this.error = null;
       const error = await this.login(idx);
       if (!error) {

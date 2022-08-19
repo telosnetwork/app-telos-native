@@ -21,69 +21,69 @@ main
 </template>
 
 <script>
-import 'vue-croppa/dist/vue-croppa.css'
+import "vue-croppa/dist/vue-croppa.css";
 // import PPP from '@smontero/ppp-client-api'
-import croppa from 'vue-croppa'
+import croppa from "vue-croppa";
 
 export default {
-  name: 'edit-image',
+  name: "edit-image",
   props: {
     imgKey: String,
-    identity: String
+    identity: String,
   },
   data: function () {
     return {
-      url: '',
+      url: "",
       croppa: croppa,
       loadingFile: false,
-      mImgKey: '',
-      mIdentity: '',
+      mImgKey: "",
+      mIdentity: "",
       imageChanged: false,
-      isFirstDraw: true
-    }
+      isFirstDraw: true,
+    };
   },
   watch: {
     imgKey: async function (val) {
-      this.updateUrl()
+      this.updateUrl();
     },
     identity: async function (val) {
-      this.updateUrl()
-    }
+      this.updateUrl();
+    },
   },
-  async created () {
-    this.updateUrl()
+  async created() {
+    this.updateUrl();
   },
   methods: {
-    isEdited () {
+    isEdited() {
       if (!this.isFirstDraw) {
-        this.imageChanged = true
-      } else this.isFirstDraw = false
+        this.imageChanged = true;
+      } else this.isFirstDraw = false;
     },
-    choseImage () {
-      this.imageChanged = true
-      this.$refs.myCroppa.chooseFile()
+    choseImage() {
+      this.imageChanged = true;
+      this.$refs.myCroppa.chooseFile();
     },
-    getBlob () {
-      const self = this
+    getBlob() {
+      const self = this;
       return new Promise(function (resolve, reject) {
         try {
           if (!self.imageChanged) {
-            reject(new Error('No image has changed'))
+            reject(new Error("No image has changed"));
           }
           if (self.croppa.hasImage()) {
             self.croppa.generateBlob((blob) => {
-              resolve(blob)
-            })
+              resolve(blob);
+            });
           } else {
-            reject(new Error('No selected image'))
+            reject(new Error("No selected image"));
           }
         } catch (e) {
-          reject(new Error(e))
+          reject(new Error(e));
         }
-      })
+      });
     },
-    async updateUrl () {
-      this.url = ''
+    async updateUrl() {
+      this.url = "";
       if (this.imgKey && this.identity) {
         /*
         await PPP.profileApi().getImageUrl(this.imgKey, this.identity).then((rUrl) => {
@@ -99,7 +99,7 @@ export default {
         */
       }
     },
-    onInit () {
+    onInit() {
       this.croppa.addClipPlugin(function (ctx, x, y, w, h) {
         /*
          * ctx: canvas context
@@ -107,15 +107,14 @@ export default {
          * y: start point (top-left corner) y coordination
          * w: croppa width
          * h: croppa height
-        */
-        // console.log(x, y, w, h)
-        ctx.beginPath()
-        ctx.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI, true)
-        ctx.closePath()
-      })
-    }
-  }
-}
+         */
+        ctx.beginPath();
+        ctx.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI, true);
+        ctx.closePath();
+      });
+    },
+  },
+};
 </script>
 
 <style lang="sass">
