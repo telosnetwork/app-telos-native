@@ -57,19 +57,20 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       env: {
-        APP_NAME: process.env.APP_NAME, // Used by scatter
-        NETWORK_PROTOCOL: process.env.NETWORK_PROTOCOL,
-        NETWORK_HOST: process.env.NETWORK_HOST,
-        NETWORK_PORT: process.env.NETWORK_PORT,
-        NETWORK_CHAIN_ID: process.env.NETWORK_CHAIN_ID,
-        WEBSERVICES_URL: process.env.WEBSERVICES_URL,
-        WEBSERVICES_API_KEY: process.env.WEBSERVICES_API_KEY,
-        HYPERION_URL: process.env.HYPERION_URL,
-        BLOCKCHAIN_EXPLORER: process.env.BLOCKCHAIN_EXPLORER,
-        GOOGLE_ANALYTICS: process.env.GOOGLE_ANALYTICS,
+        APP_NAME: "Telos", // Used by scatter
+        GOOGLE_ANALYTICS: "UA-154600181-2",
+        NETWORK_PROTOCOL: "https",
+        NETWORK_HOST: "mainnet.telos.net",
+        NETWORK_PORT: 443,
+        NETWORK_CHAIN_ID:
+          "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11",
+        WEBSERVICES_URL: "https://api.telos.net",
+        WEBSERVICES_API_KEY: "XXX",
+        HYPERION_URL: "https://mainnet.telos.net",
+        BLOCKCHAIN_EXPLORER: "https://explorer.telos.net",
         TELOS_ORIGIN: process.env.TELOS_ORIGIN,
-        IMGUR_CLIENT_ID: process.env.IMGUR_CLIENT_ID,
-        TOKENMANAGER_CONTRACT: process.env.TOKENMANAGER_CONTRACT,
+        IMGUR_CLIENT_ID: "b6f46df9d1da9d9",
+        TOKENMANAGER_CONTRACT: "tokenmanager",
       },
       scopeHoisting: true,
       vueRouterMode: "history", // available values: 'hash', 'history'
