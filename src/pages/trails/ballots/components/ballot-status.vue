@@ -1,17 +1,20 @@
 <script>
-import Countdown from '../components/countdown'
+import Countdown from "../components/countdown";
 
 export default {
-  name: 'ballot-view',
+  name: "ballot-view",
   components: { Countdown },
   props: {
     ballot: { type: Object, required: true },
     isBallotOpened: { type: Boolean, required: true },
     votingHasBegun: { type: Boolean, required: true },
     getStartTime: { type: Number, required: true },
-    getEndTime: { type: Number, required: true }
-  }
-}
+    getEndTime: { type: Number, required: true },
+  },
+  mounted() {
+    debugger;
+  },
+};
 </script>
 
 <template lang="pug">
@@ -47,5 +50,4 @@ div.left-tag.cursor-default
 .status
   margin-bottom: 0
   margin-top: 4px
-
 </style>

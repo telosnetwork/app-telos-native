@@ -33,6 +33,7 @@ export default {
     };
   },
   mounted() {
+    debugger;
     // Accepted Formats:
     // starttime="Feb 19, 2020 15:37:25"
     // endtime="March 8, 2020 16:37:25"

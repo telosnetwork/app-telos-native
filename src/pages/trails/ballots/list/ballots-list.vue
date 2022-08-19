@@ -39,6 +39,7 @@ export default {
     },
   },
   async mounted() {
+    debugger;
     console.log(`mounted`);
     this.timeAtMount = Date.now();
     this.statusChange = false;

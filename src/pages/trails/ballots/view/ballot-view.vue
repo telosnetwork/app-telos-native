@@ -34,6 +34,7 @@ export default {
     };
   },
   async mounted() {
+    debugger;
     await this.fetchBallot(this.$route.params.id);
     window.addEventListener("scroll", this.updateScroll);
 
