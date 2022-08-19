@@ -19,7 +19,6 @@
     "core-js": "^3.6.5",
     "dotenv": "^16.0.1",
     "eosjs": "^22.1.0",
-    "eosjs-ecc": "^4.0.4",
     "flag-icon-css": "https://github.com/CALEOS/flag-icons.git",
     "highcharts": "^10.2.0",
     "highcharts-vue": "^1.4.0",
