@@ -186,24 +186,41 @@ export default {
     margin: 30px 0 10px 0
 </style>
 
-<style scoped>
-.send-otp .q-btn-item /deep/div {
-  font-size: 12px;
-}
-.send-otp .phone-input /deep/.q-select .q-field__inner .q-field__control {
-  border-radius: 4px 0 0 4px;
-}
+<style lang="sass" scoped>
 .send-otp
+  width: 100%
+  max-width: 550px
+  margin: 0 auto
+  h2
+    color: $primary
+    font-size: 24px
+    text-align: center
+    font-weight: 600
+  .warning
+    color: red
+    font-size: 12px
+    text-align: center
+    font-weight: 0
+    border: 1px solid lightgrey
+    margin: 0 0 20px 0
+  .q-btn-item
+    :deep(div)
+      font-size: 12px
+  .hint
+    color: #707070
+    font-size: 12px
+    margin: 30px 0 10px 0
   .phone-input
-  /deep/.q-select
-  .q-field__inner
-  .q-field__control:before {
-  border-right: none;
-}
-.send-otp .hint /deep/.q-input .q-field__inner .q-field__control {
-  border-radius: 0 4px 4px 0;
-}
-.send-otp .hint /deep/.q-input .q-field__inner .q-field__control:before {
-  border-left: none;
-}
+    :deep(.q-select)
+      .q-field__inner
+        .q-field__control
+          border-radius: 4px 0 0 4px
+          &:before
+            border-right: none
+    :deep(.q-input)
+      .q-field__inner
+        .q-field__control
+          border-radius: 0 4px 4px 0
+          &:before
+            border-left: none
 </style>
