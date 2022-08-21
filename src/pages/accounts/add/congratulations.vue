@@ -47,10 +47,6 @@ q-page.flex.align-center.column.q-pa-lg.congratulations
     margin: 0
   .q-btn-item
     margin-top: 50px
-</style>
-
-<style scoped>
-.congratulations .q-btn-item /deep/div {
-  font-size: 12px;
-}
+    :deep(div)
+      font-size: 12px
 </style>
