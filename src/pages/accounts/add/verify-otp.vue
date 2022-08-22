@@ -1,50 +1,50 @@
 <script>
-import { mapActions, mapMutations } from 'vuex'
-import { validation } from '~/mixins/validation'
-import { utils } from '~/mixins/utils'
-import { generateKeys } from '~/utils/eosio'
+import { mapActions, mapMutations } from "vuex";
+import { validation } from "~/mixins/validation";
+import { utils } from "~/mixins/utils";
+import { generateKeys } from "~/utils/eosio";
 
 export default {
-  name: 'page-verify-otp',
+  name: "page-verify-otp",
   mixins: [validation, utils],
-  data () {
+  data() {
     return {
       form: {
         password: null,
         publicKey: null,
-        privateKey: null
+        privateKey: null,
       },
       copy: false,
       generating: false,
       submitting: false,
-      error: null
-    }
+      error: null,
+    };
   },
   methods: {
-    ...mapActions('accounts', ['verifyOTP']),
-    ...mapMutations('general', ['setSuccessMsg']),
-    async onVerifyOTP () {
-      this.resetValidation(this.form)
-      this.error = null
-      if (!(await this.validate(this.form))) return
-      this.submitting = true
+    ...mapActions("accounts", ["verifyOTP"]),
+    ...mapMutations("general", ["setSuccessMsg"]),
+    async onVerifyOTP() {
+      this.resetValidation(this.form);
+      this.error = null;
+      if (!(await this.validate(this.form))) return;
+      this.submitting = true;
       // const { success, error } = await this.verifyOTP(this.form)
       // if (success) {
-      this.$router.push({ path: '/accounts/add/congratulations' })
+      this.$router.push({ path: "/accounts/add/congratulations" });
       // } else {
       //  this.error = error
       // }
-      this.submitting = false
-    }
+      this.submitting = false;
+    },
   },
-  async mounted () {
-    this.generating = true
-    const keyPairs = await generateKeys()
-    this.form.privateKey = keyPairs.privateKey
-    this.form.publicKey = keyPairs.publicKey
-    this.generating = false
-  }
-}
+  async mounted() {
+    this.generating = true;
+    const keyPairs = await generateKeys();
+    this.form.privateKey = keyPairs.privateKey;
+    this.form.publicKey = keyPairs.publicKey;
+    this.generating = false;
+  },
+};
 </script>
 
 <template lang="pug">
@@ -131,7 +131,7 @@ export default {
     text-align: center
     font-weight: 600
   .q-btn-item
-    /deep/div
+    :deep(div)
       font-size: 12px
   .hint
     color: #707070
