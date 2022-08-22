@@ -44,6 +44,10 @@ yarn format
 yarn build
 ```
 
+### Environment variables
+
+Mainnet or testnet settings are toggled via the `MAINNET` var in `.env` which loads the tesnet or mainnet variables set in `env.js` into `quasar.config.js`  
+
 ### Customize the configuration
 
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js).
