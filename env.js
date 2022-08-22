@@ -1,5 +1,5 @@
 /*
-The environment variables ares set based on the single variable `MAINNET=true`
+The environment variables are set based on the single variable `MAINNET=true`
 (or absence thereof) in the root `.env` file. The following env vars are then assigned in
 `quasar.config.js`.
 */
