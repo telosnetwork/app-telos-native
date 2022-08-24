@@ -2,6 +2,8 @@
 
 Native App
 
+[https://app-telos-native.pages.dev/](https://app-telos-native.pages.dev/)
+
 ### Note regarding Node version
 
 It is recommended to use Node version >= 16.0.0
@@ -9,6 +11,12 @@ It is recommended to use Node version >= 16.0.0
 Using nvm: `nvm use 16`
 
 Do not use uneven versions of Node i.e. 13, 15, etc. These versions are not tested with Quasar and often cause issues due to their experimental nature. We highly recommend always using the LTS version of Node.
+
+## Set up Environment variables
+
+```bash
+cp .env.example
+```
 
 ## Install the dependencies
 
@@ -41,6 +49,10 @@ yarn format
 ```bash
 yarn build
 ```
+
+### Environment variables
+
+Mainnet or testnet settings are toggled via the `MAINNET` var in `.env` which loads the tesnet or mainnet variables set in `env.js` into `quasar.config.js`
 
 ### Customize the configuration
 
