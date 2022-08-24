@@ -47,7 +47,6 @@ export const login = async function (
       (authenticator.getError() && authenticator.getError().message) ||
       e.message ||
       e.reason;
-    commit("general/setErrorMsg", error, { root: true });
     console.log("Login error: ", error);
   } finally {
     commit("setLoadingWallet");
