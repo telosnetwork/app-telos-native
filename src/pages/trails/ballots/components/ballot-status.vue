@@ -1,13 +1,13 @@
 <script>
-import Countdown from "../components/countdown";
-import moment from "moment"
+import Countdown from "~/pages/trails/ballots/components/countdown";
+import moment from "moment";
 export default {
   name: "ballot-view",
   components: { Countdown },
-  data (){
+  data() {
     return {
-      moment: moment
-    }
+      moment: moment,
+    };
   },
   props: {
     ballot: { type: Object, required: true },
