@@ -1,4 +1,3 @@
-// import Vue from "vue";
 import Vuex, { createStore } from "vuex";
 // import Gravatar from "vue-gravatar";
 

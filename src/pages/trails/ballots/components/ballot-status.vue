@@ -1,9 +1,14 @@
 <script>
 import Countdown from "../components/countdown";
-
+import moment from "moment"
 export default {
   name: "ballot-view",
   components: { Countdown },
+  data (){
+    return {
+      moment: moment
+    }
+  },
   props: {
     ballot: { type: Object, required: true },
     isBallotOpened: { type: Boolean, required: true },
@@ -29,7 +34,7 @@ div.left-tag.cursor-default
     span(v-if="ballot.status === 'setup'") Setup
     span(v-else) Proposal ended
   div.status-frame-title.time {{Date.now() > getEndTime ? "Ended" : "Ends"}}
-  div {{getEndTime | moment("MMMM Do YYYY")}}
+  div {{moment(getEndTime).format("MMMM Do YYYY")}}
 
 </template>
 
