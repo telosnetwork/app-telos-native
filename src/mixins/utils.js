@@ -56,5 +56,12 @@ export const utils = {
         ) + "%"
       ); // 35 * 100 / 70 = 50%
     },
+    trunc(value, decimals) {
+      const integerPart = value.toString().split('.')[0]
+      let decimalsPart = value.toString().split('.')[1]
+      if (!decimalsPart || decimals === 0) decimalsPart = ''
+      else decimalsPart = '.' + decimalsPart.substring(0, decimals)
+      return integerPart + decimalsPart
+    } // trunc(109.22222222 , 2) => 109.22
   },
 };
