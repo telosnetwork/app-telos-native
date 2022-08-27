@@ -36,8 +36,7 @@ yarn dev
 
 ```bash
 yarn lint
-```
-```bash
+
 yarn lint:fix
 ```
 
