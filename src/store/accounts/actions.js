@@ -85,6 +85,8 @@ export const logout = async function ({ commit }) {
 };
 
 export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
+  console.log(112)
+
   const { authenticator, idx } = getAuthenticator(this.$ual);
   if (authenticator) {
     commit("setAutoLogin", true);

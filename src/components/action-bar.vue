@@ -629,6 +629,7 @@ div.bar-filter-wrapper
           primary
           btnWidth='155'
           fontSize='16'
+          padding='0'
           @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
         )
     div.bar-wrapper.row.items-center(:class="{'menu-visible': isFilterMenu320Open}")
@@ -725,7 +726,6 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.left-btn(
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               color="dark"
-              no-caps
             )
               q-menu(
                 ref="typesMenu"
@@ -789,7 +789,6 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.left-btn(
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
               color="dark"
-              no-caps
             )
               q-menu(
                 ref="statusesMenu"
@@ -875,6 +874,7 @@ div.bar-filter-wrapper
           :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
           iconRight
           primary
+          padding='0'
           btnWidth='155'
           fontSize='16'
           @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
@@ -952,7 +952,6 @@ div.bar-filter-wrapper
   padding: 12px
 .left-btn
   height: 40px
-  padding: 0
   margin-right: 1px
   border-radius: 6px 0 0 6px
   & .q-btn__wrapper::before

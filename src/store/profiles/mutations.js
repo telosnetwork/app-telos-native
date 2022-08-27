@@ -3,6 +3,7 @@ export const setLoadingWallet = (state, wallet) => {
 }
 
 export const setAccount = (state, account) => {
+  console.log(123333)
   state.account = account
 }
 

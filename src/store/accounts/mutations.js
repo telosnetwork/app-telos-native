@@ -7,6 +7,7 @@ export const setRequestAccount = (state, requestAccount) => {
 }
 
 export const setAccount = (state, account) => {
+  console.log(account)
   state.account = account
 }
 

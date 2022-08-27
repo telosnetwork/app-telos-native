@@ -1,6 +1,4 @@
 import Vuex, { createStore } from "vuex";
-// import Gravatar from "vue-gravatar";
-
 import accounts from "./accounts";
 import profiles from "./profiles";
 import works from "./works";
@@ -15,7 +13,6 @@ import general from "./general";
 import { store } from "quasar/wrappers";
 
 // Vue.use(Vuex);
-// Vue.component("v-gravatar", Gravatar);
 
 /*
  * If not building with SSR mode, you can
