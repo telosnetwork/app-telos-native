@@ -37,11 +37,8 @@ yarn dev
 ```bash
 yarn lint
 ```
-
-### Format the files
-
 ```bash
-yarn format
+yarn lint:fix
 ```
 
 ### Build the app for production
