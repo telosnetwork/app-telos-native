@@ -1,14 +1,18 @@
 <template lang="pug">
 q-avatar(:size='size')
     img(v-if='avatar' :src='avatar')
-    vue-gravatar(v-if='!avatar' :hash='accountHash' d='retro')
+    vue-gravatar(v-if='!avatar' :email='accountHash' defaultImage='retro')
 </template>
 
 <script>
 import md5 from "md5";
+import VueGravatar from "src/components/VueGravatar.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "gravatar",
+  components: {
+    VueGravatar,
+  },
   props: {
     size: String,
     avatar: String,
