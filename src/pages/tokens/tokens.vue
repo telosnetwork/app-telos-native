@@ -21,7 +21,6 @@ export default {
     ...mapState("tokens", ["createToken", "editingToken"]),
   },
   mounted() {
-    debugger;
     this.loadConfig();
     this.loadTokens();
   },

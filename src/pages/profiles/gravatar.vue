@@ -1,7 +1,7 @@
 <template lang="pug">
 q-avatar(:size='size')
     img(v-if='avatar' :src='avatar')
-    v-gravatar(v-if='!avatar' :hash='accountHash' default-img='retro')
+    vue-gravatar(v-if='!avatar' :hash='accountHash' d='retro')
 </template>
 
 <script>
