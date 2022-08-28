@@ -2,7 +2,7 @@
 q-card(:class="{ own: isOwn }")
   q-item.q-pa-md(v-ripple, clickable)
       q-item-section(avatar, clickable,  @click='goToProfileDetail')
-          gravatar(size="80px" :avatar='contact.avatar' :account='contact.account_name')
+          profile-avatar(size="80px" :avatar='contact.avatar' :account='contact.account_name')
       q-item-section(clickable,  @click='goToProfileDetail')
           q-item-label {{contact.account_name}}
           q-item-label(caption='', lines='1') {{contact.display_name}}
@@ -11,13 +11,12 @@ q-card(:class="{ own: isOwn }")
 </template>
 
 <script>
-// import S3Img from '~/components/s3-image'
-import gravatar from "../gravatar";
+import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 import md5 from "md5";
 export default {
   name: "contact-item",
   components: {
-    gravatar,
+    ProfileAvatar,
   },
   props: {
     contact: Object,
