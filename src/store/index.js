@@ -1,5 +1,4 @@
-import Vuex, { createStore } from "vuex";
-// import Gravatar from "vue-gravatar";
+import { createStore } from "vuex";
 
 import accounts from "./accounts";
 import profiles from "./profiles";
@@ -13,9 +12,6 @@ import testnet from "./testnet";
 import poc from "./poc";
 import general from "./general";
 import { store } from "quasar/wrappers";
-
-// Vue.use(Vuex);
-// Vue.component("v-gravatar", Gravatar);
 
 /*
  * If not building with SSR mode, you can
