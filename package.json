@@ -39,7 +39,6 @@
     "vue-moment": "^4.1.0",
     "vue-recaptcha": "^2.0.2",
     "vue-router": "^4.0.0",
-    "vue3-gravatar": "^3.0.0",
     "vuex": "^4.0.1"
   },
   "devDependencies": {
