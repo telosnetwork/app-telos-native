@@ -5,7 +5,7 @@ import md5 from "md5";
 export default {
   name: "vue-gravatar",
   props: {
-    email: {
+    hash: {
       type: String,
       default: "default",
     },
@@ -39,7 +39,7 @@ export default {
   computed: {
     gravatarUrl() {
       debugger;
-      const hash = md5(this.email.trim().toLowerCase());
+      const hash = md5(this.hash.trim().toLowerCase());
       return `https://www.gravatar.com/avatar/${hash}?s=${this.finalSize}&d=${this.defaultImage}`;
     },
   },
