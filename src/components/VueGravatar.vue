@@ -38,7 +38,6 @@ export default {
   },
   computed: {
     gravatarUrl() {
-      debugger;
       const hash = md5(this.hash.trim().toLowerCase());
       return `https://www.gravatar.com/avatar/${hash}?s=${this.finalSize}&d=${this.defaultImage}`;
     },
