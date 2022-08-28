@@ -30,6 +30,7 @@ module.exports = configure(function (ctx) {
     boot: [
       "layouts",
       "axios",
+      "gravatar",
       "hyperion",
       "i18n",
       { path: "ual", server: false },
