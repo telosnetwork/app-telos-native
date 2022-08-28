@@ -3,7 +3,7 @@ main.column.items-center.back(v-if="this.Profile")
     q-card.my-card
       q-card-section
         .column.items-center
-          gravatar(size='200px' :avatar='this.Profile.avatar' :account='this.Profile.account_name')
+          profile-gravatar(size='200px' :avatar='this.Profile.avatar' :account='this.Profile.account_name')
       q-card-section
         .row.justify-center.q-gutter-x-md
           p.text-h4 {{ ` ${this.Profile.account_name}` }}
@@ -38,16 +38,13 @@ main.column.items-center.back(v-if="this.Profile")
 </template>
 
 <script>
-// import { CommMethods } from '@smontero/ppp-common'
-// import S3Img from '~/components/s3-image.vue'
-// import { countriesLang } from '~/mixins/countries'
 import { mapActions } from "vuex";
-import gravatar from "../gravatar";
+import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 export default {
   name: "profile-detail",
   props: { owner: Boolean },
   components: {
-    gravatar,
+    ProfileAvatar,
   },
   computed: {
     Profile() {

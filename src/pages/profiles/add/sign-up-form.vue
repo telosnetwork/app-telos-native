@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 .row.justify-center.items-center
   .col-xs-11.col-md-8.q-gutter-y-md.q-pa-md
     q-dialog(v-model='showUpload')
@@ -7,7 +7,7 @@
       div.text-h4.q-pl-md {{ headerText }}
       q-card-section
         .column.items-center.q-gutter-y-md
-          gravatar(size='200px' :avatar='avatar' :account='account')
+          profile-avatar(size='200px' :avatar='avatar' :account='account')
           div.text-h4.q-pl-md {{ account }}
           q-btn(:disable="!isAuthenticated" label="Upload image", color='primary' @click="showUpload = true")
       q-input(:disable="!isAuthenticated" counter maxlength="128" filled, v-model='avatar', :label="$t('pages.signUp.form.avatar')")
@@ -20,97 +20,99 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import gravatar from '../gravatar'
+import { mapActions, mapGetters } from "vuex";
+import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 
 export default {
-  name: 'sign-up-form',
+  name: "sign-up-form",
   components: {
-    gravatar
+    ProfileAvatar,
   },
-  data () {
+  data() {
     return {
-      identity: '',
-      avatar: '',
-      name: '',
-      status: '',
-      bio: '',
-      url: '',
+      identity: "",
+      avatar: "",
+      name: "",
+      status: "",
+      bio: "",
+      url: "",
       showUpload: false,
-      authHeader: { name: 'Authorization', value: `Client-ID ${process.env.IMGUR_CLIENT_ID}` }
-    }
+      authHeader: {
+        name: "Authorization",
+        value: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
+      },
+    };
   },
   computed: {
-    ...mapGetters('accounts', ['isAuthenticated', 'account']),
-    headerText () {
+    ...mapGetters("accounts", ["isAuthenticated", "account"]),
+    headerText() {
       if (!this.isAuthenticated) {
-        return 'Login to manage your profile'
+        return "Login to manage your profile";
       }
 
-      return this.myProfile ? 'Edit your profile' : 'Setup your profile'
+      return this.myProfile ? "Edit your profile" : "Setup your profile";
     },
-    myProfile () {
-      return this.$store.state.profiles.myProfile
+    myProfile() {
+      return this.$store.state.profiles.myProfile;
     },
-    presentationSanitized () {
-      let sanitized = this.bio
-      sanitized = sanitized.replace(/script/gi, '')
-      sanitized = sanitized.replace(/<a/gi, '')
-      sanitized = sanitized.replace(/href/gi, '')
-      return sanitized
-    }
+    presentationSanitized() {
+      let sanitized = this.bio;
+      sanitized = sanitized.replace(/script/gi, "");
+      sanitized = sanitized.replace(/<a/gi, "");
+      sanitized = sanitized.replace(/href/gi, "");
+      return sanitized;
+    },
   },
   beforeMount: async function () {
-    this.showIsLoading(true)
-    const response = await this.getProfile()
+    this.showIsLoading(true);
+    const response = await this.getProfile();
     if (response !== undefined) {
-      this.avatar = response.avatar
-      this.name = response.display_name
-      this.bio = response.bio
-      this.status = response.status
+      this.avatar = response.avatar;
+      this.name = response.display_name;
+      this.bio = response.bio;
+      this.status = response.status;
     }
-    this.showIsLoading(false)
+    this.showIsLoading(false);
   },
   methods: {
-    ...mapActions('profiles', ['signUp', 'searchProfiles', 'getProfile']),
-    onSubmit () {
-      this.doSignup()
+    ...mapActions("profiles", ["signUp", "searchProfiles", "getProfile"]),
+    onSubmit() {
+      this.doSignup();
     },
-    async doSignup () {
-      this.showIsLoading(true)
+    async doSignup() {
+      this.showIsLoading(true);
 
       const mData = {
         display_name: this.name,
         bio: this.presentationSanitized,
         avatar: this.avatar,
-        status: this.status
-      }
+        status: this.status,
+      };
 
       try {
-        this.showIsLoading(true)
-        await this.signUp(mData)
-        this.showSuccessMsg('Submited')
-        await this.getProfile()
-        this.showIsLoading(false)
-        this.$router.push({ name: 'myProfile' })
+        this.showIsLoading(true);
+        await this.signUp(mData);
+        this.showSuccessMsg("Submited");
+        await this.getProfile();
+        this.showIsLoading(false);
+        this.$router.push({ name: "myProfile" });
       } catch (e) {
-        this.showIsLoading(false)
-        this.showErrorMsg(e.message)
+        this.showIsLoading(false);
+        this.showErrorMsg(e.message);
       }
     },
-    imageUploaded (info) {
-      const response = JSON.parse(info.xhr.response)
-      this.avatar = response.data.link
-      this.showUpload = false
+    imageUploaded(info) {
+      const response = JSON.parse(info.xhr.response);
+      this.avatar = response.data.link;
+      this.showUpload = false;
     },
-    onReset () {
-      this.avatar = null
-      this.name = null
-      this.age = null
-    }
-  }
-}
-</Script>
+    onReset() {
+      this.avatar = null;
+      this.name = null;
+      this.age = null;
+    },
+  },
+};
+</script>
 
-<style scoped lang='sass'>
-</style>
+<style scoped lang="sass"></style>
