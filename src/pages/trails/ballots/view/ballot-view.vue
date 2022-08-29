@@ -323,7 +323,7 @@ export default {
                         div.text-section.column
                             div(v-if="ballot.total_voters > 0")
                                 span.statistics-title Most voted
-                        div.statistics-body
+                        div.statistics-body(v-if="getWinner.key")
                             span.text-weight-bold  {{ getWinner.key.toUpperCase() }}
                             span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
                         div(v-if="ballot.total_voters > 0")
