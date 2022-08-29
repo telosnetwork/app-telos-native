@@ -629,6 +629,7 @@ div.bar-filter-wrapper
           primary
           btnWidth='155'
           fontSize='16'
+          padding='0'
           @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
         )
     div.bar-wrapper.row.items-center(:class="{'menu-visible': isFilterMenu320Open}")
@@ -874,6 +875,7 @@ div.bar-filter-wrapper
         btn.create-poll-btn(
           :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
           iconRight
+          padding='0'
           primary
           btnWidth='155'
           fontSize='16'
@@ -952,7 +954,6 @@ div.bar-filter-wrapper
   padding: 12px
 .left-btn
   height: 40px
-  padding: 0
   margin-right: 1px
   border-radius: 6px 0 0 6px
   & .q-btn__wrapper::before
