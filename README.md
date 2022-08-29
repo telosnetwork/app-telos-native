@@ -14,8 +14,9 @@ Do not use uneven versions of Node i.e. 13, 15, etc. These versions are not test
 
 ## Set up Environment variables
 
+network environment variables (testnet or mainnet) are set by a single variable in `.env` and loaded into `quasar.conf.js` from `env.js`.
 ```bash
-cp .env.example
+cp .env.example .env
 ```
 
 ## Install the dependencies
@@ -36,12 +37,8 @@ yarn dev
 
 ```bash
 yarn lint
-```
 
-### Format the files
-
-```bash
-yarn format
+yarn lint:fix
 ```
 
 ### Build the app for production
