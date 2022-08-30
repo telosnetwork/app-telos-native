@@ -187,7 +187,7 @@ div
 .poll-ended .left-tag
   background: #F7F7F7
 .column-direction .left-tag
-  top: 136px
+  top: 106px
 .poll-item .left-tag cite
   padding: 0 0 0 2px
   font-size: 7px
