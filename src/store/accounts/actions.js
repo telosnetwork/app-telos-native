@@ -53,6 +53,16 @@ export const login = async function (
   }
 };
 
+export const memoryAutoLogin = function ({ commit, dispatch }) {
+  const user = localStorage.getItem("account")
+  if (user)
+  commit("setAccount", user);
+  else {
+    return null
+  }
+
+}
+
 /*
 export const loginToBackend = async function ({ commit }) {
   try {
