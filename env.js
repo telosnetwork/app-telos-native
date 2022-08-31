@@ -3,6 +3,7 @@ The environment variables are set based on the single variable `MAINNET=true`
 (or absence thereof) in the root `.env` file. The following env vars are then assigned in
 `quasar.config.js`.
 */
+require("dotenv").config();
 
 const sharedEnv = {
   NETWORK_PROTOCOL: "https",
@@ -36,7 +37,6 @@ const MAINNET = {
   BLOCKCHAIN_EXPLORER: "https://explorer.telos.net",
 };
 
-module.exports = {
-  TESTNET,
-  MAINNET,
-};
+const env = process.env.NETWORK === "mainnet" ? MAINNET : TESTNET;
+
+module.exports = env;

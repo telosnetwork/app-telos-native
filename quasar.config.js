@@ -8,8 +8,7 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 // import { env } from "process";
-const environment = require("./env");
-require("dotenv").config();
+const env = require("./env");
 const webpack = require("webpack");
 const path = require("path");
 const { configure } = require("quasar/wrappers");
@@ -57,7 +56,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
-      env: process.env.MAINNET ? environment.MAINNET : environment.TESTNET,
+      env,
       scopeHoisting: true,
       vueRouterMode: "history", // available values: 'hash', 'history'
 
