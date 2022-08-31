@@ -94,11 +94,11 @@ export default {
       }
     },
     getIPFShash() {
-      if (this.ballot.description.match(regex)) {
-        const r = regex.exec(this.ballot.description)[0];
+      if (typeof (JSON.parse(this.ballot.content)) === "object") {
+        const r = JSON.parse(this.ballot.content).imageUrl || JSON.parse(this.ballot.content).contentUrls;
         return r;
-      } else if (this.ballot.content.match(regex)) {
-        const r = regex.exec(this.ballot.content)[0];
+      } else if (typeof (this.ballot.description) === "string") {
+        const r = "https://ipfs.io/ipfs/" + regex.exec(this.ballot.description)[0];
         return r;
       } else {
         return false;
@@ -409,10 +409,11 @@ export default {
                                             icon="fas fa-chevron-right"
                                             @click="nextSlide()"
                                             )
-                            embed(
+                            iframe(
+                            height="100%"
+                            width="100%"
                             v-if="getIPFShash"
-                            :src="`https://ipfs.io/ipfs/${getIPFShash}`"
-                            type="application/pdf"
+                            :src="getIPFShash"
                             ).kv-preview-data.file-preview-pdf.file-zoom-detail.shadow-1
                             div(v-else).text-center
                                 img(src="/statics/app-icons/no-pdf.svg" style="width: 60px;")
@@ -621,7 +622,7 @@ embed
 
 .description-section
     width: 100%
-    height: max-content
+    height: 100%
 
 .popup-right-col
     max-width: 912px
