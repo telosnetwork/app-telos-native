@@ -4,11 +4,11 @@ Native App
 
 [https://app-telos-native.pages.dev/](https://app-telos-native.pages.dev/)
 
-[![Netlify Status - Main Net](https://api.netlify.com/api/v1/badges/df3130e3-6286-4f92-8079-47e56acd0abc/deploy-status)](https://app.netlify.com/sites/telos-app-native-mainnet/deploys)
+Main Net - [![Netlify Status](https://api.netlify.com/api/v1/badges/df3130e3-6286-4f92-8079-47e56acd0abc/deploy-status)](https://app.netlify.com/sites/telos-app-native-mainnet/deploys)
 
-[![Netlify Status - Test Net](https://api.netlify.com/api/v1/badges/9d23d56c-fa1f-4107-acd1-cbcc6805e445/deploy-status)](https://app.netlify.com/sites/telos-app-native-testnet/deploys)
+Test Net - [![Netlify Status](https://api.netlify.com/api/v1/badges/9d23d56c-fa1f-4107-acd1-cbcc6805e445/deploy-status)](https://app.netlify.com/sites/telos-app-native-testnet/deploys)
 
-[![Netlify Status - Staging](https://api.netlify.com/api/v1/badges/877a1f21-5a5d-42b0-9e8c-3f95cc4b0e69/deploy-status)](https://app.netlify.com/sites/telos-app-native-staging/deploys)
+Staging - [![Netlify Status](https://api.netlify.com/api/v1/badges/877a1f21-5a5d-42b0-9e8c-3f95cc4b0e69/deploy-status)](https://app.netlify.com/sites/telos-app-native-staging/deploys)
 
 ### Note regarding Node version
 
