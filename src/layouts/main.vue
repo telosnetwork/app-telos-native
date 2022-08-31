@@ -29,7 +29,7 @@ export default {
       "unmarkRead",
       "unmarkNew",
     ]),
-    ...mapActions("accounts", ["autoLogin"]),
+    ...mapActions("accounts", ["memoryAutoLogin"]),
     toggleNotifications() {
       if (this.right) {
         this.unmarkRead();
@@ -50,6 +50,7 @@ export default {
     },
   },
   async mounted() {
+    this.memoryAutoLogin()
     this.initNotifications();
   },
 };
