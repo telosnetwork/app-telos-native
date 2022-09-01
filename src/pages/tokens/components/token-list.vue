@@ -4,7 +4,7 @@
     <q-table
       title="Tokens"
       v-model:pagination="pagination"
-      :data="tokens"
+      :rows="tokens"
       :columns="columns"
       row-key="name"
       @row-click="rowClicked"
