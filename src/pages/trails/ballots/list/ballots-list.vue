@@ -28,9 +28,10 @@ export default {
       categories: [],
       isBallotListRowDirection: true,
       currentPage: 1,
-      limit: 30,
       page: 1,
       sortMode: "",
+      startY: 0,
+      timerAction: null
     };
   },
   props: {
@@ -55,6 +56,13 @@ export default {
     this.$refs.infiniteScroll.reset();
     this.$refs.infiniteScroll.poll();
   },
+  created () {
+    window.addEventListener('scroll', this.onLoad);
+  },
+  unmounted () {
+    window.removeEventListener('scroll', this.onLoad);
+  },
+
   methods: {
     ...mapActions("trails", [
       "fetchFees",
@@ -65,22 +73,32 @@ export default {
     ]),
     ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
 
-    async onLoad(index, done) {
-      if (!this.ballotsLoaded) {
-        this.limit += 50;
+    async onLoad(status, done) {
+      let limit = 30
+      let scrollY = window.scrollY
+      this.$refs.infiniteScroll.resume();
+      clearTimeout(this.checkTimer)
+      if ((scrollY > this.startY && scrollY % 250) || status === true) {
+        limit+= 30
         const filter = {
           index: 4,
           lower:
             this.treasury || (this.$route.query && this.$route.query.treasury),
           upper:
             this.treasury || (this.$route.query && this.$route.query.treasury),
-          limit: this.limit,
+          limit: limit <= 300 ? limit : 300,
         };
-        await this.fetchBallots(filter);
-        done();
-      } else {
-        this.$refs.infiniteScroll.stop();
+        this.checkTimer = setTimeout (async () => {
+          await this.fetchBallots(filter)
+          if (scrollY === this.startY) {
+            this.$refs.infiniteScroll.stop()
+          }
+        }, 3000)
       }
+      this.startY = scrollY
+      this.checkTimer = setTimeout (() => {
+        this.$refs.infiniteScroll.stop()
+      }, 3000)
     },
     openBallotForm() {
       this.show = true;
@@ -141,12 +159,15 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
+      this.onLoad(true)
       this.treasury = newTreasury;
     },
     updateStatuses(newStatuses) {
+      this.onLoad(true)
       this.statuses = newStatuses;
     },
     updateCategories(newCategories) {
+      this.onLoad(true)
       this.categories = newCategories;
     },
     filterBallots(ballots) {
@@ -186,6 +207,7 @@ export default {
       );
     },
     changeDirection(isBallotListRowDirection) {
+      this.onLoad(true)
       this.isBallotListRowDirection = isBallotListRowDirection;
     },
     getLoser() {
@@ -216,6 +238,7 @@ export default {
     },
 
     changeSortOption(option) {
+      this.onLoad(true)
       this.sortMode = option;
     },
     ballotContentImg(ballot) {
