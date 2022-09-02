@@ -30,9 +30,20 @@ export const login = async function (
     const users = await authenticator.login(account);
     if (users.length) {
       this.$ualUser = users[0];
-      this.$type = "ual";
+      // TODO: borrame
+      console.log("login() ", this.$ualUser);
+      if (typeof this.$ualUser.rpc == "object") {
+        this.$type = "ual";
+      } else {
+        this.$type = "cleos";
+      }
+
       const accountName = await users[0].getAccountName();
       commit("setAccount", accountName);
+      commit("setUser", this.$ualUser);
+
+      console.log("login() this.state.user:", this.state.user);
+
       // PPP.setActiveUser(this.$ualUser)
       const defaultReturnUrl = localStorage.getItem("returning")
         ? "/"
@@ -46,7 +57,10 @@ export const login = async function (
     const error =
       (authenticator.getError() && authenticator.getError().message) ||
       e.message ||
-      e.reason;
+      e.reason ||
+      e.cause
+        ? e.cause.message
+        : toString(e);
     console.log("Login error: ", error);
   } finally {
     commit("setLoadingWallet");
@@ -54,14 +68,12 @@ export const login = async function (
 };
 
 export const memoryAutoLogin = function ({ commit, dispatch }) {
-  const user = localStorage.getItem("account")
-  if (user)
-  commit("setAccount", user);
+  const user = localStorage.getItem("account");
+  if (user) commit("setAccount", user);
   else {
-    return null
+    return null;
   }
-
-}
+};
 
 /*
 export const loginToBackend = async function ({ commit }) {
