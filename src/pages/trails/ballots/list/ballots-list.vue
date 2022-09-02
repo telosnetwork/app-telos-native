@@ -31,7 +31,8 @@ export default {
       page: 1,
       sortMode: "",
       startY: 0,
-      timerAction: null
+      timerAction: null,
+      limit: 50,
     };
   },
   props: {
@@ -56,11 +57,11 @@ export default {
     this.$refs.infiniteScroll.reset();
     this.$refs.infiniteScroll.poll();
   },
-  created () {
-    window.addEventListener('scroll', this.onLoad);
+  created() {
+    window.addEventListener("scroll", this.onLoad);
   },
-  unmounted () {
-    window.removeEventListener('scroll', this.onLoad);
+  unmounted() {
+    window.removeEventListener("scroll", this.onLoad);
   },
 
   methods: {
@@ -73,32 +74,32 @@ export default {
     ]),
     ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
 
-    async onLoad(status, done) {
-      let limit = 30
-      let scrollY = window.scrollY
-      this.$refs.infiniteScroll.resume();
-      clearTimeout(this.checkTimer)
-      if ((scrollY > this.startY && scrollY % 250) || status === true) {
-        limit+= 30
+    async onLoad(status) {
+      let scrollY = window.scrollY;
+      if (
+        (scrollY > this.startY && this.limit !== 500) ||
+        status === true
+      ) {
+        this.$refs.infiniteScroll.resume();
+        this.limit += 25;
         const filter = {
           index: 4,
           lower:
             this.treasury || (this.$route.query && this.$route.query.treasury),
           upper:
             this.treasury || (this.$route.query && this.$route.query.treasury),
-          limit: limit <= 300 ? limit : 300,
+          limit: this.limit,
         };
-        this.checkTimer = setTimeout (async () => {
-          await this.fetchBallots(filter)
-          if (scrollY === this.startY) {
-            this.$refs.infiniteScroll.stop()
-          }
-        }, 3000)
+        await this.fetchBallots(filter);
+        if (scrollY === this.startY) {
+          this.$refs.infiniteScroll.stop();
+        }
+      } else {
+        setTimeout(() => {
+          this.$refs.infiniteScroll.stop();
+        }, 3000);
       }
-      this.startY = scrollY
-      this.checkTimer = setTimeout (() => {
-        this.$refs.infiniteScroll.stop()
-      }, 3000)
+      this.startY = scrollY;
     },
     openBallotForm() {
       this.show = true;
@@ -159,15 +160,18 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
-      this.onLoad(true)
+      this.limit = 0;
+      this.onLoad(true);
       this.treasury = newTreasury;
     },
     updateStatuses(newStatuses) {
-      this.onLoad(true)
+      this.limit = 0;
+      this.onLoad(true);
       this.statuses = newStatuses;
     },
     updateCategories(newCategories) {
-      this.onLoad(true)
+      this.limit = 0;
+      this.onLoad(true);
       this.categories = newCategories;
     },
     filterBallots(ballots) {
@@ -207,7 +211,8 @@ export default {
       );
     },
     changeDirection(isBallotListRowDirection) {
-      this.onLoad(true)
+      this.limit = 0;
+      this.onLoad(true);
       this.isBallotListRowDirection = isBallotListRowDirection;
     },
     getLoser() {
@@ -238,7 +243,8 @@ export default {
     },
 
     changeSortOption(option) {
-      this.onLoad(true)
+      this.limit = 0;
+      this.onLoad(true);
       this.sortMode = option;
     },
     ballotContentImg(ballot) {
@@ -288,7 +294,6 @@ q-page
   .ballots(ref="ballotsRef")
     q-infinite-scroll(
       ref="infiniteScroll"
-      @load="onLoad"
       :offset="250"
     )
       div(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
