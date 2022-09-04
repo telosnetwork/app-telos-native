@@ -20,8 +20,6 @@ export default boot(async ({ app, store }) => {
   };
 
   async function loginHandler() {
-    // TODO borrame
-    console.error("loginHandler()");
     let accountName = "eosio";
     let permission = "active";
     if (localStorage.getItem("autoLogin") === "cleos") {
@@ -85,8 +83,6 @@ export default boot(async ({ app, store }) => {
   }
 
   async function signHandler(trx) {
-    // TODO: borrame
-    console.log("signHandler()", trx);
     const trxJSON = JSON.stringify(
       Object.assign(
         {

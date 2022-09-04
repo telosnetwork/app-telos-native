@@ -30,19 +30,9 @@ export const login = async function (
     const users = await authenticator.login(account);
     if (users.length) {
       this.$ualUser = users[0];
-      // TODO: borrame
-      console.log("login() ", this.$ualUser);
-      if (typeof this.$ualUser.rpc == "object") {
-        this.$type = "ual";
-      } else {
-        this.$type = "cleos";
-      }
-
       const accountName = await users[0].getAccountName();
       commit("setAccount", accountName);
       commit("setUser", this.$ualUser);
-
-      console.log("login() this.state.user:", this.state.user);
 
       // PPP.setActiveUser(this.$ualUser)
       const defaultReturnUrl = localStorage.getItem("returning")

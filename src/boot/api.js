@@ -2,8 +2,6 @@ import { boot } from "quasar/wrappers";
 import { Api, JsonRpc } from "eosjs";
 
 const signTransaction = async function (actions) {
-  // TODO: borrame
-  console.log("signTransaction()", actions);
   actions.forEach((action) => {
     if (!action.authorization || !action.authorization.length) {
       action.authorization = [
@@ -16,17 +14,15 @@ const signTransaction = async function (actions) {
   });
   let transaction = null;
   try {
-    if (this.$type === "ual" || this.$type === "cleos") {
-      transaction = await this.$ualUser.signTransaction(
-        {
-          actions,
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30,
-        }
-      );
-    }
+    transaction = await this.$ualUser.signTransaction(
+      {
+        actions,
+      },
+      {
+        blocksBehind: 3,
+        expireSeconds: 30,
+      }
+    );
   } catch (e) {
     throw e.cause.error.details[0].message.replace(
       /assertion failure with message: /g,
@@ -38,26 +34,19 @@ const signTransaction = async function (actions) {
 };
 
 const getTableRows = async function (options) {
-  if (this.$type === "ual") {
-    return this.$ualUser.rpc.get_table_rows({
-      json: true,
-      ...options,
-    });
-  } else {
+  try {
     return this.$defaultApi.rpc.get_table_rows({
       json: true,
       ...options,
     });
+  } catch (e) {
+    console.error(e);
   }
 };
 
 const getAccount = async function (account) {
   try {
-    if (this.$type === "ual") {
-      return this.$ualUser.rpc.get_account(account);
-    } else {
-      return this.$defaultApi.rpc.get_account(account);
-    }
+    return this.$defaultApi.rpc.get_account(account);
   } catch (e) {
     console.error(e);
   }
