@@ -32,5 +32,4 @@ export const setAvailableAccounts = (state, accounts) => {
 
 export const setUser = (state, user) => {
   state.user = user ? markRaw(user) : user;
-  console.log("setUser() -> ", [state, user, state.user]);
 };
