@@ -28,9 +28,11 @@ export default {
       categories: [],
       isBallotListRowDirection: true,
       currentPage: 1,
-      limit: 30,
       page: 1,
       sortMode: "",
+      startY: 0,
+      timerAction: null,
+      limit: 50,
     };
   },
   props: {
@@ -55,6 +57,13 @@ export default {
     this.$refs.infiniteScroll.reset();
     this.$refs.infiniteScroll.poll();
   },
+  created() {
+    window.addEventListener("scroll", this.onLoad);
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.onLoad);
+  },
+
   methods: {
     ...mapActions("trails", [
       "fetchFees",
@@ -65,9 +74,14 @@ export default {
     ]),
     ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
 
-    async onLoad(index, done) {
-      if (!this.ballotsLoaded) {
-        this.limit += 50;
+    async onLoad(status) {
+      let scrollY = window.scrollY;
+      if (
+        (scrollY > this.startY && this.limit !== 500) ||
+        status === true
+      ) {
+        this.$refs.infiniteScroll.resume();
+        this.limit += 25;
         const filter = {
           index: 4,
           lower:
@@ -77,10 +91,15 @@ export default {
           limit: this.limit,
         };
         await this.fetchBallots(filter);
-        done();
+        if (scrollY === this.startY) {
+          this.$refs.infiniteScroll.stop();
+        }
       } else {
-        this.$refs.infiniteScroll.stop();
+        setTimeout(() => {
+          this.$refs.infiniteScroll.stop();
+        }, 3000);
       }
+      this.startY = scrollY;
     },
     openBallotForm() {
       this.show = true;
@@ -141,12 +160,18 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
+      this.limit = 0;
+      this.onLoad(true);
       this.treasury = newTreasury;
     },
     updateStatuses(newStatuses) {
+      this.limit = 0;
+      this.onLoad(true);
       this.statuses = newStatuses;
     },
     updateCategories(newCategories) {
+      this.limit = 0;
+      this.onLoad(true);
       this.categories = newCategories;
     },
     filterBallots(ballots) {
@@ -186,6 +211,8 @@ export default {
       );
     },
     changeDirection(isBallotListRowDirection) {
+      this.limit = 0;
+      this.onLoad(true);
       this.isBallotListRowDirection = isBallotListRowDirection;
     },
     getLoser() {
@@ -216,6 +243,8 @@ export default {
     },
 
     changeSortOption(option) {
+      this.limit = 0;
+      this.onLoad(true);
       this.sortMode = option;
     },
     ballotContentImg(ballot) {
@@ -265,7 +294,6 @@ q-page
   .ballots(ref="ballotsRef")
     q-infinite-scroll(
       ref="infiniteScroll"
-      @load="onLoad"
       :offset="250"
     )
       div(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
