@@ -9,6 +9,7 @@ export default {
   props: {
     show: { type: Boolean, required: true },
   },
+  emits: ["close"],
   data() {
     return {
       form: {
@@ -129,9 +130,9 @@ export default {
       this.file = null;
       this.cid = null;
     },
-    onCansel() {
-      this.$emit("update:show", false);
+    onCancel() {
       this.resetBallot();
+      this.$emit("close");
     },
     addBallotOption(val, done) {
       done(val.toLowerCase(), "add-unique");
@@ -195,6 +196,7 @@ q-dialog(
 
     q-card-section.bg-primary.text-white
       .text-h6 Create a ballot
+    
     q-card-section
       q-input(
         ref="title"
@@ -287,9 +289,9 @@ q-dialog(
           val="voteliquid"
         )
         q-radio(
-         v-model="form.config"
-         label="Both"
-         val="both"
+        v-model="form.config"
+        label="Both"
+        val="both"
         )
       q-input(
         ref="endDate"
@@ -316,7 +318,7 @@ q-dialog(
       q-btn(
         flat
         :label="$t('common.buttons.cancel')"
-        @click="onCansel()"
+        @click="onCancel()"
       )
       q-btn(
         color="primary"
