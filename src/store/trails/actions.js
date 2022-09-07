@@ -94,7 +94,7 @@ export const fetchBallot = async function ({ commit }, ballot) {
     const proposalInfo = await this.$api.getTableRows({
       code: "works.decide",
       scope: "works.decide",
-      table: "ProposalsPage.vue",
+      table: "proposals",
       limit: 1,
       lower_bound: ballot,
       upper_bound: ballot,
