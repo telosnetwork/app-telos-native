@@ -6,7 +6,7 @@ export const fetchWorks = async function ({ commit, state }) {
     const result = await this.$api.getTableRows({
       code: 'works.decide',
       scope: 'works.decide',
-      table: 'proposals',
+      table: 'ProposalsPage.vue',
       lower_bound: nextKey || '',
       upper_bound: ''
     })
