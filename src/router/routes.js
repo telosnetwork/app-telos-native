@@ -6,51 +6,51 @@ const routes = [
   },
   {
     path: "/login",
-    component: () => import("pages/login/login.vue"),
+    component: () => import("pages/login/LoginPage.vue"),
     meta: { layout: "guest", title: "pages.login.title", guest: true },
   },
-  // { path: '/accounts/add', component: () => import('pages/accounts/add/send-otp.vue'), meta: { layout: 'guest', title: 'pages.accounts.add.title', guest: true } },
+  // { path: '/accounts/add', component: () => import('pages/accounts/add/SendOtp.vue'), meta: { layout: 'guest', title: 'pages.accounts.add.title', guest: true } },
   {
     path: "/accounts/add",
-    component: () => import("pages/accounts/add/create-account.vue"),
+    component: () => import("pages/accounts/add/CreateAccount.vue"),
     meta: { layout: "guest", title: "pages.accounts.add.title", guest: true },
   },
-  // { path: '/accounts/add/verifyOTP', component: () => import('pages/accounts/add/verify-otp.vue'), meta: { layout: 'guest', title: 'pages.accounts.add.title', guest: true } },
+  // { path: '/accounts/add/verifyOTP', component: () => import('pages/accounts/add/VerifyOtp.vue'), meta: { layout: 'guest', title: 'pages.accounts.add.title', guest: true } },
   {
     path: "/accounts/add/congratulations",
-    component: () => import("pages/accounts/add/congratulations.vue"),
+    component: () => import("pages/accounts/add/CongratulationsPage.vue"),
     meta: { layout: "empty", guest: true },
   },
 
   // Works
   {
     path: "/works/proposals",
-    component: () => import("pages/works/proposals.vue"),
+    component: () => import("pages/works/ProposalsPage.vue"),
     meta: { guest: false },
   },
 
   // Trails
   {
     path: "/trails/ballots/:id?/:hash?",
-    component: () => import("pages/trails/ballots/list/ballots-list.vue"),
+    component: () => import("pages/trails/ballots/list/BallotsList.vue"),
     meta: { guest: false },
   },
   {
     path: "/trails/treasuries",
-    component: () => import("pages/trails/treasuries/list/treasuries-list.vue"),
+    component: () => import("pages/trails/treasuries/list/TreasuriesList.vue"),
     meta: { guest: false },
   },
 
   // Trails
   {
     path: "/transfers/add",
-    component: () => import("pages/transfers/add/send-tokens.vue"),
+    component: () => import("pages/transfers/add/SendTokens.vue"),
   },
 
   // Testnet
   {
     path: "/testnet/rotation",
-    component: () => import("pages/testnet/rotation.vue"),
+    component: () => import("pages/testnet/RotationPage.vue"),
     meta: {
       layout: "empty",
       title: "pages.testnetRotation.title",
@@ -59,7 +59,7 @@ const routes = [
   },
   {
     path: "/testnet/developers",
-    component: () => import("pages/testnet/developers.vue"),
+    component: () => import("pages/testnet/DevelopersPage.vue"),
     meta: {
       layout: "empty",
       title: "pages.testnetDevelopers.title",
@@ -70,7 +70,7 @@ const routes = [
   // Tokens
   {
     path: "/tokens",
-    component: () => import("pages/tokens/tokens.vue"),
+    component: () => import("pages/tokens/TokensPage.vue"),
     meta: { title: "pages.tokens.title", guest: false },
   },
 
@@ -82,42 +82,42 @@ const routes = [
   },
 
   // Claim - no longer should be used now that claiming is done
-  // { path: '/claim/checkAccount', component: () => import('pages/accounts/claim/claim-check.vue'), meta: { layout: 'guest', title: 'pages.claim.claimCheck.title', guest: true } },
-  // { path: '/claim/claimAccount', component: () => import('pages/accounts/claim/remove-me.vue'), meta: { title: 'pages.claim.removeMe.title' } },
+  // { path: '/claim/checkAccount', component: () => import('pages/accounts/claim/ClaimForm.vue'), meta: { layout: 'guest', title: 'pages.claim.claimCheck.title', guest: true } },
+  // { path: '/claim/claimAccount', component: () => import('pages/accounts/claim/RemoveMe.vue'), meta: { title: 'pages.claim.removeMe.title' } },
 
   // POC
   {
     path: "/poc/smartsafe",
-    component: () => import("pages/poc/smartsafe/safe-list.vue"),
+    component: () => import("pages/poc/smartsafe/SmartSafe.vue"),
     meta: { title: "pages.poc.smartSafe.title" },
   },
 
   {
     path: "/profiles/myProfile/add",
-    component: () => import("pages/profiles/add/sign-up.vue"),
+    component: () => import("pages/profiles/add/SignUp.vue"),
     meta: { needBackendLogin: false },
     name: "userRegister",
   },
   {
     path: "/profiles/contacts",
-    component: () => import("pages/profiles/list/contact-list.vue"),
+    component: () => import("pages/profiles/list/ContactList.vue"),
     meta: { needVerifyComm: true, needBackendLogin: false },
   },
   {
     path: "/profiles/myProfile",
-    component: () => import("pages/profiles/read/my-profile.vue"),
+    component: () => import("pages/profiles/read/MyProfile.vue"),
     meta: { needBackendLogin: false },
     name: "myProfile",
   },
   {
     path: "/profiles/contacts/profileDetail",
-    component: () => import("pages/profiles/read/profile-detail.vue"),
+    component: () => import("pages/profiles/read/ProfileDetail.vue"),
     meta: { needVerifyComm: true, needBackendLogin: false },
     name: "profileDetail",
   },
   {
     path: "/profiles/add/profileLogin",
-    component: () => import("pages/profiles/read/profile-login.vue"),
+    component: () => import("pages/profiles/read/ProfileLogin.vue"),
     name: "profileLogin",
   },
 ];

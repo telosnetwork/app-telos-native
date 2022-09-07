@@ -1,7 +1,7 @@
 import { boot } from "quasar/wrappers";
-import LayoutMain from "../layouts/main.vue";
-import LayoutEmpty from "../layouts/empty.vue";
-import LayoutGuest from "../layouts/guest.vue";
+import LayoutMain from "../layouts/AuthLayout.vue";
+import LayoutEmpty from "../layouts/EmptyLayout.vue";
+import LayoutGuest from "../layouts/GuestLayout.vue";
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
