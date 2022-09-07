@@ -11,11 +11,11 @@
     >
       <template v-slot:body-cell-name="props">
         <q-td :props="props">
-          <div>
+          <div class="d-flex flex justify-between items-center">
             <q-avatar rounded>
               <img :src="props.row.logo_sm" />
             </q-avatar>
-            {{ props.row.token_name }}
+            <span class="q-ml-md">{{ props.row.token_name }}</span>
           </div>
         </q-td>
       </template>
