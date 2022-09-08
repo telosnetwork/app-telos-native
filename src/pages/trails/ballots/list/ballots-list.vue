@@ -290,7 +290,10 @@ q-page
     @update-cards="updateCards"
     :treasuriesOptions="treasuriesOptions"
     :activeFilter="activeFilter")
-  ballot-form(:show.sync="show")
+  ballot-form(
+    :show.sync="show"
+    @close="show = false"
+  )
   .ballots(ref="ballotsRef")
     q-infinite-scroll(
       ref="infiniteScroll"
