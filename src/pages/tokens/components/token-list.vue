@@ -1,34 +1,36 @@
 <template>
   <div class="q-pa-md">
-    <token-detail v-bind="mapSelectedToDetails"></token-detail>
-    <q-table
-      title="Tokens"
-      v-model:pagination="pagination"
-      :rows="tokens"
-      :columns="columns"
-      row-key="name"
-      @row-click="rowClicked"
-    >
-      <template v-slot:body-cell-name="props">
-        <q-td :props="props">
-          <div class="d-flex flex justify-between items-center">
-            <q-avatar rounded>
-              <img :src="props.row.logo_sm" />
-            </q-avatar>
-            <span class="q-ml-md">{{ props.row.token_name }}</span>
-          </div>
-        </q-td>
-      </template>
-      <template v-slot:top-right v-if="!createToken && isAuthenticated">
-        <q-btn
-          color="primary"
-          icon-right="plus"
-          label="Create new token"
-          no-caps
-          @click="create"
-        />
-      </template>
-    </q-table>
+    <template v-if="!createToken && !editingToken">
+      <token-detail v-bind="mapSelectedToDetails"></token-detail>
+      <q-table
+        title="Tokens"
+        v-model:pagination="pagination"
+        :rows="tokens"
+        :columns="columns"
+        row-key="name"
+        @row-click="rowClicked"
+      >
+        <template v-slot:body-cell-name="props">
+          <q-td :props="props">
+            <div class="d-flex flex justify-between items-center">
+              <q-avatar rounded>
+                <img :src="props.row.logo_sm" />
+              </q-avatar>
+              <span class="q-ml-md">{{ props.row.token_name }}</span>
+            </div>
+          </q-td>
+        </template>
+        <template v-slot:top-right v-if="!createToken && isAuthenticated">
+          <q-btn
+            color="primary"
+            icon-right="fas fa-solid fa-plus"
+            label="Create new token"
+            no-caps
+            @click="create"
+          />
+        </template>
+      </q-table>
+    </template>
   </div>
 </template>
 
