@@ -77,7 +77,7 @@ export default {
     async onLoad(status) {
       let scrollY = window.scrollY;
       if (
-        (scrollY > this.startY && this.limit !== 500) ||
+        (scrollY > this.startY && this.limit !== 300) ||
         status === true
       ) {
         this.$refs.infiniteScroll.resume();
@@ -313,6 +313,10 @@ q-page
           :getLoser="getLoser"
           :ballotContentImg="ballotContentImg"
         )
+      p.text-weight-bold(
+        style="text-align: center"
+        v-if="!sortBallots(filterBallots(ballots),sortMode).length"  ) There is no data for the corresponding request
+
       template(v-slot:loading)
         .row.justify-center.q-my-md
           q-spinner-dots(
