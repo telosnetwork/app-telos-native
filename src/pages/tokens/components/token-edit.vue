@@ -79,10 +79,12 @@
       </q-card-section>
       <q-card-section>
         <q-card-actions>
-          <q-btn flat @click="submit">{{
+          <q-btn class="q-mr-auto" no-caps label="Cancel" @click="cancelEdit" />
+
+          <q-btn color="primary" no-caps @click="submit">{{
             createToken ? `Create for ${this.config.create_price}` : "Save"
           }}</q-btn>
-          <q-btn flat @click="cancelEdit">Cancel</q-btn>
+
           <q-btn-dropdown
             v-if="!createToken"
             color="primary"
