@@ -216,7 +216,7 @@ module.exports = configure(function (ctx) {
       directives: ["ClosePopup", "Ripple"],
 
       // Quasar plugins
-      plugins: ["Notify", "Loading", "BottomSheet"],
+      plugins: ["Notify", "Dialog", "Loading", "BottomSheet"],
     },
 
     // animations: 'all', // --- includes all animations
