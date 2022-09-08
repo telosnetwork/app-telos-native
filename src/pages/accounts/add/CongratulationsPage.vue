@@ -2,7 +2,6 @@
 import { mapGetters } from "vuex";
 
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
   name: "CongratulationsPage",
   computed: {
     ...mapGetters("accounts", ["signUpAccount"]),
