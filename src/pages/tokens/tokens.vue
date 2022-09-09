@@ -1,5 +1,5 @@
 <template>
-  <q-page class="column justify-center items-center">
+  <q-page class="row justify-center">
     <token-edit v-if="createToken || editingToken"></token-edit>
     <token-list></token-list>
   </q-page>

@@ -1,8 +1,17 @@
 <template>
-  <div class="q-pa-md">
+  <div
+    class="list-container q-pa-md"
+    :class="selectedToken ? 'token-selected' : ''"
+  >
     <template v-if="!createToken && !editingToken">
-      <token-detail v-bind="mapSelectedToDetails"></token-detail>
+      <token-detail
+        class="token-preview q-mb-md show-close-btn"
+        v-bind="mapSelectedToDetails"
+        @close="clear"
+        @edit="edit"
+      ></token-detail>
       <q-table
+        class="token-list"
         title="Tokens"
         v-model:pagination="pagination"
         :rows="tokens"
@@ -34,6 +43,30 @@
   </div>
 </template>
 
+<style lang="sass" scoped>
+
+.token-preview
+  opacity: 0
+  overflow: hidden
+  padding-top: 0px
+  padding-bottom: 0px
+  max-height: 0px
+  transition-property: max-height, opacity, padding
+  transition-duration: 0.2s
+  .token-selected &
+    opacity: 1
+    max-height: 400px
+    transition-duration: 0.5s
+
+@import '~quasar/src/css/variables'
+
+.list-container
+  min-width: auto
+
+@media (min-width: $breakpoint-md-min)
+  .list-container
+    min-width: 900px
+</style>
 <script>
 import { mapGetters, mapState } from "vuex";
 import TokenDetail from "./token-detail.vue";
@@ -48,6 +81,9 @@ export default {
         rowsPerPage: 20,
       },
       selectedToken: null,
+      balance: null,
+      stat: null,
+      editable: false,
       columns: [
         {
           name: "name",
@@ -92,32 +128,69 @@ export default {
         logo_sm: this.selectedToken.logo_sm,
         logo_lg: this.selectedToken.logo_lg,
         contract: this.selectedToken.contract_account,
+        stat: this.stat,
+        balance: this.balance,
+        editable: this.editable,
       };
     },
   },
   methods: {
+    async setStat() {
+      if (!this.selectedToken) return;
+
+      let result = await this.$store.$api.getTableRows({
+        code: this.selectedToken.contract_account,
+        scope: this.selectedToken.token_symbol.split(",")[1],
+        table: "stat",
+      });
+
+      if (result.rows.length) {
+        this.stat = result.rows[0];
+      } else {
+        this.stat = null;
+      }
+    },
+    async setBalance() {
+      if (!this.selectedToken) return;
+
+      let result = await this.$store.$api.getTableRows({
+        code: this.selectedToken.contract_account,
+        scope: this.account,
+        table: "accounts",
+        lower_bound: this.selectedToken.token_symbol.split(",")[1],
+      });
+      if (result.rows.length) {
+        this.balance = result.rows[0].balance;
+      } else {
+        this.balance =
+          (0).toFixed(parseInt(this.selectedToken.token_symbol.split(",")[0])) +
+          " " +
+          this.selectedToken.token_symbol.split(",")[1];
+      }
+    },
+    edit() {
+      this.$store.commit("tokens/editToken", this.selectedToken);
+    },
     create() {
       this.clear();
       this.$store.commit("tokens/createToken", true);
     },
     clear() {
+      this.editable = false;
       this.selectedToken = null;
       this.$store.commit("tokens/editToken", null);
       this.$store.commit("tokens/createToken", false);
     },
     rowClicked(evt, row) {
-      if (this.selectedToken === row) {
-        this.clear();
-      } else if (this.editingToken === row) {
-        this.clear();
-      } else if (row.token_owner === this.account) {
-        this.clear();
-        this.$store.commit("tokens/editToken", row);
-      } else {
-        this.clear();
-        this.selectedToken = row;
-      }
+      this.clear();
+      this.selectedToken = row;
+      this.editable = row.token_owner === this.account;
+      this.setBalance();
+      this.setStat();
     },
+  },
+  beforeUnmount: function () {
+    this.clear();
   },
 };
 </script>
