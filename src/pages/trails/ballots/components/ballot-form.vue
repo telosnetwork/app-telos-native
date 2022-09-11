@@ -179,6 +179,8 @@ export default {
   },
   mounted() {
     this.fetchFees();
+
+    this.fetchTreasuriesForUser(this.account);
   },
 };
 </script>
@@ -196,7 +198,7 @@ q-dialog(
 
     q-card-section.bg-primary.text-white
       .text-h6 Create a ballot
-    
+
     q-card-section
       q-input(
         ref="title"
