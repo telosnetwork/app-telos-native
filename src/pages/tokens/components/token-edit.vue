@@ -19,125 +19,145 @@
       <div class="q-pa-lg text-h4">
         {{ editingToken ? "Edit your token's info" : "Create a new token" }}
       </div>
-      <q-card-section class="terms-section">
-        <div class="terms q-pa-md" v-html="getTermsHtml"></div>
-        <q-field
-          ref="toggle"
-          :value="acceptedTerms"
-          :rules="[checkTerms]"
-          borderless
-          dense
-        >
-          <template v-slot:control>
-            <q-checkbox
-              v-model="acceptedTerms"
-              color="green"
-              label="Please acknowledge these terms"
-            >
-            </q-checkbox>
-          </template>
-        </q-field>
-      </q-card-section>
-      <q-card-section class="form-fields">
-        <q-input v-model="token.name" label="Token name"></q-input>
-        <q-input
-          v-model="token.symbol"
-          counter
-          :readonly="!!editingToken"
-          label="Symbol"
-          @input="
-            (val) => (token.symbol = val.toUpperCase().replace(/[^A-Z]/g, ''))
-          "
-          :rules="[
-            !!val || '* Required',
-            (val) => !val || val.length <= 6 || 'Symbols can only be 6 characters'
-          ]"
-        ></q-input>
-        <q-input
-          v-model.number="token.decimals"
-          type="number"
-          :readonly="!!editingToken"
-          label="Decimals"
-          :rules="[
-            (val) => !!val || '* Required',
-            (val) => val <= 9 || 'Can only have up to 9 decimals of precision',
-          ]"
-        ></q-input>
-        <q-input
-          v-model.number="token.supply"
-          type="number"
-          v-if="createToken && token.decimals"
-          label="Max supply"
-          @input="
-            (val) =>
-              token.decimals &&
-              (token.supply = parseFloat(val.toFixed(token.decimals)))
-          "
-          lazy-rules
-          :rules="[
-            (val) => !!val || '* Required',
-            (val) => {
-              return (
-                parseInt(val.toFixed(token.decimals).replace(/\./g, '')) <
-                  4611686018427388000 ||
-                '* supply (without decimals) must be less than 4611686018427388000'
-              );
-            },
-          ]"
-        ></q-input>
-        <q-input v-model="token.logo_sm" label="Small logo URL"></q-input>
-        <q-input v-model="token.logo_lg" label="Large logo URL"></q-input>
-      </q-card-section>
-      <q-card-section class="footer-buttons q-mt-lg">
-        <q-card-actions>
-          <q-btn class="q-mr-auto" no-caps label="Cancel" @click="cancelEdit" />
 
-          <q-btn color="primary" no-caps @click="submit">{{
-            createToken ? `Create for ${this.config.create_price}` : "Save"
-          }}</q-btn>
+      <q-form
+        ref="myform"
+        @submit="submit"
+      >
 
-          <q-btn-dropdown
-            v-if="!createToken"
-            color="primary"
-            label="Manage Tokens"
+        <q-card-section class="terms-section">
+          <div class="terms q-pa-md" v-html="getTermsHtml"></div>
+          <q-field
+            ref="toggle"
+            :value="acceptedTerms"
+            :rules="[
+              !!val || 'You must accept the terms'
+            ]"
+            borderless
+            dense
           >
-            <q-list>
-              <q-item
-                v-if="canIssue()"
-                clickable
-                v-close-popup
-                @click="issueDialog = true"
+            <template v-slot:control>
+              <q-checkbox
+                v-model="acceptedTerms"
+                color="green"
+                label="Please acknowledge these terms"
               >
-                <q-item-section>
-                  <q-item-label>Issue</q-item-label>
-                </q-item-section>
-              </q-item>
+              </q-checkbox>
+            </template>
+          </q-field>
+        </q-card-section>
+        <q-card-section class="form-fields">
+          <q-input
+            v-model="token.name"
+            label="Token name"
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required'
+            ]"
+          ></q-input>
+          <q-input
+            v-model="token.symbol"
+            counter
+            :readonly="!!editingToken"
+            label="Symbol"
+            @input="
+              (val) => (token.symbol = val.toUpperCase().replace(/[^A-Z]/g, ''))
+            "
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required',
+              (val) => !val || val.length <= 6 || 'Symbols can only be 6 characters'
+            ]"
+          ></q-input>
+          <q-input
+            v-model.number="token.decimals"
+            type="number"
+            :readonly="!!editingToken"
+            label="Decimals"
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required',
+              (val) => val <= 9 || 'Can only have up to 9 decimals of precision',
+            ]"
+          ></q-input>
+          <q-input
+            ref="input_supply"
+            v-model.number="token.supply"
+            type="number"
+            v-if="createToken && token.decimals"
+            label="Max supply"
+            @input="
+              (val) =>
+                token.decimals &&
+                (token.supply = parseFloat(val.toFixed(token.decimals)))
+            "
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required',
+              (val) => {
+                return (
+                  parseInt(val.toFixed(token.decimals).replace(/\./g, '')) <
+                    4611686018427388000 ||
+                  '* supply (without decimals) must be less than 4611686018427388000'
+                );
+              },
+            ]"
+          ></q-input>
+          <q-input v-model="token.logo_sm" label="Small logo URL"></q-input>
+          <q-input v-model="token.logo_lg" label="Large logo URL"></q-input>
+        </q-card-section>
+        <q-card-section class="footer-buttons q-mt-lg">
+          <q-card-actions>
+            <q-btn class="q-mr-auto" no-caps label="Cancel" @click="cancelEdit" />
+            
+            <q-btn color="primary" no-caps type="submit">{{
+              createToken ? `Create for ${this.config.create_price}` : "Save"
+            }}</q-btn>
 
-              <q-item
-                v-if="hasBalance()"
-                clickable
-                v-close-popup
-                @click="retireDialog = true"
-              >
-                <q-item-section>
-                  <q-item-label>Retire</q-item-label>
-                </q-item-section>
-              </q-item>
+            <q-btn-dropdown
+              v-if="!createToken"
+              color="primary"
+              label="Manage Tokens"
+            >
+              <q-list>
+                <q-item
+                  v-if="canIssue()"
+                  clickable
+                  v-close-popup
+                  @click="issueDialog = true"
+                >
+                  <q-item-section>
+                    <q-item-label>Issue</q-item-label>
+                  </q-item-section>
+                </q-item>
 
-              <q-item
-                v-if="hasBalance()"
-                clickable
-                v-close-popup
-                @click="transferDialog = true"
-              >
-                <q-item-section>
-                  <q-item-label>Transfer</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
-        </q-card-actions>
-      </q-card-section>
+                <q-item
+                  v-if="hasBalance()"
+                  clickable
+                  v-close-popup
+                  @click="retireDialog = true"
+                >
+                  <q-item-section>
+                    <q-item-label>Retire</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-item
+                  v-if="hasBalance()"
+                  clickable
+                  v-close-popup
+                  @click="transferDialog = true"
+                >
+                  <q-item-section>
+                    <q-item-label>Transfer</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </q-card-actions>
+        </q-card-section>
+
+      </q-form>
     </q-card>
 
     <q-dialog v-model="issueDialog" persistent>
