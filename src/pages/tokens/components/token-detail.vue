@@ -23,6 +23,13 @@
             <div v-if="decimals" class="text-h8 q-mb-xs">precision: <b>{{ decimals }} decimals</b></div>
             <div v-if="contract" class="text-h8 q-mb-xs">contract: <b>{{ contract }}</b></div>            
             <div v-if="owner" class="text-h8 q-mb-xs">owner: <b>{{ owner }}</b></div>
+            <div v-if="!owner && logo_sm" class="text-h8 q-mb-xs">small icon: 
+              <q-img class="image-icon-sm" :src="logo_sm">
+                <template v-slot:error>
+                  <div class="error-slot text-center absolute-full flex flex-center bg-negative text-white">bad url</div>
+                </template>
+              </q-img>              
+            </div>
           </q-card-section>
           <q-separator />
           <q-card-section class="col-auto text-right col-grow">
@@ -54,6 +61,14 @@
 <style lang="sass" scoped>
 .image-icon
   min-width: 128px
+
+.image-icon-sm
+  width: 32px
+  height: 32px
+  .error-slot
+    padding: 0px
+    font-size: small
+    line-height: 13px
 </style>
 
 <style lang="sass">
