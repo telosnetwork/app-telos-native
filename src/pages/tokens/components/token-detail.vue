@@ -74,7 +74,6 @@ export default {
     owner: String,
     contract: String,
     decimals: String,
-    supply: Number,
     logo_sm: String,
     logo_lg: String,
     balance: String,

@@ -9,7 +9,7 @@
       :name="token.name ? token.name : 'Token name'"
       :symbol="token.symbol ? token.symbol : 'SYMBOL'"
       :decimals="token.decimals"
-      :supply="token.supply"
+      :stat="editing_stat"
       :logo_sm="token.logo_sm ? token.logo_sm : defaultIcon"
       :logo_lg="token.logo_lg ? token.logo_lg : defaultIcon"
       @close="cancelEdit"
@@ -50,7 +50,7 @@
           "
           :rules="[
             !!val || '* Required',
-            (val) => val.length <= 6 || 'Symbols can only be 6 characters',
+            (val) => !val || val.length <= 6 || 'Symbols can only be 6 characters'
           ]"
         ></q-input>
         <q-input
@@ -321,6 +321,21 @@ export default {
   computed: {
     ...mapState("tokens", ["createToken", "editingToken", "config"]),
     ...mapGetters("accounts", ["account"]),
+    editing_stat() {
+      if (this.editingToken) {
+        return this.stat
+      } else {
+
+        if (!this.token.decimals) return null;
+        if (!this.token.symbol) return null;
+
+        let supply = (0).toFixed(this.token.decimals) + " " + this.token.symbol;
+        let max_supply = (this.token.supply || (0)).toFixed(this.token.decimals) + " " + this.token.symbol;
+        let issuer = this.account;
+
+        return { supply, max_supply, issuer };
+      }
+    },
     getTermsHtml() {
       return `Terms:
             ${
