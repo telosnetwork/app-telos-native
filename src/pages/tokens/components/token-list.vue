@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="list-container q-pa-md"
-    :class="selectedToken ? 'token-selected' : ''"
-  >
+  <div class="list-container q-pa-md" :class="selectedToken?'token-selected':''">
     <template v-if="!createToken && !editingToken">
       <token-detail
         class="token-preview q-mb-md show-close-btn"
@@ -143,7 +140,7 @@ export default {
         scope: this.selectedToken.token_symbol.split(",")[1],
         table: "stat",
       });
-
+      
       if (result.rows.length) {
         this.stat = result.rows[0];
       } else {
