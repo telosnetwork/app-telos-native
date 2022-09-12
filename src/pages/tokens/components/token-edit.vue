@@ -88,7 +88,7 @@
         <q-input v-model="token.logo_sm" label="Small logo URL"></q-input>
         <q-input v-model="token.logo_lg" label="Large logo URL"></q-input>
       </q-card-section>
-      <q-card-section class="footer-buttons">
+      <q-card-section class="footer-buttons q-mt-lg">
         <q-card-actions>
           <q-btn class="q-mr-auto" no-caps label="Cancel" @click="cancelEdit" />
 
