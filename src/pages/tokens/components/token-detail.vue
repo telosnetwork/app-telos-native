@@ -35,26 +35,62 @@
           <q-card-section class="col-auto text-right col-grow">
             <div v-if="stat" class="text-h8 q-mb-xs">max supply: <b>{{ stat.max_supply }}</b></div>
             <div v-if="stat" class="text-h8 q-mb-xs">supply: <b>{{ stat.supply }}</b></div>
-            <div v-if="balance" class="text-h8 q-mb-xs">your balance: <b>{{ balance }}</b></div>
+            <div v-if="balance" class="text-h8 q-mb-xs">your balance: <b>{{ balance }}</b></div>    
           </q-card-section>
         </q-card-section>
       </q-card-section>
     </q-card-section>
-
-    <template v-if="editable">
-      <q-separator />
-
-      <q-card-actions class="row">
-        <q-space />
+    
+    <q-separator />
+    <q-card-section class="row q-py-md">
+      <q-space />
+      <q-btn
+          v-if="!balance && owner"
+          class="q-ml-sm"
+          color="primary"
+          icon-right="fas fa-sd-card"
+          label="Open"
+          no-caps
+          @click="openBtn"
+        />
+      <q-btn
+          v-if="balance && parseFloat(balance.split(' ')[0]) > 0"
+          class="q-ml-sm"
+          color="primary"
+          icon-right="fa-solid fa-money-bill-transfer"
+          label="Transfer"
+          no-caps
+          @click="transferBtn"
+        />
         <q-btn
-            color="primary"
-            icon-right="fa-solid fa-pen-to-square"
-            label="Edit token"
-            no-caps
-            @click="editBtn"
-          />
-      </q-card-actions>
-  </template>
+          v-if="retireable"
+          class="q-ml-sm"
+          color="primary"
+          icon-right="fa-solid fa-fire-burner"
+          label="Retire"
+          no-caps
+          @click="retireBtn"
+        />        
+      <q-btn
+          v-if="issuable"
+          class="q-ml-sm"
+          color="primary"
+          icon-right="fa-solid fa-money-bills"
+          label="Issue"
+          no-caps
+          @click="issueBtn"
+        />
+      <q-btn
+          v-if="editable"
+          class="q-ml-sm"
+          color="primary"
+          icon-right="fa-solid fa-pen-to-square"
+          label="Edit token"
+          no-caps
+          @click="editBtn"
+        />
+    </q-card-section>
+  
   </q-card>
 </template>
 
@@ -69,6 +105,9 @@
     padding: 0px
     font-size: small
     line-height: 13px
+
+.mr-negative
+  margin-right: -16px
 </style>
 
 <style lang="sass">
@@ -79,7 +118,7 @@ button.q-btn.close-btn
   display: inline-flex
 </style>
 
-<script>
+<script >
 import { mapGetters } from "vuex";
 export default {
   name: "TokenDetail",
@@ -93,6 +132,8 @@ export default {
     logo_lg: String,
     balance: String,
     editable: Boolean,
+    issuable: Boolean,
+    retireable: Boolean,
     stat: {
       supply: String,
       max_supply: String,
@@ -103,14 +144,24 @@ export default {
     ...mapGetters("accounts", ["isAuthenticated", "account"]),
   },
   methods: {
-    closeBtn: function () {
-      console.log("closeBtn()");
+    closeBtn() {
       this.$emit("close");
     },
-    editBtn: function () {
-      console.log("editBtn()");
+    editBtn() {
       this.$emit("edit");
     },
+    transferBtn() {
+      this.$emit("transfer");
+    },
+    openBtn() {
+      this.$emit("open");
+    },
+    retireBtn() {
+      this.$emit("retire");
+    },
+    issueBtn() {
+      this.$emit("issue");
+    }
   },
 };
 </script>

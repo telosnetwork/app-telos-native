@@ -113,150 +113,11 @@
             <q-btn color="primary" no-caps type="submit">{{
               createToken ? `Create for ${this.config.create_price}` : "Save"
             }}</q-btn>
-
-            <q-btn-dropdown
-              v-if="!createToken"
-              color="primary"
-              label="Manage Tokens"
-            >
-              <q-list>
-                <q-item
-                  v-if="canIssue()"
-                  clickable
-                  v-close-popup
-                  @click="issueDialog = true"
-                >
-                  <q-item-section>
-                    <q-item-label>Issue</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item
-                  v-if="hasBalance()"
-                  clickable
-                  v-close-popup
-                  @click="retireDialog = true"
-                >
-                  <q-item-section>
-                    <q-item-label>Retire</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item
-                  v-if="hasBalance()"
-                  clickable
-                  v-close-popup
-                  @click="transferDialog = true"
-                >
-                  <q-item-section>
-                    <q-item-label>Transfer</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
           </q-card-actions>
         </q-card-section>
 
       </q-form>
     </q-card>
-
-    <q-dialog v-model="issueDialog" persistent>
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Issue</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          Issue more {{ this.token.symbol }} tokens
-        </q-card-section>
-        <q-card-section>
-          <q-input
-            v-model.number="amountToIssue"
-            type="number"
-            label="Amount"
-            :placeholder="`Max - ${getUnissued()}`"
-            :rules="[
-              (val) => !!val || '* Required',
-              (val) => {
-                return (
-                  val <= this.getUnissued() ||
-                  `Can only issue ${this.getUnissued()}`
-                );
-              },
-            ]"
-          ></q-input>
-          <q-input v-model="issueMemo" label="Memo"> </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Issue" color="primary" @click="doIssue" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="retireDialog" persistent>
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Retire {{ this.token.symbol }} tokens</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            v-model.number="amountToRetire"
-            type="number"
-            label="Amount"
-            :placeholder="`Max - ${getBalanceNumber()}`"
-            :rules="[
-              (val) => !!val || '* Required',
-              (val) => {
-                return (
-                  val <= this.getBalanceNumber() ||
-                  `Can only retire ${this.getBalanceNumber()}`
-                );
-              },
-            ]"
-          ></q-input>
-          <q-input v-model="retireMemo" label="Memo"> </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Retire" @click="doRetire" color="primary" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="transferDialog">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Transfer tokens</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            v-model.number="amountToTransfer"
-            type="number"
-            label="Amount"
-            :placeholder="`Max - ${getBalanceNumber()}`"
-            :rules="[
-              (val) => !!val || '* Required',
-              (val) => {
-                return (
-                  val <= this.getBalanceNumber() ||
-                  `Can only transfer ${this.getBalanceNumber()}`
-                );
-              },
-            ]"
-          ></q-input>
-          <q-input v-model="transferTo" label="To"> </q-input>
-          <q-input v-model="transferMemo" label="Memo"> </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Transfer" @click="doTransfer" color="primary" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 
@@ -326,16 +187,6 @@ export default {
       balance: null,
       stat: null,
       acceptedTerms: false,
-      transferDialog: false,
-      issueDialog: false,
-      retireDialog: false,
-      amountToIssue: null,
-      amountToRetire: null,
-      amountToTransfer: null,
-      issueMemo: null,
-      retireMemo: null,
-      transferMemo: null,
-      transferTo: null,
     };
   },
   computed: {
@@ -384,32 +235,7 @@ export default {
       "setMeta",
       "loadTokens",
       "doCreateToken",
-      "issueTokens",
-      "retireTokens",
-      "transferTokens",
     ]),
-    checkTerms(val) {
-      return val || "You must accept the terms";
-    },
-    canIssue() {
-      return this.stat && this.getUnissued() > 0;
-    },
-    getUnissued() {
-      if (!this.stat) return;
-
-      return (
-        parseFloat(this.stat.max_supply.split(" ")[0]) -
-        parseFloat(this.stat.supply.split(" ")[0])
-      );
-    },
-    hasBalance() {
-      if (!this.balance) return false;
-
-      return parseFloat(this.balance.split(" ")[0]) > 0;
-    },
-    getBalanceNumber() {
-      return this.hasBalance() ? parseFloat(this.balance.split(" ")[0]) : 0.0;
-    },
     async submit() {
       if (!this.acceptedTerms) {
         this.$refs.toggle.validate();
@@ -502,83 +328,6 @@ export default {
       } else {
         this.token = {};
       }
-    },
-    async doIssue() {
-      if (!this.amountToIssue) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to issue",
-        });
-        return;
-      }
-      await this.issueTokens({
-        ...this.token,
-        contractAccount: this.token.contract_account,
-        memo: this.issueMemo ? this.issueMemo : "",
-        amount: this.amountToIssue,
-      });
-      this.setBalance();
-      this.setStat();
-      this.amountToIssue = null;
-      this.retireMemo = null;
-      this.issueDialog = false;
-    },
-    async doRetire() {
-      if (!this.amountToRetire) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to retire",
-        });
-        return;
-      }
-      await this.retireTokens({
-        ...this.token,
-        contractAccount: this.token.contract_account,
-        memo: this.retireMemo ? this.retireMemo : "",
-        amount: this.amountToRetire,
-      });
-      this.setBalance();
-      this.setStat();
-      this.amountToRetire = null;
-      this.retireMemo = null;
-      this.retireDialog = false;
-    },
-    async doTransfer() {
-      if (!this.amountToTransfer) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to transfer",
-        });
-        return;
-      }
-      if (!this.transferTo) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an account to transfer to",
-        });
-        return;
-      }
-      let invalidAccount = await this.isAccountFree(this.transferTo);
-      if (invalidAccount) {
-        this.$q.notify({
-          type: "negative",
-          message: `Account ${this.transferTo} does not exist`,
-        });
-        return;
-      }
-      await this.transferTokens({
-        ...this.token,
-        contractAccount: this.token.contract_account,
-        memo: this.transferMemo ? this.transferMemo : "",
-        amount: this.amountToTransfer,
-        to: this.transferTo,
-      });
-      this.setBalance();
-      this.setStat();
-      this.amountToTransfer = null;
-      this.transferTo = null;
-      this.transferMemo = null;
-      this.transferDialog = false;
     },
     cancelEdit() {
       this.$store.commit("tokens/createToken", false);
