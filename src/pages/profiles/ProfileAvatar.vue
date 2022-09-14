@@ -9,7 +9,7 @@ import md5 from "md5";
 import VueGravatar from "src/components/VueGravatar.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "profile-avatar",
+  name: "ProfileAvatar",
   components: {
     VueGravatar,
   },
