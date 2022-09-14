@@ -67,6 +67,8 @@ div
       strong {{ $t('pages.trails.treasuries.card.supply') }}: {{ treasury.supply }}
       br
       strong {{ $t('pages.trails.treasuries.card.maxSupply') }}: {{ treasury.max_supply }}
+      br
+      strong Voters: {{treasury.voters}}
     q-card-section.btn-group
       q-btn(
         icon="fas fa-person-booth"
@@ -80,7 +82,7 @@ div
         icon="fas fa-user-plus"
         color="primary"
         size="sm"
-        :label="`${$t('pages.trails.treasuries.card.registerVoter')} ${treasury.voters} voters`"
+        :label="`${$t('pages.trails.treasuries.card.registerVoter')}`"
         :disabled="treasury.access === 'private'"
         @click="show = true"
       )
@@ -89,7 +91,7 @@ div
         icon="fas fa-user-check"
         color="primary"
         size="sm"
-        :label="`${$t('pages.trails.treasuries.card.registered')} ${treasury.voters} voters`"
+        :label="`${$t('pages.trails.treasuries.card.registered')}`"
       )
 </template>
 
