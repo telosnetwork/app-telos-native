@@ -1,243 +1,171 @@
 <!-- eslint-disable vue/no-child-content -->
 <template>
-  <div class="q-pa-md row items-start q-gutter-md">
-    <q-card style="max-width: 600px">
+  <div
+    class="form-container q-pa-md column"
+    :class="acceptedTerms ? 'terms-accepted' : ''"
+  >
+    <token-detail
+      class="q-mb-md show-close-btn"
+      :name="token.name ? token.name : 'Token name'"
+      :symbol="token.symbol ? token.symbol : 'SYMBOL'"
+      :decimals="token.decimals"
+      :stat="editing_stat"
+      :logo_sm="token.logo_sm ? token.logo_sm : defaultIcon"
+      :logo_lg="token.logo_lg ? token.logo_lg : defaultIcon"
+      @close="cancelEdit"
+    ></token-detail>
+
+    <q-card>
       <div class="q-pa-lg text-h4">
         {{ editingToken ? "Edit your token's info" : "Create a new token" }}
       </div>
-      <q-card-section>
-        <div class="q-pa-md" v-html="getTermsHtml"></div>
-        <q-field
-          ref="toggle"
-          :value="acceptedTerms"
-          :rules="[checkTerms]"
-          borderless
-          dense
-        >
-          <template v-slot:control>
-            <q-checkbox
-              v-model="acceptedTerms"
-              color="green"
-              label="Please acknowledge these terms"
-            >
-            </q-checkbox>
-          </template>
-        </q-field>
-      </q-card-section>
-      <q-card-section>
-        <q-input v-model="token.name" label="Token name"></q-input>
-        <q-input
-          v-model="token.symbol"
-          counter
-          :readonly="!!editingToken"
-          label="Symbol"
-          @input="
-            (val) => (token.symbol = val.toUpperCase().replace(/[^A-Z]/g, ''))
-          "
-          :rules="[
-            !!val || '* Required',
-            (val) => val.length <= 6 || 'Symbols can only be 6 characters',
-          ]"
-        ></q-input>
-        <q-input
-          v-model.number="token.decimals"
-          type="number"
-          :readonly="!!editingToken"
-          label="Decimals"
-          :rules="[
-            (val) => !!val || '* Required',
-            (val) => val <= 9 || 'Can only have up to 9 decimals of precision',
-          ]"
-        ></q-input>
-        <q-input
-          v-model.number="token.supply"
-          type="number"
-          v-if="createToken && token.decimals"
-          label="Max supply"
-          @input="
-            (val) =>
-              token.decimals &&
-              (token.supply = parseFloat(val.toFixed(token.decimals)))
-          "
-          lazy-rules
-          :rules="[
-            (val) => !!val || '* Required',
-            (val) => {
-              return (
-                parseInt(val.toFixed(token.decimals).replace(/\./g, '')) <
-                  4611686018427388000 ||
-                '* supply (without decimals) must be less than 4611686018427388000'
-              );
-            },
-          ]"
-        ></q-input>
-        <q-input v-model="token.logo_sm" label="Small logo URL"></q-input>
-        <q-input v-model="token.logo_lg" label="Large logo URL"></q-input>
-      </q-card-section>
-      <q-card-section>
-        <div class="text-h6">Balance: {{ balance }}</div>
-      </q-card-section>
-      <q-card-section>
-        <q-card-actions>
-          <q-btn flat @click="submit">{{
-            createToken ? `Create for ${this.config.create_price}` : "Save"
-          }}</q-btn>
-          <q-btn flat @click="cancelEdit">Cancel</q-btn>
-          <q-btn-dropdown
-            v-if="!createToken"
-            color="primary"
-            label="Manage Tokens"
+
+      <q-form
+        ref="myform"
+        @submit="submit"
+      >
+
+        <q-card-section class="terms-section">
+          <div class="terms q-pa-md" v-html="getTermsHtml"></div>
+          <q-field
+            ref="toggle"
+            :value="acceptedTerms"
+            :rules="[
+              !!val || 'You must accept the terms'
+            ]"
+            borderless
+            dense
           >
-            <q-list>
-              <q-item
-                v-if="canIssue()"
-                clickable
-                v-close-popup
-                @click="issueDialog = true"
+            <template v-slot:control>
+              <q-checkbox
+                v-model="acceptedTerms"
+                color="green"
+                label="Please acknowledge these terms"
               >
-                <q-item-section>
-                  <q-item-label>Issue</q-item-label>
-                </q-item-section>
-              </q-item>
+              </q-checkbox>
+            </template>
+          </q-field>
+        </q-card-section>
+        <q-card-section class="form-fields">
+          <q-input
+            v-model="token.name"
+            label="Token name"
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required'
+            ]"
+          ></q-input>
+          <q-input
+            v-model="token.symbol"
+            counter
+            :readonly="!!editingToken"
+            label="Symbol"
+            @input="
+              (val) => (token.symbol = val.toUpperCase().replace(/[^A-Z]/g, ''))
+            "
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required',
+              (val) => !val || val.length <= 6 || 'Symbols can only be 6 characters'
+            ]"
+          ></q-input>
+          <q-input
+            v-model.number="token.decimals"
+            type="number"
+            :readonly="!!editingToken"
+            label="Decimals"
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required',
+              (val) => val <= 9 || 'Can only have up to 9 decimals of precision',
+            ]"
+          ></q-input>
+          <q-input
+            ref="input_supply"
+            v-model.number="token.supply"
+            type="number"
+            v-if="createToken && token.decimals"
+            label="Max supply"
+            @input="
+              (val) =>
+                token.decimals &&
+                (token.supply = parseFloat(val.toFixed(token.decimals)))
+            "
+            lazy-rules
+            :rules="[
+              (val) => !!val || '* Required',
+              (val) => {
+                return (
+                  parseInt(val.toFixed(token.decimals).replace(/\./g, '')) <
+                    4611686018427388000 ||
+                  '* supply (without decimals) must be less than 4611686018427388000'
+                );
+              },
+            ]"
+          ></q-input>
+          <q-input v-model="token.logo_sm" label="Small logo URL"></q-input>
+          <q-input v-model="token.logo_lg" label="Large logo URL"></q-input>
+        </q-card-section>
+        <q-card-section class="footer-buttons q-mt-lg">
+          <q-card-actions>
+            <q-btn class="q-mr-auto" no-caps label="Cancel" @click="cancelEdit" />
+            
+            <q-btn color="primary" no-caps type="submit">{{
+              createToken ? `Create for ${this.config.create_price}` : "Save"
+            }}</q-btn>
+          </q-card-actions>
+        </q-card-section>
 
-              <q-item
-                v-if="hasBalance()"
-                clickable
-                v-close-popup
-                @click="retireDialog = true"
-              >
-                <q-item-section>
-                  <q-item-label>Retire</q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item
-                v-if="hasBalance()"
-                clickable
-                v-close-popup
-                @click="transferDialog = true"
-              >
-                <q-item-section>
-                  <q-item-label>Transfer</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
-        </q-card-actions>
-      </q-card-section>
+      </q-form>
     </q-card>
-    <token-detail
-      :name="token.name"
-      :symbol="token.symbol"
-      :decimals="token.decimals"
-      :supply="token.supply"
-      :logo_sm="token.logo_sm"
-      :logo_lg="token.logo_lg"
-    ></token-detail>
-
-    <q-dialog v-model="issueDialog" persistent>
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Issue</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          Issue more {{ this.token.symbol }} tokens
-        </q-card-section>
-        <q-card-section>
-          <q-input
-            v-model.number="amountToIssue"
-            type="number"
-            label="Amount"
-            :placeholder="`Max - ${getUnissued()}`"
-            :rules="[
-              (val) => !!val || '* Required',
-              (val) => {
-                return (
-                  val <= this.getUnissued() ||
-                  `Can only issue ${this.getUnissued()}`
-                );
-              },
-            ]"
-          ></q-input>
-          <q-input v-model="issueMemo" label="Memo"> </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Issue" color="primary" @click="doIssue" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="retireDialog" persistent>
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Retire {{ this.token.symbol }} tokens</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            v-model.number="amountToRetire"
-            type="number"
-            label="Amount"
-            :placeholder="`Max - ${getBalanceNumber()}`"
-            :rules="[
-              (val) => !!val || '* Required',
-              (val) => {
-                return (
-                  val <= this.getBalanceNumber() ||
-                  `Can only retire ${this.getBalanceNumber()}`
-                );
-              },
-            ]"
-          ></q-input>
-          <q-input v-model="retireMemo" label="Memo"> </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Retire" @click="doRetire" color="primary" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="transferDialog">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Transfer tokens</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            v-model.number="amountToTransfer"
-            type="number"
-            label="Amount"
-            :placeholder="`Max - ${getBalanceNumber()}`"
-            :rules="[
-              (val) => !!val || '* Required',
-              (val) => {
-                return (
-                  val <= this.getBalanceNumber() ||
-                  `Can only transfer ${this.getBalanceNumber()}`
-                );
-              },
-            ]"
-          ></q-input>
-          <q-input v-model="transferTo" label="To"> </q-input>
-          <q-input v-model="transferMemo" label="Memo"> </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Transfer" @click="doTransfer" color="primary" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
+
+<style lang="sass" scoped>
+.terms
+  opacity: 1
+  overflow: hidden
+  max-height: 190px
+  transition-property: max-height, opacity, padding
+  transition-duration: 0.5s
+  .terms-accepted &
+    opacity: 0
+    padding-top: 0px
+    padding-bottom: 0px
+    max-height: 0px
+
+.terms-section
+  transition-duration: 0.5s
+  transition-property: padding
+  .terms-accepted &
+    padding-top: 0px
+
+.form-fields, .footer-buttons
+  opacity: 0
+  overflow: hidden
+  padding-top: 0px
+  padding-bottom: 0px
+  max-height: 0px
+  transition-property: max-height, opacity, padding
+  transition-duration: 0.5s
+  .terms-accepted &
+    opacity: 1
+    max-height: 400px
+
+@import '~quasar/src/css/variables'
+
+.form-container
+  min-width: auto
+
+@media (min-width: $breakpoint-md-min)
+  .form-container
+    min-width: 900px
+</style>
 
 <script>
 import TokenDetail from "./TokenDetail.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
+const defaultIcon = "statics/generic-token.svg";
 export default {
   name: "TokenEdit",
   components: {
@@ -255,24 +183,30 @@ export default {
         contract_account: null,
         owner: null,
       },
+      defaultIcon,
       balance: null,
       stat: null,
       acceptedTerms: false,
-      transferDialog: false,
-      issueDialog: false,
-      retireDialog: false,
-      amountToIssue: null,
-      amountToRetire: null,
-      amountToTransfer: null,
-      issueMemo: null,
-      retireMemo: null,
-      transferMemo: null,
-      transferTo: null,
     };
   },
   computed: {
     ...mapState("tokens", ["createToken", "editingToken", "config"]),
     ...mapGetters("accounts", ["account"]),
+    editing_stat() {
+      if (this.editingToken) {
+        return this.stat
+      } else {
+
+        if (!this.token.decimals) return null;
+        if (!this.token.symbol) return null;
+
+        let supply = (0).toFixed(this.token.decimals) + " " + this.token.symbol;
+        let max_supply = (this.token.supply || (0)).toFixed(this.token.decimals) + " " + this.token.symbol;
+        let issuer = this.account;
+
+        return { supply, max_supply, issuer };
+      }
+    },
     getTermsHtml() {
       return `Terms:
             ${
@@ -301,32 +235,7 @@ export default {
       "setMeta",
       "loadTokens",
       "doCreateToken",
-      "issueTokens",
-      "retireTokens",
-      "transferTokens",
     ]),
-    checkTerms(val) {
-      return val || "You must accept the terms";
-    },
-    canIssue() {
-      return this.stat && this.getUnissued() > 0;
-    },
-    getUnissued() {
-      if (!this.stat) return;
-
-      return (
-        parseFloat(this.stat.max_supply.split(" ")[0]) -
-        parseFloat(this.stat.supply.split(" ")[0])
-      );
-    },
-    hasBalance() {
-      if (!this.balance) return false;
-
-      return parseFloat(this.balance.split(" ")[0]) > 0;
-    },
-    getBalanceNumber() {
-      return this.hasBalance() ? parseFloat(this.balance.split(" ")[0]) : 0.0;
-    },
     async submit() {
       if (!this.acceptedTerms) {
         this.$refs.toggle.validate();
@@ -419,83 +328,6 @@ export default {
       } else {
         this.token = {};
       }
-    },
-    async doIssue() {
-      if (!this.amountToIssue) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to issue",
-        });
-        return;
-      }
-      await this.issueTokens({
-        ...this.token,
-        contractAccount: this.token.contract_account,
-        memo: this.issueMemo ? this.issueMemo : "",
-        amount: this.amountToIssue,
-      });
-      this.setBalance();
-      this.setStat();
-      this.amountToIssue = null;
-      this.retireMemo = null;
-      this.issueDialog = false;
-    },
-    async doRetire() {
-      if (!this.amountToRetire) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to retire",
-        });
-        return;
-      }
-      await this.retireTokens({
-        ...this.token,
-        contractAccount: this.token.contract_account,
-        memo: this.retireMemo ? this.retireMemo : "",
-        amount: this.amountToRetire,
-      });
-      this.setBalance();
-      this.setStat();
-      this.amountToRetire = null;
-      this.retireMemo = null;
-      this.retireDialog = false;
-    },
-    async doTransfer() {
-      if (!this.amountToTransfer) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to transfer",
-        });
-        return;
-      }
-      if (!this.transferTo) {
-        this.$q.notify({
-          type: "negative",
-          message: "Please specify an account to transfer to",
-        });
-        return;
-      }
-      let invalidAccount = await this.isAccountFree(this.transferTo);
-      if (invalidAccount) {
-        this.$q.notify({
-          type: "negative",
-          message: `Account ${this.transferTo} does not exist`,
-        });
-        return;
-      }
-      await this.transferTokens({
-        ...this.token,
-        contractAccount: this.token.contract_account,
-        memo: this.transferMemo ? this.transferMemo : "",
-        amount: this.amountToTransfer,
-        to: this.transferTo,
-      });
-      this.setBalance();
-      this.setStat();
-      this.amountToTransfer = null;
-      this.transferTo = null;
-      this.transferMemo = null;
-      this.transferDialog = false;
     },
     cancelEdit() {
       this.$store.commit("tokens/createToken", false);

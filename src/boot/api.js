@@ -2,6 +2,8 @@ import { boot } from "quasar/wrappers";
 import { Api, JsonRpc } from "eosjs";
 
 const signTransaction = async function (actions) {
+  // TODO: borrame
+  console.log("signTransaction()", actions);
   actions.forEach((action) => {
     if (!action.authorization || !action.authorization.length) {
       action.authorization = [
