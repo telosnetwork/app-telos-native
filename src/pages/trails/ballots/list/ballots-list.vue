@@ -32,7 +32,7 @@ export default {
       sortMode: "",
       startY: 0,
       timerAction: null,
-      limit: 100,
+      limit: 50,
     };
   },
   props: {
@@ -77,11 +77,11 @@ export default {
     async onLoad(status) {
       let scrollY = window.scrollY;
       if (
-        (scrollY > this.startY && this.limit <= 500) ||
+        (scrollY > this.startY && this.limit !== 500) ||
         status === true
       ) {
         this.$refs.infiniteScroll.resume();
-        this.limit += 45;
+        this.limit += 25;
         const filter = {
           index: 4,
           lower:
@@ -90,7 +90,6 @@ export default {
             this.treasury || (this.$route.query && this.$route.query.treasury),
           limit: this.limit,
         };
-        console.log(this.limit)
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
           this.$refs.infiniteScroll.stop();
@@ -161,17 +160,17 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.treasury = newTreasury;
     },
     updateStatuses(newStatuses) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.statuses = newStatuses;
     },
     updateCategories(newCategories) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.categories = newCategories;
     },
@@ -212,7 +211,7 @@ export default {
       );
     },
     changeDirection(isBallotListRowDirection) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.isBallotListRowDirection = isBallotListRowDirection;
     },
@@ -244,7 +243,7 @@ export default {
     },
 
     changeSortOption(option) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.sortMode = option;
     },
