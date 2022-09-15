@@ -33,6 +33,7 @@ export default {
       startY: 0,
       timerAction: null,
       limit: 100,
+      maxLimit: 500
     };
   },
   props: {
@@ -77,7 +78,7 @@ export default {
     async onLoad(status) {
       let scrollY = window.scrollY;
       if (
-        (scrollY > this.startY && this.limit <= 500) ||
+        (scrollY > this.startY && this.limit <= this.maxLimit) ||
         status === true
       ) {
         this.$refs.infiniteScroll.resume();
