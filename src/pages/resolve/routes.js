@@ -9,7 +9,7 @@ export const resolveRoutes = [
   { path: "elections", component: Elections, name: "Elections" },
   { path: "cases", component: Cases, name: "Cases" },
   // todo: special name case may need to be changed
-  { path: "/", component: Home, name: "Resolve" },
+  { path: "", component: Home, name: "Resolve" },
   {
     path: "case/:id",
     component: CaseFile,
