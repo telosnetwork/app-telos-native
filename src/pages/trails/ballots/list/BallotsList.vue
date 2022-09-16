@@ -33,7 +33,7 @@ export default {
       startY: 0,
       timerAction: null,
       limit: 100,
-      maxLimit: 500
+      maxLimit: 500,
     };
   },
   props: {
@@ -82,7 +82,12 @@ export default {
         status === true
       ) {
         this.$refs.infiniteScroll.resume();
-        this.limit += 45;
+        // Start allways with a limit of 200 and then go +100 on next query
+        if (status === true) {
+          this.limit = 200;
+        } else {
+          this.limit += 100;
+        }
         const filter = {
           index: 4,
           lower:
@@ -91,7 +96,7 @@ export default {
             this.treasury || (this.$route.query && this.$route.query.treasury),
           limit: this.limit,
         };
-        console.log(this.limit)
+        console.log(this.limit);
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
           this.$refs.infiniteScroll.stop();
