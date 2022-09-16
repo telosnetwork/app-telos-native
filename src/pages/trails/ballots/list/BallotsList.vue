@@ -33,7 +33,7 @@ export default {
       startY: 0,
       timerAction: null,
       limit: 50,
-      maxLimit: 300
+      maxLimit: 300,
     };
   },
   props: {
@@ -82,7 +82,12 @@ export default {
         status === true
       ) {
         this.$refs.infiniteScroll.resume();
-        this.limit += 25;
+        // Start allways with a limit of 200 and then go +100 on next query
+        if (status === true) {
+          this.limit = 200;
+        } else {
+          this.limit += 100;
+        }
         const filter = {
           index: 4,
           lower:
