@@ -195,6 +195,9 @@ export default {
     updatePopupScroll(e) {
       this.scrollPosition = e.target.scrollTop;
     },
+    getPartOfTotalPercent(option) {
+        return Math.round(this.getPartOfTotal(option) * 10000) / 100;
+    },
     getPartOfTotal(option) {
       if (option) {
         return !isNaN(this.getPercentofTotal(option))
@@ -298,7 +301,7 @@ export default {
                                             )
                                                 div.checkbox-text.row.space-between
                                                     div {{ option.key }}
-                                                    div(v-if="getPartOfTotal(option)") {{ getPartOfTotal(option) * 100 }}%&nbsp
+                                                    div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
                                         q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
                             q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
@@ -438,7 +441,7 @@ export default {
                                                 )
                                                     div.checkbox-text.row.space-between
                                                         div {{ option.key }}
-                                                        div(v-if="getPartOfTotal(option)") {{ getPartOfTotal(option) * 100 }}%&nbsp
+                                                        div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                         div.linear-progress(v-if="displayWinner(ballot)")
                                             q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
                                 q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
