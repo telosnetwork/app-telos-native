@@ -95,17 +95,19 @@ export type HyperionDelta = {
   data: any;
 };
 
+export type HyperionAct = {
+  account: string;
+  name: string;
+  authorization: Authorization[];
+  data: any;  
+}
+
 export type HyperionAction = {
   "@timestamp": string;
   timestamp: string;
   block_num: number;
   trx_id: string;
-  act: {
-    account: string;
-    name: string;
-    authorization: { actor: string; permission: string }[];
-    data: any;
-  };
+  act: HyperionAct;
   notified: string[];
   cpu_usage_us: number;
   net_usage_words: number;
@@ -117,3 +119,8 @@ export type HyperionAction = {
   creator_action_ordinal: number;
   signatures: string[];
 };
+
+export type Authorization = {
+ actor: string;
+ permission: string
+}
