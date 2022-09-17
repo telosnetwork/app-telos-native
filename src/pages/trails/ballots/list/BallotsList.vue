@@ -96,7 +96,6 @@ export default {
             this.treasury || (this.$route.query && this.$route.query.treasury),
           limit: this.limit,
         };
-        console.log(this.limit);
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
           this.$refs.infiniteScroll.stop();
