@@ -34,6 +34,7 @@ export default {
       timerAction: null,
       limit: 100,
       maxLimit: 500,
+      loading: false
     };
   },
   props: {
@@ -77,6 +78,7 @@ export default {
 
     async onLoad(reseted) {
       let scrollY = window.scrollY;
+      this.loading = true
       if (
         (scrollY > this.startY && this.limit <= this.maxLimit) ||
         reseted === true
@@ -99,10 +101,12 @@ export default {
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
           this.$refs.infiniteScroll.stop();
+          this.loading = false
         }
       } else {
         setTimeout(() => {
           this.$refs.infiniteScroll.stop();
+          this.loading = false
         }, 3000);
       }
       this.startY = scrollY;
@@ -321,7 +325,7 @@ q-page
         )
       p.text-weight-bold(
         style="text-align: center"
-        v-if="!sortBallots(filterBallots(ballots),sortMode).length"  ) There is no data for the corresponding request
+        v-if="!sortBallots(filterBallots(ballots),sortMode).length && !loading") There is no data for the corresponding request
 
       template(v-slot:loading)
         .row.justify-center.q-my-md
