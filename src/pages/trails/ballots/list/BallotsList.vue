@@ -75,15 +75,15 @@ export default {
     ]),
     ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
 
-    async onLoad(status) {
+    async onLoad(reseted) {
       let scrollY = window.scrollY;
       if (
         (scrollY > this.startY && this.limit <= this.maxLimit) ||
-        status === true
+        reseted === true
       ) {
         this.$refs.infiniteScroll.resume();
         // Start allways with a limit of 200 and then go +100 on next query
-        if (status === true) {
+        if (reseted === true) {
           this.limit = 200;
         } else {
           this.limit += 100;
