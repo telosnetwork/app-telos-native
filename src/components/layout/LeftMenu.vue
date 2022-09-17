@@ -21,7 +21,7 @@ export default {
         { label: this.$t("menu.contacts"), route: "/profiles/contacts" },
         {
           label: this.$t("menu.trailsTreasuries"),
-          route: "/trails/treasuries",
+          route: "/",
         },
         [
           { label: this.$t("menu.amendBallots"), filter: "amend-ballots" },

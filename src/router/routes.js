@@ -1,10 +1,5 @@
 const routes = [
   {
-    path: "/",
-    component: () => import("pages/index.vue"),
-    meta: { layout: "empty", guest: true },
-  },
-  {
     path: "/login",
     component: () => import("pages/login/LoginPage.vue"),
     meta: { layout: "guest", title: "pages.login.title", guest: true },
@@ -36,7 +31,7 @@ const routes = [
     meta: { guest: false },
   },
   {
-    path: "/trails/treasuries",
+    path: "/",
     component: () => import("pages/trails/treasuries/list/TreasuriesList.vue"),
     meta: { guest: false },
   },
