@@ -3,7 +3,7 @@
     <div class="q-pa-md">
       <q-table
         title="Elections"
-        :data="electionData || []"
+        :rows="electionData || []"
         :columns="columns"
         row-key="name"
         :loading="electionData === null"
@@ -25,7 +25,9 @@
             </q-td>
             <q-td key="ballot_name" class="ballot_name">
               <div class="info">
-                <div class="ballot-name">{{ props.row.ballot_name || `${props.row.election_id}` }}</div>
+                <div class="ballot-name">
+                  {{ props.row.ballot_name || `${props.row.election_id}` }}
+                </div>
                 <div class="ballot-subtitle">This is some description</div>
               </div>
             </q-td>
@@ -55,7 +57,11 @@
               {{ ELECTION_STATUS[props.row.status] }}
             </q-td>
           </q-tr>
-          <q-tr v-show="expandedRows[props.row.election_id]" class="expanded-row" :props="props">
+          <q-tr
+            v-show="expandedRows[props.row.election_id]"
+            class="expanded-row"
+            :props="props"
+          >
             <!-- {{JSON.stringify(props.row)}} -->
             <candidates-cell
               :election="props.row"
@@ -71,59 +77,67 @@
 </template>
 
 <script>
-import CandidatesCell from './CandidatesCell.vue'
-import { ELECTION_STATUS } from '../constants'
+import CandidatesCell from "./CandidatesCell.vue";
+import { ELECTION_STATUS } from "../constants";
 // import IpfsLink from './IpfsLink.vue'
-import { getSymbolInfo } from '../util'
+import { getSymbolInfo } from "../util";
 
 export default {
   components: {
-    CandidatesCell
+    CandidatesCell,
     // IpfsLink
   },
-  data () {
+  data() {
     return {
       columns: [
-        { name: 'election_id', label: 'ID', field: 'election_id' },
-        { name: 'ballot_name', label: 'Ballot Name', field: 'ballot_name' },
-        { name: 'candidates', label: 'Candidates', field: 'candidates' },
-        { name: 'available_seats', label: 'Seats', field: 'available_seats' },
-        { name: 'end_add_candidates_ts', label: 'End Add Candidates', field: 'end_add_candidates_ts' },
-        { name: 'begin_voting_ts', label: 'Start Voting', field: 'begin_voting_ts' },
-        { name: 'end_voting_ts', label: 'End Voting', field: 'end_voting_ts' },
-        { name: 'status', label: 'Status', field: 'status' }
+        { name: "election_id", label: "ID", field: "election_id" },
+        { name: "ballot_name", label: "Ballot Name", field: "ballot_name" },
+        { name: "candidates", label: "Candidates", field: "candidates" },
+        { name: "available_seats", label: "Seats", field: "available_seats" },
+        {
+          name: "end_add_candidates_ts",
+          label: "End Add Candidates",
+          field: "end_add_candidates_ts",
+        },
+        {
+          name: "begin_voting_ts",
+          label: "Start Voting",
+          field: "begin_voting_ts",
+        },
+        { name: "end_voting_ts", label: "End Voting", field: "end_voting_ts" },
+        { name: "status", label: "Status", field: "status" },
       ],
       expandedRows: [],
-      ELECTION_STATUS
-    }
+      ELECTION_STATUS,
+    };
   },
   methods: {
-    totalVotes (election) {
+    totalVotes(election) {
       if (election && election.candidates) {
         return election.candidates.reduce((previous, current) => {
-          const { whole } = getSymbolInfo(current.votes)
-          return previous + whole
-        }, 0)
+          const { whole } = getSymbolInfo(current.votes);
+          return previous + whole;
+        }, 0);
       } else {
-        return 0
+        return 0;
       }
     },
-    toggleRow (electionId) {
-      this.expandedRows[electionId] = !this.expandedRows[electionId]
-    }
+    toggleRow(electionId) {
+      this.expandedRows[electionId] = !this.expandedRows[electionId];
+    },
   },
   computed: {
-    electionData () {
-      return this.$store.state.resolve.elections
-    }
-  }
-}
+    electionData() {
+      return this.$store.state.resolve.elections;
+    },
+  },
+};
 </script>
 
 <style lang="scss">
 .resolve-table {
   .q-table__top {
-    background-color: #571AFF;
+    background-color: #571aff;
   }
 
   .q-table__title {
@@ -132,7 +146,6 @@ export default {
 
   .expanded-row {
     td {
-
     }
   }
 
@@ -141,18 +154,18 @@ export default {
       text-align: left;
 
       span:nth-child(1) {
-        font-family: 'Roboto';
+        font-family: "Roboto";
         font-style: normal;
         font-weight: 700;
         font-size: 11px;
         line-height: 37px;
         text-transform: uppercase;
-        color: #071A5F;
+        color: #071a5f;
         opacity: 0.5;
       }
 
       &:nth-child(2) {
-        font-family: 'Roboto';
+        font-family: "Roboto";
         font-style: normal;
         font-weight: 400;
         font-size: 14px;
@@ -172,7 +185,7 @@ export default {
           font-weight: 400;
           font-size: 18px;
           line-height: 37px;
-          color: #571AFF;
+          color: #571aff;
         }
 
         .ballot-subtitle {
@@ -183,7 +196,6 @@ export default {
           opacity: 0.5;
         }
       }
-
     }
   }
 }

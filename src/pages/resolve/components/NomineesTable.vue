@@ -1,14 +1,11 @@
 <template>
-  <div
-    class="q-pa-md"
-    v-if="nomineeData"
-  >
+  <div class="q-pa-md" v-if="nomineeData">
     <!-- <q-banner inline-actions class="text-white bg-red" v-if="isPastAddCandidates">
       Candidacy nomination period for current election has already passed
     </q-banner> -->
     <q-table
       title="Nominees"
-      :data="nomineeData"
+      :rows="nomineeData"
       :columns="columns"
       :rows="nomineeData"
       row-key="name"
@@ -20,34 +17,57 @@
           </div>
           <div class="header-buttons">
             <div class="q-pa-md q-gutter-sm">
-              <q-btn v-if="isNominateButtonVisible" color="primary" label="Nominate Self" @click="nominate = true" />
+              <q-btn
+                v-if="isNominateButtonVisible"
+                color="primary"
+                label="Nominate Self"
+                @click="nominate = true"
+              />
             </div>
           </div>
         </div>
       </template>
       <template v-slot:body-cell-nominee_name="props">
         <q-td :props="props">
-					<profile-avatar :account_name="props.nominee_name" size="24px" childClass="profile-avatar"></profile-avatar>
-						<span>{{props.row.nominee_name}}</span>
-					</q-td>
-			</template>
+          <profile-avatar
+            :account_name="props.nominee_name"
+            size="24px"
+            childClass="profile-avatar"
+          ></profile-avatar>
+          <span>{{ props.row.nominee_name }}</span>
+        </q-td>
+      </template>
       <template v-slot:body-cell-credentials_link="props">
         <q-td :props="props">
           <ipfs-link :hash="props.row.credentials_link">
-            {{props.row.credentials_link}}
+            {{ props.row.credentials_link }}
           </ipfs-link>
         </q-td>
-			</template>
+      </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn-dropdown color="primary" label="Actions" v-if="isUserNominee(props.row.nominee_name)">
+          <q-btn-dropdown
+            color="primary"
+            label="Actions"
+            v-if="isUserNominee(props.row.nominee_name)"
+          >
             <q-list>
-              <q-item clickable v-close-popup @click="enterElection" v-if="isEnterElectionButtonVisible">
+              <q-item
+                clickable
+                v-close-popup
+                @click="enterElection"
+                v-if="isEnterElectionButtonVisible"
+              >
                 <q-item-section>
                   <q-item-label>Enter Election</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="removeSelf" v-if="isRemoveCandidateButtonVisible">
+              <q-item
+                clickable
+                v-close-popup
+                @click="removeSelf"
+                v-if="isRemoveCandidateButtonVisible"
+              >
                 <q-item-section>
                   <q-item-label>Remove</q-item-label>
                 </q-item-section>
@@ -55,152 +75,171 @@
             </q-list>
           </q-btn-dropdown>
         </q-td>
-			</template>
+      </template>
     </q-table>
-    <nominate-self-modal :dialogName="nominate" :close="closeModal"></nominate-self-modal>
+    <nominate-self-modal
+      :dialogName="nominate"
+      :close="closeModal"
+    ></nominate-self-modal>
   </div>
 </template>
 
 <script>
-import ProfileAvatar from '../../../components/common/ProfileAvatar.vue'
-import NominateSelfModal from './NominateSelfModal.vue'
-import IpfsLink from './IpfsLink.vue'
+import ProfileAvatar from "../../../components/common/ProfileAvatar.vue";
+import NominateSelfModal from "./NominateSelfModal.vue";
+import IpfsLink from "./IpfsLink.vue";
 
 export default {
   components: {
     ProfileAvatar,
     NominateSelfModal,
-    IpfsLink
+    IpfsLink,
   },
-  data () {
+  data() {
     return {
       nominate: false,
       columns: [
-        { name: 'nominee_name',
-          label: 'Nominee',
-          field: 'nominee_name'
-        }, {
-          name: 'credentials_link',
-          label: 'Credentials',
-          field: 'credentials_link'
-        }, {
-          name: 'application_time',
-          label: 'Applied',
-          field: 'application_time'
-        }, {
-          name: 'actions',
-          label: 'Actions',
-          field: 'actions'
-        }
-      ]
-    }
+        { name: "nominee_name", label: "Nominee", field: "nominee_name" },
+        {
+          name: "credentials_link",
+          label: "Credentials",
+          field: "credentials_link",
+        },
+        {
+          name: "application_time",
+          label: "Applied",
+          field: "application_time",
+        },
+        {
+          name: "actions",
+          label: "Actions",
+          field: "actions",
+        },
+      ],
+    };
   },
   methods: {
-    isPastAddCandidates () {
-      let result = false
-      const end = new Date(this.config.end_add_candidates_ts)
-      const now = new Date()
+    isPastAddCandidates() {
+      let result = false;
+      const end = new Date(this.config.end_add_candidates_ts);
+      const now = new Date();
       if (now > end) {
-        result = true
+        result = true;
       }
-      return result
+      return result;
     },
-    isUserNominee (nomineeName) {
-      const account = this.$store.getters['accounts/account']
-      const isRowNominee = nomineeName === account
-      if (isRowNominee) return true
-      return false
+    isUserNominee(nomineeName) {
+      const account = this.$store.getters["accounts/account"];
+      const isRowNominee = nomineeName === account;
+      if (isRowNominee) return true;
+      return false;
     },
-    isRemoveSelfButtonVisible (nomineeName) {
-      const account = this.$store.getters['accounts/account']
-      const isRowNominee = nomineeName === account
-      if (isRowNominee) return true
-      return false
+    isRemoveSelfButtonVisible(nomineeName) {
+      const account = this.$store.getters["accounts/account"];
+      const isRowNominee = nomineeName === account;
+      if (isRowNominee) return true;
+      return false;
     },
-    async removeSelf () {
-      const unregNomineeActions = [{
-        account: 'testtelosarb',
-        name: 'unregnominee',
-        data: {
-          nominee: this.$store.getters['accounts/account']
-        }
-      }]
+    async removeSelf() {
+      const unregNomineeActions = [
+        {
+          account: "testtelosarb",
+          name: "unregnominee",
+          data: {
+            nominee: this.$store.getters["accounts/account"],
+          },
+        },
+      ];
       try {
-        await this.$store.$api.signTransaction(unregNomineeActions)
+        await this.$store.$api.signTransaction(unregNomineeActions);
       } catch (err) {
-        console.log('removeSelf error: ', err)
+        console.log("removeSelf error: ", err);
       }
     },
-    async enterElection () {
-      const enterElectionAction = [{
-        account: 'testtelosarb',
-        name: 'candaddlead',
-        data: {
-          nominee: this.$store.getters['accounts/account']
-        }
-      }]
+    async enterElection() {
+      const enterElectionAction = [
+        {
+          account: "testtelosarb",
+          name: "candaddlead",
+          data: {
+            nominee: this.$store.getters["accounts/account"],
+          },
+        },
+      ];
       try {
-        await this.$store.$api.signTransaction(enterElectionAction)
+        await this.$store.$api.signTransaction(enterElectionAction);
       } catch (err) {
-        console.log('removeSelf error: ', err)
+        console.log("removeSelf error: ", err);
       }
     },
-    closeModal () {
-      this.nominate = false
-    }
+    closeModal() {
+      this.nominate = false;
+    },
   },
   computed: {
-    isNominateButtonVisible () {
-      if (!this.elections || !this.configData) return
-      const isAuthenticated = this.$store.getters['accounts/isAuthenticated']
-      const account = this.$store.getters['accounts/account']
-      const isAlreadyNominated = this.nomineeData.find(nominee => nominee.nominee_name === account)
+    isNominateButtonVisible() {
+      if (!this.elections || !this.configData) return;
+      const isAuthenticated = this.$store.getters["accounts/isAuthenticated"];
+      const account = this.$store.getters["accounts/account"];
+      const isAlreadyNominated = this.nomineeData.find(
+        (nominee) => nominee.nominee_name === account
+      );
       if (isAuthenticated && !isAlreadyNominated) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
-    isEnterElectionButtonVisible () {
-      if (!this.elections || !this.configData) return
-      const account = this.$store.getters['accounts/account']
-      const { current_election_id } = this.configData
-      const currentElection = this.elections.find(election => election.election_id === current_election_id)
-      const isAlreadyCandidate = !!currentElection.candidates.find(candidateData => candidateData.name === account)
-      const endAddCand = new Date(currentElection.end_add_candidates_ts).getTime()
-      const isPastAddCandidates = Date.now() > endAddCand
+    isEnterElectionButtonVisible() {
+      if (!this.elections || !this.configData) return;
+      const account = this.$store.getters["accounts/account"];
+      const { current_election_id } = this.configData;
+      const currentElection = this.elections.find(
+        (election) => election.election_id === current_election_id
+      );
+      const isAlreadyCandidate = !!currentElection.candidates.find(
+        (candidateData) => candidateData.name === account
+      );
+      const endAddCand = new Date(
+        currentElection.end_add_candidates_ts
+      ).getTime();
+      const isPastAddCandidates = Date.now() > endAddCand;
 
-      const isElectionCreated = currentElection.status === 1
+      const isElectionCreated = currentElection.status === 1;
       if (isElectionCreated && !isAlreadyCandidate && !isPastAddCandidates) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
-    isRemoveCandidateButtonVisible () {
-      if (!this.elections || !this.configData) return
-      const account = this.$store.getters['accounts/account']
-      const { current_election_id } = this.configData
-      const currentElection = this.elections[current_election_id]
-      const isAlreadyCandidate = currentElection.candidates.find(candidateData => candidateData.name === account)
-      const endAddCand = new Date(currentElection.end_add_candidates_ts).getTime()
-      const isPastAddCandidates = Date.now() > endAddCand
+    isRemoveCandidateButtonVisible() {
+      if (!this.elections || !this.configData) return;
+      const account = this.$store.getters["accounts/account"];
+      const { current_election_id } = this.configData;
+      const currentElection = this.elections[current_election_id];
+      const isAlreadyCandidate = currentElection.candidates.find(
+        (candidateData) => candidateData.name === account
+      );
+      const endAddCand = new Date(
+        currentElection.end_add_candidates_ts
+      ).getTime();
+      const isPastAddCandidates = Date.now() > endAddCand;
 
-      const isElectionCreated = currentElection.status === 1
+      const isElectionCreated = currentElection.status === 1;
       if (isElectionCreated && isAlreadyCandidate && !isPastAddCandidates) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
-    nomineeData () {
-      return this.$store.state.resolve.nominees || []
+    nomineeData() {
+      return this.$store.state.resolve.nominees || [];
     },
-    configData () {
-      return this.$store.state.resolve.config || []
+    configData() {
+      return this.$store.state.resolve.config || [];
     },
-    elections () {
-      return this.$store.state.resolve.elections || []
-    }
-  }
-}
+    elections() {
+      return this.$store.state.resolve.elections || [];
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -211,11 +250,10 @@ export default {
   justify-content: space-between;
 }
 .header-buttons {
-
 }
 
 .profile-avatar {
-	display: inline;
-	margin-right: 8px;
+  display: inline;
+  margin-right: 8px;
 }
 </style>
