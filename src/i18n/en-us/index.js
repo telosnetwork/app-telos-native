@@ -143,9 +143,7 @@ export default {
           statusFilter: 'Status',
           groupFilter: 'Group',
           typeOptions: {
-            election: 'Election',
             referendum: 'Referendum',
-            leaderboard: 'Leaderboard',
             poll: 'Poll',
             proposal: 'Proposal'
           },

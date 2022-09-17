@@ -208,3 +208,31 @@ export async function transferTokens(
   commit("notifications/addNotification", notification, { root: true });
   return notification.status === "success";
 }
+
+export async function openToken({ commit }, { symbol, contractAccount }) {
+  const notification = {
+    icon: "fas fa-info",
+    title: "notifications.tokens.transfer",
+    content: `Opening token ${symbol}`,
+  };
+  try {
+    const transaction = await this.$api.signTransaction([
+      {
+        account: contractAccount,
+        name: "open",
+        data: {
+          owner: this.$ualUser.accountName,
+          symbol,
+          ram_payer: this.$ualUser.accountName,
+        },
+      },
+    ]);
+    notification.status = "success";
+    notification.transaction = transaction;
+  } catch (e) {
+    notification.status = "error";
+    notification.error = e;
+  }
+  commit("notifications/addNotification", notification, { root: true });
+  return notification.status === "success";
+}

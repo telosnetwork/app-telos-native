@@ -37,9 +37,7 @@ export default {
       ],
       categoryOptions: [
         { value: "election", label: "Election" },
-        { value: "leaderboard", label: "Leaderboard" },
         { value: "poll", label: "Poll" },
-        { value: "proposal", label: "Proposal" },
         { value: "referendum", label: "Referendum" },
       ],
       submitting: false,

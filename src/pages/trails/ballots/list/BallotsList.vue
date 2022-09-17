@@ -319,6 +319,10 @@ q-page
           :getLoser="getLoser"
           :ballotContentImg="ballotContentImg"
         )
+      p.text-weight-bold(
+        style="text-align: center"
+        v-if="!sortBallots(filterBallots(ballots),sortMode).length"  ) There is no data for the corresponding request
+
       template(v-slot:loading)
         .row.justify-center.q-my-md
           q-spinner-dots(
