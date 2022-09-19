@@ -32,8 +32,9 @@ export default {
       sortMode: "",
       startY: 0,
       timerAction: null,
-      limit: 50,
-      maxLimit: 300
+      limit: 100,
+      maxLimit: 500,
+      loading: false
     };
   },
   props: {
@@ -75,14 +76,20 @@ export default {
     ]),
     ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
 
-    async onLoad(status) {
+    async onLoad(reseted) {
       let scrollY = window.scrollY;
+      this.loading = true
       if (
-        (scrollY > this.startY && this.limit !== this.maxLimit) ||
-        status === true
+        (scrollY > this.startY && this.limit <= this.maxLimit) ||
+        reseted === true
       ) {
         this.$refs.infiniteScroll.resume();
-        this.limit += 25;
+        // Start allways with a limit of 200 and then go +100 on next query
+        if (reseted === true) {
+          this.limit = 200;
+        } else {
+          this.limit += 100;
+        }
         const filter = {
           index: 4,
           lower:
@@ -94,10 +101,12 @@ export default {
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
           this.$refs.infiniteScroll.stop();
+          this.loading = false
         }
       } else {
         setTimeout(() => {
           this.$refs.infiniteScroll.stop();
+          this.loading = false
         }, 3000);
       }
       this.startY = scrollY;
@@ -161,17 +170,17 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
-      this.limit = 0;
+      this.limit = 100;
       this.onLoad(true);
       this.treasury = newTreasury;
     },
     updateStatuses(newStatuses) {
-      this.limit = 0;
+      this.limit = 100;
       this.onLoad(true);
       this.statuses = newStatuses;
     },
     updateCategories(newCategories) {
-      this.limit = 0;
+      this.limit = 100;
       this.onLoad(true);
       this.categories = newCategories;
     },
@@ -212,7 +221,7 @@ export default {
       );
     },
     changeDirection(isBallotListRowDirection) {
-      this.limit = 0;
+      this.limit = 100;
       this.onLoad(true);
       this.isBallotListRowDirection = isBallotListRowDirection;
     },
@@ -244,7 +253,7 @@ export default {
     },
 
     changeSortOption(option) {
-      this.limit = 0;
+      this.limit = 100;
       this.onLoad(true);
       this.sortMode = option;
     },
@@ -316,7 +325,7 @@ q-page
         )
       p.text-weight-bold(
         style="text-align: center"
-        v-if="!sortBallots(filterBallots(ballots),sortMode).length"  ) There is no data for the corresponding request
+        v-if="!sortBallots(filterBallots(ballots),sortMode).length && !loading") There is no data for the corresponding request
 
       template(v-slot:loading)
         .row.justify-center.q-my-md
