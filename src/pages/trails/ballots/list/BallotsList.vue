@@ -32,9 +32,8 @@ export default {
       sortMode: "",
       startY: 0,
       timerAction: null,
-      limit: 100,
-      maxLimit: 500,
-      loading: false
+      limit: 50,
+      maxLimit: 300
     };
   },
   props: {
@@ -43,7 +42,6 @@ export default {
     },
   },
   async mounted() {
-    console.log(`mounted`);
     this.timeAtMount = Date.now();
     this.statusChange = false;
     if (this.$route.params.id) {
@@ -53,8 +51,7 @@ export default {
       this.treasury = this.$route.query.treasury;
     }
     this.resetBallots();
-
-    console.log(`after reset ballots`);
+    
     await this.fetchFees();
     this.$refs.infiniteScroll.reset();
     this.$refs.infiniteScroll.poll();
@@ -76,20 +73,14 @@ export default {
     ]),
     ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
 
-    async onLoad(reseted) {
+    async onLoad(status) {
       let scrollY = window.scrollY;
-      this.loading = true
       if (
-        (scrollY > this.startY && this.limit <= this.maxLimit) ||
-        reseted === true
+        (scrollY > this.startY && this.limit !== this.maxLimit) ||
+        status === true
       ) {
         this.$refs.infiniteScroll.resume();
-        // Start allways with a limit of 200 and then go +100 on next query
-        if (reseted === true) {
-          this.limit = 200;
-        } else {
-          this.limit += 100;
-        }
+        this.limit += 25;
         const filter = {
           index: 4,
           lower:
@@ -101,12 +92,10 @@ export default {
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
           this.$refs.infiniteScroll.stop();
-          this.loading = false
         }
       } else {
         setTimeout(() => {
           this.$refs.infiniteScroll.stop();
-          this.loading = false
         }, 3000);
       }
       this.startY = scrollY;
@@ -170,17 +159,17 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.treasury = newTreasury;
     },
     updateStatuses(newStatuses) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.statuses = newStatuses;
     },
     updateCategories(newCategories) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.categories = newCategories;
     },
@@ -221,7 +210,7 @@ export default {
       );
     },
     changeDirection(isBallotListRowDirection) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.isBallotListRowDirection = isBallotListRowDirection;
     },
@@ -253,7 +242,7 @@ export default {
     },
 
     changeSortOption(option) {
-      this.limit = 100;
+      this.limit = 0;
       this.onLoad(true);
       this.sortMode = option;
     },
@@ -325,7 +314,7 @@ q-page
         )
       p.text-weight-bold(
         style="text-align: center"
-        v-if="!sortBallots(filterBallots(ballots),sortMode).length && !loading") There is no data for the corresponding request
+        v-if="!sortBallots(filterBallots(ballots),sortMode).length"  ) There is no data for the corresponding request
 
       template(v-slot:loading)
         .row.justify-center.q-my-md
