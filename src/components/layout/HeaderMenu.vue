@@ -14,8 +14,7 @@ export default {
       menuItems: [
         {
           label: this.$t("menu.daos"),
-          route: "/trails/ballots",
-          filter: "polls",
+          route: "/trails/treasuries",
         },
         {
           label: this.$t("menu.proposals"),
@@ -56,16 +55,15 @@ q-tabs(
       :to="item.route"
       v-if="item.route && !item.filter"
     )
-    q-tab.q-mx-sm.header-menu-tab(
+    q-route-tab.q-mx-sm.header-menu-tab(
       :key="index"
       :name="item.label"
       :label="item.label"
       :to="item.route"
       v-if="item.route && item.filter"
-      @click="item.filter ? $emit('set-active-filter', item.filter) : ''"
-      
-    )    
-    q-btn-dropdown.header-submenu-tab(auto-close stretch flat label="Decide" v-else)
+      @click="item.filter ? $emit('set-active-filter', item.filter) : ''"      
+    )
+    q-btn-dropdown.header-submenu-tab(auto-close stretch flat label="Decide" v-if="item.length > 0")
       q-list
         q-route-tab.q-mx-sm.header-submenu-item(
           v-for="(el,i) of item"
