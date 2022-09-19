@@ -12,21 +12,16 @@ export default {
   data() {
     return {
       menuItems: [
-        { label: this.$t("menu.contacts"), route: "/profiles/contacts" },
         {
-          label: this.$t("menu.trailsTreasuries"),
-          route: "/trails/treasuries",
+          label: this.$t("menu.daos"),
+          route: "/trails/ballots",
+          filter: "polls",
         },
-        [
-          { label: this.$t("menu.amendBallots"), filter: "amend-ballots" },
-          { label: this.$t("menu.TFElection"), filter: "t-f-election" },
-          { label: this.$t("menu.polls"), filter: "polls" },
-          {
-            label: this.$t("menu.workerProposals"),
-            filter: "worker-proposals",
-          },
-        ],
-        { label: this.$t("menu.tokens"), route: "/tokens" },
+        {
+          label: this.$t("menu.proposals"),
+          route: "/trails/ballots",
+          filter: "worker-proposals",
+        },
       ],
       localFileter: this.activeFilter,
     };
@@ -59,8 +54,17 @@ q-tabs(
       :name="item.label"
       :label="item.label"
       :to="item.route"
-      v-if="!item.length"
+      v-if="item.route && !item.filter"
     )
+    q-tab.q-mx-sm.header-menu-tab(
+      :key="index"
+      :name="item.label"
+      :label="item.label"
+      :to="item.route"
+      v-if="item.route && item.filter"
+      @click="item.filter ? $emit('set-active-filter', item.filter) : ''"
+      
+    )    
     q-btn-dropdown.header-submenu-tab(auto-close stretch flat label="Decide" v-else)
       q-list
         q-route-tab.q-mx-sm.header-submenu-item(
