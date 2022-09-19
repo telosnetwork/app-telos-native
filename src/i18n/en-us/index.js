@@ -48,6 +48,8 @@ export default {
     amendBallots: 'Amend Ballots',
     TFElection: 'TF Election',
     polls: 'Polls',
+    daos: 'DAOs',
+    proposals: 'Proposals',
     workerProposals: 'Worker proposals',
     tokens: 'Tokens',
     trailsTreasuries: 'Groups',

@@ -18,21 +18,8 @@ export default {
   data() {
     return {
       menuItems: [
-        { label: this.$t("menu.contacts"), route: "/profiles/contacts" },
-        {
-          label: this.$t("menu.trailsTreasuries"),
-          route: "/trails/treasuries",
-        },
-        [
-          { label: this.$t("menu.amendBallots"), filter: "amend-ballots" },
-          { label: this.$t("menu.TFElection"), filter: "t-f-election" },
-          { label: this.$t("menu.polls"), filter: "polls" },
-          {
-            label: this.$t("menu.workerProposals"),
-            filter: "worker-proposals",
-          },
-        ],
-        { label: this.$t("menu.tokens"), route: "/tokens" },
+        { label: this.$t("menu.daos"), route: "/trails/ballots", filter: "polls" },
+        { label: this.$t("menu.proposals"), route: "/trails/ballots", filter: "worker-proposals" },
       ],
       localFilter: this.activeFilter,
       clientWidth: 0,
