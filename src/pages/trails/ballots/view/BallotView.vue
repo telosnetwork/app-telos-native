@@ -4,6 +4,7 @@ import BallotStatus from "../components/BallotStatus";
 import BallotChip from "../components/BallotChip";
 import Btn from "../../../../components/CustomButton";
 
+
 const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, "m"); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 const regexWithUrl = new RegExp(
   /https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
@@ -196,7 +197,7 @@ export default {
       this.scrollPosition = e.target.scrollTop;
     },
     getPartOfTotalPercent(option) {
-        return Math.round(this.getPartOfTotal(option) * 10000) / 100;
+        return this.trunc(this.getPartOfTotal(option) * 100, 2);
     },
     getPartOfTotal(option) {
       if (option) {
