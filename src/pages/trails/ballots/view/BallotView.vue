@@ -245,7 +245,7 @@ export default {
                         div(@click="showDetails = false")
                             img.poll-icon(src="statics/app-icons/back.svg")
                             span Go Back
-                    q-card-section
+                    q-card-section.body-info
                         div(v-for="option in getVariants")
                             div.text-weight-bold.variant-name {{ option.key }}
                             div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
@@ -493,6 +493,11 @@ export default {
             q-spinner(size="3em")
 </template>
 <style lang="sass">
+.body-info
+   overflow: scroll
+   overflow-x: hidden
+   height: 550px
+
 .variant-name
     margin-top: 24px
     margin-bottom: 8px
@@ -860,4 +865,5 @@ embed
     @media (max-width: 400px)
         .custom-caption > .caption-text
             max-width: 150px
+
 </style>
