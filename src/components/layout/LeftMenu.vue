@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       menuItems: [
-        { label: this.$t("menu.daos"), route: "/trails/ballots", filter: "polls" },
+        { label: this.$t("menu.daos"), route: "/trails/treasuries" },
         { label: this.$t("menu.proposals"), route: "/trails/ballots", filter: "worker-proposals" },
       ],
       localFilter: this.activeFilter,
