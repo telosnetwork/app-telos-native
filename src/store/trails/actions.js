@@ -23,6 +23,7 @@ export const fetchBallots = async function ({ commit, state }, query) {
     scope: "telos.decide",
     table: "ballots",
     limit: query.limit,
+    index_position: query.index || 0,
     key_type: "i64",
     lower_bound: query.lower,
     upper_bound: query.upper,
