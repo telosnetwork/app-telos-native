@@ -53,7 +53,6 @@ export default {
       this.treasury = this.$route.query.treasury;
     }
     this.resetBallots();
-
     console.log(`after reset ballots`);
     await this.fetchFees();
     this.$refs.infiniteScroll.reset();
@@ -84,9 +83,9 @@ export default {
         reseted === true
       ) {
         this.$refs.infiniteScroll.resume();
-        // Start allways with a limit of 200 and then go +100 on next query
+        // Start always with a limit of 200 and then go +100 on next query
         if (reseted === true) {
-          this.limit = 200;
+          this.limit = 300;
         } else {
           this.limit += 100;
         }
@@ -196,8 +195,7 @@ export default {
             return this.statuses.includes(b.status) || b.status === "voting";
           } else if (this.statuses.includes("active")) {
             return (
-              this.statuses.includes(b.status) ||
-              (this.isBallotOpened(b) && b.status === "voting")
+             Date.now() < Date.parse(b.end_time)
             );
           } else if (this.statuses.includes("expired")) {
             return (
