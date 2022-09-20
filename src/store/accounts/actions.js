@@ -57,10 +57,20 @@ export const login = async function (
   }
 };
 
-export const memoryAutoLogin = function ({ commit, dispatch }) {
-  const user = localStorage.getItem("account");
-  if (user) commit("setAccount", user);
-  else {
+export const memoryAutoLogin = async function ({ commit, dispatch, rootState }) {
+
+  const account = localStorage.getItem("account");
+  // TODO: delete debug
+  if (account) {
+   
+    // if not logged
+    if (!rootState.accounts.account) {
+
+      autoLogin.bind(this)({ commit, dispatch }, location.pathname);
+    } else {
+      console.debug("Accounts.actions.memoryAutoLogin() alredy logged");
+    }
+  } else {
     return null;
   }
 };
@@ -90,7 +100,8 @@ export const logout = async function ({ commit }) {
   }
   commit("profiles/setProfile", undefined, { root: true });
   commit("setAccount");
-  localStorage.removeItem("autoLogin");
+  
+  localStorage.removeItem("account");
   if (this.$router.path !== "/") {
     this.$router.push({ path: "/" });
   }
