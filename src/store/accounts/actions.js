@@ -60,16 +60,13 @@ export const login = async function (
 export const memoryAutoLogin = async function ({ commit, dispatch, rootState }) {
 
   const account = localStorage.getItem("account");
-  // TODO: delete debug
-  if (account) {
-   
-    // if not logged
+  
+  if (account) {   
+ 
+    // check state and set account 
     if (!rootState.accounts.account) {
-
       autoLogin.bind(this)({ commit, dispatch }, location.pathname);
-    } else {
-      console.debug("Accounts.actions.memoryAutoLogin() alredy logged");
-    }
+    } 
   } else {
     return null;
   }
