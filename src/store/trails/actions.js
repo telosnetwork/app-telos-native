@@ -24,8 +24,8 @@ export const fetchBallots = async function ({ commit, state }, query) {
     table: "ballots",
     limit: query.limit,
     key_type: "i64",
-    lower_bound: '',
-    upper_bound: 'voting',
+    lower_bound: query.lower,
+    upper_bound: query.upper,
   });
   let treasuries = {};
 
