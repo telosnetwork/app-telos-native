@@ -77,7 +77,6 @@ export default {
 
     async onLoad(reseted) {
       let scrollY = window.scrollY;
-      console.log();
       this.loading = true;
       if (
         (scrollY > this.startY && this.limit <= this.maxLimit) ||
