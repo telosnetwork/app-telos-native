@@ -19,7 +19,6 @@ export default {
         {
           label: this.$t("menu.proposals"),
           route: "/trails/ballots",
-          filter: "worker-proposals",
         },
       ],
       localFileter: this.activeFilter,
