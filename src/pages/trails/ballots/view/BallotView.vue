@@ -69,7 +69,7 @@ export default {
       return this.ballot.options[winner];
     },
     ballotDescription() {
-      if (this.getIPFShash) {
+      if (this.iframeUrl) {
         return this.ballot.description
           .replace(regexWithUrl, "")
           .replace(regex, "");
@@ -94,12 +94,20 @@ export default {
         return null;
       }
     },
-    getIPFShash() {
-      if (typeof (JSON.parse(this.ballot.content)) === "object") {
-        const r = JSON.parse(this.ballot.content).imageUrl || JSON.parse(this.ballot.content).contentUrls;
+    iframeUrl() {
+      let content = this.ballot.content;
+      let file_path = null;
+
+      // catch parse possible errors
+      try { content = JSON.parse(this.ballot.content); } catch(e) {};
+      try { file_path = regex.exec(this.ballot.description); } catch(e) {};
+
+      if (typeof content === "object") {
+        // prioritize content urls over image urls
+        const r = content.contentUrl || (content.contentUrls||[])[0] || content.imageUrl || (content.imageUrls||[])[0];
         return r;
-      } else if (typeof (this.ballot.description) === "string") {
-        const r = "https://ipfs.io/ipfs/" + regex.exec(this.ballot.description)[0];
+      } else if (Array.isArray(file_path)) {
+        const r = "https://ipfs.io/ipfs/" + file_path[0];
         return r;
       } else {
         return false;
@@ -375,7 +383,7 @@ export default {
                     q-separator.popup-separator
                     q-card-section.description-section-wrapper
                         div.description-section
-                            div.description-section-title(:class="getIPFShash ? `q-pb-md` : `q-pb-xl q-mb-lg`")
+                            div.description-section-title(:class="iframeUrl ? `q-pb-md` : `q-pb-xl q-mb-lg`")
                                 p(v-html="ballotDescription")
                             div(
                             v-if="ballotContentOptionData && ballotContentOptionData[0] && ballotContentOptionData[0].hasOwnProperty('imageUrl')"
@@ -416,8 +424,8 @@ export default {
                             iframe(
                             height="100%"
                             width="100%"
-                            v-if="getIPFShash"
-                            :src="getIPFShash"
+                            v-if="iframeUrl"
+                            :src="iframeUrl"
                             ).kv-preview-data.file-preview-pdf.file-zoom-detail.shadow-1
                             div(v-else).text-center
                                 img(src="/statics/app-icons/no-pdf.svg" style="width: 60px;")
