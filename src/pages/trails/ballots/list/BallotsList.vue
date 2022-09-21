@@ -93,12 +93,10 @@ export default {
           index: 4,
           lower:
             this.treasury ||
-            (this.$route.query && this.$route.query.treasury) ||
-            "VOTE",
+            (this.$route.query && this.$route.query.treasury),
           upper:
             this.treasury ||
-            (this.$route.query && this.$route.query.treasury) ||
-            "VOTE",
+            (this.$route.query && this.$route.query.treasury),
           limit: this.limit,
         };
         await this.fetchBallots(filter);
