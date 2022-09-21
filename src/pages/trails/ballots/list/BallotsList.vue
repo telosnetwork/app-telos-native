@@ -34,7 +34,7 @@ export default {
       timerAction: null,
       limit: 100,
       maxLimit: 500,
-      loading: false
+      loading: false,
     };
   },
   props: {
@@ -77,7 +77,8 @@ export default {
 
     async onLoad(reseted) {
       let scrollY = window.scrollY;
-      this.loading = true
+      console.log();
+      this.loading = true;
       if (
         (scrollY > this.startY && this.limit <= this.maxLimit) ||
         reseted === true
@@ -92,20 +93,24 @@ export default {
         const filter = {
           index: 4,
           lower:
-            this.treasury || (this.$route.query && this.$route.query.treasury),
+            this.treasury ||
+            (this.$route.query && this.$route.query.treasury) ||
+            "VOTE",
           upper:
-            this.treasury || (this.$route.query && this.$route.query.treasury),
+            this.treasury ||
+            (this.$route.query && this.$route.query.treasury) ||
+            "VOTE",
           limit: this.limit,
         };
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
           this.$refs.infiniteScroll.stop();
-          this.loading = false
+          this.loading = false;
         }
       } else {
         setTimeout(() => {
           this.$refs.infiniteScroll.stop();
-          this.loading = false
+          this.loading = false;
         }, 3000);
       }
       this.startY = scrollY;
@@ -170,18 +175,18 @@ export default {
     },
     updateTreasury(newTreasury) {
       this.limit = 100;
-      this.onLoad(true);
       this.treasury = newTreasury;
+      this.onLoad(true);
     },
     updateStatuses(newStatuses) {
       this.limit = 100;
-      this.onLoad(true);
       this.statuses = newStatuses;
+      this.onLoad(true);
     },
     updateCategories(newCategories) {
       this.limit = 100;
-      this.onLoad(true);
       this.categories = newCategories;
+      this.onLoad(true);
     },
     filterBallots(ballots) {
       const ballotFiltered = ballots.filter((b) => {
@@ -194,9 +199,7 @@ export default {
           ) {
             return this.statuses.includes(b.status) || b.status === "voting";
           } else if (this.statuses.includes("active")) {
-            return (
-             Date.now() < Date.parse(b.end_time)
-            );
+            return Date.now() < Date.parse(b.end_time);
           } else if (this.statuses.includes("expired")) {
             return (
               this.statuses.includes(b.status) ||
@@ -252,8 +255,8 @@ export default {
 
     changeSortOption(option) {
       this.limit = 100;
-      this.onLoad(true);
       this.sortMode = option;
+      this.onLoad(true);
     },
     ballotContentImg(ballot) {
       try {
