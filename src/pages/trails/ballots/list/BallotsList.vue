@@ -92,11 +92,9 @@ export default {
         const filter = {
           index: 4,
           lower:
-            this.treasury ||
-            (this.$route.query && this.$route.query.treasury),
+            this.treasury || (this.$route.query && this.$route.query.treasury),
           upper:
-            this.treasury ||
-            (this.$route.query && this.$route.query.treasury),
+            this.treasury || (this.$route.query && this.$route.query.treasury),
           limit: this.limit,
         };
         await this.fetchBallots(filter);

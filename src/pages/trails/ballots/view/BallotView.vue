@@ -4,7 +4,6 @@ import BallotStatus from "../components/BallotStatus";
 import BallotChip from "../components/BallotChip";
 import Btn from "../../../../components/CustomButton";
 
-
 const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, "m"); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 const regexWithUrl = new RegExp(
   /https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
@@ -99,12 +98,20 @@ export default {
       let file_path = null;
 
       // catch parse possible errors
-      try { content = JSON.parse(this.ballot.content); } catch(e) {};
-      try { file_path = regex.exec(this.ballot.description); } catch(e) {};
+      try {
+        content = JSON.parse(this.ballot.content);
+      } catch (e) {}
+      try {
+        file_path = regex.exec(this.ballot.description);
+      } catch (e) {}
 
       if (typeof content === "object") {
         // prioritize content urls over image urls
-        const r = content.contentUrl || (content.contentUrls||[])[0] || content.imageUrl || (content.imageUrls||[])[0];
+        const r =
+          content.contentUrl ||
+          (content.contentUrls || [])[0] ||
+          content.imageUrl ||
+          (content.imageUrls || [])[0];
         return r;
       } else if (Array.isArray(file_path)) {
         const r = "https://ipfs.io/ipfs/" + file_path[0];
@@ -205,7 +212,7 @@ export default {
       this.scrollPosition = e.target.scrollTop;
     },
     getPartOfTotalPercent(option) {
-        return this.trunc(this.getPartOfTotal(option) * 100, 2);
+      return this.trunc(this.getPartOfTotal(option) * 100, 2);
     },
     getPartOfTotal(option) {
       if (option) {
@@ -873,5 +880,4 @@ embed
     @media (max-width: 400px)
         .custom-caption > .caption-text
             max-width: 150px
-
 </style>
