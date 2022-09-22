@@ -156,14 +156,19 @@ export default {
         settings: this.isStakeable,
       };
     },
-    async convertToIFPS(file) {
-      const ipfs = await IPFS.create();
-      this.cid = await ipfs.add(file);
+    async convertToIPFS(file) {
+      try {
+        const ipfs = await IPFS.create();
+        this.cid = await ipfs.add(file);
+      } catch (e) {
+        if (e.code == "ERR_LOCK_EXISTS") return;
+        console.error(e);
+      }
     },
   },
   watch: {
     file: function () {
-      this.convertToIFPS(this.file);
+      this.convertToIPFS(this.file);
     },
     account: async function (account) {
       this.fetchTreasuriesForUser(account);
@@ -172,7 +177,11 @@ export default {
       this.fee = this.ballotFees.value;
     },
     cid: function () {
-      this.form.IPFSString = this.cid.path;
+      if (this.cid) {
+        this.form.IPFSString = this.cid.path;
+      } else {
+        this.form.IPFSString = null;
+      }      
     },
   },
   mounted() {
