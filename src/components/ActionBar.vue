@@ -11,10 +11,10 @@ export default {
     activeFilter: {
       type: String,
     },
-    election:{
+    election: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -31,7 +31,9 @@ export default {
       isFilterMenu320Open: false,
       typeGroup: [],
       typeOptions: [
+        { label: "Election", value: "election" },
         { label: "Referendum", value: "referendum" },
+        { label: "Leaderboard", value: "leaderboard" },
         { label: "Poll", value: "poll" },
         { label: "Proposal", value: "proposal" },
       ],
