@@ -157,8 +157,13 @@ export default {
       };
     },
     async convertToIFPS(file) {
-      const ipfs = await IPFS.create();
-      this.cid = await ipfs.add(file);
+      try {
+        const ipfs = await IPFS.create();
+        this.cid = await ipfs.add(file);
+      } catch (e) {
+        if (e.code == "ERR_LOCK_EXISTS") return;
+        console.error(e);
+      }
     },
   },
   watch: {
@@ -172,7 +177,11 @@ export default {
       this.fee = this.ballotFees.value;
     },
     cid: function () {
-      this.form.IPFSString = this.cid.path;
+      if (this.cid) {
+        this.form.IPFSString = this.cid.path;
+      } else {
+        this.form.IPFSString = null;
+      }      
     },
   },
   mounted() {
