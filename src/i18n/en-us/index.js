@@ -134,7 +134,7 @@ export default {
         welcomeCard: {
           title: 'Hi, ',
           textBeginning: 'Welcome to the ',
-          textBold: 'Telos Ballots',
+          textBold: 'Telos DAO and Proposals portal',
           textEnd: '. This is the place where you can influence the development of the Telos blockchain. Your voice matters!',
           btnLabel: 'OK, got it'
         },
