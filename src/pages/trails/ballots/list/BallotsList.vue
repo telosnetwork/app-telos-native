@@ -170,7 +170,6 @@ export default {
     updateTreasury(newTreasury) {
       this.limit = 100;
       this.treasury = newTreasury;
-      console.log(newTreasury)
       this.onLoad(true);
     },
     updateStatuses(newStatuses) {
