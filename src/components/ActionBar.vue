@@ -27,7 +27,9 @@ export default {
       isFilterMenu320Open: false,
       typeGroup: [],
       typeOptions: [
+        { label: "Election", value: "election" },
         { label: "Referendum", value: "referendum" },
+        { label: "Leaderboard", value: "leaderboard" },
         { label: "Poll", value: "poll" },
         { label: "Proposal", value: "proposal" },
       ],
@@ -622,7 +624,6 @@ div.bar-filter-wrapper
         )
       div.btn-320-wrapper.row.items-center.scroll-anim
         btn.create-poll-btn.btn-320(
-          class=""
           iconRight
           :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
           primary
