@@ -11,10 +11,10 @@ export default {
     activeFilter: {
       type: String,
     },
-    election:{
+    election: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
