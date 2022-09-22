@@ -279,7 +279,7 @@ export const cancelBallot = async function ({ commit }, ballot) {
 
 export const castVote = async function (
   { commit, rootState },
-  { ballotName, options }
+  { register, ballotName, options }
 ) {
   const notification = {
     icon: "fas fa-person-booth",
@@ -287,7 +287,7 @@ export const castVote = async function (
     content: `${ballotName} ${options}`,
   };
   try {
-    const actions = [
+    let actions = [
       {
         account: "telos.decide",
         name: "refresh",
@@ -305,6 +305,20 @@ export const castVote = async function (
         },
       },
     ];
+
+    if (register) {
+      let ballot = rootState.trails.ballots.list.data.find(b => b.ballot_name == ballotName);
+      let treasury_symbol = ballot.treasury_symbol;
+      actions.unshift({
+        account: "telos.decide",
+        name: "regvoter",
+        data: {
+          voter: rootState.accounts.account,
+          treasury_symbol,
+          referrer: null,
+        },
+      });
+    }
     const transaction = await this.$api.signTransaction(actions);
     transaction === null
       ? (notification.status = "error")
