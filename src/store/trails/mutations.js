@@ -53,6 +53,7 @@ export const setBallot = (state, ballot) => {
 
 export const setUserTreasuries = (state, treasuries) => {
   state.userTreasuries = treasuries;
+  console.log("Trails.mutations.setUserTreasuries() ", treasuries.rows);
 };
 
 export const setBallotVotes = (state, voters) => {
