@@ -868,7 +868,11 @@ div.bar-filter-wrapper
         outline
       )
       div.separator-320
+<<<<<<< HEAD
       div.right-bar-section.col-grow.row.items-center.justify-end.hidden
+=======
+      div.right-bar-section.col-grow.row.items-center.justify-end
+>>>>>>> avoid any possible attempt to access property of null object
         q-separator.bar-separator-vertical(vertical inset)
         btn.create-poll-btn(
           :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
