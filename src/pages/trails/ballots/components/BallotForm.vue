@@ -156,7 +156,7 @@ export default {
         settings: this.isStakeable,
       };
     },
-    async convertToIFPS(file) {
+    async convertToIPFS(file) {
       try {
         const ipfs = await IPFS.create();
         this.cid = await ipfs.add(file);
@@ -168,7 +168,7 @@ export default {
   },
   watch: {
     file: function () {
-      this.convertToIFPS(this.file);
+      this.convertToIPFS(this.file);
     },
     account: async function (account) {
       this.fetchTreasuriesForUser(account);
