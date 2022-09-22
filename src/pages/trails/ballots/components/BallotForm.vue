@@ -92,6 +92,9 @@ export default {
         return null;
       }
     },
+    fee() {
+      return this.ballotFees ? this.ballotFees.value : 0;
+    },
   },
   methods: {
     ...mapActions("trails", [
@@ -165,6 +168,11 @@ export default {
         console.error(e);
       }
     },
+    async updateUserBalance() {
+      const getAccount = await this.$store.$api.getAccount(this.account);
+      this.userBalance = this.onlyNumbers(getAccount.core_liquid_balance);
+      console.log("updateUserBalance() ---> ", this.userBalance);
+    },
   },
   watch: {
     file: function () {
@@ -172,9 +180,7 @@ export default {
     },
     account: async function (account) {
       this.fetchTreasuriesForUser(account);
-      const getAccount = await this.$store.$api.getAccount(this.account);
-      this.userBalance = this.onlyNumbers(getAccount.core_liquid_balance);
-      this.fee = this.ballotFees.value;
+      this.updateUserBalance();
     },
     cid: function () {
       if (this.cid) {
@@ -186,7 +192,7 @@ export default {
   },
   mounted() {
     this.fetchFees();
-
+    this.updateUserBalance();
     this.fetchTreasuriesForUser(this.account);
   },
 };
