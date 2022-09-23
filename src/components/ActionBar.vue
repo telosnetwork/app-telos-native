@@ -622,7 +622,6 @@ div.bar-filter-wrapper
         )
       div.btn-320-wrapper.row.items-center.scroll-anim
         btn.create-poll-btn.btn-320(
-          class=""
           iconRight
           :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
           primary

@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapGetters("notifications", ["notifications"]),
     ...mapGetters("accounts", ["isAuthenticated", "account"]),
-    ...mapGetters("trails", ["ballot", "voters"]),
+    ...mapGetters("trails", ["ballot", "voters", "userTreasury"]),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
@@ -130,6 +130,27 @@ export default {
       }
       return newArr;
     },
+    isUserRegisteredInTreasury() {
+        if (!this.ballot) return false;
+        return this.userTreasury.some(t => t.liquid.split(" ")[1] == this.ballot.treasury.supply.split(" ")[1]);
+    },
+    voteButtonText() {
+        console.log("BalllotView.voteButtonText() isUserRegisteredInTreasury: ", this.isUserRegisteredInTreasury);
+        if (this.isUserRegisteredInTreasury) {
+            return 'pages.trails.ballots.vote';    
+        } else {
+            // ---- quickfix for #92 -------
+            return 'pages.trails.ballots.joinDAOFirst';
+            /*
+            if (this.ballot.treasury.access == 'public') {
+                return 'pages.trails.ballots.joinAndVote';
+            } else {
+                return 'pages.trails.ballots.joinDAO';
+            }
+            */           
+            // ------------------------------
+        }
+    },
   },
   methods: {
     ...mapActions("trails", [
@@ -137,6 +158,7 @@ export default {
       "castVote",
       "cancelBallot",
       "fetchVotesForBallot",
+      "fetchTreasuriesForUser"
     ]),
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
@@ -148,9 +170,10 @@ export default {
         100;
       return Number.isInteger(total) ? total : +total.toFixed(2);
     },
-    async onCastVote({ options, option, ballotName }) {
+    async onCastVote({ options, option, ballotName, register }) {
       this.voting = true;
       await this.castVote({
+        register,
         ballotName,
         options: options || [option],
       });
@@ -187,12 +210,46 @@ export default {
       }
       return newArr;
     },
+
+
+    // ---- quickfix for #92 -------
+    ...mapActions('trails', ['registerVoter']),
+    async onRegisterVoter (max_supply) {
+      await this.registerVoter(max_supply);
+    },
+    // -------------------------------  
     async vote() {
-      await this.onCastVote({
-        options: this.votes,
-        ballotName: this.ballot.ballot_name,
-      });
-      this.showNotification();
+        let register = false;
+        if (this.isUserRegisteredInTreasury) {
+            register = false;
+        } else {
+            // ---- quickfix for #92 -------
+            /*
+            if (this.ballot.treasury.access == 'public') {
+                register = true;
+            } else {
+                // redirect to treasuties page with filter
+                this.$router.push({
+                    path: "/trails/treasuries",
+                    query: { treasury: this.ballot.treasury.supply.split(" ")[1] },
+                });
+                return; // Do not Cast Vote
+            }
+            */
+            console.log("this.ballot.treasury: ", this.ballot.treasury.max_supply);
+            await this.onRegisterVoter(this.ballot.treasury.max_supply);
+            this.showNotification();
+            this.fetchTreasuriesForUser(this.account);
+            return;
+            // -------------------------------  
+        }
+
+        await this.onCastVote({
+            register,
+            options: this.votes,
+            ballotName: this.ballot.ballot_name,
+        });
+        this.showNotification();
     },
     async cancel() {
       await this.cancelBallot(this.ballot);
@@ -324,7 +381,7 @@ export default {
                                 q-item-section.btn-wrapper
                                     btn(
                                     v-if="isAuthenticated"
-                                    :labelText="$t('pages.trails.ballots.vote')"
+                                    :labelText="$t(voteButtonText)"
                                     btnWidth='220'
                                     fontSize='16'
                                     hoverBlue=true
