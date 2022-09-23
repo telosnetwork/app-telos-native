@@ -56,8 +56,8 @@ export default {
     this.resetBallots();
     console.log(`after reset ballots`);
     await this.fetchFees();
-    this.$refs.infiniteScroll.reset();
-    this.$refs.infiniteScroll.poll();
+    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.reset() : "";
+    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.poll() : "";
   },
   created() {
     window.addEventListener("scroll", this.onLoad);
@@ -83,7 +83,7 @@ export default {
         (scrollY > this.startY && this.limit <= this.maxLimit) ||
         reseted === true
       ) {
-        this.$refs.infiniteScroll.resume();
+        this.$refs.infiniteScroll ? this.$refs.infiniteScroll.resume() : "";
         // Start always with a limit of 200 and then go +100 on next query
         if (reseted === true) {
           this.limit = 300;
@@ -100,12 +100,12 @@ export default {
         };
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
-          this.$refs.infiniteScroll.stop();
+          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
           this.loading = false;
         }
       } else {
         setTimeout(() => {
-          this.$refs.infiniteScroll.stop();
+          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
           this.loading = false;
         }, 3000);
       }
@@ -120,10 +120,10 @@ export default {
         this.showBallot = false;
         return;
       }
-      console.log("opening ballot", ballot);
+      console.log("opening ballot", ballot, this.$route.path);
       this.timeAtMount = Date.now();
       this.$router.push(
-        `/trails/${this.$route.path.indexOf('election') ? 'election' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
+        `/trails/${this.$route.path.indexOf('election') > 0 ? 'election' : 'ballots'}/${ballot.ballot_name}/${this.timeAtMount}`
       );
       // the timestamp prevents scroll glitches on the infinite list
     },
@@ -280,10 +280,12 @@ export default {
     $route(to, from) {
       console.log(`watching $route`);
       this.showBallot = !!to.params.id
+
+      this.onLoad(true);
       // this.renderComponent = true
       this.$nextTick(() => {
         // this.renderComponent = false
-        this.onLoad(true)
+        
       });
     },
   },
