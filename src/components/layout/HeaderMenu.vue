@@ -17,6 +17,10 @@ export default {
           route: "/trails/treasuries",
         },
         {
+          label: this.$t("menu.elections"),
+          route: "/trails/elections",
+        },        
+        {
           label: this.$t("menu.proposals"),
           route: "/trails/ballots",
         },
@@ -60,7 +64,7 @@ q-tabs(
       :label="item.label"
       :to="item.route"
       v-if="item.route && item.filter"
-      @click="item.filter ? $emit('set-active-filter', item.filter) : ''"      
+      @click="item.filter ? $emit('set-active-filter', item.filter) : ''"
     )
     q-btn-dropdown.header-submenu-tab(auto-close stretch flat label="Decide" v-if="item.length > 0")
       q-list

@@ -11,6 +11,10 @@ export default {
     activeFilter: {
       type: String,
     },
+    election:{
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -355,6 +359,7 @@ div.bar-filter-wrapper
               outline
               flat
               align="left"
+              v-if="!election"
             )
             q-dialog(
               v-model="isTypeDialogOpen"
@@ -397,6 +402,7 @@ div.bar-filter-wrapper
                       )
           div.flex.no-wrap(v-else)
             q-btn.bar-filter-btn.left-btn.left-btn-320(
+              v-if="!election"
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               @click="toggleMenu('isTypeDialogOpen')"
               color="dark"
@@ -690,7 +696,7 @@ div.bar-filter-wrapper
               color="dark"
             )
           q-btn.bar-filter-btn(
-            v-if="submitTypesResult.length === 0"
+            v-if="submitTypesResult.length === 0 && !election"
             :label="$t('pages.trails.ballots.actionBar.typeFilter')"
             :class="{'menu-open': isTypeMenuOpen}"
             :icon-right="isTypeMenuOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
@@ -720,7 +726,7 @@ div.bar-filter-wrapper
                   btnWidth='142'
                   fontSize='16'
                 )
-          div(v-else)
+          div(v-else-if="!election")
             q-btn.bar-filter-btn.left-btn(
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               color="dark"
