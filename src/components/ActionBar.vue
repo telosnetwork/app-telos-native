@@ -620,16 +620,17 @@ div.bar-filter-wrapper
           @clickBtn="discardAllFilter()"
           fontSize='15'
         )
-      <!--div.btn-320-wrapper.row.items-center.scroll-anim-->
-        <!--btn.create-poll-btn.btn-320(-->
-          <!--iconRight-->
-          <!--:labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"-->
-          <!--primary-->
-          <!--btnWidth='155'-->
-          <!--fontSize='16'-->
-          <!--padding='0'-->
-          <!--@clickBtn="isAuthenticated ? openBallotForm() : openNotice()"-->
-        <!--)-->
+      div.btn-320-wrapper.row.items-center.scroll-anim
+        btn.create-poll-btn.btn-320(
+          class=""
+          iconRight
+          :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
+          primary
+          btnWidth='155'
+          fontSize='16'
+          padding='0'
+          @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
+        )
     div.bar-wrapper.row.items-center(:class="{'menu-visible': isFilterMenu320Open}")
       div.bar-linear-gradient-left
       div.bar-linear-gradient-right
@@ -868,17 +869,17 @@ div.bar-filter-wrapper
         outline
       )
       div.separator-320
-      <!--div.right-bar-section.col-grow.row.items-center.justify-end-->
-        <!--q-separator.bar-separator-vertical(vertical inset)-->
-        <!--btn.create-poll-btn(-->
-          <!--:labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"-->
-          <!--iconRight-->
-          <!--padding='0'-->
-          <!--primary-->
-          <!--btnWidth='155'-->
-          <!--fontSize='16'-->
-          <!--@clickBtn="isAuthenticated ? openBallotForm() : openNotice()"-->
-        <!--)-->
+      div.right-bar-section.col-grow.row.items-center.justify-end.hidden
+        q-separator.bar-separator-vertical(vertical inset)
+        btn.create-poll-btn(
+          :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
+          iconRight
+          padding='0'
+          primary
+          btnWidth='155'
+          fontSize='16'
+          @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
+        )
     q-dialog(v-model="notice")
       q-card.notice
         q-card-section.row.no-wrap
@@ -888,6 +889,11 @@ div.bar-filter-wrapper
           q-btn(flat label="OK" v-close-popup)
 </template>
 <style lang="sass">
+.scroll-anim
+  height: 0px !important
+  margin: 10px !important
+  pointer-events: none
+  opacity: 0
 .bar-filter-wrapper
   margin: 40px 0 8px 0
 .bar-wrapper
