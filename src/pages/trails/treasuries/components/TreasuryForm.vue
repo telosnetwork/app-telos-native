@@ -82,7 +82,7 @@ q-dialog(
     style="width: 400px; max-width: 80vw;"
   )
     q-card-section.bg-primary.text-white
-      .text-h6 Create a treasury
+      .text-h6 Create a DAO
     q-card-section
       q-input(
         ref="manager"
