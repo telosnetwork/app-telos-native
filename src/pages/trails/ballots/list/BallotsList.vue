@@ -17,6 +17,7 @@ export default {
   },
   data() {
     return {
+      renderComponent: false,
       show: false,
       showBallot: false,
       statusChange: false,
@@ -122,7 +123,7 @@ export default {
       console.log("opening ballot", ballot);
       this.timeAtMount = Date.now();
       this.$router.push(
-        `/trails/ballots/${ballot.ballot_name}/${this.timeAtMount}`
+        `/trails/${this.$route.path.indexOf('election') ? 'election' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
       );
       // the timestamp prevents scroll glitches on the infinite list
     },
@@ -212,14 +213,19 @@ export default {
         }
       });
       return ballotFiltered.filter(
-        (b) =>
-          this.categories.length === 0 || this.categories.includes(b.category)
+        (b) => {
+          if(this.$route.path.indexOf('election') > 0) {
+            return b.category === 'election'
+          } else {
+            return this.categories.length === 0 || this.categories.includes(b.category)
+          }
+        }
       );
     },
     changeDirection(isBallotListRowDirection) {
       this.limit = 100;
-      this.onLoad(true);
       this.isBallotListRowDirection = isBallotListRowDirection;
+      this.onLoad(true);
     },
     getLoser() {
       if (!this.ballot.total_voters || this.ballot.options.length !== 2)
@@ -273,11 +279,12 @@ export default {
   watch: {
     $route(to, from) {
       console.log(`watching $route`);
-      if (to.params.id !== undefined) {
-        this.showBallot = true;
-      } else {
-        this.showBallot = false;
-      }
+      this.showBallot = !!to.params.id
+      // this.renderComponent = true
+      this.$nextTick(() => {
+        // this.renderComponent = false
+        this.onLoad(true)
+      });
     },
   },
 };
