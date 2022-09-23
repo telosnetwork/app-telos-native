@@ -85,8 +85,6 @@ export default {
       return this.form.treasurySymbol?.symbol !== "VOTE" && this.isStakeable;
     },
     available() {
-      // TODO: borrame
-      console.log("BallotForm.computed.available -> this.userBalance: ", this.userBalance);
       if (this.userBalance) {
         const ballotFee = this.onlyNumbers(this.ballotFees.value);
         return this.userBalance >= ballotFee;
