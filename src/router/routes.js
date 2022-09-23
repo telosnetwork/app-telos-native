@@ -24,6 +24,13 @@ const routes = [
     meta: { guest: false },
   },
 
+  //Elections
+  {
+    path: "/trails/elections/:id?/:hash?",
+    component: () => import("pages/trails/ballots/list/BallotsList.vue"),
+    meta: { guest: false },
+  },
+
   // Trails
   {
     path: "/trails/ballots/:id?/:hash?",
