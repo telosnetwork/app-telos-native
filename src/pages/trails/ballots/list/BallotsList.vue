@@ -17,7 +17,6 @@ export default {
   },
   data() {
     return {
-      renderComponent: false,
       show: false,
       showBallot: false,
       statusChange: false,
@@ -76,24 +75,26 @@ export default {
     ]),
     ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
 
-    async onLoad(reset) {
+    async onLoad(reseted) {
       let scrollY = window.scrollY;
       this.loading = true;
       if (
         (scrollY > this.startY && this.limit <= this.maxLimit) ||
-        reset === true
+        reseted === true
       ) {
         this.$refs.infiniteScroll.resume();
         // Start always with a limit of 200 and then go +100 on next query
-        if (reset === true) {
+        if (reseted === true) {
           this.limit = 300;
         } else {
           this.limit += 100;
         }
         const filter = {
           index: 4,
-          lower: this.treasury || (this.$route.query && this.$route.query.treasury),
-          upper: this.treasury || (this.$route.query && this.$route.query.treasury),
+          lower:
+            this.treasury || (this.$route.query && this.$route.query.treasury),
+          upper:
+            this.treasury || (this.$route.query && this.$route.query.treasury),
           limit: this.limit,
         };
         await this.fetchBallots(filter);
@@ -121,7 +122,7 @@ export default {
       console.log("opening ballot", ballot);
       this.timeAtMount = Date.now();
       this.$router.push(
-        `/trails/${this.$route.path.indexOf('election') ? 'election' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
+        `/trails/ballots/${ballot.ballot_name}/${this.timeAtMount}`
       );
       // the timestamp prevents scroll glitches on the infinite list
     },
@@ -211,20 +212,14 @@ export default {
         }
       });
       return ballotFiltered.filter(
-        (b) => {
-          if(this.$route.path.indexOf('election') > 0) {
-            return b.category === 'election'
-          } else {
-            return this.categories.length === 0 || this.categories.includes(b.category)
-          }
-        }
+        (b) =>
+          this.categories.length === 0 || this.categories.includes(b.category)
       );
     },
     changeDirection(isBallotListRowDirection) {
       this.limit = 100;
-      this.isBallotListRowDirection = isBallotListRowDirection;
       this.onLoad(true);
-
+      this.isBallotListRowDirection = isBallotListRowDirection;
     },
     getLoser() {
       if (!this.ballot.total_voters || this.ballot.options.length !== 2)
@@ -267,7 +262,7 @@ export default {
     },
     updateCards(params) {
       this.treasury = params.treasury;
-      this.statuses = params.status;
+      this.statuses = params.tatus;
       this.categories = params.type;
     },
   },
@@ -277,19 +272,19 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.showBallot = !!to.params.id
-      this.renderComponent = true
-      this.$nextTick(() => {
-        this.renderComponent = false
-        this.onLoad(true)
-      });
+      console.log(`watching $route`);
+      if (to.params.id !== undefined) {
+        this.showBallot = true;
+      } else {
+        this.showBallot = false;
+      }
     },
   },
 };
 </script>
 
 <template lang="pug">
-q-page(v-if="!renderComponent")
+q-page
   welcome-card(v-if="!isNewUser() && isAuthenticated")
   action-bar(
     @update-treasury="updateTreasury"
@@ -300,10 +295,7 @@ q-page(v-if="!renderComponent")
     @change-sort-option="changeSortOption"
     @update-cards="updateCards"
     :treasuriesOptions="treasuriesOptions"
-    :activeFilter="activeFilter"
-    :election="$route.path.indexOf('election') > 0"
-
-  )
+    :activeFilter="activeFilter")
   ballot-form(
     :show.sync="show"
     @close="show = false"
@@ -316,7 +308,7 @@ q-page(v-if="!renderComponent")
       div(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
         ballot-list-item(
           @click.native="openBallot(ballot)"
-          v-for="(ballot, index) in filterBallots(ballots)"
+          v-for="(ballot, index) in sortBallots(filterBallots(ballots),sortMode)"
           :key="index"
           :ballot="ballot"
           :displayWinner="displayWinner"
@@ -331,7 +323,7 @@ q-page(v-if="!renderComponent")
         style="text-align: center"
         v-if="!sortBallots(filterBallots(ballots),sortMode).length && !loading") There is no data for the corresponding request
 
-      div(v-if="loading")
+      template(v-slot:loading)
         .row.justify-center.q-my-md
           q-spinner-dots(
             color="primary"
