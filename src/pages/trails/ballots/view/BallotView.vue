@@ -249,6 +249,7 @@ export default {
             options: this.votes,
             ballotName: this.ballot.ballot_name,
         });
+        await this.fetchBallot(this.$route.params.id);
         this.showNotification();
     },
     async cancel() {
