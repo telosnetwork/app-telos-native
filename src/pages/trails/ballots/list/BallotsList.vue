@@ -43,7 +43,6 @@ export default {
     },
   },
   async mounted() {
-    console.log(`mounted`);
     this.timeAtMount = Date.now();
     this.statusChange = false;
     if (this.$route.params.id) {
@@ -53,7 +52,6 @@ export default {
       this.treasury = this.$route.query.treasury;
     }
     this.resetBallots();
-    console.log(`after reset ballots`);
     await this.fetchFees();
     this.$refs.infiniteScroll.reset();
     this.$refs.infiniteScroll.poll();
@@ -114,17 +112,13 @@ export default {
       this.show = true;
     },
     closeBallot() {
-      console.log("closeBallot()");
       this.$router.go(-1);
-      console.log("this.$router.go(-1);");
     },
     openBallot(ballot) {
       if (this.showBallot) {
-        console.log("closing ballot", ballot);
         this.showBallot = false;
         return;
       }
-      console.log("opening ballot", ballot);
       this.timeAtMount = Date.now();
       this.$router.push(
         `/trails/ballots/${ballot.ballot_name}/${this.timeAtMount}`
@@ -277,7 +271,6 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log(`watching $route`);
       if (to.params.id !== undefined) {
         this.showBallot = true;
       } else {
