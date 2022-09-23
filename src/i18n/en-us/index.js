@@ -74,7 +74,7 @@ export default {
     },
     trails: {
       addBallot: 'Create a ballot',
-      addTreasury: 'Create a group',
+      addTreasury: 'Create a DAO',
       castVote: 'Cast a vote',
       editTreasury: 'Edit a group',
       mintTokens: 'Mint tokens',
