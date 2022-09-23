@@ -49,7 +49,6 @@ export default {
     TFElection: 'TF Election',
     polls: 'Polls',
     daos: 'DAOs',
-    elections: 'Elections',
     proposals: 'Proposals',
     workerProposals: 'Worker proposals',
     tokens: 'Tokens',
