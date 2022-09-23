@@ -120,10 +120,6 @@ export default {
         this.showBallot = false;
         return;
       }
-<<<<<<< HEAD
-=======
-      console.log("opening ballot", ballot, this.$route.path);
->>>>>>> Adding Election Page again and fixing #120 and #119
       this.timeAtMount = Date.now();
       this.$router.push(
         `/trails/${this.$route.path.indexOf('election') > 0 ? 'election' : 'ballots'}/${ballot.ballot_name}/${this.timeAtMount}`
@@ -281,15 +277,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log(`watching $route`);
       this.showBallot = !!to.params.id
-
       this.onLoad(true);
-      // this.renderComponent = true
-      this.$nextTick(() => {
-        // this.renderComponent = false
-        
-      });
     },
   },
 };
