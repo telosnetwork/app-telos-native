@@ -113,6 +113,11 @@ export default {
     openBallotForm() {
       this.show = true;
     },
+    closeBallot() {
+      console.log("closeBallot()");
+      this.$router.go(-1);
+      console.log("this.$router.go(-1);");
+    },
     openBallot(ballot) {
       if (this.showBallot) {
         console.log("closing ballot", ballot);
@@ -329,7 +334,7 @@ q-page
             color="primary"
             size="40px"
           )
-  q-dialog(v-model="showBallot" :key="$route.params.id + timeAtMount" transition-show="slide-up" transition-hide="slide-down")
+  q-dialog(v-model="showBallot" :key="$route.params.id + timeAtMount" transition-show="slide-up" transition-hide="slide-down" @hide="closeBallot")
     //- div(style="width: 80vw").bg-white
       //- p test
     ballot-view(
