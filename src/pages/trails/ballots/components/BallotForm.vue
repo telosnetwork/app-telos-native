@@ -171,7 +171,6 @@ export default {
     async updateUserBalance() {
       const getAccount = await this.$store.$api.getAccount(this.account);
       this.userBalance = this.onlyNumbers(getAccount.core_liquid_balance);
-      console.log("updateUserBalance() ---> ", this.userBalance);
     },
   },
   watch: {
