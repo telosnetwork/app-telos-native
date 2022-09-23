@@ -126,6 +126,7 @@ export default {
     },
     trails: {
       ballots: {
+        joinDAOFirst: 'Join DAO first',
         joinDAO: 'Join DAO',
         joinAndVote: 'Join DAO & Vote',
         vote: 'Vote',
