@@ -122,7 +122,7 @@ export default {
       }
       this.timeAtMount = Date.now();
       this.$router.push(
-        `/trails/${this.$route.path.indexOf('election') > 0 ? 'election' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
+        `/trails/${this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
       );
       // the timestamp prevents scroll glitches on the infinite list
     },
