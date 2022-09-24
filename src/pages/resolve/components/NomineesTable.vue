@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import ProfileAvatar from "../../../components/common/ProfileAvatar.vue";
+import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 import NominateSelfModal from "./NominateSelfModal.vue";
 import IpfsLink from "./IpfsLink.vue";
 
@@ -93,7 +93,7 @@ export default {
   components: {
     ProfileAvatar,
     NominateSelfModal,
-    IpfsLink
+    IpfsLink,
   },
   data() {
     return {
@@ -103,19 +103,19 @@ export default {
         {
           name: "credentials_link",
           label: "Credentials",
-          field: "credentials_link"
+          field: "credentials_link",
         },
         {
           name: "application_time",
           label: "Applied",
-          field: "application_time"
+          field: "application_time",
         },
         {
           name: "actions",
           label: "Actions",
-          field: "actions"
-        }
-      ]
+          field: "actions",
+        },
+      ],
     };
   },
   methods: {
@@ -146,9 +146,9 @@ export default {
           account: "testtelosarb",
           name: "unregnominee",
           data: {
-            nominee: this.$store.getters["accounts/account"]
-          }
-        }
+            nominee: this.$store.getters["accounts/account"],
+          },
+        },
       ];
       try {
         await this.$store.$api.signTransaction(unregNomineeActions);
@@ -162,9 +162,9 @@ export default {
           account: "testtelosarb",
           name: "candaddlead",
           data: {
-            nominee: this.$store.getters["accounts/account"]
-          }
-        }
+            nominee: this.$store.getters["accounts/account"],
+          },
+        },
       ];
       try {
         await this.$store.$api.signTransaction(enterElectionAction);
@@ -174,7 +174,7 @@ export default {
     },
     closeModal() {
       this.nominate = false;
-    }
+    },
   },
   computed: {
     isNominateButtonVisible() {
@@ -182,7 +182,7 @@ export default {
       const isAuthenticated = this.$store.getters["accounts/isAuthenticated"];
       const account = this.$store.getters["accounts/account"];
       const isAlreadyNominated = this.nomineeData.find(
-        nominee => nominee.nominee_name === account
+        (nominee) => nominee.nominee_name === account
       );
       if (isAuthenticated && !isAlreadyNominated) {
         return true;
@@ -194,10 +194,10 @@ export default {
       const account = this.$store.getters["accounts/account"];
       const { current_election_id } = this.configData;
       const currentElection = this.elections.find(
-        election => election.election_id === current_election_id
+        (election) => election.election_id === current_election_id
       );
       const isAlreadyCandidate = !!currentElection.candidates.find(
-        candidateData => candidateData.name === account
+        (candidateData) => candidateData.name === account
       );
       const endAddCand = new Date(
         currentElection.end_add_candidates_ts
@@ -216,7 +216,7 @@ export default {
       const { current_election_id } = this.configData;
       const currentElection = this.elections[current_election_id];
       const isAlreadyCandidate = currentElection.candidates.find(
-        candidateData => candidateData.name === account
+        (candidateData) => candidateData.name === account
       );
       const endAddCand = new Date(
         currentElection.end_add_candidates_ts
@@ -237,8 +237,8 @@ export default {
     },
     elections() {
       return this.$store.state.resolve.elections || [];
-    }
-  }
+    },
+  },
 };
 </script>
 

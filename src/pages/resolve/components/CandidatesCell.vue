@@ -26,18 +26,18 @@
 </template>
 
 <script>
-import ProfileAvatar from "../../../components/common/ProfileAvatar.vue";
+import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 import { getBallot, getSymbolInfo } from "../util";
 
 export default {
   props: ["election", "totalVotes"],
   components: {
-    ProfileAvatar
+    ProfileAvatar,
   },
   data() {
     return {
       results: null,
-      interval: null
+      interval: null,
     };
   },
   methods: {
@@ -68,8 +68,8 @@ export default {
     },
     unmounted() {
       clearInterval(this.interval);
-    }
-  }
+    },
+  },
 };
 </script>
 
