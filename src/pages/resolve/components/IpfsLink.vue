@@ -1,16 +1,16 @@
 <template>
-  <a :href='hashLink' class='hash-link' target="_blank">{{ hash }}</a>
+  <a :href="hashLink" class="hash-link" target="_blank">{{ hash }}</a>
 </template>
 
 <script>
 export default {
-  props: ['hash'],
+  props: ["hash"],
   computed: {
-    hashLink () {
-      return `https://api.dstor.cloud/ipfs/${this.hash}`
+    hashLink() {
+      return `https://api.dstor.cloud/ipfs/${this.hash}`;
     }
   }
-}
+};
 </script>
 
 <style scoped>

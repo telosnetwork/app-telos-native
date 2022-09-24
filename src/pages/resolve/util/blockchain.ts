@@ -45,7 +45,7 @@ export const fetchArbConfig = async (context: any) => {
   const { rows } = await context.$store.$api.getTableRows({
     code: "testtelosarb",
     scope: "testtelosarb",
-    table: "config",
+    table: "config"
   });
   const [config] = rows;
   return config;
@@ -55,7 +55,7 @@ export const fetchArbitrators = async (context: any) => {
   const { rows } = await context.$store.$api.getTableRows({
     code: "testtelosarb",
     scope: "testtelosarb",
-    table: "arbitrators",
+    table: "arbitrators"
   });
   return rows;
 };
@@ -65,7 +65,7 @@ export const fetchElections = async (context: any) => {
     code: "testtelosarb",
     scope: "testtelosarb",
     table: "elections",
-    reverse: true,
+    reverse: true
   });
   return rows;
 };
@@ -74,7 +74,7 @@ export const fetchNominees = async (context: any) => {
   const { rows } = await context.$store.$api.getTableRows({
     code: "testtelosarb",
     scope: "testtelosarb",
-    table: "nominees",
+    table: "nominees"
   });
   return rows;
 };
@@ -86,7 +86,7 @@ export const fetchCaseFiles = async (context: any, case_id?: number) => {
     table: "casefiles",
     upper_limit: case_id || null,
     lower_limit: case_id || null,
-    reverse: true,
+    reverse: true
   });
   return rows;
 };
@@ -95,20 +95,20 @@ export const fetchClaims = async (context: any, id: number) => {
   const { rows } = await context.$store.$api.getTableRows({
     code: "testtelosarb",
     scope: id,
-    table: "claims",
+    table: "claims"
   });
   return rows;
 };
 
 export const getBallot = async (context: any, ballot_name: string) => {
   const {
-    rows: [ballot],
+    rows: [ballot]
   } = await context.$store.$api.getTableRows({
     code: "telos.decide",
     scope: "telos.decide",
     table: "ballots",
     lower_bound: ballot_name,
-    upper_bound: ballot_name,
+    upper_bound: ballot_name
   });
   return ballot;
 };
@@ -125,7 +125,7 @@ export const getSymbolInfo = (balance: string): SymbolInfo => {
       whole,
       decimal,
       symbol,
-      amount,
+      amount
     };
   }
   const [amount, symbol] = balance.split(" ");
@@ -139,6 +139,6 @@ export const getSymbolInfo = (balance: string): SymbolInfo => {
     whole,
     decimal,
     symbol,
-    amount,
+    amount
   };
 };

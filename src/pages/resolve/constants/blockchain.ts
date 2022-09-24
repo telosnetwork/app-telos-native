@@ -15,7 +15,7 @@ export const GET_TABLE_ROWS = async (
     url: TABLE_ROWS_ENDPOINT,
     method: "post",
     headers: {
-      "content-type": "application/json",
+      "content-type": "application/json"
     },
     data: {
       index_position: "1",
@@ -25,20 +25,20 @@ export const GET_TABLE_ROWS = async (
       lower_bound: null,
       reverse: false,
       table_key: "",
-      ...config,
-    },
+      ...config
+    }
   });
   return data;
 };
 
 export const FETCH_CONFIG = async (): Promise<Config[]> => {
   const {
-    rows: [config],
+    rows: [config]
   } = await GET_TABLE_ROWS({
     code: ARBITRATION_CONTRACT,
     scope: ARBITRATION_CONTRACT,
     table: "config",
-    reverse: true,
+    reverse: true
   });
   return config;
 };

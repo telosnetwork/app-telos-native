@@ -4,14 +4,21 @@
     <div v-for="candidate of election.candidates" v-bind:key="candidate.name">
       <div class="candidate-item">
         <div class="data">
-          <profile-avatar v-bind:account_name="candidate.name" class="avatar-wrap" size="24px"></profile-avatar>
+          <profile-avatar
+            v-bind:account_name="candidate.name"
+            class="avatar-wrap"
+            size="24px"
+          ></profile-avatar>
           <div class="info">
-            <div class="text">{{candidate.name}}</div>
+            <div class="text">{{ candidate.name }}</div>
             <div class="text">({{ candidate.votes }})</div>
           </div>
         </div>
         <div class="bar-wrap">
-          <q-linear-progress :value="getPercentage(candidate.name)" class="q-mt-md" />
+          <q-linear-progress
+            :value="getPercentage(candidate.name)"
+            class="q-mt-md"
+          />
         </div>
       </div>
     </div>
@@ -19,49 +26,51 @@
 </template>
 
 <script>
-import ProfileAvatar from '../../../components/common/ProfileAvatar.vue'
-import { getBallot, getSymbolInfo } from '../util'
+import ProfileAvatar from "../../../components/common/ProfileAvatar.vue";
+import { getBallot, getSymbolInfo } from "../util";
 
 export default {
-  props: ['election', 'totalVotes'],
+  props: ["election", "totalVotes"],
   components: {
     ProfileAvatar
   },
-  data () {
+  data() {
     return {
       results: null,
       interval: null
-    }
+    };
   },
   methods: {
-    async getBallotResults () {
-      if (this.election.status !== 2) return
+    async getBallotResults() {
+      if (this.election.status !== 2) return;
       try {
-        const ballot = await getBallot(this.election.ballot_name)
-        if (!ballot) return
-        this.results = ballot.options
-        console.log('this.ballotResults: ', this.ballotResults)
+        const ballot = await getBallot(this.election.ballot_name);
+        if (!ballot) return;
+        this.results = ballot.options;
+        console.log("this.ballotResults: ", this.ballotResults);
       } catch (err) {
-        console.log('getBallotResults error: ', err)
+        console.log("getBallotResults error: ", err);
       }
     },
-    getPercentage (searchName) {
-      if (!this.totalVotes) return 0
-      const candidateData = this.election.candidates.find(({ name }) => name === searchName)
-      if (!candidateData) return 0
-      const { votes } = candidateData
-      const { whole } = getSymbolInfo(votes)
-      return (100 * whole) / this.totalVotes
+    getPercentage(searchName) {
+      if (!this.totalVotes) return 0;
+      const candidateData = this.election.candidates.find(
+        ({ name }) => name === searchName
+      );
+      if (!candidateData) return 0;
+      const { votes } = candidateData;
+      const { whole } = getSymbolInfo(votes);
+      return (100 * whole) / this.totalVotes;
     },
-    mounted () {
-      this.getBallotResults()
-      this.interval = setInterval(this.getBallotResults, 10000)
+    mounted() {
+      this.getBallotResults();
+      this.interval = setInterval(this.getBallotResults, 10000);
     },
-    unmounted () {
-      clearInterval(this.interval)
+    unmounted() {
+      clearInterval(this.interval);
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

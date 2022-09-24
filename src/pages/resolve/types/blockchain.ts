@@ -6,6 +6,7 @@ export type TableRowsConfig = {
   upper_bound?: string | null;
   lower_bound?: string | null;
   reverse?: boolean;
+  index_position?: string;
 };
 
 export type CaseFile = {
@@ -99,8 +100,8 @@ export type HyperionAct = {
   account: string;
   name: string;
   authorization: Authorization[];
-  data: any;  
-}
+  data: any;
+};
 
 export type HyperionAction = {
   "@timestamp": string;
@@ -121,6 +122,6 @@ export type HyperionAction = {
 };
 
 export type Authorization = {
- actor: string;
- permission: string
-}
+  actor: string;
+  permission: string;
+};

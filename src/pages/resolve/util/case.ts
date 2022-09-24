@@ -1,7 +1,5 @@
-import { fetchCaseFiles } from "./blockchain";
 import axios from "axios";
-import { HyperionAction } from "../types";
-import { HyperionDelta } from "../types/blockchain";
+import { HyperionDelta, HyperionAction } from "../types/blockchain";
 
 export const FETCH_DELTAS = async (context: any, params: any) => {
   const { data } = await axios(
@@ -17,8 +15,8 @@ export const FETCH_DELTAS = async (context: any, params: any) => {
         // after: '',
         // before: '',
         // simple: ''
-        ...params,
-      },
+        ...params
+      }
     }
   );
   return data;
@@ -39,8 +37,8 @@ export const FETCH_ACTIONS = async (context: any, params: any) => {
         // after: '',
         // before: '',
         // simple: ''
-        ...params,
-      },
+        ...params
+      }
     }
   );
   return data;
@@ -57,7 +55,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
     const totalActions = [];
     while (true) {
       const { deltas } = await FETCH_DELTAS(context, {
-        skip: skipDeltas,
+        skip: skipDeltas
       });
       deltas.forEach(({ table, primary_key, block_num }: HyperionDelta) => {
         if (table === "casefiles" && parseInt(primary_key) === case_id) {
@@ -72,7 +70,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
 
     while (true) {
       const { actions } = await FETCH_ACTIONS(context, {
-        skip: skipActions,
+        skip: skipActions
       });
       actions.forEach(({ table, primary_key, block_num }: HyperionDelta) => {
         if (table === "casefiles" && parseInt(primary_key) === case_id) {
@@ -94,7 +92,10 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
 };
 
 // filecase, readycase, makeoffer, respondoffer, startcase, assignarb, respond, acceptclaim
-export const FILTER_CASE_FILE_ACTIONS = (actions: any[], case_id: number) => {
+export const FILTER_CASE_FILE_ACTIONS = (
+  actions: any[],
+  case_id: number
+): HyperionAction[] => {
   console.log("actions.length: ", actions.length);
   const filteredActions = actions.filter((action: HyperionAction) => {
     if (action.act && action.act.data && action.act.data.case_id === case_id) {

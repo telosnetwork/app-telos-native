@@ -84,7 +84,7 @@ import { getSymbolInfo } from "../util";
 
 export default {
   components: {
-    CandidatesCell,
+    CandidatesCell
     // IpfsLink
   },
   data() {
@@ -97,18 +97,18 @@ export default {
         {
           name: "end_add_candidates_ts",
           label: "End Add Candidates",
-          field: "end_add_candidates_ts",
+          field: "end_add_candidates_ts"
         },
         {
           name: "begin_voting_ts",
           label: "Start Voting",
-          field: "begin_voting_ts",
+          field: "begin_voting_ts"
         },
         { name: "end_voting_ts", label: "End Voting", field: "end_voting_ts" },
-        { name: "status", label: "Status", field: "status" },
+        { name: "status", label: "Status", field: "status" }
       ],
       expandedRows: [],
-      ELECTION_STATUS,
+      ELECTION_STATUS
     };
   },
   methods: {
@@ -124,13 +124,13 @@ export default {
     },
     toggleRow(electionId) {
       this.expandedRows[electionId] = !this.expandedRows[electionId];
-    },
+    }
   },
   computed: {
     electionData() {
       return this.$store.state.resolve.elections;
-    },
-  },
+    }
+  }
 };
 </script>
 

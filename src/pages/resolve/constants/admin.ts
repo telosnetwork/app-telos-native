@@ -4,12 +4,12 @@ export const ADMIN_STATUS_MAP = {
   "nominee-registration": "Nominee Registration",
   "election-preparation": "Election Preparation",
   voting: "Voting",
-  "election-finalization": "Election Finalization",
+  "election-finalization": "Election Finalization"
 };
 
 export const GET_ADMIN_STATUS = (state: any) => {
   const {
-    config: { current_election_id },
+    config: { current_election_id }
   } = state;
   const { status: currentElectionStatus } = state.elections.find(
     (e: any) => e.id === current_election_id

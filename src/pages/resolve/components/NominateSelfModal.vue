@@ -1,7 +1,7 @@
 <template>
   <q-card style="min-width: 450px">
     <q-card-section>
-      <div class="text-h6">Nominate Self ({{account_name}})</div>
+      <div class="text-h6">Nominate Self ({{ account_name }})</div>
     </q-card-section>
 
     <q-card-section class="q-pt-none">
@@ -19,58 +19,64 @@
     </q-card-section>
 
     <q-card-actions align="right" class="text-primary">
-      <q-btn flat label="Submit" @click="nominateSelf" :disable="!isCredentialsLinkValid" />
+      <q-btn
+        flat
+        label="Submit"
+        @click="nominateSelf"
+        :disable="!isCredentialsLinkValid"
+      />
       <q-btn flat label="Cancel" @click="close" />
     </q-card-actions>
   </q-card>
 </template>
 
 <script>
-import { validateIpfsHash } from '../util'
+import { validateIpfsHash } from "../util";
 
 export default {
-  props: ['close', 'onSubmit'],
-  data () {
+  props: ["close", "onSubmit"],
+  data() {
     return {
-      credentialsLink: ''
-    }
+      credentialsLink: ""
+    };
   },
   computed: {
-    isCredentialsLinkValid () {
-      return validateIpfsHash(this.credentialsLink)
+    isCredentialsLinkValid() {
+      return validateIpfsHash(this.credentialsLink);
     },
-    account_name () {
-      return this.$store.state.accounts.account
+    account_name() {
+      return this.$store.state.accounts.account;
     }
   },
   methods: {
-    async nominateSelf () {
+    async nominateSelf() {
       const nominateSelfActions = [
         {
-          account: 'testtelosarb',
-          name: 'regarb',
+          account: "testtelosarb",
+          name: "regarb",
           data: {
             credentials_link: this.credentialsLink,
             nominee: this.account_name
           }
         }
-      ]
+      ];
       try {
-        await this.$store.$api.signTransaction(nominateSelfActions)
-        this.close()
-        setTimeout(this.onSubmit, 5000)
+        console.log("this.$store: ", this.$store);
+        await this.$store.$api.signTransaction(nominateSelfActions);
+        this.close();
+        setTimeout(this.onSubmit, 5000);
       } catch (err) {
-        console.log('nominateSelf error: ', err)
+        console.log("nominateSelf error: ", err);
       }
     }
   },
-  mounted: function () {
-    console.log('nominateSelfModal mounted, this.$store.state', this.$store.state)
+  mounted: function() {
+    console.log(
+      "nominateSelfModal mounted, this.$store.state",
+      this.$store.state
+    );
   }
-}
-
+};
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

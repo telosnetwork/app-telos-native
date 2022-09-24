@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="heading">
-      <h3>{{getCurrentRouteName}}</h3>
+      <h3>{{ getCurrentRouteName }}</h3>
     </section>
     <!-- <div class="nav-tabs">
       <div class="q-pa-md">
@@ -28,85 +28,85 @@ import {
   fetchArbitrators,
   fetchElections,
   fetchNominees,
-  fetchCaseFiles
-} from './util'
+  fetchCaseFiles,
+} from "./util";
 
 export default {
-  data () {
+  data() {
     return {
-      tab: 'mails',
-      interval: null
-    }
+      tab: "mails",
+      interval: null,
+    };
   },
   computed: {
-    getCurrentRouteName () {
+    getCurrentRouteName() {
       if (this.$route.params && this.$route.params.id) {
-        return `${this.$route.name} ${this.$route.params.id}`
+        return `${this.$route.name} ${this.$route.params.id}`;
       }
-      return this.$route.name
-    }
+      return this.$route.name;
+    },
   },
   methods: {
-    async getArbConfig () {
+    async getArbConfig() {
       try {
-        const config = await fetchArbConfig(this)
-        this.$store.commit('resolve/setArbConfig', config)
+        const config = await fetchArbConfig(this);
+        this.$store.commit("resolve/setArbConfig", config);
       } catch (err) {
-        console.warn('fetchConfig error: ', err)
+        console.warn("fetchConfig error: ", err);
       }
     },
-    async getArbitrators () {
+    async getArbitrators() {
       try {
-        const arbitrators = await fetchArbitrators(this)
-        this.$store.commit('resolve/setArbitrators', arbitrators)
+        const arbitrators = await fetchArbitrators(this);
+        this.$store.commit("resolve/setArbitrators", arbitrators);
       } catch (err) {
-        console.warn('fetchArbitrators error: ', err)
+        console.warn("fetchArbitrators error: ", err);
       }
     },
-    async getElections () {
+    async getElections() {
       try {
-        const elections = await fetchElections(this)
-        this.$store.commit('resolve/setElections', elections)
+        const elections = await fetchElections(this);
+        this.$store.commit("resolve/setElections", elections);
       } catch (err) {
-        console.warn('getElections error: ', err)
+        console.warn("getElections error: ", err);
       }
     },
-    async getNominees () {
+    async getNominees() {
       try {
-        const nominees = await fetchNominees(this)
-        this.$store.commit('resolve/setNominees', nominees)
+        const nominees = await fetchNominees(this);
+        this.$store.commit("resolve/setNominees", nominees);
       } catch (err) {
-        console.warn('getNominees error: ', err)
+        console.warn("getNominees error: ", err);
       }
     },
-    async getCaseFiles () {
+    async getCaseFiles() {
       try {
-        const caseFiles = await fetchCaseFiles(this)
-        this.$store.commit('resolve/setCaseFiles', caseFiles)
+        const caseFiles = await fetchCaseFiles(this);
+        this.$store.commit("resolve/setCaseFiles", caseFiles);
       } catch (err) {
-        console.warn('getCaseFiles error: ', err)
+        console.warn("getCaseFiles error: ", err);
       }
     },
-    fetchAllData () {
-      this.getArbConfig()
-      this.getArbitrators()
-      this.getElections()
-      this.getNominees()
-      this.getCaseFiles()
-    }
+    fetchAllData() {
+      this.getArbConfig();
+      this.getArbitrators();
+      this.getElections();
+      this.getNominees();
+      this.getCaseFiles();
+    },
   },
-  mounted () {
-    this.fetchAllData()
-    this.interval = setInterval(this.fetchAllData, 10000)
+  mounted() {
+    this.fetchAllData();
+    this.interval = setInterval(this.fetchAllData, 10000);
   },
-  unmounted () {
-    clearInterval(this.interval)
-  }
-}
+  unmounted() {
+    clearInterval(this.interval);
+  },
+};
 </script>
 
 <style lang="scss">
-  @import url('../../css/app.sass');
+@import url("../../css/app.sass");
 </style>
 
 <style scoped lang="scss">
@@ -119,7 +119,7 @@ export default {
     font-size: 92px;
     line-height: 110px;
 
-    background: linear-gradient(90deg, #071A5F 0%, #571AFF 30%);
+    background: linear-gradient(90deg, #071a5f 0%, #571aff 30%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -132,9 +132,9 @@ export default {
   text-align: center;
 }
 a:-webkit-any-link {
-    color: inherit;
-    cursor: pointer;
-    text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
 }
 .nav-tabs {
   display: flex;
