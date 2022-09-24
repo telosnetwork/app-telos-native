@@ -68,7 +68,7 @@ q-dialog(
       q-btn(
         flat
         :label="$t('common.buttons.cancel')"
-        @click="$emit('update:show', false)"
+        @click="$emit('close')"
       )
       q-btn(
         color="primary"

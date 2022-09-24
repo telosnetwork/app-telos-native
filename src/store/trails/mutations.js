@@ -8,10 +8,9 @@ export const setFees = (state, config) => {
 };
 
 export const resetBallots = (state) => {
-  console.log(`resetballots called`);
-  state.ballots.list.data = [];
-  state.ballots.list.loaded = false;
-  console.log(`ballots reset`);
+  // THere's no need to reset what's already fetched. Just use filters.
+  // state.ballots.list.data = [];
+  // state.ballots.list.loaded = false;
 };
 
 const removeOldBallot = (ballots, timeLimit) =>
@@ -61,8 +60,9 @@ export const setBallotVotes = (state, voters) => {
 };
 
 export const resetTreasuries = (state) => {
-  state.treasuries.list.data = [];
-  state.treasuries.list.loaded = false;
+  // same as resetBallos
+  // state.treasuries.list.data = [];
+  // state.treasuries.list.loaded = false;
 };
 
 const putVoteFirst = (treasuries) => {

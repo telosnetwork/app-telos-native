@@ -105,16 +105,16 @@ export default {
         file_path = regex.exec(this.ballot.description);
       } catch (e) {}
 
-      if (typeof content === "object") {
+      if (Array.isArray(file_path)) {
+        const r = "https://ipfs.io/ipfs/" + file_path[0];
+        return r;
+      } else if (typeof content === "object") {
         // prioritize content urls over image urls
         const r =
           content.contentUrl ||
           (content.contentUrls || [])[0] ||
           content.imageUrl ||
           (content.imageUrls || [])[0];
-        return r;
-      } else if (Array.isArray(file_path)) {
-        const r = "https://ipfs.io/ipfs/" + file_path[0];
         return r;
       } else {
         return false;
