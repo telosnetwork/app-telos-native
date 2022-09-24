@@ -2,29 +2,39 @@
   <div class="container">
     <div v-if="act.name === 'readycase'">
       <strong>{{ authorization[0].actor }}</strong> changed case
-      <strong>{{ data.case_id }}</strong
+      <strong>{{ actionData.case_id }}</strong
       >'s status to <strong>'ready'</strong> at
       {{ action.timestamp }}
     </div>
     <div v-if="act.name === 'assigntocase'">
       <strong>{{ authorization[0].actor }}</strong> assigned arbitrator
-      <strong>{{ data.arb_to_assign }}</strong> to case
+      <strong>{{ actionData.arb_to_assign }}</strong> to case
       {{ action.timestamp }}
     </div>
     <div v-if="act.name === 'respond'">
       <strong>{{ authorization[0].actor }}</strong> responded to claim
-      <strong>{{ data.claim_id }}</strong>
+      <strong>{{ actionData.claim_id }}</strong>
       {{ action.timestamp }}
     </div>
     <div v-if="act.name === 'acceptclaim'">
       <strong>{{ authorization[0].actor }}</strong> changed claim
-      <strong>{{ data.claim_id }}</strong> status to
-      <strong>{{ decisionClass(data.decision_class) }}</strong>
+      <strong>{{ actionData.claim_id }}</strong> status to
+      <strong>{{ decisionClass(actionData.decision_class) }}</strong>
       {{ action.timestamp }}
     </div>
     <div v-if="act.name === 'execclaim'">
       <strong>{{ authorization[0].actor }}</strong> executed claim
-      <strong>{{ data.claim_id }}</strong>
+      <strong>{{ actionData.claim_id }}</strong>
+      {{ action.timestamp }}
+    </div>
+    <div v-if="act.name === 'addclaim'">
+      <strong>{{ authorization[0].actor }}</strong> added claim
+      <strong>{{ actionData.claim_id }}</strong>
+      {{ action.timestamp }}
+    </div>
+    <div v-if="act.name === 'shredcase'">
+      <strong>{{ authorization[0].actor }}</strong> shredded the case
+      <strong>{{ actionData.claim_id }}</strong>
       {{ action.timestamp }}
     </div>
     <!-- {{ action.timestamp }}
@@ -43,12 +53,15 @@ export default {
   props: ["action", "index"],
   computed: {
     act(): HyperionAct {
+      // @ts-ignore
       return this.action.act;
     },
     authorization(): Authorization {
+      // @ts-ignore
       return this.action.act.authorization;
     },
-    data(): any {
+    actionData(): any {
+      // @ts-ignore
       return this.action.act.data;
     },
   },
@@ -58,6 +71,7 @@ export default {
     },
   },
   mounted() {
+    // @ts-ignore
     console.log(this.action);
   },
 };
