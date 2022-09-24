@@ -183,7 +183,7 @@ export default {
           registerVoter: "Register as a voter",
         },
         registerVoterDialog: {
-          title: "Do you want to register to this group?",
+          title: "Do you want to register to this DAO?",
         },
       },
     },

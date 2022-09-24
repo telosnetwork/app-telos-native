@@ -67,7 +67,7 @@ export default {
 
 <template lang="pug">
 q-page.q-pa-lg
-  treasury-form(:show.sync="show")
+  treasury-form(:show.sync="show" @close="show = false")
   .treasuries(ref="treasuriesRef")
     q-infinite-scroll(
       ref="infiniteScroll"

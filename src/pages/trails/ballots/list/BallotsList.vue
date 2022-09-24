@@ -24,7 +24,7 @@ export default {
       timeAtMount: undefined,
       openedBallot: {},
       voting: false,
-      treasury: "",
+      treasury: "VOTE",
       statuses: [],
       categories: [],
       isBallotListRowDirection: true,
@@ -49,8 +49,9 @@ export default {
     if (this.$route.params.id) {
       this.showBallot = true;
     }
-    if (this.$route.query) {
+    if (this.$route.query && this.$route.query.treasury) {
       this.treasury = this.$route.query.treasury;
+      this.$refs.actionBar ? this.$refs.actionBar.setTreasuryBar(this.treasury) : "";
     }
     this.resetBallots();
     await this.fetchFees();
@@ -184,7 +185,7 @@ export default {
       this.onLoad(true);
     },
     filterBallots(ballots) {
-      const ballotFiltered = ballots.filter((b) => {
+      const ballotFilteredByStatuses = ballots.filter((b) => {
         if (this.statuses) {
           if (this.statuses.length === 0) {
             return true;
@@ -211,15 +212,33 @@ export default {
           return this.statuses.includes(b.status);
         }
       });
-      return ballotFiltered.filter(
+      const ballotFilteredByCategory = ballotFilteredByStatuses.filter(
         (b) => {
-          if(this.$route.path.indexOf('election') > 0) {
-            return b.category === 'election'
+          if (this.categories.length > 0) {
+            return this.categories.includes(b.category);
           } else {
-            return this.categories.length === 0 || this.categories.includes(b.category)
+            if(this.$route.path.indexOf('election') > 0) {
+              // console.log("election page. -> b.category: ", b.category);
+              return ["election","referendum","leaderboard"].includes(b.category);
+            } else {
+              return ["poll","proposal"].includes(b.category);
+            }
           }
         }
       );
+      const ballotFilteredByTreasury = ballotFilteredByCategory.filter(
+        (b) => {
+          if (!this.treasury) return true;
+          try {
+            return b.treasury_symbol.split(",")[1] == this.treasury;
+          } catch (e) {
+            console.log("Problematic ballot: ", b);
+            console.error(e);
+          }
+          return false;
+        }
+      );
+      return ballotFilteredByTreasury
     },
     changeDirection(isBallotListRowDirection) {
       this.limit = 100;
@@ -288,6 +307,7 @@ export default {
 q-page
   welcome-card(v-if="!isNewUser() && isAuthenticated")
   action-bar(
+    ref="actionBar"
     @update-treasury="updateTreasury"
     @update-statuses="updateStatuses"
     @update-categories="updateCategories"

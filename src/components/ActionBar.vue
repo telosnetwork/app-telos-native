@@ -30,10 +30,12 @@ export default {
       isConfirmBtn: false,
       isFilterMenu320Open: false,
       typeGroup: [],
-      typeOptions: [
+      electionsPageTypeOptions:[
         { label: "Election", value: "election" },
         { label: "Referendum", value: "referendum" },
-        { label: "Leaderboard", value: "leaderboard" },
+        { label: "Leaderboard", value: "leaderboard" }  
+      ],
+      proposalsPageTypeOptions:[
         { label: "Poll", value: "poll" },
         { label: "Proposal", value: "proposal" },
       ],
@@ -56,7 +58,7 @@ export default {
       ],
       submitTypesResult: [],
       submitStatusesResult: [],
-      treasuryBar: "",
+      treasuryBar: "VOTE",
       isBallotListRowDirection: true,
       notice: false,
     };
@@ -180,31 +182,31 @@ export default {
     openNotice() {
       this.notice = true;
     },
+    setTreasuryBar: function(treasury) {
+      console.log("ActionBar.setTreasuryBar()", treasury);
+      this.treasuryBar = treasury;
+    },
     setFilterParams(path) {
       if (path === "amend-ballots") {
         this.typeGroup = [];
         this.submitTypesResult = [];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       } else if (path === "worker-proposals") {
         this.typeGroup = ["proposal"];
         this.submitTypesResult = ["proposal"];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       } else if (path === "t-f-election") {
         this.typeGroup = ["election"];
         this.submitTypesResult = ["election"];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       } else if (path === "polls") {
         this.typeGroup = ["poll"];
         this.submitTypesResult = ["poll"];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       }
       this.$emit("update-cards", {
         type: this.typeGroup,
@@ -224,6 +226,13 @@ export default {
   },
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
+    typeOptions() {
+      if(this.election > 0) {
+        return this.electionsPageTypeOptions;
+      } else {
+        return this.proposalsPageTypeOptions;
+      }
+    },
   },
   watch: {
     $route(to, from) {
