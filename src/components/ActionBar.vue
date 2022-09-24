@@ -30,12 +30,12 @@ export default {
       isConfirmBtn: false,
       isFilterMenu320Open: false,
       typeGroup: [],
-      electionsPageTypeOptions:[
+      electionsPageTypeOptions: [
         { label: "Election", value: "election" },
         { label: "Referendum", value: "referendum" },
-        { label: "Leaderboard", value: "leaderboard" }  
+        { label: "Leaderboard", value: "leaderboard" },
       ],
-      proposalsPageTypeOptions:[
+      proposalsPageTypeOptions: [
         { label: "Poll", value: "poll" },
         { label: "Proposal", value: "proposal" },
       ],
@@ -182,7 +182,7 @@ export default {
     openNotice() {
       this.notice = true;
     },
-    setTreasuryBar: function(treasury) {
+    setTreasuryBar: function (treasury) {
       console.log("ActionBar.setTreasuryBar()", treasury);
       this.treasuryBar = treasury;
     },
@@ -227,7 +227,7 @@ export default {
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
     typeOptions() {
-      if(this.election > 0) {
+      if (this.election > 0) {
         return this.electionsPageTypeOptions;
       } else {
         return this.proposalsPageTypeOptions;
@@ -885,11 +885,7 @@ div.bar-filter-wrapper
         outline
       )
       div.separator-320
-<<<<<<< HEAD
       div.right-bar-section.col-grow.row.items-center.justify-end.hidden
-=======
-      div.right-bar-section.col-grow.row.items-center.justify-end
->>>>>>> avoid any possible attempt to access property of null object
         q-separator.bar-separator-vertical(vertical inset)
         btn.create-poll-btn(
           :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
