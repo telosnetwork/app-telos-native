@@ -227,7 +227,7 @@ export default {
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
     typeOptions() {
-      if (this.election > 0) {
+      if(this.$route.path.indexOf('election') > 0) {
         return this.electionsPageTypeOptions;
       } else {
         return this.proposalsPageTypeOptions;
