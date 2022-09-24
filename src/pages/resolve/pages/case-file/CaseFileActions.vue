@@ -15,6 +15,7 @@ export default {
   components: { CaseFileAction },
   props: ["actions"],
   mounted() {
+    // @ts-ignore
     console.log("this.actions", this.actions);
   },
 };

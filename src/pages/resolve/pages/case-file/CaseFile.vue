@@ -4,9 +4,9 @@
       <div class="part">
         <intro-card heading="Case Summary">
           <p>
-            <strong>{{ caseData && caseData.claimant }}</strong> is the
+            <strong>{{ caseFile && caseFile.claimant }}</strong> is the
             claimant, with
-            <strong>{{ caseData && caseData.respondant }}</strong> being the
+            <strong>{{ caseFile && caseFile.respondant }}</strong> being the
             respondant. There is one arbitrator assigned to the case.
           </p>
           <template v-slot:buttons>
@@ -18,7 +18,7 @@
         </intro-card>
       </div>
       <div class="part">
-        <case-steps :caseFile="caseFile[0]" />
+        <case-steps :caseFile="caseFile" />
       </div>
     </div>
     <div class="q-pa-md">
@@ -30,15 +30,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { GET_TABLE_ROWS } from "../../constants";
 import { FETCH_CASE_ACTIONS_HISTORY } from "../../util/case";
 import ClaimsTable from "../../components/ClaimsTable.vue";
 import IntroCard from "../../components/IntroCard.vue";
 import CaseSteps from "../cases/CaseSteps.vue";
 import CaseFileActions from "./CaseFileActions.vue";
+import { defineComponent } from "@vue/runtime-core";
 
-export default {
+export default defineComponent({
   props: ["id"],
   components: {
     ClaimsTable,
@@ -48,7 +49,7 @@ export default {
   },
   data() {
     return {
-      caseFile: [],
+      caseFile: {},
       columns: [
         { name: "case_id", label: "ID", field: "case_id" },
         { name: "claimant", label: "Claimant", field: "claimant" },
@@ -66,22 +67,18 @@ export default {
     };
   },
   methods: {
-    goToCaseFile(caseFileId) {
-      this.$router.push({
-        path: `resolve/case/${caseFileId}`,
-        params: { caseFileId },
-      });
-    },
     async fetchCaseFile() {
       try {
         const { rows } = await GET_TABLE_ROWS({
           code: "testtelosarb",
           scope: "testtelosarb",
           table: "casefiles",
+          // @ts-ignore
           index_position: this.$route.params.id,
           reverse: true,
         });
-        this.caseFile = rows;
+        const [caseFile] = rows;
+        this.caseFile = caseFile;
       } catch (err) {
         console.log("fetch case files error:", err);
       }
@@ -91,17 +88,19 @@ export default {
     this.fetchCaseFile();
     const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
       this,
+      // @ts-ignore
       this.$route.params.id
     );
     console.log("actionsHistory: ", actionsHistory);
+    // @ts-ignore
     this.caseActionsHistory = actionsHistory;
   },
   computed: {
     caseData() {
-      return this.caseFile[0];
+      return this.caseFile;
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">
