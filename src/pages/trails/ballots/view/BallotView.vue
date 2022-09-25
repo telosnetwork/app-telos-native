@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapGetters("notifications", ["notifications"]),
     ...mapGetters("accounts", ["isAuthenticated", "account"]),
-    ...mapGetters("trails", ["ballot", "voters"]),
+    ...mapGetters("trails", ["ballot", "voters", "userTreasury"]),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
@@ -68,7 +68,7 @@ export default {
       return this.ballot.options[winner];
     },
     ballotDescription() {
-      if (this.getIPFShash) {
+      if (this.iframeUrl) {
         return this.ballot.description
           .replace(regexWithUrl, "")
           .replace(regex, "");
@@ -93,12 +93,28 @@ export default {
         return null;
       }
     },
-    getIPFShash() {
-      if (typeof (JSON.parse(this.ballot.content)) === "object") {
-        const r = JSON.parse(this.ballot.content).imageUrl || JSON.parse(this.ballot.content).contentUrls;
+    iframeUrl() {
+      let content = this.ballot.content;
+      let file_path = null;
+
+      // catch parse possible errors
+      try {
+        content = JSON.parse(this.ballot.content);
+      } catch (e) {}
+      try {
+        file_path = regex.exec(this.ballot.description);
+      } catch (e) {}
+
+      if (Array.isArray(file_path)) {
+        const r = "https://ipfs.io/ipfs/" + file_path[0];
         return r;
-      } else if (typeof (this.ballot.description) === "string") {
-        const r = "https://ipfs.io/ipfs/" + regex.exec(this.ballot.description)[0];
+      } else if (typeof content === "object") {
+        // prioritize content urls over image urls
+        const r =
+          content.contentUrl ||
+          (content.contentUrls || [])[0] ||
+          content.imageUrl ||
+          (content.imageUrls || [])[0];
         return r;
       } else {
         return false;
@@ -114,6 +130,27 @@ export default {
       }
       return newArr;
     },
+    isUserRegisteredInTreasury() {
+        if (!this.ballot) return false;
+        return this.userTreasury.some(t => t.liquid.split(" ")[1] == this.ballot.treasury.supply.split(" ")[1]);
+    },
+    voteButtonText() {
+        console.log("BalllotView.voteButtonText() isUserRegisteredInTreasury: ", this.isUserRegisteredInTreasury);
+        if (this.isUserRegisteredInTreasury) {
+            return 'pages.trails.ballots.vote';    
+        } else {
+            // ---- quickfix for #92 -------
+            return 'pages.trails.ballots.joinDAOFirst';
+            /*
+            if (this.ballot.treasury.access == 'public') {
+                return 'pages.trails.ballots.joinAndVote';
+            } else {
+                return 'pages.trails.ballots.joinDAO';
+            }
+            */           
+            // ------------------------------
+        }
+    },
   },
   methods: {
     ...mapActions("trails", [
@@ -121,6 +158,7 @@ export default {
       "castVote",
       "cancelBallot",
       "fetchVotesForBallot",
+      "fetchTreasuriesForUser"
     ]),
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
@@ -132,9 +170,10 @@ export default {
         100;
       return Number.isInteger(total) ? total : +total.toFixed(2);
     },
-    async onCastVote({ options, option, ballotName }) {
+    async onCastVote({ options, option, ballotName, register }) {
       this.voting = true;
       await this.castVote({
+        register,
         ballotName,
         options: options || [option],
       });
@@ -171,12 +210,47 @@ export default {
       }
       return newArr;
     },
+
+
+    // ---- quickfix for #92 -------
+    ...mapActions('trails', ['registerVoter']),
+    async onRegisterVoter (max_supply) {
+      await this.registerVoter(max_supply);
+    },
+    // -------------------------------  
     async vote() {
-      await this.onCastVote({
-        options: this.votes,
-        ballotName: this.ballot.ballot_name,
-      });
-      this.showNotification();
+        let register = false;
+        if (this.isUserRegisteredInTreasury) {
+            register = false;
+        } else {
+            // ---- quickfix for #92 -------
+            /*
+            if (this.ballot.treasury.access == 'public') {
+                register = true;
+            } else {
+                // redirect to treasuties page with filter
+                this.$router.push({
+                    path: "/trails/treasuries",
+                    query: { treasury: this.ballot.treasury.supply.split(" ")[1] },
+                });
+                return; // Do not Cast Vote
+            }
+            */
+            console.log("this.ballot.treasury: ", this.ballot.treasury.max_supply);
+            await this.onRegisterVoter(this.ballot.treasury.max_supply);
+            this.showNotification();
+            this.fetchTreasuriesForUser(this.account);
+            return;
+            // -------------------------------  
+        }
+
+        await this.onCastVote({
+            register,
+            options: this.votes,
+            ballotName: this.ballot.ballot_name,
+        });
+        await this.fetchBallot(this.$route.params.id);
+        this.showNotification();
     },
     async cancel() {
       await this.cancelBallot(this.ballot);
@@ -194,6 +268,9 @@ export default {
     },
     updatePopupScroll(e) {
       this.scrollPosition = e.target.scrollTop;
+    },
+    getPartOfTotalPercent(option) {
+      return this.trunc(this.getPartOfTotal(option) * 100, 2);
     },
     getPartOfTotal(option) {
       if (option) {
@@ -241,7 +318,7 @@ export default {
                         div(@click="showDetails = false")
                             img.poll-icon(src="statics/app-icons/back.svg")
                             span Go Back
-                    q-card-section
+                    q-card-section.body-info
                         div(v-for="option in getVariants")
                             div.text-weight-bold.variant-name {{ option.key }}
                             div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
@@ -298,14 +375,14 @@ export default {
                                             )
                                                 div.checkbox-text.row.space-between
                                                     div {{ option.key }}
-                                                    div(v-if="getPartOfTotal(option)") {{ getPartOfTotal(option) * 100 }}%&nbsp
+                                                    div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
                                         q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
                             q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
                                 q-item-section.btn-wrapper
                                     btn(
                                     v-if="isAuthenticated"
-                                    :labelText="$t('pages.trails.ballots.vote')"
+                                    :labelText="$t(voteButtonText)"
                                     btnWidth='220'
                                     fontSize='16'
                                     hoverBlue=true
@@ -371,7 +448,7 @@ export default {
                     q-separator.popup-separator
                     q-card-section.description-section-wrapper
                         div.description-section
-                            div.description-section-title(:class="getIPFShash ? `q-pb-md` : `q-pb-xl q-mb-lg`")
+                            div.description-section-title(:class="iframeUrl ? `q-pb-md` : `q-pb-xl q-mb-lg`")
                                 p(v-html="ballotDescription")
                             div(
                             v-if="ballotContentOptionData && ballotContentOptionData[0] && ballotContentOptionData[0].hasOwnProperty('imageUrl')"
@@ -412,8 +489,8 @@ export default {
                             iframe(
                             height="100%"
                             width="100%"
-                            v-if="getIPFShash"
-                            :src="getIPFShash"
+                            v-if="iframeUrl"
+                            :src="iframeUrl"
                             ).kv-preview-data.file-preview-pdf.file-zoom-detail.shadow-1
                             div(v-else).text-center
                                 img(src="/statics/app-icons/no-pdf.svg" style="width: 60px;")
@@ -438,7 +515,7 @@ export default {
                                                 )
                                                     div.checkbox-text.row.space-between
                                                         div {{ option.key }}
-                                                        div(v-if="getPartOfTotal(option)") {{ getPartOfTotal(option) * 100 }}%&nbsp
+                                                        div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                         div.linear-progress(v-if="displayWinner(ballot)")
                                             q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
                                 q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
@@ -489,6 +566,11 @@ export default {
             q-spinner(size="3em")
 </template>
 <style lang="sass">
+.body-info
+   overflow: scroll
+   overflow-x: hidden
+   height: 550px
+
 .variant-name
     margin-top: 24px
     margin-bottom: 8px

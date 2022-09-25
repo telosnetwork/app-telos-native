@@ -82,7 +82,7 @@ q-dialog(
     style="width: 400px; max-width: 80vw;"
   )
     q-card-section.bg-primary.text-white
-      .text-h6 Create a treasury
+      .text-h6 Create a DAO
     q-card-section
       q-input(
         ref="manager"
@@ -150,7 +150,7 @@ q-dialog(
       q-btn(
         flat
         :label="$t('common.buttons.cancel')"
-        @click="$emit('update:show', false)"
+        @click="$emit('close')"
       )
       q-btn(
         color="primary"

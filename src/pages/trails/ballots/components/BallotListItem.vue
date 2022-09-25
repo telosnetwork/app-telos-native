@@ -51,7 +51,7 @@ export default {
         (Number(option.value.split(" ")[0]) /
           Number(this.ballot.total_raw_weight.split(" ")[0])) *
         100;
-      return Number.isInteger(total) ? total : total.toFixed(2);
+      return this.trunc(total, 2);
     },
     async onCastVote({ options, option, ballotName }) {
       this.voting = true;

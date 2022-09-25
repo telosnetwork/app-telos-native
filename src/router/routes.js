@@ -1,10 +1,5 @@
 const routes = [
   {
-    path: "/",
-    component: () => import("pages/index.vue"),
-    meta: { layout: "empty", guest: true },
-  },
-  {
     path: "/login",
     component: () => import("pages/login/LoginPage.vue"),
     meta: { layout: "guest", title: "pages.login.title", guest: true },
@@ -29,13 +24,34 @@ const routes = [
     meta: { guest: false },
   },
 
-  // Trails
+  // Elections
   {
-    path: "/trails/ballots/:id?/:hash?",
+    name: "Elections",
+    path: "/trails/elections/:id?/:hash?",
     component: () => import("pages/trails/ballots/list/BallotsList.vue"),
     meta: { guest: false },
   },
+
+  // Proposals
   {
+    name: "Proposals",
+    path: '/trails/ballots',
+    component: () => import("pages/trails/ballots/list/BallotsList.vue"),
+    meta: { guest: false },
+    alias: "/",
+  },
+  
+  // Ballot
+  {
+    name: "Ballot",
+    path: '/trails/ballot/:id?/:hash?',
+    component: () => import("pages/trails/ballots/list/BallotsList.vue"),
+    meta: { guest: false },
+  },
+  
+  // DAOs
+  {
+    name: "DAOs",
     path: "/trails/treasuries",
     component: () => import("pages/trails/treasuries/list/TreasuriesList.vue"),
     meta: { guest: false },

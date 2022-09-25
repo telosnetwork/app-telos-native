@@ -37,9 +37,7 @@ export default {
       ],
       categoryOptions: [
         { value: "election", label: "Election" },
-        { value: "leaderboard", label: "Leaderboard" },
         { value: "poll", label: "Poll" },
-        { value: "proposal", label: "Proposal" },
         { value: "referendum", label: "Referendum" },
       ],
       submitting: false,
@@ -87,12 +85,17 @@ export default {
       return this.form.treasurySymbol?.symbol !== "VOTE" && this.isStakeable;
     },
     available() {
+      // TODO: borrame
+      console.log("BallotForm.computed.available -> this.userBalance: ", this.userBalance);
       if (this.userBalance) {
         const ballotFee = this.onlyNumbers(this.ballotFees.value);
         return this.userBalance >= ballotFee;
       } else {
         return null;
       }
+    },
+    fee() {
+      return this.ballotFees ? this.ballotFees.value : 0;
     },
   },
   methods: {
@@ -158,28 +161,39 @@ export default {
         settings: this.isStakeable,
       };
     },
-    async convertToIFPS(file) {
-      const ipfs = await IPFS.create();
-      this.cid = await ipfs.add(file);
+    async convertToIPFS(file) {
+      try {
+        const ipfs = await IPFS.create();
+        this.cid = await ipfs.add(file);
+      } catch (e) {
+        if (e.code == "ERR_LOCK_EXISTS") return;
+        console.error(e);
+      }
+    },
+    async updateUserBalance() {
+      const getAccount = await this.$store.$api.getAccount(this.account);
+      this.userBalance = this.onlyNumbers(getAccount.core_liquid_balance);
     },
   },
   watch: {
     file: function () {
-      this.convertToIFPS(this.file);
+      this.convertToIPFS(this.file);
     },
     account: async function (account) {
       this.fetchTreasuriesForUser(account);
-      const getAccount = await this.$store.$api.getAccount(this.account);
-      this.userBalance = this.onlyNumbers(getAccount.core_liquid_balance);
-      this.fee = this.ballotFees.value;
+      this.updateUserBalance();
     },
     cid: function () {
-      this.form.IPFSString = this.cid.path;
+      if (this.cid) {
+        this.form.IPFSString = this.cid.path;
+      } else {
+        this.form.IPFSString = null;
+      }      
     },
   },
   mounted() {
     this.fetchFees();
-
+    this.updateUserBalance();
     this.fetchTreasuriesForUser(this.account);
   },
 };
