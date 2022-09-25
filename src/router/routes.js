@@ -24,18 +24,34 @@ const routes = [
     meta: { guest: false },
   },
 
-  // Trails
+  // Elections
   {
-    path: "/trails/ballots/:id?/:hash?",
+    name: "Elections",
+    path: "/trails/elections/:id?/:hash?",
     component: () => import("pages/trails/ballots/list/BallotsList.vue"),
     meta: { guest: false },
   },
+
+  // Proposals
   {
-    path: "/",
+    name: "Proposals",
+    path: '/trails/ballots',
+    component: () => import("pages/trails/ballots/list/BallotsList.vue"),
+    meta: { guest: false },
+    alias: "/",
+  },
+  
+  // Ballot
+  {
+    name: "Ballot",
+    path: '/trails/ballot/:id?/:hash?',
     component: () => import("pages/trails/ballots/list/BallotsList.vue"),
     meta: { guest: false },
   },
+  
+  // DAOs
   {
+    name: "DAOs",
     path: "/trails/treasuries",
     component: () => import("pages/trails/treasuries/list/TreasuriesList.vue"),
     meta: { guest: false },

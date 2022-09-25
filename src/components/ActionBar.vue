@@ -11,6 +11,10 @@ export default {
     activeFilter: {
       type: String,
     },
+    election: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -26,8 +30,12 @@ export default {
       isConfirmBtn: false,
       isFilterMenu320Open: false,
       typeGroup: [],
-      typeOptions: [
+      electionsPageTypeOptions: [
+        { label: "Election", value: "election" },
         { label: "Referendum", value: "referendum" },
+        { label: "Leaderboard", value: "leaderboard" },
+      ],
+      proposalsPageTypeOptions: [
         { label: "Poll", value: "poll" },
         { label: "Proposal", value: "proposal" },
       ],
@@ -50,7 +58,7 @@ export default {
       ],
       submitTypesResult: [],
       submitStatusesResult: [],
-      treasuryBar: "",
+      treasuryBar: "VOTE",
       isBallotListRowDirection: true,
       notice: false,
     };
@@ -174,31 +182,31 @@ export default {
     openNotice() {
       this.notice = true;
     },
+    setTreasuryBar: function (treasury) {
+      console.log("ActionBar.setTreasuryBar()", treasury);
+      this.treasuryBar = treasury;
+    },
     setFilterParams(path) {
       if (path === "amend-ballots") {
         this.typeGroup = [];
         this.submitTypesResult = [];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       } else if (path === "worker-proposals") {
         this.typeGroup = ["proposal"];
         this.submitTypesResult = ["proposal"];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       } else if (path === "t-f-election") {
         this.typeGroup = ["election"];
         this.submitTypesResult = ["election"];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       } else if (path === "polls") {
         this.typeGroup = ["poll"];
         this.submitTypesResult = ["poll"];
         this.statusGroup = ["active"];
         this.submitStatusesResult = ["active"];
-        this.treasuryBar = "VOTE";
       }
       this.$emit("update-cards", {
         type: this.typeGroup,
@@ -218,6 +226,13 @@ export default {
   },
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
+    typeOptions() {
+      if(this.$route.path.indexOf('election') > 0) {
+        return this.electionsPageTypeOptions;
+      } else {
+        return this.proposalsPageTypeOptions;
+      }
+    },
   },
   watch: {
     $route(to, from) {
@@ -355,6 +370,7 @@ div.bar-filter-wrapper
               outline
               flat
               align="left"
+              v-if="!election"
             )
             q-dialog(
               v-model="isTypeDialogOpen"
@@ -397,6 +413,7 @@ div.bar-filter-wrapper
                       )
           div.flex.no-wrap(v-else)
             q-btn.bar-filter-btn.left-btn.left-btn-320(
+              v-if="!election"
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               @click="toggleMenu('isTypeDialogOpen')"
               color="dark"
@@ -690,7 +707,7 @@ div.bar-filter-wrapper
               color="dark"
             )
           q-btn.bar-filter-btn(
-            v-if="submitTypesResult.length === 0"
+            v-if="submitTypesResult.length === 0 && !election"
             :label="$t('pages.trails.ballots.actionBar.typeFilter')"
             :class="{'menu-open': isTypeMenuOpen}"
             :icon-right="isTypeMenuOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
@@ -720,7 +737,7 @@ div.bar-filter-wrapper
                   btnWidth='142'
                   fontSize='16'
                 )
-          div(v-else)
+          div(v-else-if="!election")
             q-btn.bar-filter-btn.left-btn(
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               color="dark"

@@ -32,14 +32,17 @@ div
   add-voter-dialog(
     :show.sync="show"
     :supply="treasury.max_supply"
+    @close="show = false"
   )
   mint-token-dialog(
     :show.sync="showMint"
     :supply="treasury.max_supply"
+    @close="showMint = false"
   )
   treasury-edit-dialog(
     :show.sync="showEdit"
     :treasury="treasury"
+    @close="showEdit = false"
   )
   q-card
     q-card-section.bg-primary.text-white(:class="`${!treasury.isPreferred ? undefined : 'prefered'}`")

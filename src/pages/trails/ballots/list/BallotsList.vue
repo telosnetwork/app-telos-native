@@ -17,13 +17,14 @@ export default {
   },
   data() {
     return {
+      renderComponent: false,
       show: false,
       showBallot: false,
       statusChange: false,
       timeAtMount: undefined,
       openedBallot: {},
       voting: false,
-      treasury: "",
+      treasury: "VOTE",
       statuses: [],
       categories: [],
       isBallotListRowDirection: true,
@@ -43,20 +44,19 @@ export default {
     },
   },
   async mounted() {
-    console.log(`mounted`);
     this.timeAtMount = Date.now();
     this.statusChange = false;
     if (this.$route.params.id) {
       this.showBallot = true;
     }
-    if (this.$route.query) {
+    if (this.$route.query && this.$route.query.treasury) {
       this.treasury = this.$route.query.treasury;
+      this.$refs.actionBar ? this.$refs.actionBar.setTreasuryBar(this.treasury) : "";
     }
     this.resetBallots();
-    console.log(`after reset ballots`);
     await this.fetchFees();
-    this.$refs.infiniteScroll.reset();
-    this.$refs.infiniteScroll.poll();
+    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.reset() : "";
+    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.poll() : "";
   },
   created() {
     window.addEventListener("scroll", this.onLoad);
@@ -82,7 +82,7 @@ export default {
         (scrollY > this.startY && this.limit <= this.maxLimit) ||
         reseted === true
       ) {
-        this.$refs.infiniteScroll.resume();
+        this.$refs.infiniteScroll ? this.$refs.infiniteScroll.resume() : "";
         // Start always with a limit of 200 and then go +100 on next query
         if (reseted === true) {
           this.limit = 300;
@@ -99,12 +99,12 @@ export default {
         };
         await this.fetchBallots(filter);
         if (scrollY === this.startY) {
-          this.$refs.infiniteScroll.stop();
+          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
           this.loading = false;
         }
       } else {
         setTimeout(() => {
-          this.$refs.infiniteScroll.stop();
+          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
           this.loading = false;
         }, 3000);
       }
@@ -113,16 +113,17 @@ export default {
     openBallotForm() {
       this.show = true;
     },
+    closeBallot() {
+      this.$router.go(-1);
+    },
     openBallot(ballot) {
       if (this.showBallot) {
-        console.log("closing ballot", ballot);
         this.showBallot = false;
         return;
       }
-      console.log("opening ballot", ballot);
       this.timeAtMount = Date.now();
       this.$router.push(
-        `/trails/ballots/${ballot.ballot_name}/${this.timeAtMount}`
+        `/trails/${this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
       );
       // the timestamp prevents scroll glitches on the infinite list
     },
@@ -184,7 +185,7 @@ export default {
       this.onLoad(true);
     },
     filterBallots(ballots) {
-      const ballotFiltered = ballots.filter((b) => {
+      const ballotFilteredByStatuses = ballots.filter((b) => {
         if (this.statuses) {
           if (this.statuses.length === 0) {
             return true;
@@ -211,15 +212,38 @@ export default {
           return this.statuses.includes(b.status);
         }
       });
-      return ballotFiltered.filter(
-        (b) =>
-          this.categories.length === 0 || this.categories.includes(b.category)
+      const ballotFilteredByCategory = ballotFilteredByStatuses.filter(
+        (b) => {
+          if (this.categories.length > 0) {
+            return this.categories.includes(b.category);
+          } else {
+            if(this.$route.path.indexOf('election') > 0) {
+              // console.log("election page. -> b.category: ", b.category);
+              return ["election","referendum","leaderboard"].includes(b.category);
+            } else {
+              return ["poll","proposal"].includes(b.category);
+            }
+          }
+        }
       );
+      const ballotFilteredByTreasury = ballotFilteredByCategory.filter(
+        (b) => {
+          if (!this.treasury) return true;
+          try {
+            return b.treasury_symbol.split(",")[1] == this.treasury;
+          } catch (e) {
+            console.log("Problematic ballot: ", b);
+            console.error(e);
+          }
+          return false;
+        }
+      );
+      return ballotFilteredByTreasury
     },
     changeDirection(isBallotListRowDirection) {
       this.limit = 100;
-      this.onLoad(true);
       this.isBallotListRowDirection = isBallotListRowDirection;
+      this.onLoad(true);
     },
     getLoser() {
       if (!this.ballot.total_voters || this.ballot.options.length !== 2)
@@ -272,12 +296,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log(`watching $route`);
-      if (to.params.id !== undefined) {
-        this.showBallot = true;
-      } else {
-        this.showBallot = false;
-      }
+      this.showBallot = !!to.params.id
+      this.onLoad(true);
     },
   },
 };
@@ -287,6 +307,7 @@ export default {
 q-page
   welcome-card(v-if="!isNewUser() && isAuthenticated")
   action-bar(
+    ref="actionBar"
     @update-treasury="updateTreasury"
     @update-statuses="updateStatuses"
     @update-categories="updateCategories"
@@ -329,7 +350,7 @@ q-page
             color="primary"
             size="40px"
           )
-  q-dialog(v-model="showBallot" :key="$route.params.id + timeAtMount" transition-show="slide-up" transition-hide="slide-down")
+  q-dialog(v-model="showBallot" :key="$route.params.id + timeAtMount" transition-show="slide-up" transition-hide="slide-down" @hide="closeBallot")
     //- div(style="width: 80vw").bg-white
       //- p test
     ballot-view(
