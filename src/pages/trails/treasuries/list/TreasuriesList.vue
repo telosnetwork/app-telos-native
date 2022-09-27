@@ -37,7 +37,6 @@ export default {
     };
   },
   async mounted() {
-    this.resetTreasuries();
     await this.fetchFees();
     this.$refs.infiniteScroll.reset();
     this.$refs.infiniteScroll.poll();
@@ -45,7 +44,6 @@ export default {
   },
   methods: {
     ...mapActions("trails", ["fetchTreasuries", "fetchFees"]),
-    ...mapMutations("trails", ["resetTreasuries"]),
     async onLoad(index, done) {
       await this.maybeLoadTreasuries();
       done();

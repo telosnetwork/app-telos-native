@@ -71,7 +71,7 @@ export default {
       "fetchTreasuries",
       "fetchBallotsByStatus",
     ]),
-    ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
+    ...mapMutations("trails", ["stopAddBallots"]),
     addToLocalStorage() {
       localStorage.isNewUser = false;
       this.isNewUser = false;
@@ -246,22 +246,17 @@ export default {
       this.setFilterParams(this.activeFilter);
     },
     treasuryBar: function (val, old) {
-      if (val !== old) {
-        this.resetBallots();
-      }
       this.$emit("update-treasury", this.treasuryBar);
     },
     submitStatusesResult: function (val, old) {
       if (val !== old) {
         this.statusGroup = this.submitStatusesResult;
-        this.resetBallots();
         this.$emit("update-statuses", this.submitStatusesResult);
       }
     },
     submitTypesResult: function (val, old) {
       if (val !== old) {
         this.typeGroup = this.submitTypesResult;
-        this.resetBallots();
         this.$emit("update-categories", this.submitTypesResult);
       }
     },

@@ -53,7 +53,6 @@ export default {
       this.treasury = this.$route.query.treasury;
       this.$refs.actionBar ? this.$refs.actionBar.setTreasuryBar(this.treasury) : "";
     }
-    this.resetBallots();
     await this.fetchFees();
     this.$refs.infiniteScroll ? this.$refs.infiniteScroll.reset() : "";
     this.$refs.infiniteScroll ? this.$refs.infiniteScroll.poll() : "";
@@ -73,7 +72,7 @@ export default {
       "fetchTreasuries",
       "fetchBallotsByStatus",
     ]),
-    ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
+    ...mapMutations("trails", ["stopAddBallots"]),
 
     async onLoad(reseted) {
       let scrollY = window.scrollY;

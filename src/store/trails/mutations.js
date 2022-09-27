@@ -1,36 +1,24 @@
 import { supplyToSymbol } from "~/utils/assets";
 
 const VOTE_SYMBOL = "VOTE";
-const HALF_YEAR_IN_MS = 15552000000;
 
 export const setFees = (state, config) => {
   state.fees = config.fees;
 };
 
-export const resetBallots = (state) => {
-  // THere's no need to reset what's already fetched. Just use filters.
-  // state.ballots.list.data = [];
-  // state.ballots.list.loaded = false;
-};
-
-const removeOldBallot = (ballots, timeLimit) =>
-  ballots.filter(
-    (ballot) =>
-      new Date().getTime() - new Date(ballot.end_time).getTime() < timeLimit
-  );
-
 export const addBallots = (state, { rows, more }) => {
   if (rows) {
-    // Remove the first item as it's the lower_bound
-    const arr = state.ballots.list.data.length ? rows.slice(1) : rows;
-    const filteredArr = removeOldBallot(arr, HALF_YEAR_IN_MS);
-    const res = state.ballots.list.data.concat(filteredArr).reduce((o, i) => {
-      if (!o.find((v) => v.title === i.title)) {
-        o.push(i);
-      }
-      return o;
-    }, []);
-    state.ballots.list.data = res;
+
+    // create a ballot name list from incoming rows
+    let incoming_names = rows.map(x => x.ballot_name);
+
+    // merging together
+    state.ballots.list.data = state.ballots.list.data
+      // take out old versions of incoming ones
+      .filter(ballot => incoming_names.indexOf(ballot.ballot_name) == -1)
+      // concat new ones
+      .concat(rows);
+    
   }
   state.ballots.list.loaded = !more;
 };
@@ -52,17 +40,10 @@ export const setBallot = (state, ballot) => {
 
 export const setUserTreasuries = (state, treasuries) => {
   state.userTreasuries = treasuries;
-  console.log("Trails.mutations.setUserTreasuries() ", treasuries.rows);
 };
 
 export const setBallotVotes = (state, voters) => {
   state.ballotVoters = voters;
-};
-
-export const resetTreasuries = (state) => {
-  // same as resetBallos
-  // state.treasuries.list.data = [];
-  // state.treasuries.list.loaded = false;
 };
 
 const putVoteFirst = (treasuries) => {
@@ -78,28 +59,26 @@ const putVoteFirst = (treasuries) => {
   return [voteTreasury, ...treasuries];
 };
 
-const sortTreasuries = (treasuries) => {
-  const sortArr = treasuries.sort(
-    (treasuryA, treasuryB) => treasuryB.voters - treasuryA.voters
-  );
-  return putVoteFirst(sortArr);
-};
-
 export const addTreasuries = (state, { rows, more }) => {
   if (rows) {
-    // Remove the first item as it's the lower_bound
-    const arr = state.treasuries.list.data.length ? rows.slice(1) : rows;
-    const stateArr =
-      state.treasuries.list.data.length < state.treasuries.list.pagination.limit
-        ? []
-        : state.treasuries.list.data;
-    const fullArr = stateArr.concat(
-      arr.map((treasury) => ({
-        ...treasury,
-        symbol: supplyToSymbol(treasury.max_supply),
-      }))
-    );
-    state.treasuries.list.data = sortTreasuries(fullArr);
+
+    // create a ballot name list from incoming rows
+    let incoming_symbols = rows.map(treasury => supplyToSymbol(treasury.max_supply));
+
+    // merging together
+    state.treasuries.list.data = state.treasuries.list.data
+      // take out old versions of incoming ones
+      .filter(treasury => incoming_symbols.indexOf( supplyToSymbol(treasury.max_supply) ) == -1)
+      // concat new ones
+      .concat(rows);
+      
+    // sort them by voters but allways put VOTE first
+    state.treasuries.list.data.sort( (A, B) => {
+      if (A.symbol === VOTE_SYMBOL) return 1;
+      if (B.symbol === VOTE_SYMBOL) return -1;
+      return B.voters - A.voters;
+    });
+
   }
   state.treasuries.list.loaded = !more;
 };
