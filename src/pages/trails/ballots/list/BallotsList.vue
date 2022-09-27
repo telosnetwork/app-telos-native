@@ -316,7 +316,8 @@ q-page
     @change-sort-option="changeSortOption"
     @update-cards="updateCards"
     :treasuriesOptions="treasuriesOptions"
-    :activeFilter="activeFilter")
+    :activeFilter="activeFilter"
+    :election="$route.path.indexOf('election') > 0")
   ballot-form(
     :show.sync="show"
     @close="show = false"
