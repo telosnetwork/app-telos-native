@@ -105,6 +105,7 @@ export const fetchBallot = async function ({ commit }, ballot) {
 
   result.rows[0].treasury = treasury.rows[0];
 
+  commit("addBallots", result);
   commit("setBallot", result.rows[0]);
 };
 
@@ -403,6 +404,7 @@ export const fetchTreasury = async function ({ commit }, treasury) {
     lower_bound: treasury,
     upper_bound: treasury,
   });
+  commit("addTreasuries", result);
   commit("setTreasury", result.rows[0]);
 };
 
