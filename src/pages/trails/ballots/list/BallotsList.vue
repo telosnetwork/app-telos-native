@@ -114,7 +114,7 @@ export default {
       this.show = true;
     },
     closeBallot() {
-      this.$router.go(-1);
+      this.showBallot = false;
     },
     openBallot(ballot) {
       if (this.showBallot) {
@@ -297,14 +297,20 @@ export default {
   watch: {
     $route(to, from) {
       this.showBallot = !!to.params.id
-      this.onLoad(true);
+      if(!to.params.id && !this.showBallot) {
+        this.renderComponent = true
+        this.$nextTick(() => {
+          this.renderComponent = false
+          this.onLoad(true)
+        });
+      }
     },
   },
 };
 </script>
 
 <template lang="pug">
-q-page
+q-page(v-if="!renderComponent")
   welcome-card(v-if="!isNewUser() && isAuthenticated")
   action-bar(
     ref="actionBar"
