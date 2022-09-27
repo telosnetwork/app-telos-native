@@ -18,7 +18,11 @@ export const addBallots = (state, { rows, more }) => {
       .filter(ballot => incoming_names.indexOf(ballot.ballot_name) == -1)
       // concat new ones
       .concat(rows);
-    
+
+    state.ballots.list.data.sort( (A, B) => {
+      return new Date(B.end_time).getTime() - new Date(A.end_time).getTime();
+    });
+
   }
   state.ballots.list.loaded = !more;
 };
