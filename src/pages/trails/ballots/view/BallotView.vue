@@ -24,6 +24,7 @@ export default {
   },
   data() {
     return {
+      userCanVote: false,
       loading: true,
       voting: false,
       votes: [],
@@ -178,7 +179,6 @@ export default {
         options: options || [option],
       });
       this.voting = false;
-      this.votes = [];
     },
     showNotification() {
       this.$q.notify({
@@ -287,6 +287,7 @@ export default {
       if (this.ballot.max_options === 1) {
         this.votes = this.votes.includes(key) ? [key] : [];
       }
+      this.userCanVote = this.votes.length > 0;
     },
     findLinks(text) {
       const urlRegex =
@@ -382,10 +383,11 @@ export default {
                                 q-item-section.btn-wrapper
                                     btn(
                                     v-if="isAuthenticated"
+                                    :disable="!userCanVote"
                                     :labelText="$t(voteButtonText)"
                                     btnWidth='220'
                                     fontSize='16'
-                                    hoverBlue=true
+                                    hoverBlue=true                                    
                                     @clickBtn="vote()"
                                     )
                                     btn(
@@ -419,7 +421,7 @@ export default {
                             span.statistics-title Request amount
                         div.statistics-body(v-if="ballot.proposal_info")
                             span.text-weight-bold {{ getRequestAmountRounded(ballot.proposal_info.total_requested) }}&nbsp
-            .col-xs-12.col-sm.popup-right-col-wrapper
+            .col-xs-12.col-sm.popup-right-col-wrapper.cosoooooooo
                 q-card(
                 flat
                 square
@@ -521,7 +523,8 @@ export default {
                                 q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
                                     q-item-section.btn-wrapper
                                         btn.btn-vote-320(
-                                        :labelText="$t('pages.trails.ballots.vote')"
+                                        :labelText="$t(voteButtonText)"
+                                        :disable="!userCanVote"
                                         btnWidth='220'
                                         fontSize='16'
                                         hoverBlue=true
