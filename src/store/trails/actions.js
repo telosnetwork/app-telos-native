@@ -201,7 +201,6 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
     !isBoth && actions.splice(2, 0, togglebal);
 
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetBallots");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {
@@ -237,7 +236,6 @@ export const deleteBallot = async function ({ commit }, ballot) {
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetBallots");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {
@@ -266,7 +264,6 @@ export const cancelBallot = async function ({ commit }, ballot) {
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetBallots");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {
@@ -452,7 +449,6 @@ export const addTreasury = async function (
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetTreasuries");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {
