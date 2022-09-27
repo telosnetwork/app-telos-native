@@ -35,9 +35,9 @@ export default {
     };
   },
   async mounted() {
+    this.getLoggedUserVote(this.$route.params.id);
     await this.fetchBallot(this.$route.params.id);
     window.addEventListener("scroll", this.updateScroll);
-
     this.loading = false;
   },
   beforeUnmount() {
@@ -48,7 +48,7 @@ export default {
   computed: {
     ...mapGetters("notifications", ["notifications"]),
     ...mapGetters("accounts", ["isAuthenticated", "account"]),
-    ...mapGetters("trails", ["ballot", "voters", "userTreasury"]),
+    ...mapGetters("trails", ["ballot", "userVote", "voters", "userTreasury"]),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
@@ -159,6 +159,7 @@ export default {
       "castVote",
       "cancelBallot",
       "fetchVotesForBallot",
+      "fetchUserVoteForThisBallot",
       "fetchTreasuriesForUser"
     ]),
     openUrl(url) {
@@ -210,8 +211,12 @@ export default {
       }
       return newArr;
     },
-
-
+    async getLoggedUserVote(ballot_name) {
+        await this.fetchUserVoteForThisBallot(ballot_name, this.account);
+        if (!this.userVote) return;
+        let votes = this.userVote.weighted_votes.map(v => v.key);
+        this.votes = this.votes.concat(votes);
+    },
     // ---- quickfix for #92 -------
     ...mapActions('trails', ['registerVoter']),
     async onRegisterVoter (max_supply) {
@@ -236,7 +241,6 @@ export default {
                 return; // Do not Cast Vote
             }
             */
-            console.log("this.ballot.treasury: ", this.ballot.treasury.max_supply);
             await this.onRegisterVoter(this.ballot.treasury.max_supply);
             this.showNotification();
             this.fetchTreasuriesForUser(this.account);
