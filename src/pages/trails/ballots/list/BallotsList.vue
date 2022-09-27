@@ -297,14 +297,18 @@ export default {
   watch: {
     $route(to, from) {
       this.showBallot = !!to.params.id
-      this.onLoad(true);
+      this.renderComponent = true
+      this.$nextTick(() => {
+        this.renderComponent = false
+        this.onLoad(true)
+      });
     },
   },
 };
 </script>
 
 <template lang="pug">
-q-page
+q-page(v-if="!renderComponent")
   welcome-card(v-if="!isNewUser() && isAuthenticated")
   action-bar(
     ref="actionBar"
