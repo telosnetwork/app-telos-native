@@ -71,7 +71,6 @@ export default {
       "fetchTreasuries",
       "fetchBallotsByStatus",
     ]),
-    ...mapMutations("trails", ["stopAddBallots"]),
     addToLocalStorage() {
       localStorage.isNewUser = false;
       this.isNewUser = false;

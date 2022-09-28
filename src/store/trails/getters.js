@@ -1,5 +1,5 @@
-export const ballots = ({ ballots }) => ballots.list.data
-export const ballotsLoaded = ({ ballots }) => ballots.list.loaded
+export const ballotsPagination = ({ ballots }) => ballots.list.pagination
+export const ballots = ({ ballots }) => ballots.list.rows
 export const ballot = ({ ballots }) => ballots.view.ballot
 
 export const treasuries = ({ treasuries }) => treasuries.list.data
