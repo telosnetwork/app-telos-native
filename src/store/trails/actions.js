@@ -65,7 +65,7 @@ export const fetchVotesForBallot = async function ({ commit }, ballot) {
     code: "telos.decide",
     scope: ballot,
     table: "votes",
-    limit: 20,
+    limit: 400,
   });
 
   commit("setBallotVotes", res.rows);
