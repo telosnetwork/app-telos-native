@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="isResolveStoresAvailable" class="container">
     <div class="q-pa-md stepper-wrap">
       <q-stepper v-model="electionStatus" vertical color="primary" animated>
         <q-step
@@ -88,6 +88,7 @@
 <script>
 import InitElectionModal from "../../components/InitElectionModal.vue";
 import BeginVotingModal from "../../components/BeginVotingModal.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -120,6 +121,10 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      arbSeatsAvailable: "resolve/arbSeatsAvailable",
+      isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
+    }),
     electionStatus() {
       const resolve = this.$store.state.resolve;
       if (resolve && resolve.config && resolve.elections) {
@@ -159,6 +164,7 @@ export default {
       return null;
     },
   },
+  mounted() {},
 };
 </script>
 
