@@ -22,6 +22,7 @@
 export default {
   methods: {
     navigateToAdmin() {
+      // @ts-ignore
       this.$router.push("/resolve/admin");
     },
   },
