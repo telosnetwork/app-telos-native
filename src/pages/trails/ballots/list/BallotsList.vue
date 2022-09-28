@@ -28,13 +28,8 @@ export default {
       statuses: [],
       categories: [],
       isBallotListRowDirection: true,
-      currentPage: 1,
-      page: 1,
       sortMode: "",
-      startY: 0,
       timerAction: null,
-      limit: 100,
-      maxLimit: 500,
       loading: false,
     };
   },
@@ -54,60 +49,22 @@ export default {
       this.$refs.actionBar ? this.$refs.actionBar.setTreasuryBar(this.treasury) : "";
     }
     await this.fetchFees();
-    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.reset() : "";
-    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.poll() : "";
   },
-  created() {
-    window.addEventListener("scroll", this.onLoad);
-  },
-  unmounted() {
-    window.removeEventListener("scroll", this.onLoad);
-  },
-
   methods: {
     ...mapActions("trails", [
       "fetchFees",
-      "fetchBallots",
+      "fetchMoreBallots",
       "castVote",
       "fetchTreasuries",
       "fetchBallotsByStatus",
     ]),
-    ...mapMutations("trails", ["stopAddBallots"]),
-
-    async onLoad(reseted) {
-      let scrollY = window.scrollY;
+    async onLoad(_, done) {
       this.loading = true;
-      if (
-        (scrollY > this.startY && this.limit <= this.maxLimit) ||
-        reseted === true
-      ) {
-        this.$refs.infiniteScroll ? this.$refs.infiniteScroll.resume() : "";
-        // Start always with a limit of 200 and then go +100 on next query
-        if (reseted === true) {
-          this.limit = 300;
-        } else {
-          this.limit += 100;
-        }
-        const filter = {
-          index: 4,
-          lower:
-            this.treasury || (this.$route.query && this.$route.query.treasury),
-          upper:
-            this.treasury || (this.$route.query && this.$route.query.treasury),
-          limit: this.limit,
-        };
-        await this.fetchBallots(filter);
-        if (scrollY === this.startY) {
-          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
-          this.loading = false;
-        }
-      } else {
-        setTimeout(() => {
-          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
-          this.loading = false;
-        }, 3000);
-      }
-      this.startY = scrollY;
+      await this.fetchMoreBallots();
+      this.loading = false;
+      setTimeout(() => {
+        done(!this.ballotsPagination.more);
+      }, 1000);
     },
     openBallotForm() {
       this.show = true;
@@ -169,19 +126,16 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
-      this.limit = 100;
       this.treasury = newTreasury;
-      this.onLoad(true);
+      this.$refs.infiniteScroll.resume();
     },
     updateStatuses(newStatuses) {
-      this.limit = 100;
       this.statuses = newStatuses;
-      this.onLoad(true);
+      this.$refs.infiniteScroll.resume();
     },
     updateCategories(newCategories) {
-      this.limit = 100;
       this.categories = newCategories;
-      this.onLoad(true);
+      this.$refs.infiniteScroll.resume();
     },
     filterBallots(ballots) {
       const ballotFilteredByStatuses = ballots.filter((b) => {
@@ -217,7 +171,6 @@ export default {
             return this.categories.includes(b.category);
           } else {
             if(this.$route.path.indexOf('election') > 0) {
-              // console.log("election page. -> b.category: ", b.category);
               return ["election","referendum","leaderboard"].includes(b.category);
             } else {
               return ["poll","proposal"].includes(b.category);
@@ -242,7 +195,6 @@ export default {
     changeDirection(isBallotListRowDirection) {
       this.limit = 100;
       this.isBallotListRowDirection = isBallotListRowDirection;
-      this.onLoad(true);
     },
     getLoser() {
       if (!this.ballot.total_voters || this.ballot.options.length !== 2)
@@ -274,7 +226,6 @@ export default {
     changeSortOption(option) {
       this.limit = 100;
       this.sortMode = option;
-      this.onLoad(true);
     },
     ballotContentImg(ballot) {
       try {
@@ -291,18 +242,11 @@ export default {
   },
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
-    ...mapGetters("trails", ["ballots", "ballotsLoaded", "treasuriesOptions"]),
+    ...mapGetters("trails", ["ballots", "ballotsPagination", "treasuriesOptions"]),
   },
   watch: {
     $route(to, from) {
       this.showBallot = !!to.params.id
-      if(!to.params.id && !this.showBallot) {
-        this.renderComponent = true
-        this.$nextTick(() => {
-          this.renderComponent = false
-          this.onLoad(true)
-        });
-      }
     },
   },
 };
@@ -330,7 +274,8 @@ q-page(v-if="!renderComponent")
   .ballots(ref="ballotsRef")
     q-infinite-scroll(
       ref="infiniteScroll"
-      :offset="250"
+      @load="onLoad"
+      :offset="50"
     )
       div(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
         ballot-list-item(

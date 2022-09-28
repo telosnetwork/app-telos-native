@@ -17,16 +17,16 @@ export const fetchFees = async function ({ commit }) {
 // Fees
 
 // Ballots
-export const fetchBallots = async function ({ commit, state }, query) {
+export const fetchMoreBallots = async function ({ commit, state }) {
   const result = await this.$api.getTableRows({
     code: "telos.decide",
     scope: "telos.decide",
     table: "ballots",
-    limit: query.limit,
-    index_position: query.index || 0,
+    limit: state.ballots.list.pagination.limit,
+    index_position: 5,
+    reverse: true,
     key_type: "i64",
-    lower_bound: query.lower,
-    upper_bound: query.upper,
+    lower_bound: state.ballots.list.pagination.next_key
   });
   let treasuries = {rows:[]};
   state.treasuries.list.data.forEach(t => treasuries[t.symbol] = t);
@@ -130,7 +130,6 @@ export const fetchBallot = async function ({ commit }, ballot) {
   }
 
   result.rows[0].treasury = treasury.rows[0];
-
   commit("addBallots", result);
   commit("setBallot", result.rows[0]);
 };
@@ -331,7 +330,7 @@ export const castVote = async function (
     ];
 
     if (register) {
-      let ballot = rootState.trails.ballots.list.data.find(b => b.ballot_name == ballotName);
+      let ballot = rootState.trails.ballots.list.rows.find(b => b.ballot_name == ballotName);
       let treasury_symbol = ballot.treasury_symbol;
       actions.unshift({
         account: "telos.decide",
