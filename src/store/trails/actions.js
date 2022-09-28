@@ -28,25 +28,31 @@ export const fetchBallots = async function ({ commit, state }, query) {
     lower_bound: query.lower,
     upper_bound: query.upper,
   });
-  let treasuries = {};
+  let treasuries = {rows:[]};
+  state.treasuries.list.data.forEach(t => treasuries[t.symbol] = t);
 
   for await (const ballot of result.rows) {
-    let supply = supplyToSymbol(ballot.treasury_symbol);
-    if (!treasuries.hasOwnProperty(supply)) {
+    let symbol = supplyToSymbol(ballot.treasury_symbol);
+    if (!treasuries.hasOwnProperty(symbol)) {
       const treasury = await this.$api.getTableRows({
         code: "telos.decide",
         scope: "telos.decide",
         table: "treasuries",
         limit: 1,
-        lower_bound: supply,
-        upper_bound: supply,
+        lower_bound: symbol,
+        upper_bound: symbol,
       });
-      treasuries[supply] = treasury.rows[0];
+      treasuries[symbol] = treasury.rows[0];
+      treasuries.rows.push(treasuries[symbol]);
     }
 
-    ballot.treasury = treasuries[supply];
+    ballot.treasury = treasuries[symbol];
   }
   commit("addBallots", result);
+  if (treasuries.rows.length > 0) {
+    commit("addTreasuries", treasuries);
+  }  
+  commit("updateTreasuries");
 };
 
 export const fetchTreasuriesForUser = async function ({ commit }, account) {
@@ -58,7 +64,7 @@ export const fetchTreasuriesForUser = async function ({ commit }, account) {
   });
 
   commit("setUserTreasuries", res);
-  commit("markRegisteredTreasuries");
+  commit("updateTreasuries");
 };
 
 export const fetchVotesForBallot = async function ({ commit }, ballot) {
@@ -391,7 +397,7 @@ export const registerVoter = async function (
 // Ballots
 
 // Treasuries
-export const fetchTreasuries = async function ({ commit, state, rootState }) {
+export const fetchTreasuries = async function ({ commit, state }) {
   const result = await this.$api.getTableRows({
     code: "telos.decide",
     scope: "telos.decide",
@@ -400,7 +406,7 @@ export const fetchTreasuries = async function ({ commit, state, rootState }) {
   });
 
   commit("addTreasuries", result);
-  fetchTreasuriesForUser.bind(this)({ commit, state, rootState }, rootState.accounts.account);
+  commit("updateTreasuries");
 };
 
 export const fetchTreasury = async function ({ commit }, treasury) {
@@ -414,6 +420,7 @@ export const fetchTreasury = async function ({ commit }, treasury) {
   });
   commit("addTreasuries", result);
   commit("setTreasury", result.rows[0]);
+  commit("updateTreasuries");
 };
 
 export const addTreasury = async function (
