@@ -54,18 +54,15 @@ export const setBallotVotes = (state, voters) => {
   state.ballotVoters = voters;
 };
 
-const putVoteFirst = (treasuries) => {
-  if (treasuries[0] && treasuries[0].symbol === VOTE_SYMBOL) {
-    return treasuries;
+export const markRegisteredTreasuries = (state) => {
+  // mark every treasury.isRegistered if the current user treasuries (userTreasuries) includes that treasury
+  let userTreasuries = state.userTreasuries ? state.userTreasuries.rows : [];
+  if (userTreasuries) {
+    state.treasuries.list.data.forEach(t => t.isRegistered = userTreasuries.some(
+      (v) => supplyToSymbol(v.liquid) === supplyToSymbol(t.max_supply)
+    ));
   }
-
-  const voteTreasury = treasuries.find(
-    (treasury) => treasury.symbol === VOTE_SYMBOL
-  );
-  const indexOfVote = treasuries.indexOf(voteTreasury);
-  treasuries.splice(indexOfVote, 1);
-  return [voteTreasury, ...treasuries];
-};
+}
 
 export const addTreasuries = (state, { rows, more }) => {
   if (rows) {
