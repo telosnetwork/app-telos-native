@@ -71,7 +71,7 @@ import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 
 export default {
   components: {
-    ProfileAvatar,
+    ProfileAvatar
   },
   data() {
     return {
@@ -83,20 +83,20 @@ export default {
         { name: "approvals", label: "Approvals", field: "approvals" },
         { name: "case_status", label: "Status", field: "case_status" },
         { name: "update_ts", label: "Last Updated", field: "update_ts" },
-        { name: "actions", label: "Actions", field: "actions" },
-      ],
+        { name: "actions", label: "Actions", field: "actions" }
+      ]
     };
   },
   computed: {
     caseFiles() {
       return this.$store.state.resolve.case_files || [];
-    },
+    }
   },
   methods: {
     goToCaseFile(caseFileId) {
       this.$router.push({ path: `case/${caseFileId}`, params: { caseFileId } });
-    },
-  },
+    }
+  }
 };
 </script>
 

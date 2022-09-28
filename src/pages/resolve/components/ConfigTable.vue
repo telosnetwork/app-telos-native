@@ -46,7 +46,7 @@ import { secondsToDhms } from "../util";
 
 export default {
   components: {
-    ProfileAvatar,
+    ProfileAvatar
   },
   data() {
     return {
@@ -55,34 +55,34 @@ export default {
         {
           name: "current_election_id",
           label: "Current Election",
-          field: "current_election_id",
+          field: "current_election_id"
         },
         {
           name: "arb_term_length",
           label: "Arbitrator Term",
-          field: "arb_term_length",
+          field: "arb_term_length"
         },
         {
           name: "election_add_candidates_ts",
           label: "Add Election Nominees",
-          field: "election_add_candidates_ts",
+          field: "election_add_candidates_ts"
         },
         {
           name: "election_voting_ts",
           label: "Election Duration",
-          field: "election_voting_ts",
+          field: "election_voting_ts"
         },
         {
           name: "max_elected_arbs",
           label: "Arbitrator Count",
-          field: "max_elected_arbs",
+          field: "max_elected_arbs"
         },
         {
           name: "runoff_election_voting_ts",
           label: "Runoff Duration",
-          field: "runoff_election_voting_ts",
-        },
-      ],
+          field: "runoff_election_voting_ts"
+        }
+      ]
     };
   },
   computed: {
@@ -106,8 +106,8 @@ export default {
     runoffElectionDuration() {
       if (!this.configData[0]) return "";
       return secondsToDhms(this.configData[0].runoff_election_voting_ts);
-    },
-  },
+    }
+  }
 };
 </script>
 
