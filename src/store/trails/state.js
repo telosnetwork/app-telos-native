@@ -1,6 +1,7 @@
 export default () => ({
   ballots: {
     list: {
+      open_ballots: [],
       data: [],
       loaded: false,
       pagination: {

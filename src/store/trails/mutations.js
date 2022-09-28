@@ -23,6 +23,7 @@ export const addBallots = (state, { rows, more }) => {
       return new Date(B.end_time).getTime() - new Date(A.end_time).getTime();
     });
 
+    state.ballots.list.open_ballots = state.ballots.list.data.filter(b => Date.now() < Date.parse(b.end_time));
   }
   state.ballots.list.loaded = !more;
 };
@@ -54,14 +55,16 @@ export const setBallotVotes = (state, voters) => {
   state.ballotVoters = voters;
 };
 
-export const markRegisteredTreasuries = (state) => {
+export const updateTreasuries = (state) => {
   // mark every treasury.isRegistered if the current user treasuries (userTreasuries) includes that treasury
+  let open_ballots = state.ballots.list.open_ballots;
   let userTreasuries = state.userTreasuries ? state.userTreasuries.rows : [];
-  if (userTreasuries) {
-    state.treasuries.list.data.forEach(t => t.isRegistered = userTreasuries.some(
-      (v) => supplyToSymbol(v.liquid) === supplyToSymbol(t.max_supply)
-    ));
-  }
+  
+  state.treasuries.list.data.forEach(t => {
+    t.symbol = supplyToSymbol(t.max_supply);
+    t.open_ballots = open_ballots.filter( b => b.treasury.max_supply == t.max_supply ).length;
+    t.isRegistered = userTreasuries.some( v => supplyToSymbol(v.liquid) === t.symbol );
+  });
 }
 
 export const addTreasuries = (state, { rows, more }) => {
