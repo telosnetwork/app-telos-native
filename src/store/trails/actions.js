@@ -54,10 +54,11 @@ export const fetchTreasuriesForUser = async function ({ commit }, account) {
     code: "telos.decide",
     scope: account,
     table: "voters",
-    key_type: "i64",
+    limit: 1000,
   });
 
   commit("setUserTreasuries", res);
+  commit("markRegisteredTreasuries");
 };
 
 export const fetchVotesForBallot = async function ({ commit }, ballot) {
@@ -398,20 +399,8 @@ export const fetchTreasuries = async function ({ commit, state, rootState }) {
     limit: state.treasuries.list.pagination.limit,
   });
 
-  const voter = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: rootState.accounts.account,
-    table: "voters",
-    limit: 1000,
-  });
-
-  for await (const treasury of result.rows) {
-    treasury.isRegistered = voter.rows.some(
-      (v) => supplyToSymbol(v.liquid) === supplyToSymbol(treasury.max_supply)
-    );
-  }
-
   commit("addTreasuries", result);
+  fetchTreasuriesForUser.bind(this)({ commit, state, rootState }, rootState.accounts.account);
 };
 
 export const fetchTreasury = async function ({ commit }, treasury) {
