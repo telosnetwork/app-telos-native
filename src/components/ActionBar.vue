@@ -1082,24 +1082,12 @@ div.bar-filter-wrapper
     left: 70%
 @media (max-width: 1070px)
   .bar-filters
-    max-width: 68%
+    max-width: 100%
   .bar-linear-gradient-right
-    left: 65%
+    display: none
 @media (max-width: 940px)
   .bar-filters
-    max-width: 63%
-  .bar-linear-gradient-right
-    left: 60%
-@media (max-width: 750px)
-  .bar-filters
-    max-width: 60%
-  .bar-linear-gradient-right
-    left: 55%
-@media (max-width: 660px)
-  .bar-filters
-    max-width: 55%
-  .bar-linear-gradient-right
-    left: 50%
+    max-width: 100%
 @media (max-width: 600px)
   .bar-filter-menu-320-wrapper
     display: flex
