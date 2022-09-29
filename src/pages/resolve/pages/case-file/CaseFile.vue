@@ -6,7 +6,12 @@
           <p>
             <strong>{{ caseFile.claimant }}</strong> is the claimant, with
             <strong>{{ caseFile.respondant }}</strong> being the respondant.
-            There is one arbitrator assigned to the case.
+            There is
+            <strong>{{ caseFile.arbitrators?.length }}</strong> arbitrator,
+            <strong>{{
+              caseFile.arbitrators && caseFile.arbitrators[0]
+            }}</strong
+            >, assigned to the case.
           </p>
           <template v-slot:buttons>
             <div class="intro-buttons-wrap">
