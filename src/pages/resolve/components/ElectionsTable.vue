@@ -11,7 +11,6 @@
         hide-header
       >
         <template v-slot:body="props">
-          <!-- <span>{{JSON.stringify(props)}}</span> -->
           <q-tr :props="props">
             <q-td auto-width>
               <q-btn
