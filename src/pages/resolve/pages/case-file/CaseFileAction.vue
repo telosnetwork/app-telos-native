@@ -50,6 +50,13 @@
       at
       {{ action.timestamp }}
     </div>
+    <div v-if="act.name === 'startcase'">
+      <strong>{{ authorization[0].actor }}</strong
+      >&nbsp; <strong>started case</strong>, giving respondant
+      <strong>{{ actionData.number_days_respondant }}</strong> days to respond
+      to claims at
+      {{ action.timestamp }}
+    </div>
     <!-- {{ action.timestamp }}
     {{ action.timestamp }}
     {{ action.timestamp }}
