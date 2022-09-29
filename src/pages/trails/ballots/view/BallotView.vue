@@ -137,7 +137,7 @@ export default {
     voteButtonText() {
         console.log("BalllotView.voteButtonText() isUserRegisteredInTreasury: ", this.isUserRegisteredInTreasury);
         if (this.isUserRegisteredInTreasury) {
-            return 'pages.trails.ballots.vote';    
+            return 'pages.trails.ballots.vote';
         } else {
             // ---- quickfix for #92 -------
             return 'pages.trails.ballots.joinDAOFirst';
@@ -147,7 +147,7 @@ export default {
             } else {
                 return 'pages.trails.ballots.joinDAO';
             }
-            */           
+            */
             // ------------------------------
         }
     },
@@ -192,7 +192,7 @@ export default {
       });
     },
     async showVoters() {
-      await this.fetchVotesForBallot(this.ballot.ballot_name);
+      await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters })
       this.voters.length > 0
         ? (this.showDetails = true)
         : (this.showDetails = false);
@@ -217,7 +217,7 @@ export default {
     async onRegisterVoter (max_supply) {
       await this.registerVoter(max_supply);
     },
-    // -------------------------------  
+    // -------------------------------
     async vote() {
         let register = false;
         if (this.isUserRegisteredInTreasury) {
@@ -241,7 +241,7 @@ export default {
             this.showNotification();
             this.fetchTreasuriesForUser(this.account);
             return;
-            // -------------------------------  
+            // -------------------------------
         }
 
         await this.onCastVote({
