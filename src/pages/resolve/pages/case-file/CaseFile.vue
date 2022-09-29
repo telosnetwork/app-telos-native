@@ -1,13 +1,12 @@
 <template>
-  <div>
+  <div v-if="isResolveStoresAvailable && caseFile">
     <div class="row">
       <div class="part">
         <intro-card heading="Case Summary">
           <p>
-            <strong>{{ caseFile && caseFile.claimant }}</strong> is the
-            claimant, with
-            <strong>{{ caseFile && caseFile.respondant }}</strong> being the
-            respondant. There is one arbitrator assigned to the case.
+            <strong>{{ caseFile.claimant }}</strong> is the claimant, with
+            <strong>{{ caseFile.respondant }}</strong> being the respondant.
+            There is one arbitrator assigned to the case.
           </p>
           <template v-slot:buttons>
             <div class="intro-buttons-wrap">
@@ -38,6 +37,7 @@ import IntroCard from "../../components/IntroCard.vue";
 import CaseSteps from "../cases/CaseSteps.vue";
 import CaseFileActions from "./CaseFileActions.vue";
 import { defineComponent } from "@vue/runtime-core";
+import { mapGetters } from "vuex";
 
 export default defineComponent({
   props: ["id"],
@@ -68,19 +68,26 @@ export default defineComponent({
   },
   methods: {
     async fetchCaseFile() {
+      const id = this.$route.params.id;
+      if (!id) return;
       try {
         const { rows } = await GET_TABLE_ROWS({
           code: "testtelosarb",
           scope: "testtelosarb",
           table: "casefiles",
+          key_type: "i64",
           // @ts-ignore
-          index_position: this.$route.params.id,
-          reverse: true,
+          index_position: "1",
+          // @ts-ignore
+          upper_bound: this.$route.params.id,
+          // @ts-ignore
+          lower_bound: this.$route.params.id,
         });
+        console.log("fetchCaseFile rows", rows);
         const [caseFile] = rows;
         this.caseFile = caseFile;
       } catch (err) {
-        console.log("fetch case files error:", err);
+        console.log("fetchCaseFile error:", err);
       }
     },
   },
@@ -96,6 +103,9 @@ export default defineComponent({
     this.caseActionsHistory = actionsHistory;
   },
   computed: {
+    ...mapGetters({
+      isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
+    }),
     caseData() {
       return this.caseFile;
     },
