@@ -212,7 +212,7 @@ export default {
       return newArr;
     },
     async getLoggedUserVote(ballot_name) {
-        await this.fetchUserVoteForThisBallot(ballot_name, this.account);
+        await this.fetchUserVoteForThisBallot(ballot_name);
         if (!this.userVote) return;
         let votes = this.userVote.weighted_votes.map(v => v.key);
         this.votes = this.votes.concat(votes);

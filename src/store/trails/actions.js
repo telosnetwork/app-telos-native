@@ -81,14 +81,17 @@ export const fetchVotesForBallot = async function ({ commit }, ballot) {
 export const fetchUserVoteForThisBallot = async function ({ rootState, commit }, ballot) {
   commit("setUserVote", null);
 
-  const res = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: ballot,
-    table: "votes",
-    upper_bound: rootState.accounts.account,
-    lower_bound: rootState.accounts.account,
-    limit: 1,
-  });
+  let res = {rows:[]};
+  if (rootState.accounts.account) {
+    res = await this.$api.getTableRows({
+      code: "telos.decide",
+      scope: ballot,
+      table: "votes",
+      upper_bound: rootState.accounts.account,
+      lower_bound: rootState.accounts.account,
+      limit: 1,
+    });
+  }
 
   let list = rootState.trails.ballotVoters || [];
   list = list.filter(a => a.voter != rootState.accounts.account).concat(res.rows);
