@@ -425,7 +425,7 @@ export default {
                             span.statistics-title Request amount
                         div.statistics-body(v-if="ballot.proposal_info")
                             span.text-weight-bold {{ getRequestAmountRounded(ballot.proposal_info.total_requested) }}&nbsp
-            .col-xs-12.col-sm.popup-right-col-wrapper.cosoooooooo
+            .col-xs-12.col-sm.popup-right-col-wrapper
                 q-card(
                 flat
                 square
