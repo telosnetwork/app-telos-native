@@ -43,6 +43,11 @@
           </div>
         </q-td>
       </template>
+      <template v-slot:body-cell-case_status="props">
+        <q-td :props="props">
+          {{ getCaseFileStatusSyntax(props.row.case_status) }}
+        </q-td>
+      </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
           <div>
@@ -68,10 +73,11 @@
 
 <script>
 import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
+import { CASE_STATUS_LIST } from "../constants";
 
 export default {
   components: {
-    ProfileAvatar
+    ProfileAvatar,
   },
   data() {
     return {
@@ -83,20 +89,23 @@ export default {
         { name: "approvals", label: "Approvals", field: "approvals" },
         { name: "case_status", label: "Status", field: "case_status" },
         { name: "update_ts", label: "Last Updated", field: "update_ts" },
-        { name: "actions", label: "Actions", field: "actions" }
-      ]
+        { name: "actions", label: "Actions", field: "actions" },
+      ],
     };
   },
   computed: {
     caseFiles() {
       return this.$store.state.resolve.case_files || [];
-    }
+    },
   },
   methods: {
     goToCaseFile(caseFileId) {
       this.$router.push({ path: `case/${caseFileId}`, params: { caseFileId } });
-    }
-  }
+    },
+    getCaseFileStatusSyntax(index) {
+      return CASE_STATUS_LIST[index];
+    },
+  },
 };
 </script>
 
