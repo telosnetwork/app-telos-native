@@ -37,6 +37,19 @@
       <strong>{{ actionData.claim_id }}</strong>
       {{ action.timestamp }}
     </div>
+    <div v-if="act.name === 'makeoffer'">
+      <strong>{{ authorization[0].actor }}</strong> made offer with estimate
+      <strong>{{ actionData.estimated_hours }}</strong> hours at
+      <strong>{{ actionData.hourly_rate }}</strong> per hour at
+      {{ action.timestamp }}
+    </div>
+    <div v-if="act.name === 'respondoffer'">
+      <strong>{{ authorization[0].actor }}</strong
+      >&nbsp;
+      <strong>{{ actionData.accept ? "accepted" : "rejected" }}</strong> offer
+      at
+      {{ action.timestamp }}
+    </div>
     <!-- {{ action.timestamp }}
     {{ action.timestamp }}
     {{ action.timestamp }}
