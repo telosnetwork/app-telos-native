@@ -7,11 +7,18 @@
           title="Setup &amp; Nominee Registration"
           icon="settings"
         >
-          Admin is able to set the configuration parameters for the smart
-          contract, including election duration, arbitration term length, and
-          number of arbitration seats to be filled.
-          <br /><br />
+          <p>
+            Admin is able to set the configuration parameters for the smart
+            contract, including election duration, arbitration term length, and
+            number of arbitration seats to be filled.
+          </p>
+
+          <p>
+            There are currently <strong>{{ arbSeatsAvailable }}</strong>
+            arbitration seats available
+          </p>
           <q-btn
+            v-if="arbSeatsAvailable"
             @click="
               form = true;
               formType = 'initelection';
