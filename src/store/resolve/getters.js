@@ -12,12 +12,10 @@ export const arbSeatsAvailable = ({ config, arbitrators }) => {
   });
 
   const availableSeats = max_elected_arbs - occupiedSeats;
-  console.log("availableSeats", availableSeats);
   return availableSeats;
 };
 
-export const isResolveStoresAvailable = (resolve) => {
-  console.log("resolve: ", resolve);
+export const isResolveStoresAvailable = (resolve, getters, rootState) => {
   if (!resolve) return false;
   const { config, arbitrators, elections, nominees, case_files } = resolve;
   const isAvailable = !!(
@@ -27,6 +25,14 @@ export const isResolveStoresAvailable = (resolve) => {
     nominees &&
     case_files
   );
-  console.log("isAvailable", isAvailable);
   return isAvailable;
+};
+
+export const isResolveAdmin = (resolve, getters, rootState) => {
+  const {
+    config: { admin },
+  } = resolve;
+  if (!admin) return false;
+  const { account } = rootState.accounts;
+  return account === admin;
 };

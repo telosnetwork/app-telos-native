@@ -12,18 +12,43 @@
         arbitration system to resolve? We believe that a transparent process
         benefits everyone.
       </p>
-      <q-btn color="primary" label="Create a new case" />&nbsp;
-      <q-btn color="primary" label="Admin Dashboard" @click="navigateToAdmin" />
+      <q-btn
+        v-if="isAuthenticated"
+        color="primary"
+        label="View Cases"
+        @click="$router.push('/resolve/cases')"
+      />&nbsp;
+      <q-btn
+        v-if="isResolveAdmin"
+        color="primary"
+        label="Admin Dashboard"
+        @click="navigateToAdmin"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { mapActions } from "vuex";
+
 export default {
+  ...mapActions("accounts", ["login"]),
   methods: {
     navigateToAdmin() {
       // @ts-ignore
       this.$router.push("/resolve/admin");
+    },
+  },
+  computed: {
+    // @ts-ignore
+    isResolveAdmin() {
+      // @ts-ignore
+      return this.$store.getters["resolve/isResolveAdmin"];
+    },
+    // @ts-ignore
+    isAuthenticated() {
+      // @ts-ignore
+      return this.$store.getters["accounts/isAuthenticated"];
     },
   },
 };

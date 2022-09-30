@@ -110,6 +110,7 @@ export default defineComponent({
   computed: {
     ...mapGetters({
       isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
+      isResolveAdmin: "resolve/isResolveAdmin",
     }),
     caseData() {
       return this.caseFile;
