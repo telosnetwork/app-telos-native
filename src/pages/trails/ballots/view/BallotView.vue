@@ -391,7 +391,7 @@ export default {
                                     :labelText="$t(voteButtonText)"
                                     btnWidth='220'
                                     fontSize='16'
-                                    hoverBlue=true                                    
+                                    hoverBlue=true
                                     @clickBtn="vote()"
                                     )
                                     btn(
