@@ -78,9 +78,11 @@ export const fetchVotesForBallot = async function ({ commit }, ballot) {
   commit("setBallotVotes", res.rows);
 };
 
-export const fetchUserVoteForThisBallot = async function ({ rootState, commit }, ballot) {
-  commit("setUserVote", null);
+export const resetUserVotes = async function ({ rootState, commit }) {
+  commit("setUserVotes", {});
+};
 
+export const fetchUserVotesForThisBallot = async function ({ rootState, commit }, ballot) {
   let res = {rows:[]};
   if (rootState.accounts.account) {
     res = await this.$api.getTableRows({
@@ -93,10 +95,19 @@ export const fetchUserVoteForThisBallot = async function ({ rootState, commit },
     });
   }
 
+  let userVotes = Object.assign({}, rootState.trails.userVotes);
+  userVotes[ballot] = res.rows[0];
+
+  for (const [key, value] of Object.entries(userVotes)) {
+    if (!value || value.voter != rootState.accounts.account) {
+      delete userVotes[key]
+    }
+  }
+
   let list = rootState.trails.ballotVoters || [];
   list = list.filter(a => a.voter != rootState.accounts.account).concat(res.rows);
 
-  commit("setUserVote", res.rows[0]);
+  commit("setUserVotes", userVotes);
   commit("setBallotVotes", list);
 };
 

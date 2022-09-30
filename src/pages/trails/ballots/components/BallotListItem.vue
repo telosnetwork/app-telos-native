@@ -25,6 +25,17 @@ export default {
   },
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters("trails", ["userVotes"]),
+    mainButtonText() {
+      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+        if (this.userVotes[this.ballot.ballot_name]) {
+          return "View proposal / Update vote"
+        } else {
+          return "View proposal & vote"
+        }
+      }
+      return "View proposal";
+    },
     getWinner() {
       if (!this.ballot.total_voters) return "No votes";
       let winnerValue = -1;
@@ -152,10 +163,12 @@ div
           span.text-weight-bold {{ ballot.total_raw_weight.split(' ')[0].split('.')[0] }}&nbsp
           span.opacity06 {{ ballot.total_raw_weight.split(' ')[1]  }}&nbsp
           span.opacity06 tokens
+        div.statics-section-item.voted(:class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
+          span.voted__text Voted!
 
     q-card-section().row.justify-center.btn-section
       btn(
-        :labelText="(isBallotOpened && ballot.status === 'voting' && isAuthenticated) ? 'View proposal & vote' : 'View proposal'"
+        :labelText="mainButtonText"
         btnWidth='332'
         fontSize='16'
         hoverBlue=true
@@ -163,6 +176,17 @@ div
 </template>
 
 <style lang="sass">
+.voted
+  align-self: end
+  flex-direction: column
+  align-items: flex-end
+.voted__text
+  color: #ff9501
+  border: 3px solid #ff9501
+  border-radius: 10px
+  padding: 13px 10px 11px 10px
+  font-size: 22px !important
+  font-weight: bold
 .column-direction > div
   margin-top: 32px
 .poll-item

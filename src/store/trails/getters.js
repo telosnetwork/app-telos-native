@@ -10,7 +10,7 @@ export const treasuriesOptions = ({ treasuries }) => treasuries.list.data.map(tr
 export const treasuriesLoaded = ({ treasuries }) => treasuries.list.loaded
 export const treasury = ({ treasuries }) => treasuries.view.treasury
 export const voters = ({ ballotVoters }) => ballotVoters
-export const userVote = ({ userVote }) => userVote
+export const userVotes = ({ userVotes }) => userVotes
 export const userTreasury = ({ userTreasuries }) => userTreasuries?.rows
 export const treasuryFees = ({ fees }) => fees.find(fee => fee.key === 'treasury')
 export const ballotFees = ({ fees }) => fees.find(fee => fee.key === 'ballot')

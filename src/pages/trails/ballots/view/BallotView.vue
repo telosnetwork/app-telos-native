@@ -35,7 +35,7 @@ export default {
     };
   },
   async mounted() {
-    this.getLoggedUserVote(this.$route.params.id);
+    this.getLoggedUserVotes(this.$route.params.id);
     await this.fetchBallot(this.$route.params.id);
     window.addEventListener("scroll", this.updateScroll);
     this.loading = false;
@@ -48,7 +48,7 @@ export default {
   computed: {
     ...mapGetters("notifications", ["notifications"]),
     ...mapGetters("accounts", ["isAuthenticated", "account"]),
-    ...mapGetters("trails", ["ballot", "userVote", "voters", "userTreasury"]),
+    ...mapGetters("trails", ["ballot", "userVotes", "voters", "userTreasury"]),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
@@ -159,7 +159,7 @@ export default {
       "castVote",
       "cancelBallot",
       "fetchVotesForBallot",
-      "fetchUserVoteForThisBallot",
+      "fetchUserVotesForThisBallot",
       "fetchTreasuriesForUser"
     ]),
     openUrl(url) {
@@ -211,10 +211,11 @@ export default {
       }
       return newArr;
     },
-    async getLoggedUserVote(ballot_name) {
-        await this.fetchUserVoteForThisBallot(ballot_name);
-        if (!this.userVote) return;
-        let votes = this.userVote.weighted_votes.map(v => v.key);
+    async getLoggedUserVotes(ballot_name) {
+        await this.fetchUserVotesForThisBallot(ballot_name);
+        if (!this.userVotes) return;
+        if (!this.userVotes[ballot_name]) return;
+        let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
         this.votes = this.votes.concat(votes);
     },
     // ---- quickfix for #92 -------
