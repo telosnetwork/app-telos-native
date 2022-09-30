@@ -1,22 +1,24 @@
 {
   "name": "app-telos-net",
   "version": "0.0.1",
-  "description": "Native App",
-  "productName": "Telos App",
-  "author": "Don Peat <don@caleos.io>",
   "private": true,
+  "description": "Native App",
+  "author": "Don Peat <don@caleos.io>",
   "scripts": {
-    "dev": "quasar dev -m spa",
+    "build": "quasar build -m spa",
+    "test:unit": "jest",
     "lint": "eslint --ext .js,.vue src",
+    "dev": "quasar dev -m spa",
     "lint:fix": "eslint --fix --ext .js,.vue src",
-    "test": "echo \"No test specified\" && exit 0",
-    "build": "quasar build -m spa"
+    "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.19.3",
     "@quasar/extras": "^1.0.0",
     "@telosnetwork/ual-cleos": "^0.1.0",
     "assert": "^2.0.0",
     "axios": "^0.21.1",
+    "babel-core": "^7.0.0-bridge.0",
     "core-js": "^3.6.5",
     "dotenv": "^16.0.1",
     "eosjs": "^22.1.0",
@@ -40,18 +42,24 @@
     "vue-moment": "^4.1.0",
     "vue-recaptcha": "^2.0.2",
     "vue-router": "^4.0.0",
+    "vue3-jest": "^27.0.0-alpha.1",
     "vuex": "^4.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.10",
+    "@babel/core": "^7.19.3",
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app-webpack": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
+    "@vue/cli-plugin-unit-jest": "^5.0.8",
+    "@vue/test-utils": "^2.1.0",
+    "@vue/vue3-jest": "^27.0.0-alpha.1",
+    "babel-jest": "^29.1.2",
     "eslint": "^8.10.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
     "eslint-webpack-plugin": "^3.1.1",
+    "jest": "^27.0.5",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "prettier": "^2.5.1",
     "process": "^0.11.10",
@@ -72,5 +80,6 @@
     "node": ">= 12.22.1",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
-  }
+  },
+  "productName": "Telos App"
 }
