@@ -82,13 +82,9 @@ export default {
       this.show = true;
     },
     closeBallot() {
-      this.showBallot = false;
+      this.$router.go(-1);
     },
     openBallot(ballot) {
-      if (this.showBallot) {
-        this.showBallot = false;
-        return;
-      }
       this.timeAtMount = Date.now();
       this.$router.push(
         `/trails/${this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
