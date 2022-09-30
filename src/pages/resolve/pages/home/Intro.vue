@@ -29,26 +29,18 @@
 </template>
 
 <script lang="ts">
-import { mapActions } from "vuex";
-
 export default {
-  ...mapActions("accounts", ["login"]),
   methods: {
-    navigateToAdmin() {
-      // @ts-ignore
-      this.$router.push("/resolve/admin");
+    navigateToAdmin(): void {
+      (this as any).$router.push("/resolve/admin");
     },
   },
   computed: {
-    // @ts-ignore
-    isResolveAdmin() {
-      // @ts-ignore
-      return this.$store.getters["resolve/isResolveAdmin"];
+    isResolveAdmin(): any {
+      return (this as any).$store.getters["resolve/isResolveAdmin"];
     },
-    // @ts-ignore
-    isAuthenticated() {
-      // @ts-ignore
-      return this.$store.getters["accounts/isAuthenticated"];
+    isAuthenticated(): any {
+      return (this as any).$store.getters["accounts/isAuthenticated"];
     },
   },
 };
