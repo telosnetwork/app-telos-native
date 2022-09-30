@@ -49,6 +49,7 @@ export default {
       this.$refs.actionBar ? this.$refs.actionBar.setTreasuryBar(this.treasury) : "";
     }
     await this.fetchFees();
+    this.fetchUserVotes();
   },
   methods: {
     ...mapActions("trails", [
@@ -57,14 +58,25 @@ export default {
       "castVote",
       "fetchTreasuries",
       "fetchBallotsByStatus",
+      "fetchUserVotesForThisBallot",
+      "resetUserVotes",
     ]),
     async onLoad(_, done) {
+      let isFirstFetch = this.ballots.length == 0;
       this.loading = true;
       await this.fetchMoreBallots();
       this.loading = false;
       setTimeout(() => {
-        done(!this.ballotsPagination.more);
+        this.fetchUserVotes();
+        done(isFirstFetch || !this.ballotsPagination.more);
       }, 1000);
+    },
+    async fetchUserVotes() {
+      if (this.isAuthenticated) {
+        this.filterBallots(this.ballots).forEach(b => this.fetchUserVotesForThisBallot(b.ballot_name));
+      } else {
+        this.resetUserVotes();
+      }
     },
     openBallotForm() {
       this.show = true;
@@ -241,13 +253,16 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters("accounts", ["isAuthenticated", "account"]),
     ...mapGetters("trails", ["ballots", "ballotsPagination", "treasuriesOptions"]),
   },
   watch: {
     $route(to, from) {
       this.showBallot = !!to.params.id
     },
+    account() {
+      this.fetchUserVotes();
+    }
   },
 };
 </script>

@@ -58,8 +58,8 @@ export const setUserTreasuries = (state, treasuries) => {
   state.userTreasuries = treasuries;
 };
 
-export const setUserVote = (state, vote) => {
-  state.userVote = vote;
+export const setUserVotes = (state, votes) => {
+  state.userVotes = votes;
 };
 
 export const setBallotVotes = (state, voters) => {
