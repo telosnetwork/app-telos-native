@@ -15,7 +15,7 @@ export const arbSeatsAvailable = ({ config, arbitrators }) => {
   return availableSeats;
 };
 
-export const isResolveStoresAvailable = (resolve, getters, rootState) => {
+export const isResolveStoresAvailable = (resolve) => {
   if (!resolve) return false;
   const { config, arbitrators, elections, nominees, case_files } = resolve;
   const isAvailable = !!(
@@ -29,6 +29,7 @@ export const isResolveStoresAvailable = (resolve, getters, rootState) => {
 };
 
 export const isResolveAdmin = (resolve, getters, rootState) => {
+  if (!resolve.config) return false;
   const {
     config: { admin },
   } = resolve;
