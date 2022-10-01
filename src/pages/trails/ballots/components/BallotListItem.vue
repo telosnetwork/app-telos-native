@@ -26,6 +26,14 @@ export default {
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
     ...mapGetters("trails", ["userVotes"]),
+    mainButtonTextSmall() {
+      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+        if (this.userVotes[this.ballot.ballot_name]) {
+          return "View / Update vote"
+        }
+      }
+      return this.mainButtonText;
+    },
     mainButtonText() {
       if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
         if (this.userVotes[this.ballot.ballot_name]) {
@@ -105,6 +113,7 @@ div
     )
 
     q-card-section().q-pb-none.cursor-pointer.title-section
+      span.voted__text.voted__text--absolute.absolute-top-right.q-mt-md.q-mr-md(:class="userVotes[ballot.ballot_name] ? '' : 'hidden'") Voted!
       div.text-section.row.ballot-card-title-wrapper
         span.ballot-card-title {{ ballot.title || "Untitled Ballot" }}
       div.ballot-card-sub-title-wrapper.row
@@ -127,7 +136,7 @@ div
       div.text-section-row
         div.statics-section-item.section-item-btn
           btn(
-            :labelText="(isBallotOpened && ballot.status === 'voting') ? 'View proposal & vote' : 'View proposal'"
+            :labelText="mainButtonTextSmall"
             btnWidth='220'
             fontSize='16'
             hoverBlue=true
@@ -187,6 +196,10 @@ div
   padding: 13px 10px 11px 10px
   font-size: 22px !important
   font-weight: bold
+.voted__text--absolute
+  line-height: 16px
+  .row-direction &
+    display: none
 .column-direction > div
   margin-top: 32px
 .poll-item
