@@ -26,6 +26,8 @@ q-chip(square text-color="white" :class="`${type}-chip`").capitalize.no-margin.t
 </template>
 
 <style lang="sass">
+.ballot-type.voted-chip
+  background: #00A402
 .ballot-type.poll-chip
   background: #FFB010
 .ballot-type.referendum-chip
