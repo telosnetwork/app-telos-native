@@ -1,29 +1,33 @@
 export default () => ({
   ballots: {
     list: {
-      data: [],
-      loaded: false,
+      open_ballots: [],
+      rows: [],
       pagination: {
-        limit: 200
-      }
+        pages: 0,
+        next_key: "",
+        limit: 250,
+        more: true,
+      },
     },
     view: {
-      ballot: null
-    }
+      ballot: null,
+    },
   },
   ballotVoters: null,
+  userVotes: {},
   userTreasuries: null,
   treasuries: {
     list: {
       data: [],
       loaded: false,
       pagination: {
-        limit: 100
-      }
+        limit: 100,
+      },
     },
     view: {
       treasury: null
     }
   },
-  fees: []
-})
+  fees: [],
+});

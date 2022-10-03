@@ -24,6 +24,7 @@ export default {
   },
   data() {
     return {
+      userCanVote: false,
       loading: true,
       voting: false,
       votes: [],
@@ -34,9 +35,9 @@ export default {
     };
   },
   async mounted() {
+    this.getLoggedUserVotes(this.$route.params.id);
     await this.fetchBallot(this.$route.params.id);
     window.addEventListener("scroll", this.updateScroll);
-
     this.loading = false;
   },
   beforeUnmount() {
@@ -47,7 +48,7 @@ export default {
   computed: {
     ...mapGetters("notifications", ["notifications"]),
     ...mapGetters("accounts", ["isAuthenticated", "account"]),
-    ...mapGetters("trails", ["ballot", "voters", "userTreasury"]),
+    ...mapGetters("trails", ["ballot", "userVotes", "voters", "userTreasury"]),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
@@ -158,6 +159,7 @@ export default {
       "castVote",
       "cancelBallot",
       "fetchVotesForBallot",
+      "fetchUserVotesForThisBallot",
       "fetchTreasuriesForUser"
     ]),
     openUrl(url) {
@@ -178,7 +180,6 @@ export default {
         options: options || [option],
       });
       this.voting = false;
-      this.votes = [];
     },
     showNotification() {
       this.$q.notify({
@@ -210,8 +211,13 @@ export default {
       }
       return newArr;
     },
-
-
+    async getLoggedUserVotes(ballot_name) {
+        await this.fetchUserVotesForThisBallot(ballot_name);
+        if (!this.userVotes) return;
+        if (!this.userVotes[ballot_name]) return;
+        let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
+        this.votes = this.votes.concat(votes);
+    },
     // ---- quickfix for #92 -------
     ...mapActions('trails', ['registerVoter']),
     async onRegisterVoter (max_supply) {
@@ -236,7 +242,6 @@ export default {
                 return; // Do not Cast Vote
             }
             */
-            console.log("this.ballot.treasury: ", this.ballot.treasury.max_supply);
             await this.onRegisterVoter(this.ballot.treasury.max_supply);
             this.showNotification();
             this.fetchTreasuriesForUser(this.account);
@@ -287,6 +292,7 @@ export default {
       if (this.ballot.max_options === 1) {
         this.votes = this.votes.includes(key) ? [key] : [];
       }
+      this.userCanVote = this.votes.length > 0;
     },
     findLinks(text) {
       const urlRegex =
@@ -382,6 +388,7 @@ export default {
                                 q-item-section.btn-wrapper
                                     btn(
                                     v-if="isAuthenticated"
+                                    :disable="!userCanVote"
                                     :labelText="$t(voteButtonText)"
                                     btnWidth='220'
                                     fontSize='16'
@@ -521,7 +528,8 @@ export default {
                                 q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
                                     q-item-section.btn-wrapper
                                         btn.btn-vote-320(
-                                        :labelText="$t('pages.trails.ballots.vote')"
+                                        :labelText="$t(voteButtonText)"
+                                        :disable="!userCanVote"
                                         btnWidth='220'
                                         fontSize='16'
                                         hoverBlue=true

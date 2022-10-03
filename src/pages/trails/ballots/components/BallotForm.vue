@@ -43,7 +43,6 @@ export default {
       submitting: false,
       file: null,
       cid: null,
-      fee: null,
     };
   },
   computed: {

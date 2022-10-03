@@ -25,6 +25,25 @@ export default {
   },
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters("trails", ["userVotes"]),
+    mainButtonTextSmall() {
+      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+        if (this.userVotes[this.ballot.ballot_name]) {
+          return "View / Update vote"
+        }
+      }
+      return this.mainButtonText;
+    },
+    mainButtonText() {
+      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+        if (this.userVotes[this.ballot.ballot_name]) {
+          return "View proposal / Update vote"
+        } else {
+          return "View proposal & vote"
+        }
+      }
+      return "View proposal";
+    },
     getWinner() {
       if (!this.ballot.total_voters) return "No votes";
       let winnerValue = -1;
@@ -94,6 +113,7 @@ div
     )
 
     q-card-section().q-pb-none.cursor-pointer.title-section
+      span.voted__text.voted__text--absolute.absolute-top-right.q-mt-md.q-mr-md(:class="userVotes[ballot.ballot_name] ? '' : 'hidden'") Voted!
       div.text-section.row.ballot-card-title-wrapper
         span.ballot-card-title {{ ballot.title || "Untitled Ballot" }}
       div.ballot-card-sub-title-wrapper.row
@@ -116,7 +136,7 @@ div
       div.text-section-row
         div.statics-section-item.section-item-btn
           btn(
-            :labelText="(isBallotOpened && ballot.status === 'voting') ? 'View proposal & vote' : 'View proposal'"
+            :labelText="mainButtonTextSmall"
             btnWidth='220'
             fontSize='16'
             hoverBlue=true
@@ -152,10 +172,12 @@ div
           span.text-weight-bold {{ ballot.total_raw_weight.split(' ')[0].split('.')[0] }}&nbsp
           span.opacity06 {{ ballot.total_raw_weight.split(' ')[1]  }}&nbsp
           span.opacity06 tokens
+        div.statics-section-item.voted(:class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
+          span.voted__text Voted!
 
     q-card-section().row.justify-center.btn-section
       btn(
-        :labelText="(isBallotOpened && ballot.status === 'voting' && isAuthenticated) ? 'View proposal & vote' : 'View proposal'"
+        :labelText="mainButtonText"
         btnWidth='332'
         fontSize='16'
         hoverBlue=true
@@ -163,6 +185,21 @@ div
 </template>
 
 <style lang="sass">
+.voted
+  align-self: end
+  flex-direction: column
+  align-items: flex-end
+.voted__text
+  color: #ff9501
+  border: 3px solid #ff9501
+  border-radius: 10px
+  padding: 13px 10px 11px 10px
+  font-size: 22px !important
+  font-weight: bold
+.voted__text--absolute
+  line-height: 16px
+  .row-direction &
+    display: none
 .column-direction > div
   margin-top: 32px
 .poll-item

@@ -17,7 +17,7 @@ export default {
     async onRegisterVoter () {
       this.loading = true
       await this.registerVoter(this.supply)
-      this.$emit('update:show', false)
+      this.$emit('close')
       this.loading = false
     }
   }
