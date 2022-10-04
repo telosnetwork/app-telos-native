@@ -76,7 +76,7 @@ div
       q-btn(
         icon="fas fa-person-booth"
         color="primary"
-        size="sm"
+        no-caps
         :label="`${$t('pages.trails.treasuries.card.openedBallots')} ${treasury.open_ballots}`"
         :to="`/trails/ballots?treasury=${treasury.symbol}`"
       )
@@ -84,7 +84,7 @@ div
         v-if="isAuthenticated && !treasury.isRegistered"
         icon="fas fa-user-plus"
         color="primary"
-        size="sm"
+        no-caps
         :label="`${$t('pages.trails.treasuries.card.registerVoter')}`"
         :disabled="treasury.access === 'private'"
         @click="show = true"
@@ -93,7 +93,7 @@ div
         v-if="isAuthenticated && treasury.isRegistered"
         icon="fas fa-user-check"
         color="primary"
-        size="sm"
+        no-caps
         :label="`${$t('pages.trails.treasuries.card.registered')}`"
       )
 </template>
