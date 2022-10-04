@@ -108,7 +108,7 @@ export default boot(async ({ app, store }) => {
         })
         .onOk(() => {
           copyToClipboard(
-            `cleos -u https://${process.env.NETWORK_HOST} push transaction '${trxJSON}`
+            `cleos -u https://${process.env.NETWORK_HOST} push transaction '${trxJSON}'`
           )
             .then(() => {
               app.config.globalProperties.$q.notify({
