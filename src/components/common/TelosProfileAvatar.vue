@@ -6,25 +6,26 @@
       </q-avatar>
     </div>
     <div v-else>
-      <v-gravatar
-        v-bind:hash="this.hash"
-        :style="styleClass"
-        class="q-avatar"
-      />
+      <profile-avatar :size="size" :avatar="avatar" :account="account_name" />
     </div>
   </div>
 </template>
 
 <script>
 import { GET_TABLE_ROWS } from "../../pages/resolve/util/fetch";
+import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 import md5 from "md5";
 
 export default {
+  name: "TelosProfileAvatar",
+  components: {
+    ProfileAvatar,
+  },
   props: ["account_name", "size", "childClass"],
   data() {
     return {
       avatar: "",
-      hash: md5(this.account_name),
+      hash: md5(this.account_name || ""),
       styleClass: this.size
         ? { ...this.childClass, height: this.size, width: this.size }
         : this.childClass,

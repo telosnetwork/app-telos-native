@@ -2,17 +2,23 @@
   <div>
     <div class="intro-row">
       <div class="first">
-        <intro-card
-          heading="Elect Telos's Next Arbitrators"
-        >
-          <p>As a leader in blockchain governance, Telos allows any user with a Telos account to nominate themselves as a candidate for
-            the position of arbitrator.
-            Do you have a background in arbitration? Consider nominating yourself.
-            Know someone else who you think would make a good arbitrator? Ask them to nominate themselves.
-            If they win the election they may find themselves ruling on some of the community's most important cases.</p>
-            <strong>Current nominees:</strong>
+        <intro-card heading="Elect Telos's Next Arbitrators">
+          <p>
+            As a leader in blockchain governance, Telos allows any user with a
+            Telos account to nominate themselves as a candidate for the position
+            of arbitrator. Do you have a background in arbitration? Consider
+            nominating yourself. Know someone else who you think would make a
+            good arbitrator? Ask them to nominate themselves. If they win the
+            election they may find themselves ruling on some of the community's
+            most important cases.
+          </p>
+          {{ isPastAddCandidates }}
+          {{ isPastNomination }}
+          <strong>Current nominees:</strong>
           <ul>
-            <li v-for="nominee in nominees" :key="nominee.nominee_name">{{nominee.nominee_name}}</li>
+            <li v-for="nominee in nominees" :key="nominee.nominee_name">
+              {{ nominee.nominee_name }}
+            </li>
           </ul>
         </intro-card>
       </div>
@@ -25,31 +31,36 @@
 </template>
 
 <script>
-import ElectionsTable from '../../components/ElectionsTable.vue'
-import ElectionSteps from './ElectionSteps.vue'
-import IntroCard from '../../components/IntroCard.vue'
+import ElectionsTable from "../../components/ElectionsTable.vue";
+import ElectionSteps from "./ElectionSteps.vue";
+import IntroCard from "../../components/IntroCard.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     ElectionsTable,
     ElectionSteps,
-    IntroCard
+    IntroCard,
   },
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   },
   computed: {
-    nominees () {
-      const nomineesList = this.$store.state.resolve.nominees
+    ...mapGetters({
+      isPastNomination: "resolve/isPastNomination",
+      isPastAddCandidates: "resolve/isPastAddCandidates",
+    }),
+    nominees() {
+      const nomineesList = this.$store.state.resolve.nominees;
+      console.log("this.isPastNomination", this.isPastNomination);
+      console.log("this.isPastAddCandidates", this.isPastAddCandidates);
       if (nomineesList) {
-        return nomineesList
+        return nomineesList;
       }
-      return []
-    }
-  }
-}
+      return [];
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -58,7 +69,8 @@ export default {
   flex: 1;
   flex-direction: row;
 
-  .first, .second {
+  .first,
+  .second {
     flex: 1;
   }
 }

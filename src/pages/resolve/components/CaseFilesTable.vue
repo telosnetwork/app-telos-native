@@ -10,11 +10,11 @@
       <template v-slot:body-cell-claimant="props">
         <q-td :props="props">
           <div class="profile-item">
-            <profile-avatar
+            <telos-profile-avatar
               :account_name="props.row.claimant"
               size="24px"
               childClass="avatar-wrap"
-            ></profile-avatar>
+            ></telos-profile-avatar>
             <div>&nbsp;{{ props.row.claimant }}</div>
           </div>
         </q-td>
@@ -22,11 +22,11 @@
       <template v-slot:body-cell-respondant="props">
         <q-td :props="props">
           <div class="profile-item">
-            <profile-avatar
+            <telos-profile-avatar
               :account_name="props.row.respondant"
               size="24px"
               childClass="avatar-wrap"
-            ></profile-avatar>
+            ></telos-profile-avatar>
             <div>&nbsp;{{ props.row.respondant }}</div>
           </div>
         </q-td>
@@ -34,11 +34,11 @@
       <template v-slot:body-cell-arbitrators="props">
         <q-td :props="props">
           <div class="arbitrator-cell profile-item">
-            <profile-avatar
+            <telos-profile-avatar
               :account_name="props.row.arbitrators[0]"
               size="24px"
               childClass="avatar-wrap"
-            ></profile-avatar>
+            ></telos-profile-avatar>
             <div>&nbsp;{{ props.row.arbitrators[0] }}</div>
           </div>
         </q-td>
@@ -72,12 +72,12 @@
 </template>
 
 <script>
-import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
+import TelosProfileAvatar from "src/components/common/TelosProfileAvatar.vue";
 import { CASE_STATUS_LIST } from "../constants";
 
 export default {
   components: {
-    ProfileAvatar,
+    TelosProfileAvatar,
   },
   data() {
     return {
