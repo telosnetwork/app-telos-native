@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     ...mapGetters("notifications", ["notifications"]),
-    ...mapGetters("accounts", ["isAuthenticated", "account"]),
+    ...mapGetters("accounts", ["isAuthenticated", "account", "accountData"]),
     ...mapGetters("trails", ["ballot", "userVotes", "voters", "userTreasury"]),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
@@ -135,21 +135,29 @@ export default {
         if (!this.ballot) return false;
         return this.userTreasury.some(t => t.liquid.split(" ")[1] == this.ballot.treasury.supply.split(" ")[1]);
     },
+    isPositiveVotePower() {
+        if (!this.accountData) return false;
+        if (!this.accountData.self_delegated_bandwidth) return false;
+
+        let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || "0.0000 TLOS";
+        let net_weight = this.accountData.self_delegated_bandwidth.net_weight || "0.0000 TLOS";
+        let sum = parseFloat(cpu_weight.split(" ")[0]) + parseFloat(net_weight.split(" ")[0]);
+
+        return sum > 0;
+    },
     voteButtonText() {
-        console.log("BalllotView.voteButtonText() isUserRegisteredInTreasury: ", this.isUserRegisteredInTreasury);
-        if (this.isUserRegisteredInTreasury) {
-            return 'pages.trails.ballots.vote';
-        } else {
-            // ---- quickfix for #92 -------
-            return 'pages.trails.ballots.joinDAOFirst';
-            /*
-            if (this.ballot.treasury.access == 'public') {
-                return 'pages.trails.ballots.joinAndVote';
+        if (this.isPositiveVotePower) {
+            if (this.isUserRegisteredInTreasury) {
+                return 'pages.trails.ballots.vote';
             } else {
-                return 'pages.trails.ballots.joinDAO';
+                if (this.ballot.treasury.access == 'public') {
+                    return 'pages.trails.ballots.joinAndVote';
+                } else {
+                    return 'pages.trails.ballots.joinDAO';
+                }
             }
-            */
-            // ------------------------------
+        } else {
+            return 'pages.trails.ballots.needPositiveVote';
         }
     },
   },
@@ -218,35 +226,26 @@ export default {
         let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
         this.votes = this.votes.concat(votes);
     },
-    // ---- quickfix for #92 -------
-    ...mapActions('trails', ['registerVoter']),
-    async onRegisterVoter (max_supply) {
-      await this.registerVoter(max_supply);
-    },
-    // -------------------------------
     async vote() {
         let register = false;
-        if (this.isUserRegisteredInTreasury) {
-            register = false;
-        } else {
-            // ---- quickfix for #92 -------
-            /*
-            if (this.ballot.treasury.access == 'public') {
-                register = true;
+
+        if (this.isPositiveVotePower) {
+            if (this.isUserRegisteredInTreasury) {
+                register = false;
             } else {
-                // redirect to treasuties page with filter
-                this.$router.push({
-                    path: "/trails/treasuries",
-                    query: { treasury: this.ballot.treasury.supply.split(" ")[1] },
-                });
-                return; // Do not Cast Vote
+                if (this.ballot.treasury.access == 'public') {
+                    register = true;
+                } else {
+                    // redirect to treasuties page with filter
+                    this.$router.push({
+                        path: "/trails/treasuries",
+                        query: { treasury: this.ballot.treasury.supply.split(" ")[1] },
+                    });
+                    return; // Do not Cast Vote
+                }
             }
-            */
-            await this.onRegisterVoter(this.ballot.treasury.max_supply);
-            this.showNotification();
-            this.fetchTreasuriesForUser(this.account);
+        } else {
             return;
-            // -------------------------------
         }
 
         await this.onCastVote({
