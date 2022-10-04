@@ -35,13 +35,13 @@
               <span>{{ props.row.available_seats }}</span>
             </q-td>
             <q-td key="end_add_candidates_ts" class="default">
-              <span>End Nomination</span><br />
+              <span>End Add Candidates</span><br />
               <span>{{ props.row.end_add_candidates_ts }}</span>
             </q-td>
-            <q-td key="begin_voting_ts" class="default">
+            <!-- <q-td key="begin_voting_ts" class="default">
               <span>Start Voting</span><br />
               <span>{{ props.row.begin_voting_ts }}</span>
-            </q-td>
+            </q-td> -->
             <q-td key="end_voting_ts" class="default">
               <span>End Voting</span><br />
               <span>{{ props.row.end_voting_ts }}</span>
@@ -80,10 +80,11 @@ import CandidatesCell from "./CandidatesCell.vue";
 import { ELECTION_STATUS } from "../constants";
 // import IpfsLink from './IpfsLink.vue'
 import { getSymbolInfo } from "../util";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    CandidatesCell
+    CandidatesCell,
     // IpfsLink
   },
   data() {
@@ -96,18 +97,18 @@ export default {
         {
           name: "end_add_candidates_ts",
           label: "End Add Candidates",
-          field: "end_add_candidates_ts"
+          field: "end_add_candidates_ts",
         },
         {
           name: "begin_voting_ts",
           label: "Start Voting",
-          field: "begin_voting_ts"
+          field: "begin_voting_ts",
         },
         { name: "end_voting_ts", label: "End Voting", field: "end_voting_ts" },
-        { name: "status", label: "Status", field: "status" }
+        { name: "status", label: "Status", field: "status" },
       ],
       expandedRows: [],
-      ELECTION_STATUS
+      ELECTION_STATUS,
     };
   },
   methods: {
@@ -123,13 +124,21 @@ export default {
     },
     toggleRow(electionId) {
       this.expandedRows[electionId] = !this.expandedRows[electionId];
-    }
+    },
   },
   computed: {
+    ...mapGetters({
+      currentElection: "resolve/getCurrentElection",
+    }),
     electionData() {
       return this.$store.state.resolve.elections;
+    },
+  },
+  mounted() {
+    if (this.currentElection) {
+      this.expandedRows[this.currentElection.election_id] = true;
     }
-  }
+  },
 };
 </script>
 

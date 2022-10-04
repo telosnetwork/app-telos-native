@@ -12,8 +12,6 @@
             election they may find themselves ruling on some of the community's
             most important cases.
           </p>
-          {{ isPastAddCandidates }}
-          {{ isPastNomination }}
           <strong>Current nominees:</strong>
           <ul>
             <li v-for="nominee in nominees" :key="nominee.nominee_name">
@@ -23,10 +21,10 @@
         </intro-card>
       </div>
       <div class="second">
-        <election-steps />
+        <election-steps v-if="isResolveStoresAvailable" />
       </div>
     </div>
-    <elections-table />
+    <elections-table v-if="isResolveStoresAvailable" />
   </div>
 </template>
 
@@ -49,6 +47,7 @@ export default {
     ...mapGetters({
       isPastNomination: "resolve/isPastNomination",
       isPastAddCandidates: "resolve/isPastAddCandidates",
+      isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
     }),
     nominees() {
       const nomineesList = this.$store.state.resolve.nominees;

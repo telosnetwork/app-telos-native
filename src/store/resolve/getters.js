@@ -1,3 +1,16 @@
+export const isResolveStoresAvailable = (resolve) => {
+  if (!resolve) return false;
+  const { config, arbitrators, elections, nominees, case_files } = resolve;
+  const isAvailable = !!(
+    config &&
+    arbitrators &&
+    elections &&
+    nominees &&
+    case_files
+  );
+  return isAvailable;
+};
+
 export const arbSeatsAvailable = ({ config, arbitrators }) => {
   if (!config || !arbitrators) return 0;
   const { max_elected_arbs } = config;
@@ -14,19 +27,6 @@ export const arbSeatsAvailable = ({ config, arbitrators }) => {
 
   const availableSeats = max_elected_arbs - occupiedSeats;
   return availableSeats;
-};
-
-export const isResolveStoresAvailable = (resolve) => {
-  if (!resolve) return false;
-  const { config, arbitrators, elections, nominees, case_files } = resolve;
-  const isAvailable = !!(
-    config &&
-    arbitrators &&
-    elections &&
-    nominees &&
-    case_files
-  );
-  return isAvailable;
 };
 
 export const isResolveAdmin = (resolve, getters, rootState) => {
