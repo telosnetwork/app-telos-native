@@ -28,8 +28,17 @@ export const addBallots = (state, { rows, more, next_key }) => {
     // concat new ones
     .concat(rows);
 
+  let NOW = new Date().getTime();
   state.ballots.list.rows.sort( (A, B) => {
-    return new Date(B.end_time).getTime() - new Date(A.end_time).getTime();
+    let A_time = new Date(A.end_time).getTime();
+    let B_time = new Date(B.end_time).getTime();
+    if (A_time > NOW && B_time > NOW) {
+      // Active ballots are sorted to show the next to end first.
+      return A_time - B_time;
+    } else {
+      // Non-active ballots are sorted to show the most recent first.
+      return B_time - A_time;
+    }
   });
 
   state.ballots.list.open_ballots = state.ballots.list.rows.filter(b => Date.now() < Date.parse(b.end_time));
