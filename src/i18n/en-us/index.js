@@ -130,7 +130,7 @@ export default {
     },
     trails: {
       ballots: {
-        joinDAOFirst: "Join DAO first",
+        needPositiveVote: "Stake before voting",
         joinDAO: "Join DAO",
         joinAndVote: "Join DAO & Vote",
         vote: "Vote",
