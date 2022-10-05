@@ -33,7 +33,10 @@
         </intro-card>
       </div>
       <div class="second">
-        <election-steps v-if="isResolveStoresAvailable" />
+        <election-steps
+          v-if="isResolveStoresAvailable"
+          remove-nominee="removeNominee"
+        />
       </div>
     </div>
     <elections-table v-if="isResolveStoresAvailable" />
