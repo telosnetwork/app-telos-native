@@ -56,11 +56,13 @@ export const isPastAddCandidates = (
   if (!elections || !config) return true;
   const currentElection = getCurrentElection({ elections, config });
   if (!currentElection) return true;
-  const { add_candidates_end_time } = currentElection;
+  const { end_add_candidates_ts } = currentElection;
   const nowTimestamp = Math.floor(Date.now() / 1000);
   const addCandidatesEndTime =
-    new Date(add_candidates_end_time + "Z").getTime() / 1000;
-  return nowTimestamp > addCandidatesEndTime;
+    new Date(end_add_candidates_ts + "Z").getTime() / 1000;
+  const isPast = nowTimestamp > addCandidatesEndTime;
+  console.log("isPastAddCandidates", isPast, addCandidatesEndTime);
+  return isPast;
 };
 
 export const isPastNomination = ({ elections, config }, getters, rootState) => {
@@ -71,5 +73,7 @@ export const isPastNomination = ({ elections, config }, getters, rootState) => {
   const nowTimestamp = Math.floor(Date.now() / 1000);
   const beginAddCandidatesTime =
     new Date(begin_add_candidates_ts + "Z").getTime() / 1000;
-  return nowTimestamp > beginAddCandidatesTime;
+  const isPast = nowTimestamp > beginAddCandidatesTime;
+  console.log("isPastNomination", isPast);
+  return isPast;
 };
