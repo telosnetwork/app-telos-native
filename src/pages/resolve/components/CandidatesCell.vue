@@ -10,7 +10,16 @@
             size="24px"
           ></profile-avatar>
           <div class="info">
-            <div class="text">{{ candidate.name }}</div>
+            <div class="text candidate-item">
+              {{ candidate.name }}&nbsp;
+              <q-icon
+                v-if="isRemoveCandidateButtonVisible(candidate.name)"
+                name="remove"
+                color="white"
+                size="1rem"
+                class="remove-icon"
+              />
+            </div>
             <div class="text">({{ candidate.votes }})</div>
           </div>
         </div>
@@ -27,17 +36,18 @@
 
 <script>
 import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
+import { mapGetters } from "vuex";
 import { getBallot, getSymbolInfo } from "../util";
 
 export default {
   props: ["election", "totalVotes"],
   components: {
-    ProfileAvatar
+    ProfileAvatar,
   },
   data() {
     return {
       results: null,
-      interval: null
+      interval: null,
     };
   },
   methods: {
@@ -52,6 +62,16 @@ export default {
         console.log("getBallotResults error: ", err);
       }
     },
+    isRemoveCandidateButtonVisible(account_name) {
+      if (
+        this.currentElection.status === 1 &&
+        account_name === this.account &&
+        !this.isPastAddCandidates
+      ) {
+        return true;
+      }
+      return false;
+    },
     getPercentage(searchName) {
       if (!this.totalVotes) return 0;
       const candidateData = this.election.candidates.find(
@@ -62,14 +82,21 @@ export default {
       const { whole } = getSymbolInfo(votes);
       return (100 * whole) / this.totalVotes;
     },
-    mounted() {
-      this.getBallotResults();
-      this.interval = setInterval(this.getBallotResults, 10000);
-    },
-    unmounted() {
-      clearInterval(this.interval);
-    }
-  }
+  },
+  computed: {
+    ...mapGetters({
+      account: "accounts/account",
+      currentElection: "resolve/getCurrentElection",
+      isPastAddCandidates: "resolve/isPastAddCandidates",
+    }),
+  },
+  mounted() {
+    this.getBallotResults();
+    this.interval = setInterval(this.getBallotResults, 10000);
+  },
+  unmounted() {
+    clearInterval(this.interval);
+  },
 };
 </script>
 
@@ -86,6 +113,15 @@ td.text-left {
   padding: 4px;
   display: flex;
   flex: 1;
+
+  .remove-icon {
+    background-color: red;
+    border-radius: 50%;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 
   .data {
     display: flex;

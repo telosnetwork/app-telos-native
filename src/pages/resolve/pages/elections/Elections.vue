@@ -21,7 +21,7 @@
             >
               {{ nominee.nominee_name }}&nbsp;
               <q-icon
-                v-if="nominee.nominee_name === account"
+                v-if="isRemoveNomineeVisible(nominee.nominee_name)"
                 @click="removeNominee()"
                 name="remove"
                 color="white"
@@ -67,8 +67,6 @@ export default {
     }),
     nominees() {
       const nomineesList = this.$store.state.resolve.nominees;
-      console.log("this.isPastNomination", this.isPastNomination);
-      console.log("this.isPastAddCandidates", this.isPastAddCandidates);
       if (nomineesList) {
         return nomineesList;
       }
@@ -76,6 +74,13 @@ export default {
     },
   },
   methods: {
+    isRemoveNomineeVisible(account) {
+      return (
+        !this.isPastNomination &&
+        this.isPastAddCandidates &&
+        account === this.account
+      );
+    },
     async removeNominee() {
       const unregNomineeActions = [
         {
