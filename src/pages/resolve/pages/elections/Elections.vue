@@ -14,8 +14,20 @@
           </p>
           <strong>Current nominees:</strong>
           <ul>
-            <li v-for="nominee in nominees" :key="nominee.nominee_name">
-              {{ nominee.nominee_name }}
+            <li
+              v-for="nominee in nominees"
+              :key="nominee.nominee_name"
+              class="nominee-item"
+            >
+              {{ nominee.nominee_name }}&nbsp;
+              <q-icon
+                v-if="nominee.nominee_name === account"
+                @click="removeNominee()"
+                name="remove"
+                color="white"
+                size=".8rem"
+                class="remove-icon"
+              />
             </li>
           </ul>
         </intro-card>
@@ -48,6 +60,7 @@ export default {
       isPastNomination: "resolve/isPastNomination",
       isPastAddCandidates: "resolve/isPastAddCandidates",
       isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
+      account: "accounts/account",
     }),
     nominees() {
       const nomineesList = this.$store.state.resolve.nominees;
@@ -57,6 +70,24 @@ export default {
         return nomineesList;
       }
       return [];
+    },
+  },
+  methods: {
+    async removeNominee() {
+      const unregNomineeActions = [
+        {
+          account: "testtelosarb",
+          name: "unregnominee",
+          data: {
+            nominee: this.account,
+          },
+        },
+      ];
+      try {
+        await this.$store.$api.signTransaction(unregNomineeActions);
+      } catch (err) {
+        console.log("endElection error: ", err);
+      }
     },
   },
 };
@@ -71,6 +102,17 @@ export default {
   .first,
   .second {
     flex: 1;
+  }
+}
+
+.nominee-item {
+  .remove-icon {
+    background-color: red;
+    border-radius: 50%;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 </style>
