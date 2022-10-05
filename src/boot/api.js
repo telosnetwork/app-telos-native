@@ -25,10 +25,14 @@ const signTransaction = async function (actions) {
       }
     );
   } catch (e) {
-    throw e.cause.error.details[0].message.replace(
-      /assertion failure with message: /g,
-      ""
-    );
+    if (e.cause.error) {
+      throw e.cause.error.details[0].message.replace(
+        /assertion failure with message: /g,
+        ""
+      );
+    } else {
+      throw e
+    }
   }
 
   return transaction;
