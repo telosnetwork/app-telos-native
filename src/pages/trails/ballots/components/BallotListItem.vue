@@ -138,6 +138,7 @@ div
           q-btn(
             no-caps
             color="primary"
+            outline
             :label="mainButtonTextSmall"
             btnWidth='220'
             fontSize='16'
@@ -181,6 +182,7 @@ div
       q-btn(
           no-caps
           color="primary"
+          outline
           :label="mainButtonText"
           btnWidth='332'
           fontSize='16'
