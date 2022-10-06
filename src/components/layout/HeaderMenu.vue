@@ -23,11 +23,7 @@ export default {
         {
           label: this.$t("menu.proposals"),
           route: "/trails/ballots",
-        },
-        {
-          label: this.$t("menu.contacts"),
-          route: "/profiles/contacts"
-        },
+        }
       ],
       localFileter: this.activeFilter,
     };
