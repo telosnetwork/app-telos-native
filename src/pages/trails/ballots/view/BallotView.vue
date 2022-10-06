@@ -396,7 +396,8 @@ export default {
                                 )
                                 q-btn(
                                     no-caps
-                                    color="red"
+                                    outline
+                                    color="primary"
                                     class="col"
                                     v-if="isAuthenticated && ballot.publisher === account"
                                     :label="$t('common.buttons.cancel')"
@@ -536,7 +537,8 @@ export default {
                                     )
                                     q-btn(
                                         no-caps
-                                        color="red"
+                                        outline
+                                        color="primary"
                                         v-if="isAuthenticated && ballot.publisher === account"
                                         :label="$t('common.buttons.cancel')"
                                         @click="cancel()"
