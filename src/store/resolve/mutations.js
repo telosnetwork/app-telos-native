@@ -17,3 +17,7 @@ export const setNominees = (state, nominees) => {
 export const setCaseFiles = (state, case_files) => {
   state.case_files = case_files;
 };
+
+export const setOffers = (state, offers) => {
+  state.offers = offers;
+};

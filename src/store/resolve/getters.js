@@ -1,12 +1,14 @@
 export const isResolveStoresAvailable = (resolve) => {
   if (!resolve) return false;
-  const { config, arbitrators, elections, nominees, case_files } = resolve;
+  const { config, arbitrators, elections, nominees, case_files, offers } =
+    resolve;
   const isAvailable = !!(
     config &&
     arbitrators &&
     elections &&
     nominees &&
-    case_files
+    case_files &&
+    offers
   );
   return isAvailable;
 };
@@ -39,6 +41,15 @@ export const isResolveAdmin = (resolve, getters, rootState) => {
   return account === admin;
 };
 
+export const isArbitrator = (resolve, getters, rootState) => {
+  if (!resolve.arbitrators) return false;
+  const { arbitrators } = resolve;
+  const foundArbitrator = arbitrators.find(
+    (arbitrator) => arbitrator.arb === rootState.accounts.account
+  );
+  return foundArbitrator;
+};
+
 export const getCurrentElection = ({ elections, config }) => {
   if (!elections || !config) return null;
   const { current_election_id } = config;
@@ -48,11 +59,7 @@ export const getCurrentElection = ({ elections, config }) => {
   return currentElection;
 };
 
-export const isPastAddCandidates = (
-  { elections, config },
-  getters,
-  rootState
-) => {
+export const isPastAddCandidates = ({ elections, config }) => {
   if (!elections || !config) return true;
   const currentElection = getCurrentElection({ elections, config });
   if (!currentElection) return true;
@@ -61,7 +68,7 @@ export const isPastAddCandidates = (
   const addCandidatesEndTime =
     new Date(end_add_candidates_ts + "Z").getTime() / 1000;
   const isPast = nowTimestamp > addCandidatesEndTime;
-  console.log("isPastAddCandidates", isPast, addCandidatesEndTime);
+  // console.log("isPastAddCandidates", isPast, addCandidatesEndTime);
   return isPast;
 };
 
@@ -74,6 +81,6 @@ export const isPastNomination = ({ elections, config }, getters, rootState) => {
   const beginAddCandidatesTime =
     new Date(begin_add_candidates_ts + "Z").getTime() / 1000;
   const isPast = nowTimestamp > beginAddCandidatesTime;
-  console.log("isPastNomination", isPast);
+  // console.log("isPastNomination", isPast);
   return isPast;
 };

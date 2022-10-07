@@ -29,6 +29,7 @@ import {
   fetchElections,
   fetchNominees,
   fetchCaseFiles,
+  fetchOffers,
 } from "./util";
 
 export default {
@@ -87,12 +88,21 @@ export default {
         console.warn("getCaseFiles error: ", err);
       }
     },
+    async getOffers() {
+      try {
+        const offers = await fetchOffers(this);
+        this.$store.commit("resolve/setOffers", offers);
+      } catch (err) {
+        console.warn("getOffers error: ", err);
+      }
+    },
     fetchAllData() {
       this.getArbConfig();
       this.getArbitrators();
       this.getElections();
       this.getNominees();
       this.getCaseFiles();
+      this.getOffers();
     },
   },
   mounted() {

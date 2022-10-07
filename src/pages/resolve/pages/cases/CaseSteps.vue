@@ -26,13 +26,19 @@
         </q-step>
 
         <q-step :name="1" title="Awaiting Arbitrators" icon="assignment">
-          Awaiting Arbs description
+          After a case file has been built and is ready for review, the case
+          enters the "Awaiting Arbitrators" stage where any arbitrator can send
+          an offer to the claimant with their hourly rate and the estimated
+          number of hours to judge the case. To accept an offer the claimant
+          will need to pay the whole cost upfront. However, the funds will not
+          be transferred to the arbitrator until the case is resolved, and can
+          be returned in case of mistrial.
           <br /><br />
           <q-btn
-            v-if="isRegisterCandidateButtonVisible"
+            v-if="canArbitratorSubmitOffer()"
             @click="registerSelfCandidate"
             color="primary"
-            label="Register as Candidate"
+            label="Submit Offer"
           />
         </q-step>
 
@@ -105,29 +111,48 @@ export default {
     return {
       form: null,
       formType: null,
+      account: this.$store.state.accounts.account,
     };
   },
   computed: {
     ...mapGetters({
       isResolveAdmin: "resolve/isResolveAdmin",
+      isArbitrator: "resolve/isArbitrator",
     }),
     caseStatus() {
       if (!this.caseFile) return null;
       return this.caseFile.case_status;
     },
     isClaimant() {
-      return this.$store.state.accounts.account === this.caseFile.claimant;
+      return this.account === this.caseFile.claimant;
     },
     isRespondant() {
-      return this.$store.state.accounts.account === this.caseFile.respondant;
-    },
-    isArbitrator() {
-      return false;
+      return this.account === this.caseFile.respondant;
     },
   },
   methods: {
     closeModal() {
       this.form = null;
+    },
+    canArbitratorSubmitOffer() {
+      // is arbitrator available
+      if (!this.isArbitrator) return false;
+      if (this.caseFile.case_status !== 1) return false;
+      const arbitrators = this.$store.state.resolve.arbitrators;
+      const foundArbitrator = arbitrators.find(
+        (arb) => arb.arb === this.account
+      );
+      if (foundArbitrator.arb_status !== 1) return false;
+      if (
+        this.$store.state.resolve.offers.find(
+          (offer) =>
+            offer.case_id === this.caseFile.case_id &&
+            offer.arbitrator === this.account
+        )
+      ) {
+        return false;
+      }
+      return true;
     },
     async validateCase(isProceed) {
       const validateCaseActions = [
