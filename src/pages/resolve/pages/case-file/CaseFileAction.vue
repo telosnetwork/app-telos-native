@@ -57,6 +57,28 @@
       to claims at
       {{ action.timestamp }}
     </div>
+    <div v-if="act.name === 'settleclaim'">
+      <strong>{{ authorization[0].actor }}</strong
+      >&nbsp; settled claim <strong>{{ actionData.claim_id }}</strong> with
+      <a href="createIpfsLink(actionData.decision_link)">decision</a> at
+      {{ action.timestamp }}
+    </div>
+    <div v-if="act.name === 'setruling'">
+      <strong>{{ authorization[0].actor }}</strong> (admin)
+      <a href="createIpfsLink(actionData.case_ruling)">ruled</a> on case at
+      {{ action.timestamp }}
+    </div>
+    <div v-if="act.name === 'validatecase'">
+      <strong>{{ authorization[0].actor }}</strong> (admin)
+      <strong>{{ actionData.proceed ? "validated" : "rejected" }}</strong> case
+      at
+      {{ action.timestamp }}
+    </div>
+    <div v-if="act.name === 'closecase'">
+      <strong>{{ authorization[0].actor }}</strong
+      >&nbsp; <strong>closed case</strong> at
+      {{ action.timestamp }}
+    </div>
     <!-- {{ action.timestamp }}
     {{ action.timestamp }}
     {{ action.timestamp }}
@@ -88,6 +110,9 @@ export default {
   methods: {
     decisionClass(type: number) {
       return DECISION_CLASS_LIST[type];
+    },
+    createIpfsLink(hash: string) {
+      return `https://api.dstor.cloud/ipfs/${hash}`;
     },
   },
   mounted() {
