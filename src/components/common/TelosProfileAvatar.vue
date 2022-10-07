@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <div v-if="avatar" :class="childClass">
-      <q-avatar v-bind:size="size">
-        <img v-bind:src="avatar" />
-      </q-avatar>
-    </div>
-    <div v-else>
-      <profile-avatar :size="size" :avatar="avatar" :account="account_name" />
-    </div>
+  <div v-if="avatar" :class="childClass">
+    <q-avatar v-bind:size="size">
+      <img v-bind:src="avatar" />
+    </q-avatar>
+  </div>
+  <div v-else :class="childClass">
+    <profile-avatar :size="size" :avatar="avatar" :account="account_name" />
   </div>
 </template>
 
