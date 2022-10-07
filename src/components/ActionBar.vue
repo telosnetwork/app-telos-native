@@ -655,7 +655,7 @@ div.bar-filter-wrapper
       div.bar-custom-separator
       div.bar-filters
         div.row.bar-filter-btns-wrapper
-          //- new button
+          //- 'Sort by' button
           q-btn.q-mr-md(
             v-if="!sortMode"
             :label="'Sort by'"
@@ -681,6 +681,7 @@ div.bar-filter-wrapper
               :label="sortMode"
               color="primary"
               no-caps
+              outline
             )
               q-menu(
                 @show="toggleMenu('isSortingMenuOpen')"
@@ -697,7 +698,9 @@ div.bar-filter-wrapper
               @click="clearSort"
               icon="close"
               color="primary"
+              outline
             )
+          //- 'Type' button
           q-btn.q-mr-md(
             v-if="submitTypesResult.length === 0 && !election"
             :label="$t('pages.trails.ballots.actionBar.typeFilter')"
@@ -734,6 +737,7 @@ div.bar-filter-wrapper
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               color="primary"
               no-caps
+              outline
             )
               q-menu(
                 ref="typesMenu"
@@ -761,7 +765,9 @@ div.bar-filter-wrapper
               @click="clearFilter('submitTypesResult', 'isTypeMenuOpen')"
               icon="close"
               color="primary"
+              outline
             )
+          //- 'State' button
           q-btn.q-mr-md(
             v-if="submitStatusesResult.length === 0"
             :label="$t('pages.trails.ballots.actionBar.statusFilter')"
@@ -798,6 +804,7 @@ div.bar-filter-wrapper
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
               color="primary"
               no-caps
+              outline
             )
               q-menu(
                 ref="statusesMenu"
@@ -825,7 +832,9 @@ div.bar-filter-wrapper
               @click="clearFilter('submitStatusesResult', 'isStatusMenuOpen')"
               icon="close"
               color="primary"
+              outline
             )
+          //- 'DAO' button
           q-btn.q-mr-md(
             v-if="!treasuryBar"
             :label="$t('pages.trails.ballots.actionBar.groupFilter')"
@@ -851,6 +860,7 @@ div.bar-filter-wrapper
               :label="treasuryBar"
               color="primary"
               no-caps
+              outline
             )
               q-menu(
                 @show="toggleMenu('isGroupMenuOpen')"
@@ -867,6 +877,7 @@ div.bar-filter-wrapper
               @click="clearGroupFilter()"
               icon="close"
               color="primary"
+              outline
             )
       q-btn.bar-filter-btn-320(
         :label="$t('pages.trails.ballots.actionBar.filterTitle')"
