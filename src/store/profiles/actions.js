@@ -3,8 +3,6 @@
 export const signUp = async function ({ commit }, profileData) {
   const actions = []
 
-  //await getProfile({ commit })
-
   if (!this.state.profiles.myProfile) {
     actions.push({
       account: 'profiles',
@@ -113,7 +111,6 @@ export const clearProfilesList = function ({ commit }, options = {}) {
 }
 
 export const getProfile = async function ({ commit }) {
-  console.log(this.state.profiles)
   if (!this.$ualUser && !this.state.profiles) {
     return
   }
