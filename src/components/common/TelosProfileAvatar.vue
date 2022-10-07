@@ -1,11 +1,15 @@
 <template>
-  <div v-if="avatar" :class="childClass">
+  <div v-if="avatar && !isError" :class="childClass">
     <q-avatar v-bind:size="size">
-      <img v-bind:src="avatar" />
+      <img @error="onError" v-bind:src="avatar" />
     </q-avatar>
   </div>
   <div v-else :class="childClass">
-    <profile-avatar :size="size" :avatar="avatar" :account="account_name" />
+    <profile-avatar
+      :size="size"
+      :avatar="isError ? null : avatar"
+      :account="account_name"
+    />
   </div>
 </template>
 
@@ -22,12 +26,19 @@ export default {
   props: ["account_name", "size", "childClass"],
   data() {
     return {
+      isError: false,
       avatar: "",
       hash: md5(this.account_name || ""),
       styleClass: this.size
         ? { ...this.childClass, height: this.size, width: this.size }
         : this.childClass,
     };
+  },
+  methods: {
+    onError() {
+      console.log("there is error");
+      this.isError = true;
+    },
   },
   async beforeMount() {
     try {
@@ -43,8 +54,10 @@ export default {
       const [profile] = rows;
       if (profile) {
         const { avatar } = profile;
-        if (avatar) {
-          this.avatar = avatar;
+        if (profile.account_name === this.account_name) {
+          if (avatar) {
+            this.avatar = avatar;
+          }
         }
       }
     } catch (err) {

@@ -35,6 +35,7 @@
         <q-td :props="props">
           <div class="arbitrator-cell profile-item">
             <telos-profile-avatar
+              v-if="props.row.arbitrators[0]"
               :account_name="props.row.arbitrators[0]"
               size="24px"
               childClass="avatar-wrap"
