@@ -16,7 +16,7 @@ export default {
 </script>
 
 <template lang="pug">
-q-chip(square text-color="white" :class="`${type}-chip`").capitalize.no-margin.text-weight-bold.ballot-type
+q-chip(square text-color="white" :color="`${type}`").capitalize.no-margin.text-weight-bold.ballot-type
   q-avatar
     template(v-if="isBallotOpened")
       img(:src="`statics/app-icons/${type.toLowerCase()}-icon.svg`").poll-icon
@@ -26,18 +26,6 @@ q-chip(square text-color="white" :class="`${type}-chip`").capitalize.no-margin.t
 </template>
 
 <style lang="sass">
-.ballot-type.voted-chip
-  background: #00A402
-.ballot-type.poll-chip
-  background: #FFB010
-.ballot-type.referendum-chip
-  background: #F5898A
-.ballot-type.proposal-chip
-  background: #FA7238
-.ballot-type.election-chip
-  background: #71DA76
-.ballot-type.leaderboard-chip
-  background: #8A8EF5
 .q-card .q-chip.ballot-type
   border-radius: 6px 6px 12px 6px
   margin-left: 6px !important

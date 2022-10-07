@@ -22,3 +22,36 @@ $positive  : #55c3b3
 $negative  : #ff422a
 $info      : #caccce
 $warning   : #F2C037
+
+// -------------------------------------
+  
+@mixin new_color($name, $color) 
+  $--q-name: --q- + $name
+  $bg-color: bg- + $name
+  $color-text: $name + -text
+  
+  :root
+    #{$--q-name}: #{$color}
+
+  .#{$bg-color}
+    background: $color !important
+    background: var(#{$--q-name}) !important
+
+  .#{$color-text}
+    color: $color !important
+    color: var(#{$--q-name}) !important
+
+$voted-color:                   #00A402
+$poll-color:                    #FFB010
+$referendum-color:              #F5898A
+$proposal-color:                #FA7238
+$election-color:                #71DA76
+$leaderboard-color:             #8A8EF5
+
+@include new_color(voted,       $voted-color)
+@include new_color(poll,        $poll-color)
+@include new_color(referendum,  $referendum-color)
+@include new_color(proposal,    $proposal-color)
+@include new_color(election,    $election-color)
+@include new_color(leaderboard, $leaderboard-color)
+
