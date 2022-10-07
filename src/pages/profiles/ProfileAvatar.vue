@@ -22,9 +22,6 @@ export default {
     accountHash() {
       return md5(this.account || "");
     },
-  },
-  mounted() {
-    console.log(this.avatar, 123, this.account)
   }
 };
 </script>
