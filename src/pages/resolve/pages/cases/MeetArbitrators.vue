@@ -12,8 +12,12 @@
             :account_name="arbitrator.arb"
             size="24px"
             childClass="avatar-wrap"
-          />
-          {{ arbitrator.arb }}
+          />&nbsp;
+          <a
+            v-bind:href="getDstorLink(arbitrator.credentials_link)"
+            target="_blank"
+            >{{ arbitrator.arb }}</a
+          >
           <arbitrator-status-chip :statusIndex="arbitrator.arb_status" />
         </li>
       </ul>
@@ -24,10 +28,16 @@
 <script lang="ts">
 import ArbitratorStatusChip from "../../components/ArbitratorStatusChip.vue";
 import TelosProfileAvatar from "src/components/common/TelosProfileAvatar.vue";
+import { getDstorLink } from "../../util";
 export default {
   components: {
     ArbitratorStatusChip,
     TelosProfileAvatar,
+  },
+  methods: {
+    getDstorLink(hash: string) {
+      return getDstorLink(hash);
+    },
   },
   computed: {
     arbitrators(): any[] {
@@ -57,6 +67,11 @@ export default {
 
   ul {
     list-style-type: none;
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
   }
 }
 </style>

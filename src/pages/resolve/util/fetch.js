@@ -26,3 +26,7 @@ export const GET_TABLE_ROWS = async config => {
   });
   return data;
 };
+
+export const getDstorLink = (hash) => {
+  return `https://api.dstor.cloud/ipfs/${hash}`;
+};
