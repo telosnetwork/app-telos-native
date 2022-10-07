@@ -86,6 +86,7 @@ export const logout = async function ({ commit }) {
   commit("setAccount");
 
   localStorage.removeItem("account");
+  localStorage.removeItem("autoLogin");
   if (this.$router.path !== "/") {
     this.$router.push({ path: "/" });
   }
