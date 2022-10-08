@@ -16,6 +16,9 @@
         @update:model-value="changeArbStatus"
       />
     </div>
+    <div>
+      <assigned-cases />
+    </div>
     <div class="form-wrapper">
       <q-dialog v-model="form">
         <init-election-modal
@@ -34,12 +37,14 @@
 <script>
 import InitElectionModal from "../../components/InitElectionModal.vue";
 import BeginVotingModal from "../../components/BeginVotingModal.vue";
+import AssignedCases from "./AssignedCases.vue";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     InitElectionModal,
     BeginVotingModal,
+    AssignedCases,
   },
   data() {
     return {
@@ -128,7 +133,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   .stepper-wrap {
     flex: 1;

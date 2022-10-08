@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
-      title="Case Files"
+      :title="finalTitle"
       :rows="caseFiles"
       :columns="columns"
       row-key="name"
@@ -77,6 +77,7 @@ import TelosProfileAvatar from "src/components/common/TelosProfileAvatar.vue";
 import { CASE_STATUS_LIST } from "../constants";
 
 export default {
+  props: ["caseFiles", "title"],
   components: {
     TelosProfileAvatar,
   },
@@ -96,7 +97,10 @@ export default {
   },
   computed: {
     caseFiles() {
-      return this.$store.state.resolve.case_files || [];
+      return this.caseFiles || this.$store.state.resolve.case_files || [];
+    },
+    finalTitle() {
+      return this.title || "Case Files";
     },
   },
   methods: {
