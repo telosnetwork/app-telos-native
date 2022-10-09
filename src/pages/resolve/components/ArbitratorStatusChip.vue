@@ -32,6 +32,7 @@ export default {
   },
   mounted() {
     console.log("hi");
+    // @ts-ignore
     console.log("this.statusIndex", this.statusIndex);
   },
 };
