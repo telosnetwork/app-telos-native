@@ -13,7 +13,6 @@
         benefits everyone.
       </p>
       <q-btn
-        v-if="isAuthenticated"
         color="primary"
         label="View Cases"
         @click="$router.push('/resolve/cases')"
