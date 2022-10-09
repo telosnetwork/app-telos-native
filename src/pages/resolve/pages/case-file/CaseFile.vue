@@ -95,6 +95,9 @@ export default defineComponent({
         console.log("fetchCaseFile error:", err);
       }
     },
+    isAddClaimButtonVisible() {},
+    isUpdateClaimButtonVisible() {},
+    isRespondToClaimButtonVisible() {},
   },
   mounted: async function () {
     this.fetchCaseFile();
