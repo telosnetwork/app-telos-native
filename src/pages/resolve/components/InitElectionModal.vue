@@ -34,10 +34,10 @@
 import { validateIpfsHash } from "../util";
 
 export default {
-  props: ["form", "close", "onSubmit"],
+  props: ["close", "onSubmit"],
   data() {
     return {
-      credentialsLink: ""
+      credentialsLink: "",
     };
   },
   computed: {
@@ -46,7 +46,7 @@ export default {
     },
     account_name() {
       return this.$store.state.accounts.account;
-    }
+    },
     // dialogNameValue: {
     //   get () {
     //     return this.dialogName
@@ -63,9 +63,9 @@ export default {
           account: "testtelosarb",
           name: "initelection",
           data: {
-            content: this.credentialsLink
-          }
-        }
+            content: this.credentialsLink,
+          },
+        },
       ];
       try {
         await this.$store.$api.signTransaction(initElectionActions);
@@ -74,14 +74,14 @@ export default {
       } catch (err) {
         console.log("initElection error: ", err);
       }
-    }
+    },
   },
-  mounted: function() {
+  mounted: function () {
     console.log(
       "initElectionModal mounted, this.$store.state",
       this.$store.state
     );
-  }
+  },
 };
 </script>
 
