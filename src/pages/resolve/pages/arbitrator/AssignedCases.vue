@@ -17,7 +17,7 @@ export default {
       const caseFiles = [...(this as any).$store.state.resolve.case_files];
       const relevantCaseFiles = caseFiles.filter((caseFile) => {
         const arbIsFound = caseFile.arbitrators.find(
-          (arb) => arb === this.account
+          (arb: any) => arb === this.account
         );
         if (arbIsFound) return true;
         return false;
