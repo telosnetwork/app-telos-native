@@ -36,6 +36,27 @@
             @click="registerSelfCandidate"
             color="primary"
             label="Register as Candidate"
+          />&nbsp;
+          <q-btn
+            v-if="isRemoveCandidacyButtonVisible"
+            @click="removeSelfCandidacy"
+            color="primary"
+            label="Remove Candidacy"
+          />&nbsp;
+          <q-btn
+            v-if="isAddNomineeButtonVisible"
+            @click="
+              form = true;
+              formType = 'nominate-self';
+            "
+            color="primary"
+            label="Nominate Self"
+          />&nbsp;
+          <q-btn
+            v-if="isRemoveNomineeButtonVisible"
+            @click="removeSelfNomination"
+            color="primary"
+            label="Remove Nomination"
           />
         </q-step>
 
@@ -107,9 +128,26 @@ export default {
         console.log("endElection error: ", err);
       }
     },
+    async removeSelfNomination() {
+      const { account } = this.$store.state.accounts;
+      const removeSelfNominationActions = [
+        {
+          account: "testtelosarb",
+          name: "unregnominee",
+          data: {
+            nominee: account,
+          },
+        },
+      ];
+      try {
+        await this.$store.$api.signTransaction(removeSelfNominationActions);
+      } catch (err) {
+        console.log("removeSelfNomination error: ", err);
+      }
+    },
     async registerSelfCandidate() {
       const { account } = this.$store.state.accounts;
-      const endElectionActions = [
+      const registerSelfCandidacyActions = [
         {
           account: "testtelosarb",
           name: "candaddlead",
@@ -119,9 +157,26 @@ export default {
         },
       ];
       try {
-        await this.$store.$api.signTransaction(endElectionActions);
+        await this.$store.$api.signTransaction(registerSelfCandidacyActions);
       } catch (err) {
-        console.log("endElection error: ", err);
+        console.log("registerSelfCandidate error: ", err);
+      }
+    },
+    async removeSelfCandidacy() {
+      const { account } = this.$store.state.accounts;
+      const removeCandidacyActions = [
+        {
+          account: "testtelosarb",
+          name: "candrmvlead",
+          data: {
+            nominee: account,
+          },
+        },
+      ];
+      try {
+        await this.$store.$api.signTransaction(removeCandidacyActions);
+      } catch (err) {
+        console.log("removeSelfCandidacy error: ", err);
       }
     },
   },
@@ -133,12 +188,15 @@ export default {
     isAddNomineeButtonVisible() {
       // already nominee
       const {
-        resolve: { nominees },
+        resolve: { nominees, arbitrators },
       } = this.$store.state;
       const foundNominee = nominees.find(
         (nominee) => nominee.nominee_name === this.account
       );
-      return !foundNominee;
+      const foundUnavailableArbitrator = arbitrators.find(
+        (arb) => [1, 2].includes(arb.arb_status) && arb.arb === this.account
+      );
+      return !foundNominee && !foundUnavailableArbitrator;
     },
     isRemoveNomineeButtonVisible() {
       // needs to be in nominees table but not elections candidate
@@ -151,7 +209,15 @@ export default {
       const foundCandidate = this.currentElection.candidates.find(
         (candidate) => candidate.name === this.account
       );
-      if (foundNominee && foundCandidate) return true;
+      if (foundNominee && !foundCandidate) return true;
+      return false;
+    },
+    isRemoveCandidacyButtonVisible() {
+      // needs to be in nominees table but not elections candidate
+      const foundCandidate = this.currentElection.candidates.find(
+        (candidate) => candidate.name === this.account
+      );
+      if (foundCandidate) return true;
       return false;
     },
     isRegisterCandidateButtonVisible() {
