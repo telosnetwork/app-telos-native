@@ -15,8 +15,8 @@ export const FETCH_DELTAS = async (context: any, params: any) => {
         // after: '',
         // before: '',
         // simple: ''
-        ...params
-      }
+        ...params,
+      },
     }
   );
   return data;
@@ -37,8 +37,8 @@ export const FETCH_ACTIONS = async (context: any, params: any) => {
         // after: '',
         // before: '',
         // simple: ''
-        ...params
-      }
+        ...params,
+      },
     }
   );
   return data;
@@ -55,7 +55,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
     const totalActions = [];
     while (true) {
       const { deltas } = await FETCH_DELTAS(context, {
-        skip: skipDeltas
+        skip: skipDeltas,
       });
       deltas.forEach(({ table, primary_key, block_num }: HyperionDelta) => {
         if (table === "casefiles" && parseInt(primary_key) === case_id) {
@@ -70,7 +70,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
 
     while (true) {
       const { actions } = await FETCH_ACTIONS(context, {
-        skip: skipActions
+        skip: skipActions,
       });
       actions.forEach(({ table, primary_key, block_num }: HyperionDelta) => {
         if (table === "casefiles" && parseInt(primary_key) === case_id) {
