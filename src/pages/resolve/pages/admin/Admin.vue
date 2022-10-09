@@ -139,7 +139,6 @@ export default {
         const currentElection = resolve.elections.find(
           (e) => e.id === current_election_id
         );
-        console.log("currentElection: ", currentElection);
         if (!currentElection) return null;
         const { status, end_voting_ts, end_add_candidates_ts } =
           currentElection;
