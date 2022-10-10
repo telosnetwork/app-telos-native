@@ -22,6 +22,6 @@ export default {
     accountHash() {
       return md5(this.account || '');
     },
-  },
+  }
 };
 </script>
