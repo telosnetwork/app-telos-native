@@ -1,7 +1,7 @@
 <script>
 export default {
-  name: "BallotChip",
-  props: ["type", "isBallotOpened"],
+  name: 'BallotChip',
+  props: ['type', 'isBallotOpened'],
   data() {
     return {};
   },

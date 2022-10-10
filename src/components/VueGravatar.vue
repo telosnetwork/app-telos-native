@@ -1,13 +1,13 @@
 <script>
-import { h } from "vue";
-import md5 from "md5";
+import { h } from 'vue';
+import md5 from 'md5';
 
 export default {
-  name: "vue-gravatar",
+  name: 'vue-gravatar',
   props: {
     hash: {
       type: String,
-      default: "default",
+      default: 'default',
     },
     size: {
       type: [Number, String],
@@ -15,11 +15,11 @@ export default {
     },
     tag: {
       type: String,
-      default: "div",
+      default: 'div',
     },
     defaultImage: {
       type: String,
-      default: "404",
+      default: '404',
     },
   },
   data() {
@@ -43,7 +43,7 @@ export default {
     },
   },
   render() {
-    return h("img", {
+    return h('img', {
       src: this.gravatarUrl,
     });
   },

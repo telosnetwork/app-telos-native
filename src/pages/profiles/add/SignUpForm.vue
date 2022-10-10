@@ -20,46 +20,46 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
+import { mapActions, mapGetters } from 'vuex';
+import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 
 export default {
-  name: "SignUpForm",
+  name: 'SignUpForm',
   components: {
     ProfileAvatar,
   },
   data() {
     return {
-      identity: "",
-      avatar: "",
-      name: "",
-      status: "",
-      bio: "",
-      url: "",
+      identity: '',
+      avatar: '',
+      name: '',
+      status: '',
+      bio: '',
+      url: '',
       showUpload: false,
       authHeader: {
-        name: "Authorization",
+        name: 'Authorization',
         value: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
       },
     };
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated", "account"]),
+    ...mapGetters('accounts', ['isAuthenticated', 'account']),
     headerText() {
       if (!this.isAuthenticated) {
-        return "Login to manage your profile";
+        return 'Login to manage your profile';
       }
 
-      return this.myProfile ? "Edit your profile" : "Setup your profile";
+      return this.myProfile ? 'Edit your profile' : 'Setup your profile';
     },
     myProfile() {
       return this.$store.state.profiles.myProfile;
     },
     presentationSanitized() {
       let sanitized = this.bio;
-      sanitized = sanitized.replace(/script/gi, "");
-      sanitized = sanitized.replace(/<a/gi, "");
-      sanitized = sanitized.replace(/href/gi, "");
+      sanitized = sanitized.replace(/script/gi, '');
+      sanitized = sanitized.replace(/<a/gi, '');
+      sanitized = sanitized.replace(/href/gi, '');
       return sanitized;
     },
   },
@@ -75,7 +75,7 @@ export default {
     this.showIsLoading(false);
   },
   methods: {
-    ...mapActions("profiles", ["signUp", "searchProfiles", "getProfile"]),
+    ...mapActions('profiles', ['signUp', 'searchProfiles', 'getProfile']),
     onSubmit() {
       this.doSignup();
     },
@@ -92,10 +92,10 @@ export default {
       try {
         this.showIsLoading(true);
         await this.signUp(mData);
-        this.showSuccessMsg("Submited");
+        this.showSuccessMsg('Submited');
         await this.getProfile();
         this.showIsLoading(false);
-        this.$router.push({ name: "myProfile" });
+        this.$router.push({ name: 'myProfile' });
       } catch (e) {
         this.showIsLoading(false);
         this.showErrorMsg(e.message);

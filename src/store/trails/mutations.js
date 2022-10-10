@@ -1,38 +1,39 @@
-import { supplyToSymbol } from "~/utils/assets";
+import { supplyToSymbol } from '~/utils/assets';
 
-const VOTE_SYMBOL = "VOTE";
+const VOTE_SYMBOL = 'VOTE';
 
 export const setFees = (state, config) => {
   state.fees = config.fees;
 };
 
 export const addBallots = (state, { rows, more, next_key }) => {
-
   let before_count = state.ballots.list.rows.length;
   let currentKey = parseInt(state.ballots.list.pagination.next_key);
   let nextKey = parseInt(next_key);
   if (isNaN(currentKey) || isNaN(nextKey) || currentKey < nextKey) {
     state.ballots.list.pagination.pages++;
-    state.ballots.list.pagination.next_key = next_key;    
+    state.ballots.list.pagination.next_key = next_key;
   } else {
     state.ballots.list.pagination.next_key = new Number(nextKey + 1).toString();
   }
-  
+
   // create a ballot name list from incoming rows
-  let incoming_names = rows.map(x => x.ballot_name);
+  let incoming_names = rows.map((x) => x.ballot_name);
 
   // merging together
   state.ballots.list.rows = state.ballots.list.rows
     // take out old versions of incoming ones
-    .filter(ballot => incoming_names.indexOf(ballot.ballot_name) == -1)
+    .filter((ballot) => incoming_names.indexOf(ballot.ballot_name) == -1)
     // concat new ones
     .concat(rows);
 
-  state.ballots.list.rows.sort( (A, B) => {
+  state.ballots.list.rows.sort((A, B) => {
     return new Date(B.end_time).getTime() - new Date(A.end_time).getTime();
   });
 
-  state.ballots.list.open_ballots = state.ballots.list.rows.filter(b => Date.now() < Date.parse(b.end_time));
+  state.ballots.list.open_ballots = state.ballots.list.rows.filter(
+    (b) => Date.now() < Date.parse(b.end_time)
+  );
 
   let current_count = state.ballots.list.rows.length;
 
@@ -41,7 +42,6 @@ export const addBallots = (state, { rows, more, next_key }) => {
   } else {
     state.ballots.list.pagination.more = true;
   }
-  
 };
 
 export const setBallots = (state, { rows, more }) => {
@@ -70,34 +70,41 @@ export const updateTreasuries = (state) => {
   // mark every treasury.isRegistered if the current user treasuries (userTreasuries) includes that treasury
   let open_ballots = state.ballots.list.open_ballots;
   let userTreasuries = state.userTreasuries ? state.userTreasuries.rows : [];
-  
-  state.treasuries.list.data.forEach(t => {
+
+  state.treasuries.list.data.forEach((t) => {
     t.symbol = supplyToSymbol(t.max_supply);
-    t.open_ballots = open_ballots.filter( b => b.treasury.max_supply == t.max_supply ).length;
-    t.isRegistered = userTreasuries.some( v => supplyToSymbol(v.liquid) === t.symbol );
+    t.open_ballots = open_ballots.filter(
+      (b) => b.treasury.max_supply == t.max_supply
+    ).length;
+    t.isRegistered = userTreasuries.some(
+      (v) => supplyToSymbol(v.liquid) === t.symbol
+    );
   });
-}
+};
 
 export const addTreasuries = (state, { rows, more }) => {
   if (rows) {
-
     // create a ballot name list from incoming rows
-    let incoming_symbols = rows.map(treasury => supplyToSymbol(treasury.max_supply));
+    let incoming_symbols = rows.map((treasury) =>
+      supplyToSymbol(treasury.max_supply)
+    );
 
     // merging together
     state.treasuries.list.data = state.treasuries.list.data
       // take out old versions of incoming ones
-      .filter(treasury => incoming_symbols.indexOf( supplyToSymbol(treasury.max_supply) ) == -1)
+      .filter(
+        (treasury) =>
+          incoming_symbols.indexOf(supplyToSymbol(treasury.max_supply)) == -1
+      )
       // concat new ones
       .concat(rows);
-      
+
     // sort them by voters but allways put VOTE first
-    state.treasuries.list.data.sort( (A, B) => {
+    state.treasuries.list.data.sort((A, B) => {
       if (A.symbol === VOTE_SYMBOL) return 1;
       if (B.symbol === VOTE_SYMBOL) return -1;
       return B.voters - A.voters;
     });
-
   }
   state.treasuries.list.loaded = !more;
 };

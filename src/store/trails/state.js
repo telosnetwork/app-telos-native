@@ -5,7 +5,7 @@ export default () => ({
       rows: [],
       pagination: {
         pages: 0,
-        next_key: "",
+        next_key: '',
         limit: 250,
         more: true,
       },
@@ -26,8 +26,8 @@ export default () => ({
       },
     },
     view: {
-      treasury: null
-    }
+      treasury: null,
+    },
   },
   fees: [],
 });

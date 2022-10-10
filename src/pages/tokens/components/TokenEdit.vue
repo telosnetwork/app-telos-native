@@ -236,10 +236,10 @@
 </template>
 
 <script>
-import TokenDetail from "./TokenDetail.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import TokenDetail from './TokenDetail.vue';
+import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
-  name: "TokenEdit",
+  name: 'TokenEdit',
   components: {
     TokenDetail,
   },
@@ -271,14 +271,14 @@ export default {
     };
   },
   computed: {
-    ...mapState("tokens", ["createToken", "editingToken", "config"]),
-    ...mapGetters("accounts", ["account"]),
+    ...mapState('tokens', ['createToken', 'editingToken', 'config']),
+    ...mapGetters('accounts', ['account']),
     getTermsHtml() {
       return `Terms:
             ${
               !this.editingToken
                 ? `There will be a fee of <strong>${this.config.create_price}</strong> to create a new token.  `
-                : ""
+                : ''
             }
           If this token is found to be misleading, scamming or attempting to
           present itself as another existing token then it will be removed from the token registry (the token itself will remain untouched).
@@ -296,17 +296,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions("accounts", ["isAccountFree"]),
-    ...mapActions("tokens", [
-      "setMeta",
-      "loadTokens",
-      "doCreateToken",
-      "issueTokens",
-      "retireTokens",
-      "transferTokens",
+    ...mapActions('accounts', ['isAccountFree']),
+    ...mapActions('tokens', [
+      'setMeta',
+      'loadTokens',
+      'doCreateToken',
+      'issueTokens',
+      'retireTokens',
+      'transferTokens',
     ]),
     checkTerms(val) {
-      return val || "You must accept the terms";
+      return val || 'You must accept the terms';
     },
     canIssue() {
       return this.stat && this.getUnissued() > 0;
@@ -315,17 +315,17 @@ export default {
       if (!this.stat) return;
 
       return (
-        parseFloat(this.stat.max_supply.split(" ")[0]) -
-        parseFloat(this.stat.supply.split(" ")[0])
+        parseFloat(this.stat.max_supply.split(' ')[0]) -
+        parseFloat(this.stat.supply.split(' ')[0])
       );
     },
     hasBalance() {
       if (!this.balance) return false;
 
-      return parseFloat(this.balance.split(" ")[0]) > 0;
+      return parseFloat(this.balance.split(' ')[0]) > 0;
     },
     getBalanceNumber() {
-      return this.hasBalance() ? parseFloat(this.balance.split(" ")[0]) : 0.0;
+      return this.hasBalance() ? parseFloat(this.balance.split(' ')[0]) : 0.0;
     },
     async submit() {
       if (!this.acceptedTerms) {
@@ -343,8 +343,8 @@ export default {
 
       let result = await this.$store.$api.getTableRows({
         code: this.editingToken.contract_account,
-        scope: this.editingToken.token_symbol.split(",")[1],
-        table: "stat",
+        scope: this.editingToken.token_symbol.split(',')[1],
+        table: 'stat',
       });
       if (result.rows.length) {
         this.stat = result.rows[0];
@@ -358,15 +358,15 @@ export default {
       let result = await this.$store.$api.getTableRows({
         code: this.editingToken.contract_account,
         scope: this.account,
-        table: "accounts",
-        lower_bound: this.editingToken.token_symbol.split(",")[1],
+        table: 'accounts',
+        lower_bound: this.editingToken.token_symbol.split(',')[1],
       });
       if (result.rows.length) {
         this.balance = result.rows[0].balance;
       } else {
         this.balance = (0).toFixed(
-          `${parseInt(this.editingToken.token_symbol.split(",")[0])} ${
-            this.editingToken.token_symbol.split(",")[1]
+          `${parseInt(this.editingToken.token_symbol.split(',')[0])} ${
+            this.editingToken.token_symbol.split(',')[1]
           }`
         );
       }
@@ -389,8 +389,8 @@ export default {
         !this.token.symbol
       ) {
         this.$q.notify({
-          type: "negative",
-          message: "Please fill out all the token fields",
+          type: 'negative',
+          message: 'Please fill out all the token fields',
         });
         return;
       }
@@ -406,9 +406,9 @@ export default {
     setToken() {
       if (this.editingToken) {
         this.token.name = this.editingToken.token_name;
-        this.token.symbol = this.editingToken.token_symbol.split(",")[1];
+        this.token.symbol = this.editingToken.token_symbol.split(',')[1];
         this.token.decimals = parseInt(
-          this.editingToken.token_symbol.split(",")[0]
+          this.editingToken.token_symbol.split(',')[0]
         );
         this.token.logo_sm = this.editingToken.logo_sm;
         this.token.logo_lg = this.editingToken.logo_lg;
@@ -423,15 +423,15 @@ export default {
     async doIssue() {
       if (!this.amountToIssue) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to issue",
+          type: 'negative',
+          message: 'Please specify an amount to issue',
         });
         return;
       }
       await this.issueTokens({
         ...this.token,
         contractAccount: this.token.contract_account,
-        memo: this.issueMemo ? this.issueMemo : "",
+        memo: this.issueMemo ? this.issueMemo : '',
         amount: this.amountToIssue,
       });
       this.setBalance();
@@ -443,15 +443,15 @@ export default {
     async doRetire() {
       if (!this.amountToRetire) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to retire",
+          type: 'negative',
+          message: 'Please specify an amount to retire',
         });
         return;
       }
       await this.retireTokens({
         ...this.token,
         contractAccount: this.token.contract_account,
-        memo: this.retireMemo ? this.retireMemo : "",
+        memo: this.retireMemo ? this.retireMemo : '',
         amount: this.amountToRetire,
       });
       this.setBalance();
@@ -463,22 +463,22 @@ export default {
     async doTransfer() {
       if (!this.amountToTransfer) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to transfer",
+          type: 'negative',
+          message: 'Please specify an amount to transfer',
         });
         return;
       }
       if (!this.transferTo) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an account to transfer to",
+          type: 'negative',
+          message: 'Please specify an account to transfer to',
         });
         return;
       }
       let invalidAccount = await this.isAccountFree(this.transferTo);
       if (invalidAccount) {
         this.$q.notify({
-          type: "negative",
+          type: 'negative',
           message: `Account ${this.transferTo} does not exist`,
         });
         return;
@@ -486,7 +486,7 @@ export default {
       await this.transferTokens({
         ...this.token,
         contractAccount: this.token.contract_account,
-        memo: this.transferMemo ? this.transferMemo : "",
+        memo: this.transferMemo ? this.transferMemo : '',
         amount: this.amountToTransfer,
         to: this.transferTo,
       });
@@ -498,8 +498,8 @@ export default {
       this.transferDialog = false;
     },
     cancelEdit() {
-      this.$store.commit("tokens/createToken", false);
-      this.$store.commit("tokens/editToken", null);
+      this.$store.commit('tokens/createToken', false);
+      this.$store.commit('tokens/editToken', null);
     },
   },
 };

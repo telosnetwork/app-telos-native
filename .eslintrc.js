@@ -27,9 +27,9 @@ module.exports = {
 
     // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#usage
     // ESLint typescript rules
-    'plugin:@typescript-eslint/recommended',
+      // 'plugin:@typescript-eslint/recommended',
     // consider disabling this class of rules if linting takes too long
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+   //  'plugin:@typescript-eslint/recommended-requiring-type-checking',
 
     // Uncomment any of the lines below to choose desired strictness,
     // but leave only one uncommented!
@@ -40,17 +40,16 @@ module.exports = {
 
     // https://github.com/prettier/eslint-config-prettier#installation
     // usage with Prettier, provided by 'eslint-config-prettier'.
-    'prettier'
+    // 'prettier'
   ],
 
   plugins: [
     // required to apply rules which need type information
-    '@typescript-eslint',
+    // '@typescript-eslint',
 
     // https://eslint.vuejs.org/user-guide/#why-doesn-t-it-work-on-vue-file
     // required to lint *.vue files
     'vue',
-    "prettier"
   ],
 
   globals: {
@@ -76,8 +75,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
 
     // allow debugger during development only
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-
-    "prettier/prettier": "error"
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

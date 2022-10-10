@@ -1,36 +1,37 @@
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import { validation } from '~/mixins/validation'
+import { mapActions, mapGetters } from 'vuex';
+import { validation } from '~/mixins/validation';
 
 export default {
   name: 'RemoveMe',
   mixins: [validation],
   methods: {
     ...mapActions('accounts', ['claimAccount', 'isAccountClaimed']),
-    async setClaimed () {
-      this.isClaimed = await this.isAccountClaimed(this.account) === 'claimed'
+    async setClaimed() {
+      this.isClaimed =
+        (await this.isAccountClaimed(this.account)) === 'claimed';
     },
-    async doClaim () {
-      await this.claimAccount(this.account)
-      await this.setClaimed()
-    }
+    async doClaim() {
+      await this.claimAccount(this.account);
+      await this.setClaimed();
+    },
   },
-  async mounted () {
-    await this.setClaimed()
+  async mounted() {
+    await this.setClaimed();
   },
-  data () {
+  data() {
     return {
       form: {
-        account_name: null
+        account_name: null,
       },
       submitting: false,
-      isClaimed: false
-    }
+      isClaimed: false,
+    };
   },
   computed: {
-    ...mapGetters('accounts', ['account', 'isAuthenticated'])
-  }
-}
+    ...mapGetters('accounts', ['account', 'isAuthenticated']),
+  },
+};
 </script>
 
 <template lang="pug">

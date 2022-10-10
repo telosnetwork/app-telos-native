@@ -18,29 +18,29 @@ div
 </template>
 
 <script>
-import axios from "axios";
-import { mapGetters } from "vuex";
-import ValidatorDataChart from "./components/ValidatorDataChart.vue";
-import ValidatorDataTable from "./components/ValidatorDataTable.vue";
+import axios from 'axios';
+import { mapGetters } from 'vuex';
+import ValidatorDataChart from './components/ValidatorDataChart.vue';
+import ValidatorDataTable from './components/ValidatorDataTable.vue';
 
-const BUCKET_URL = "https://telos-producer-validation.s3.amazonaws.com";
+const BUCKET_URL = 'https://telos-producer-validation.s3.amazonaws.com';
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "Validator",
+  name: 'Validator',
   components: {
     ValidatorDataChart,
     ValidatorDataTable,
   },
   data() {
     return {
-      lastUpdated: "",
+      lastUpdated: '',
       producerData: [],
       producerVotes: [],
       showCpu: false,
       voteChanged: false,
       resetFlag: false,
-      lastWeight: "0",
+      lastWeight: '0',
       lastStaked: 0,
       stakedAmount: 0,
     };
@@ -49,9 +49,9 @@ export default {
     await this.getData();
   },
   computed: {
-    ...mapGetters("accounts", ["account"]),
+    ...mapGetters('accounts', ['account']),
     toggleLabel() {
-      return this.showCpu ? "View Table" : "View Graph";
+      return this.showCpu ? 'View Table' : 'View Graph';
     },
   },
   methods: {
@@ -59,18 +59,18 @@ export default {
       try {
         const objectList = await axios.get(BUCKET_URL);
         const lastKey = this.getLastKey(objectList);
-        this.producerData = ["test"];
+        this.producerData = ['test'];
         this.producerData = (await axios.get(`${BUCKET_URL}/${lastKey}`)).data;
         await this.getVotes();
       } catch (err) {
-        console.log("Error", err);
+        console.log('Error', err);
       }
     },
     getLastKey(objectList) {
       const parser = new DOMParser();
       const contentsArray = parser
-        .parseFromString(objectList.data, "text/xml")
-        .getElementsByTagName("Contents");
+        .parseFromString(objectList.data, 'text/xml')
+        .getElementsByTagName('Contents');
       const lastEntry = contentsArray[contentsArray.length - 1];
       this.lastUpdated = lastEntry.childNodes[1].textContent;
       return lastEntry.childNodes[0].textContent;

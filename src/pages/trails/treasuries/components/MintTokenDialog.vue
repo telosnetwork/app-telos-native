@@ -1,41 +1,41 @@
 <script>
-import { mapActions } from 'vuex'
-import { validation } from '~/mixins/validation'
+import { mapActions } from 'vuex';
+import { validation } from '~/mixins/validation';
 
 export default {
   name: 'MintTokenDialog',
   mixins: [validation],
   props: {
     show: { type: Boolean, required: true },
-    supply: { type: String, required: true }
+    supply: { type: String, required: true },
   },
-  data () {
+  data() {
     return {
       form: {
         to: null,
         quantity: null,
-        memo: null
+        memo: null,
       },
-      submitting: false
-    }
+      submitting: false,
+    };
   },
   methods: {
     ...mapActions('trails', ['mint']),
-    async onMintTokens () {
-      this.resetValidation(this.form)
-      if (!(await this.validate(this.form))) return
-      this.submitting = true
+    async onMintTokens() {
+      this.resetValidation(this.form);
+      if (!(await this.validate(this.form))) return;
+      this.submitting = true;
       const success = await this.mint({
         ...this.form,
-        supply: this.supply
-      })
-      this.submitting = false
+        supply: this.supply,
+      });
+      this.submitting = false;
       if (success) {
-        this.$emit('update:show', false)
+        this.$emit('update:show', false);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <template lang="pug">
@@ -84,6 +84,4 @@ q-dialog(
       )
 </template>
 
-<style lang="sass" scoped>
-
-</style>
+<style lang="sass" scoped></style>

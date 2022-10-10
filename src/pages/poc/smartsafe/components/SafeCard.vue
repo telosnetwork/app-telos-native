@@ -1,39 +1,39 @@
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SafeCard',
   props: {
-    safe: { type: Object, required: true }
+    safe: { type: Object, required: true },
   },
-  data () {
+  data() {
     return {
-      show: false
-    }
+      show: false,
+    };
   },
   methods: {
     ...mapActions('poc', ['toggleLock']),
-    onToggleLock () {
+    onToggleLock() {
       this.toggleLock({
         lock: !this.safe.locked,
         safeName: this.safe.safe_name,
-        accountName: this.account
-      })
-    }
+        accountName: this.account,
+      });
+    },
   },
   computed: {
     ...mapGetters('accounts', ['account']),
-    lockedByUser () {
-      return this.safe.locked_by === this.account
+    lockedByUser() {
+      return this.safe.locked_by === this.account;
     },
-    userIsAdmin () {
-      return this.safe.admins.includes(this.account)
-    }
-  }
-}
+    userIsAdmin() {
+      return this.safe.admins.includes(this.account);
+    },
+  },
+};
 </script>
 
-<template lang='pug'>
+<template lang="pug">
 div
   q-card
     q-card-section.bg-primary.text-white

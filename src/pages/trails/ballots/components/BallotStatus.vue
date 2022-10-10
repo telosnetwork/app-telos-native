@@ -1,8 +1,8 @@
 <script>
-import Countdown from "~/pages/trails/ballots/components/CountdownBlock";
-import moment from "moment";
+import Countdown from '~/pages/trails/ballots/components/CountdownBlock';
+import moment from 'moment';
 export default {
-  name: "BallotStatus",
+  name: 'BallotStatus',
   components: { Countdown },
   data() {
     return {

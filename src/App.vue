@@ -1,27 +1,27 @@
 <script>
-import { mapGetters } from "vuex";
-import appIcons from "~/utils/app-icons";
+import { mapGetters } from 'vuex';
+import appIcons from '~/utils/app-icons';
 
 export default {
-  name: "App",
+  name: 'App',
   computed: {
-    ...mapGetters("accounts", ["isAutoLoading"]),
-    ...mapGetters("general", ["isLoading", "errorMsg", "successMsg"]),
+    ...mapGetters('accounts', ['isAutoLoading']),
+    ...mapGetters('general', ['isLoading', 'errorMsg', 'successMsg']),
     layout() {
-      return `layout-${this.$route.meta.layout || "main"}`;
+      return `layout-${this.$route.meta.layout || 'main'}`;
     },
   },
   watch: {
     errorMsg(msg) {
-      console.log("error", msg);
+      console.log('error', msg);
       if (msg) {
-        this.showNotification(msg, "error");
+        this.showNotification(msg, 'error');
         this.showErrorMsg(null);
       }
     },
     successMsg(msg) {
       if (msg) {
-        this.showNotification(msg, "success");
+        this.showNotification(msg, 'success');
         this.showSuccessMsg(null);
       }
     },

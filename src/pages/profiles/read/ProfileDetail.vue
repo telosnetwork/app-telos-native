@@ -38,10 +38,10 @@ main.column.items-center.back(v-if="this.Profile")
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
+import { mapActions } from 'vuex';
+import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 export default {
-  name: "ProfileDetail",
+  name: 'ProfileDetail',
   props: { owner: Boolean },
   components: {
     ProfileAvatar,
@@ -83,7 +83,7 @@ export default {
     }
     this.showIsLoading(false);
     if (this.missingProfile) {
-      this.$router.push({ name: "userRegister" });
+      this.$router.push({ name: 'userRegister' });
     }
     /*
     if (!this.$store.getters['profiles/isRegistered']) {
@@ -92,10 +92,10 @@ export default {
     */
   },
   beforeMount: function () {
-    this.$store.commit("profiles/setSelectedProfile", []);
+    this.$store.commit('profiles/setSelectedProfile', []);
   },
   methods: {
-    ...mapActions("profiles", ["getProfile"]),
+    ...mapActions('profiles', ['getProfile']),
     /*
     goToChat () {
       this.$store.commit('messages/setActiveChat', { activeChat: this.Profile.eosAccount, avatarImage: this.Profile.publicData.avatarImage, s3Identity: this.Profile.publicData.s3Identity })

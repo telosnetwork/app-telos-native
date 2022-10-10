@@ -21,23 +21,23 @@ main
 </template>
 
 <script>
-import "vue-croppa/dist/vue-croppa.css";
+import 'vue-croppa/dist/vue-croppa.css';
 // import PPP from '@smontero/ppp-client-api'
-import croppa from "vue-croppa";
+import croppa from 'vue-croppa';
 
 export default {
-  name: "EditImage",
+  name: 'EditImage',
   props: {
     imgKey: String,
     identity: String,
   },
   data: function () {
     return {
-      url: "",
+      url: '',
       croppa: croppa,
       loadingFile: false,
-      mImgKey: "",
-      mIdentity: "",
+      mImgKey: '',
+      mIdentity: '',
       imageChanged: false,
       isFirstDraw: true,
     };
@@ -68,14 +68,14 @@ export default {
       return new Promise(function (resolve, reject) {
         try {
           if (!self.imageChanged) {
-            reject(new Error("No image has changed"));
+            reject(new Error('No image has changed'));
           }
           if (self.croppa.hasImage()) {
             self.croppa.generateBlob((blob) => {
               resolve(blob);
             });
           } else {
-            reject(new Error("No selected image"));
+            reject(new Error('No selected image'));
           }
         } catch (e) {
           reject(new Error(e));
@@ -83,7 +83,7 @@ export default {
       });
     },
     async updateUrl() {
-      this.url = "";
+      this.url = '';
       if (this.imgKey && this.identity) {
         /*
         await PPP.profileApi().getImageUrl(this.imgKey, this.identity).then((rUrl) => {

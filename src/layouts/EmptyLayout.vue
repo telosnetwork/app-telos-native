@@ -1,7 +1,7 @@
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
-import RightMenuAuthenticated from "~/components/layout/RightMenuAuthenticated";
-import RightMenuGuest from "~/components/layout/RightMenuGuest";
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import RightMenuAuthenticated from '~/components/layout/RightMenuAuthenticated';
+import RightMenuGuest from '~/components/layout/RightMenuGuest';
 
 export default {
   components: {
@@ -9,18 +9,18 @@ export default {
     RightMenuGuest,
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-    ...mapGetters("notifications", ["successCount", "errorCount"]),
+    ...mapGetters('accounts', ['isAuthenticated']),
+    ...mapGetters('notifications', ['successCount', 'errorCount']),
   },
   methods: {
-    ...mapMutations("notifications", [
-      "initNotifications",
-      "unmarkRead",
-      "unmarkNew",
+    ...mapMutations('notifications', [
+      'initNotifications',
+      'unmarkRead',
+      'unmarkNew',
     ]),
-    ...mapActions("accounts", ["autoLogin"]),
+    ...mapActions('accounts', ['autoLogin']),
   },
-  name: "EmptyLayout",
+  name: 'EmptyLayout',
 };
 </script>
 

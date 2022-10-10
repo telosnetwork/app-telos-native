@@ -30,17 +30,30 @@
             <div v-if="symbol" class="text-h6">{{ symbol }}</div>
           </div>
         </div>
-        <div v-if="decimals" class="text-h8 q-mb-xs">{{ decimals }} decimals of precision</div>
-        <div v-if="supply" class="text-h8 q-mb-xs">{{ supply.toLocaleString(undefined, { minimumFractionDigits: decimals }) }} max supply</div>
-        <div v-if="owner" class="text-h8 q-mb-xs">{{ owner }} owner account</div>
-        <div v-if="contract" class="text-h8 q-mb-xs">{{ contract }} contract account</div>
+        <div v-if="decimals" class="text-h8 q-mb-xs">
+          {{ decimals }} decimals of precision
+        </div>
+        <div v-if="supply" class="text-h8 q-mb-xs">
+          {{
+            supply.toLocaleString(undefined, {
+              minimumFractionDigits: decimals,
+            })
+          }}
+          max supply
+        </div>
+        <div v-if="owner" class="text-h8 q-mb-xs">
+          {{ owner }} owner account
+        </div>
+        <div v-if="contract" class="text-h8 q-mb-xs">
+          {{ contract }} contract account
+        </div>
       </q-card-section>
     </q-card>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 export default {
   name: 'TokenDetail',
   props: {
@@ -51,10 +64,10 @@ export default {
     decimals: Number,
     supply: Number,
     logo_sm: String,
-    logo_lg: String
+    logo_lg: String,
   },
   computed: {
-    ...mapGetters('accounts', ['isAuthenticated', 'account'])
-  }
-}
+    ...mapGetters('accounts', ['isAuthenticated', 'account']),
+  },
+};
 </script>

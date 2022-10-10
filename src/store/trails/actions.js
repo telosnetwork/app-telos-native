@@ -1,43 +1,43 @@
-import slugify from "slugify";
+import slugify from 'slugify';
 import {
   supplyToAsset,
   supplyToDecimals,
   supplyToSymbol,
-} from "~/utils/assets";
+} from '~/utils/assets';
 // Fees
 export const fetchFees = async function ({ commit }) {
   const result = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: "telos.decide",
-    table: "config",
+    code: 'telos.decide',
+    scope: 'telos.decide',
+    table: 'config',
     limit: 1,
   });
-  commit("setFees", result.rows[0]);
+  commit('setFees', result.rows[0]);
 };
 // Fees
 
 // Ballots
 export const fetchMoreBallots = async function ({ commit, state }) {
   const result = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: "telos.decide",
-    table: "ballots",
+    code: 'telos.decide',
+    scope: 'telos.decide',
+    table: 'ballots',
     limit: state.ballots.list.pagination.limit,
     index_position: 5,
     reverse: true,
-    key_type: "i64",
-    lower_bound: state.ballots.list.pagination.next_key
+    key_type: 'i64',
+    lower_bound: state.ballots.list.pagination.next_key,
   });
-  let treasuries = {rows:[]};
-  state.treasuries.list.data.forEach(t => treasuries[t.symbol] = t);
+  let treasuries = { rows: [] };
+  state.treasuries.list.data.forEach((t) => (treasuries[t.symbol] = t));
 
   for await (const ballot of result.rows) {
     let symbol = supplyToSymbol(ballot.treasury_symbol);
     if (!treasuries.hasOwnProperty(symbol)) {
       const treasury = await this.$api.getTableRows({
-        code: "telos.decide",
-        scope: "telos.decide",
-        table: "treasuries",
+        code: 'telos.decide',
+        scope: 'telos.decide',
+        table: 'treasuries',
         limit: 1,
         lower_bound: symbol,
         upper_bound: symbol,
@@ -48,47 +48,50 @@ export const fetchMoreBallots = async function ({ commit, state }) {
 
     ballot.treasury = treasuries[symbol];
   }
-  commit("addBallots", result);
+  commit('addBallots', result);
   if (treasuries.rows.length > 0) {
-    commit("addTreasuries", treasuries);
-  }  
-  commit("updateTreasuries");
+    commit('addTreasuries', treasuries);
+  }
+  commit('updateTreasuries');
 };
 
 export const fetchTreasuriesForUser = async function ({ commit }, account) {
   const res = await this.$api.getTableRows({
-    code: "telos.decide",
+    code: 'telos.decide',
     scope: account,
-    table: "voters",
+    table: 'voters',
     limit: 1000,
   });
 
-  commit("setUserTreasuries", res);
-  commit("updateTreasuries");
+  commit('setUserTreasuries', res);
+  commit('updateTreasuries');
 };
 
 export const fetchVotesForBallot = async function ({ commit }, ballot) {
   const res = await this.$api.getTableRows({
-    code: "telos.decide",
+    code: 'telos.decide',
     scope: ballot.name,
-    table: "votes",
+    table: 'votes',
     limit: ballot.limit,
   });
 
-  commit("setBallotVotes", res.rows);
+  commit('setBallotVotes', res.rows);
 };
 
 export const resetUserVotes = async function ({ rootState, commit }) {
-  commit("setUserVotes", {});
+  commit('setUserVotes', {});
 };
 
-export const fetchUserVotesForThisBallot = async function ({ rootState, commit }, ballot) {
-  let res = {rows:[]};
+export const fetchUserVotesForThisBallot = async function (
+  { rootState, commit },
+  ballot
+) {
+  let res = { rows: [] };
   if (rootState.accounts.account) {
     res = await this.$api.getTableRows({
-      code: "telos.decide",
+      code: 'telos.decide',
       scope: ballot,
-      table: "votes",
+      table: 'votes',
       upper_bound: rootState.accounts.account,
       lower_bound: rootState.accounts.account,
       limit: 1,
@@ -100,41 +103,43 @@ export const fetchUserVotesForThisBallot = async function ({ rootState, commit }
 
   for (const [key, value] of Object.entries(userVotes)) {
     if (!value || value.voter != rootState.accounts.account) {
-      delete userVotes[key]
+      delete userVotes[key];
     }
   }
 
   let list = rootState.trails.ballotVoters || [];
-  list = list.filter(a => a.voter != rootState.accounts.account).concat(res.rows);
+  list = list
+    .filter((a) => a.voter != rootState.accounts.account)
+    .concat(res.rows);
 
-  commit("setUserVotes", userVotes);
-  commit("setBallotVotes", list);
+  commit('setUserVotes', userVotes);
+  commit('setBallotVotes', list);
 };
 
 export const fetchBallot = async function ({ commit }, ballot) {
   const result = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: "telos.decide",
-    table: "ballots",
+    code: 'telos.decide',
+    scope: 'telos.decide',
+    table: 'ballots',
     limit: 1,
     lower_bound: ballot,
     upper_bound: ballot,
   });
 
   const treasury = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: "telos.decide",
-    table: "treasuries",
+    code: 'telos.decide',
+    scope: 'telos.decide',
+    table: 'treasuries',
     limit: 1,
     lower_bound: supplyToSymbol(result.rows[0].treasury_symbol),
     upper_bound: supplyToSymbol(result.rows[0].treasury_symbol),
   });
 
-  if (result.rows[0].category === "proposal") {
+  if (result.rows[0].category === 'proposal') {
     const proposalInfo = await this.$api.getTableRows({
-      code: "works.decide",
-      scope: "works.decide",
-      table: "proposals",
+      code: 'works.decide',
+      scope: 'works.decide',
+      table: 'proposals',
       limit: 1,
       lower_bound: ballot,
       upper_bound: ballot,
@@ -144,21 +149,21 @@ export const fetchBallot = async function ({ commit }, ballot) {
   }
 
   result.rows[0].treasury = treasury.rows[0];
-  commit("addBallots", result);
-  commit("setBallot", result.rows[0]);
+  commit('addBallots', result);
+  commit('setBallot', result.rows[0]);
 };
 
 export const addBallot = async function ({ commit, state, rootState }, ballot) {
   const ballotName = slugify(ballot.title, {
-    replacement: "-",
+    replacement: '-',
     remove: /[*+~.()'"!:@?]/g,
     lower: true,
   });
-  const deposit = state.fees.find((fee) => fee.key === "ballot").value;
+  const deposit = state.fees.find((fee) => fee.key === 'ballot').value;
 
   let togglebal = {
-    account: "telos.decide",
-    name: "togglebal",
+    account: 'telos.decide',
+    name: 'togglebal',
     data: {
       ballot_name: ballotName,
       setting_name: null,
@@ -166,25 +171,25 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
   };
 
   const notification = {
-    icon: "fas fa-person-booth",
-    title: "notifications.trails.addBallot",
+    icon: 'fas fa-person-booth',
+    title: 'notifications.trails.addBallot',
     content: `Ballot: ${ballot.title}, deposit: ${deposit}`,
   };
   try {
     const actions = [
       {
-        account: "eosio.token",
-        name: "transfer",
+        account: 'eosio.token',
+        name: 'transfer',
         data: {
           from: rootState.accounts.account,
-          to: "telos.decide",
+          to: 'telos.decide',
           quantity: deposit,
-          memo: "fees-deposit",
+          memo: 'fees-deposit',
         },
       },
       {
-        account: "telos.decide",
-        name: "newballot",
+        account: 'telos.decide',
+        name: 'newballot',
         data: {
           ballot_name: ballotName,
           category: ballot.category,
@@ -195,8 +200,8 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
         },
       },
       {
-        account: "telos.decide",
-        name: "editdetails",
+        account: 'telos.decide',
+        name: 'editdetails',
         data: {
           ballot_name: ballotName,
           title: ballot.title,
@@ -205,8 +210,8 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
         },
       },
       {
-        account: "telos.decide",
-        name: "editminmax",
+        account: 'telos.decide',
+        name: 'editminmax',
         data: {
           ballot_name: ballotName,
           new_min_options: ballot.minOptions,
@@ -214,8 +219,8 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
         },
       },
       {
-        account: "telos.decide",
-        name: "openvoting",
+        account: 'telos.decide',
+        name: 'openvoting',
         data: {
           ballot_name: ballotName,
           end_time: new Date(ballot.endDate).toISOString().slice(0, -5),
@@ -223,13 +228,13 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
       },
     ];
     let isBoth = false;
-    if (ballot.treasurySymbol.symbol === "VOTE") {
-      togglebal.data.setting_name = "votestake";
+    if (ballot.treasurySymbol.symbol === 'VOTE') {
+      togglebal.data.setting_name = 'votestake';
     } else if (!ballot.settings) {
-      togglebal.data.setting_name = "voteliquid";
+      togglebal.data.setting_name = 'voteliquid';
     } else if (ballot.settings && ballot.config) {
-      if (ballot.config === "both") {
-        for (let i of ["voteliquid", "votestake"]) {
+      if (ballot.config === 'both') {
+        for (let i of ['voteliquid', 'votestake']) {
           togglebal.data.setting_name = i;
           isBoth = true;
           actions.splice(2, 0, togglebal);
@@ -241,77 +246,77 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
     !isBoth && actions.splice(2, 0, togglebal);
 
     const transaction = await this.$api.signTransaction(actions);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 
 export const deleteBallot = async function ({ commit }, ballot) {
   const notification = {
-    icon: "fas fa-person-booth",
-    title: "notifications.trails.deleteBallot",
+    icon: 'fas fa-person-booth',
+    title: 'notifications.trails.deleteBallot',
     content: `Ballot: ${ballot.title}`,
   };
   try {
     const actions = [
       {
-        account: "telos.decide",
-        name: "closevoting",
+        account: 'telos.decide',
+        name: 'closevoting',
         data: {
           ballot_name: ballot.ballot_name,
           broadcast: true,
         },
       },
       {
-        account: "telos.decide",
-        name: "deleteballot",
+        account: 'telos.decide',
+        name: 'deleteballot',
         data: {
           ballot_name: ballot.ballot_name,
         },
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 
 export const cancelBallot = async function ({ commit }, ballot) {
   const notification = {
-    icon: "fas fa-person-booth",
-    title: "notifications.trails.cancelBallot",
+    icon: 'fas fa-person-booth',
+    title: 'notifications.trails.cancelBallot',
     content: `Ballot: ${ballot.title}`,
   };
   try {
     const actions = [
       {
-        account: "telos.decide",
-        name: "cancelballot",
+        account: 'telos.decide',
+        name: 'cancelballot',
         data: {
           ballot_name: ballot.ballot_name,
-          memo: "Cancel ballot",
+          memo: 'Cancel ballot',
         },
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 
 export const castVote = async function (
@@ -319,22 +324,22 @@ export const castVote = async function (
   { register, ballotName, options }
 ) {
   const notification = {
-    icon: "fas fa-person-booth",
-    title: "notifications.trails.castVote",
+    icon: 'fas fa-person-booth',
+    title: 'notifications.trails.castVote',
     content: `${ballotName} ${options}`,
   };
   try {
     let actions = [
       {
-        account: "telos.decide",
-        name: "refresh",
+        account: 'telos.decide',
+        name: 'refresh',
         data: {
           voter: rootState.accounts.account,
         },
       },
       {
-        account: "telos.decide",
-        name: "castvote",
+        account: 'telos.decide',
+        name: 'castvote',
         data: {
           voter: rootState.accounts.account,
           ballot_name: ballotName,
@@ -344,11 +349,13 @@ export const castVote = async function (
     ];
 
     if (register) {
-      let ballot = rootState.trails.ballots.list.rows.find(b => b.ballot_name == ballotName);
+      let ballot = rootState.trails.ballots.list.rows.find(
+        (b) => b.ballot_name == ballotName
+      );
       let treasury_symbol = ballot.treasury_symbol;
       actions.unshift({
-        account: "telos.decide",
-        name: "regvoter",
+        account: 'telos.decide',
+        name: 'regvoter',
         data: {
           voter: rootState.accounts.account,
           treasury_symbol,
@@ -358,16 +365,16 @@ export const castVote = async function (
     }
     const transaction = await this.$api.signTransaction(actions);
     transaction === null
-      ? (notification.status = "error")
-      : (notification.status = "success");
+      ? (notification.status = 'error')
+      : (notification.status = 'success');
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
 
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 
 export const registerVoter = async function (
@@ -375,16 +382,16 @@ export const registerVoter = async function (
   supply
 ) {
   const notification = {
-    icon: "fas fa-user-plus",
-    title: "notifications.trails.registerVoter",
+    icon: 'fas fa-user-plus',
+    title: 'notifications.trails.registerVoter',
     content: `Treasury: ${supply}`,
   };
 
   try {
     const actions = [
       {
-        account: "telos.decide",
-        name: "regvoter",
+        account: 'telos.decide',
+        name: 'regvoter',
         data: {
           voter: rootState.accounts.account,
           treasury_symbol: supplyToAsset(supply),
@@ -394,17 +401,17 @@ export const registerVoter = async function (
     ];
     const transaction = await this.$api.signTransaction(actions);
     commit(
-      "increaseVoters",
+      'increaseVoters',
       state.treasuries.list.data.findIndex((t) => t.max_supply === supply)
     );
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 
 // Ballots
@@ -412,55 +419,55 @@ export const registerVoter = async function (
 // Treasuries
 export const fetchTreasuries = async function ({ commit, state }) {
   const result = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: "telos.decide",
-    table: "treasuries",
+    code: 'telos.decide',
+    scope: 'telos.decide',
+    table: 'treasuries',
     limit: state.treasuries.list.pagination.limit,
   });
 
-  commit("addTreasuries", result);
-  commit("updateTreasuries");
+  commit('addTreasuries', result);
+  commit('updateTreasuries');
 };
 
 export const fetchTreasury = async function ({ commit }, treasury) {
   const result = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: "telos.decide",
-    table: "treasuries",
+    code: 'telos.decide',
+    scope: 'telos.decide',
+    table: 'treasuries',
     limit: 1,
     lower_bound: treasury,
     upper_bound: treasury,
   });
-  commit("addTreasuries", result);
-  commit("setTreasury", result.rows[0]);
-  commit("updateTreasuries");
+  commit('addTreasuries', result);
+  commit('setTreasury', result.rows[0]);
+  commit('updateTreasuries');
 };
 
 export const addTreasury = async function (
   { commit, state, rootState },
   { manager, maxSupply, access, title, description }
 ) {
-  const deposit = state.fees.find((fee) => fee.key === "treasury").value;
+  const deposit = state.fees.find((fee) => fee.key === 'treasury').value;
   const notification = {
-    icon: "fas fa-users",
-    title: "notifications.trails.addTreasury",
+    icon: 'fas fa-users',
+    title: 'notifications.trails.addTreasury',
     content: `Treasury manager: ${manager}, supply: ${maxSupply}, deposit: ${deposit}`,
   };
   try {
     const actions = [
       {
-        account: "eosio.token",
-        name: "transfer",
+        account: 'eosio.token',
+        name: 'transfer',
         data: {
           from: rootState.accounts.account,
-          to: "telos.decide",
+          to: 'telos.decide',
           quantity: deposit,
-          memo: "fees-deposit",
+          memo: 'fees-deposit',
         },
       },
       {
-        account: "telos.decide",
-        name: "newtreasury",
+        account: 'telos.decide',
+        name: 'newtreasury',
         data: {
           manager,
           max_supply: maxSupply,
@@ -468,8 +475,8 @@ export const addTreasury = async function (
         },
       },
       {
-        account: "telos.decide",
-        name: "edittrsinfo",
+        account: 'telos.decide',
+        name: 'edittrsinfo',
         data: {
           treasury_symbol: supplyToAsset(maxSupply),
           title,
@@ -479,14 +486,14 @@ export const addTreasury = async function (
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 
 export const editTreasury = async function (
@@ -494,15 +501,15 @@ export const editTreasury = async function (
   { title, description, treasury }
 ) {
   const notification = {
-    icon: "fas fa-edit",
-    title: "notifications.trails.editTreasury",
+    icon: 'fas fa-edit',
+    title: 'notifications.trails.editTreasury',
     content: `Treasury: ${title}`,
   };
   try {
     const actions = [
       {
-        account: "telos.decide",
-        name: "edittrsinfo",
+        account: 'telos.decide',
+        name: 'edittrsinfo',
         data: {
           treasury_symbol: supplyToAsset(treasury.max_supply),
           title,
@@ -512,15 +519,15 @@ export const editTreasury = async function (
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    commit("updateTreasury", { title, description, treasury });
-    notification.status = "success";
+    commit('updateTreasury', { title, description, treasury });
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 
 export const mint = async function (
@@ -528,15 +535,15 @@ export const mint = async function (
   { to, quantity, memo, supply }
 ) {
   const notification = {
-    icon: "fas fa-comment-dollar",
-    title: "notifications.trails.mintTokens",
+    icon: 'fas fa-comment-dollar',
+    title: 'notifications.trails.mintTokens',
     content: `Mint ${quantity} ${supplyToSymbol(supply)} to ${to}`,
   };
   try {
     const actions = [
       {
-        account: "telos.decide",
-        name: "mint",
+        account: 'telos.decide',
+        name: 'mint',
         data: {
           to,
           quantity: `${parseFloat(quantity).toFixed(
@@ -547,13 +554,13 @@ export const mint = async function (
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };
 // Treasuries

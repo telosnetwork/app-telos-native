@@ -1,7 +1,7 @@
 // import PPP from '@smontero/ppp-client-api'
 
 const getAuthenticator = function (ual, wallet = null) {
-  wallet = wallet || localStorage.getItem("autoLogin");
+  wallet = wallet || localStorage.getItem('autoLogin');
   const idx = ual.authenticators.findIndex(
     (auth) => auth.constructor.name === wallet
   );
@@ -17,13 +17,13 @@ export const login = async function (
 ) {
   const authenticator = this.$ual.authenticators[idx];
   try {
-    commit("setLoadingWallet", authenticator.getStyle().text);
+    commit('setLoadingWallet', authenticator.getStyle().text);
     await authenticator.init();
     if (!account) {
       const requestAccount = await authenticator.shouldRequestAccountName();
       if (requestAccount) {
-        await dispatch("fetchAvailableAccounts", idx);
-        commit("setRequestAccount", true);
+        await dispatch('fetchAvailableAccounts', idx);
+        commit('setRequestAccount', true);
         return;
       }
     }
@@ -31,16 +31,16 @@ export const login = async function (
     if (users.length) {
       this.$ualUser = users[0];
       const accountName = await users[0].getAccountName();
-      commit("setAccount", accountName);
-      commit("setUser", this.$ualUser);
+      commit('setAccount', accountName);
+      commit('setUser', this.$ualUser);
 
       // PPP.setActiveUser(this.$ualUser)
-      const defaultReturnUrl = localStorage.getItem("returning")
-        ? "/"
-        : "/profiles/myProfile";
-      localStorage.setItem("autoLogin", authenticator.constructor.name);
-      localStorage.setItem("account", accountName);
-      localStorage.setItem("returning", true);
+      const defaultReturnUrl = localStorage.getItem('returning')
+        ? '/'
+        : '/profiles/myProfile';
+      localStorage.setItem('autoLogin', authenticator.constructor.name);
+      localStorage.setItem('account', accountName);
+      localStorage.setItem('returning', true);
       this.$router.push({ path: returnUrl || defaultReturnUrl });
     }
   } catch (e) {
@@ -51,9 +51,9 @@ export const login = async function (
       e.cause
         ? e.cause.message
         : toString(e);
-    console.log("Login error: ", error);
+    console.log('Login error: ', error);
   } finally {
-    commit("setLoadingWallet");
+    commit('setLoadingWallet');
   }
 };
 
@@ -62,7 +62,7 @@ export const memoryAutoLogin = async function ({
   dispatch,
   rootState,
 }) {
-  const account = localStorage.getItem("account");
+  const account = localStorage.getItem('account');
 
   if (account) {
     // check state and set account
@@ -95,27 +95,27 @@ export const logout = async function ({ commit }) {
   try {
     authenticator && (await authenticator.logout());
   } catch (error) {
-    console.log("Authenticator logout error", error);
+    console.log('Authenticator logout error', error);
   }
-  commit("profiles/setProfile", undefined, { root: true });
-  commit("setAccount");
+  commit('profiles/setProfile', undefined, { root: true });
+  commit('setAccount');
 
-  localStorage.removeItem("account");
-  if (this.$router.path !== "/") {
-    this.$router.push({ path: "/" });
+  localStorage.removeItem('account');
+  if (this.$router.path !== '/') {
+    this.$router.push({ path: '/' });
   }
 };
 
 export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
   const { authenticator, idx } = getAuthenticator(this.$ual);
   if (authenticator) {
-    commit("setAutoLogin", true);
-    await dispatch("login", {
+    commit('setAutoLogin', true);
+    await dispatch('login', {
       idx,
       returnUrl,
-      account: localStorage.getItem("account"),
+      account: localStorage.getItem('account'),
     });
-    commit("setAutoLogin", false);
+    commit('setAutoLogin', false);
   }
 };
 
@@ -131,12 +131,12 @@ export const isAccountFree = async function (context, accountName) {
 
 export const sendOTP = async function ({ commit }, form) {
   try {
-    const response = await this.$axios.post("/v1/registrations", {
+    const response = await this.$axios.post('/v1/registrations', {
       smsNumber: form.internationalPhone,
       telosAccount: form.account,
     });
     if (response) {
-      commit("setSignUpForm", form);
+      commit('setSignUpForm', form);
     }
     return true;
   } catch (e) {
@@ -151,7 +151,7 @@ export const verifyOTP = async function (
   { password, publicKey }
 ) {
   try {
-    await this.$axios.post("/v1/accounts", {
+    await this.$axios.post('/v1/accounts', {
       smsOtp: password,
       smsNumber: state.signUpForm.internationalPhone,
       telosAccount: state.signUpForm.account,
@@ -174,7 +174,7 @@ export const createAccount = async function (
   { account, recaptchaResponse, publicKey }
 ) {
   try {
-    await this.$axios.post("/v1/recaptchaCreate", {
+    await this.$axios.post('/v1/recaptchaCreate', {
       recaptchaResponse: recaptchaResponse,
       accountName: account,
       ownerKey: publicKey,
@@ -192,67 +192,67 @@ export const createAccount = async function (
 };
 
 export const fetchAvailableAccounts = async function ({ commit }, idx) {
-  commit("resetAvailableAccounts");
+  commit('resetAvailableAccounts');
   const chainId = process.env.NETWORK_CHAIN_ID;
   const authenticator = this.$ual.authenticators[idx];
   const map = await authenticator.getAccountNamesPerChain();
   const accounts = map.has(chainId) ? map.get(chainId) : [];
-  commit("setAvailableAccounts", accounts);
+  commit('setAvailableAccounts', accounts);
 };
 
 export const isAccountClaimed = async function ({ commit }, accountName) {
   const unstake = await this.$api.getTableRows({
-    code: "tlosrecovery",
-    scope: "tlosrecovery",
-    table: "unstake",
+    code: 'tlosrecovery',
+    scope: 'tlosrecovery',
+    table: 'unstake',
     limit: 1,
     lower_bound: accountName,
     upper_bound: accountName,
   });
 
   if (unstake.rows.length) {
-    return "unstake";
+    return 'unstake';
   }
 
   const recover = await this.$api.getTableRows({
-    code: "tlosrecovery",
-    scope: "tlosrecovery",
-    table: "recover",
+    code: 'tlosrecovery',
+    scope: 'tlosrecovery',
+    table: 'recover',
     limit: 1,
     lower_bound: accountName,
     upper_bound: accountName,
   });
 
   if (recover.rows.length) {
-    return "recover";
+    return 'recover';
   }
 
-  return "claimed";
+  return 'claimed';
 };
 
 export const claimAccount = async function ({ commit }, accountName) {
   const removeMeAction = [
     {
-      account: "tlosrecovery",
-      name: "removeme",
+      account: 'tlosrecovery',
+      name: 'removeme',
       data: {
         account_name: accountName,
       },
     },
   ];
   const notification = {
-    icon: "fas fa-shopping-bag",
-    title: "claim.claimAccount",
+    icon: 'fas fa-shopping-bag',
+    title: 'claim.claimAccount',
     content: `Claim account ${accountName}`,
   };
   try {
     const transaction = await this.$api.signTransaction(removeMeAction);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 };

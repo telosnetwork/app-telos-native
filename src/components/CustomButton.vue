@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "CustomButton",
+  name: 'CustomButton',
   props: {
     primary: Boolean,
     labelText: String,
@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     clickBtn: function () {
-      this.$emit("clickBtn");
+      this.$emit('clickBtn');
     },
   },
 };

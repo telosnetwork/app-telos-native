@@ -13,9 +13,9 @@ main
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 export default {
-  name: "ProfileLogin",
+  name: 'ProfileLogin',
   data() {
     return {
       loading: true,
@@ -25,13 +25,13 @@ export default {
     const isLogged = await this.loginToBackend();
     if (isLogged) {
       const returnUrl = this.$route.query.returnUrl;
-      this.$router.push({ path: returnUrl || "/profiles/myProfile" });
+      this.$router.push({ path: returnUrl || '/profiles/myProfile' });
     } else {
       this.loading = false;
     }
   },
   methods: {
-    ...mapActions("accounts", ["loginToBackend"]),
+    ...mapActions('accounts', ['loginToBackend']),
   },
 };
 </script>

@@ -1,9 +1,9 @@
 <script>
-import Btn from "../CustomButton";
+import Btn from '../CustomButton';
 
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 export default {
-  name: "RightMenuGuest",
+  name: 'RightMenuGuest',
   components: { Btn },
   props: {
     landingPage: Boolean,
@@ -14,10 +14,10 @@ export default {
     });
   },
   methods: {
-    ...mapActions("accounts", ["autoLogin"]),
+    ...mapActions('accounts', ['autoLogin']),
     loginClick() {
       this.$router.push({
-        path: "/login/",
+        path: '/login/',
         query: { returnUrl: this.$route.path },
       });
     },

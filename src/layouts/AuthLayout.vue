@@ -1,11 +1,11 @@
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
-import AppHeader from "~/components/layout/AppHeader";
-import LeftMenu from "~/components/layout/LeftMenu";
-import RightMenuNotifications from "~/components/layout/RightMenuNotifications";
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import AppHeader from '~/components/layout/AppHeader';
+import LeftMenu from '~/components/layout/LeftMenu';
+import RightMenuNotifications from '~/components/layout/RightMenuNotifications';
 
 export default {
-  name: "AuthLayout",
+  name: 'AuthLayout',
   components: {
     AppHeader,
     LeftMenu,
@@ -16,20 +16,20 @@ export default {
       menu: false,
       right: false,
       miniState: true,
-      activeFilter: "amend-ballots",
+      activeFilter: 'amend-ballots',
     };
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-    ...mapGetters("notifications", ["successCount", "errorCount"]),
+    ...mapGetters('accounts', ['isAuthenticated']),
+    ...mapGetters('notifications', ['successCount', 'errorCount']),
   },
   methods: {
-    ...mapMutations("notifications", [
-      "initNotifications",
-      "unmarkRead",
-      "unmarkNew",
+    ...mapMutations('notifications', [
+      'initNotifications',
+      'unmarkRead',
+      'unmarkNew',
     ]),
-    ...mapActions("accounts", ["memoryAutoLogin"]),
+    ...mapActions('accounts', ['memoryAutoLogin']),
     toggleNotifications() {
       if (this.right) {
         this.unmarkRead();
@@ -37,7 +37,7 @@ export default {
       this.right = !this.right;
     },
     toLanding() {
-      this.$router.push({ path: "/" });
+      this.$router.push({ path: '/' });
     },
     toggleMenu() {
       this.menu = !this.menu;
@@ -50,7 +50,7 @@ export default {
     },
   },
   async mounted() {
-    this.memoryAutoLogin()
+    this.memoryAutoLogin();
     this.initNotifications();
   },
 };

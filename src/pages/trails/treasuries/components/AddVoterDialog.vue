@@ -1,27 +1,27 @@
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 
 export default {
   name: 'AddVoterDialog',
   props: {
     show: { type: Boolean, required: true },
-    supply: { type: String, required: true }
+    supply: { type: String, required: true },
   },
-  data () {
+  data() {
     return {
-      loading: false
-    }
+      loading: false,
+    };
   },
   methods: {
     ...mapActions('trails', ['registerVoter']),
-    async onRegisterVoter () {
-      this.loading = true
-      await this.registerVoter(this.supply)
-      this.$emit('close')
-      this.loading = false
-    }
-  }
-}
+    async onRegisterVoter() {
+      this.loading = true;
+      await this.registerVoter(this.supply);
+      this.$emit('close');
+      this.loading = false;
+    },
+  },
+};
 </script>
 
 <template lang="pug">

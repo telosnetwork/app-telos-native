@@ -1,8 +1,8 @@
-import { boot } from "quasar/wrappers";
-import { UAL } from "universal-authenticator-library";
-import { Anchor } from "ual-anchor";
-import { CleosAuthenticator } from "@telosnetwork/ual-cleos";
-import { copyToClipboard } from "quasar";
+import { boot } from 'quasar/wrappers';
+import { UAL } from 'universal-authenticator-library';
+import { Anchor } from 'ual-anchor';
+import { CleosAuthenticator } from '@telosnetwork/ual-cleos';
+import { copyToClipboard } from 'quasar';
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
@@ -20,29 +20,29 @@ export default boot(async ({ app, store }) => {
   };
 
   async function loginHandler() {
-    let accountName = "eosio";
-    let permission = "active";
-    if (localStorage.getItem("autoLogin") === "cleos") {
-      accountName = localStorage.getItem("account");
+    let accountName = 'eosio';
+    let permission = 'active';
+    if (localStorage.getItem('autoLogin') === 'cleos') {
+      accountName = localStorage.getItem('account');
     } else {
       await new Promise((resolve) => {
         app.config.globalProperties.$q
           .dialog({
-            color: "primary",
-            title: "Connect to cleos",
-            message: "Account name",
+            color: 'primary',
+            title: 'Connect to cleos',
+            message: 'Account name',
             prompt: {
-              model: "",
-              type: "text",
+              model: '',
+              type: 'text',
             },
             cancel: true,
             persistent: true,
           })
           .onOk((data) => {
-            accountName = data != "" ? data : "eosio";
+            accountName = data != '' ? data : 'eosio';
           })
           .onCancel(() => {
-            throw "Cancelled!";
+            throw 'Cancelled!';
           })
           .onDismiss(() => {
             resolve(true);
@@ -51,15 +51,15 @@ export default boot(async ({ app, store }) => {
       await new Promise((resolve) => {
         app.config.globalProperties.$q
           .dialog({
-            color: "primary",
-            title: "Connect to cleos",
-            message: "Account permission",
+            color: 'primary',
+            title: 'Connect to cleos',
+            message: 'Account permission',
             options: {
-              type: "radio",
+              type: 'radio',
               model: [],
               items: [
-                { label: "Active", value: "active" },
-                { label: "Owner", value: "owner" },
+                { label: 'Active', value: 'active' },
+                { label: 'Owner', value: 'owner' },
               ],
             },
             cancel: true,
@@ -69,7 +69,7 @@ export default boot(async ({ app, store }) => {
             permission = data;
           })
           .onCancel(() => {
-            throw "Cancelled!";
+            throw 'Cancelled!';
           })
           .onDismiss(() => {
             resolve(true);
@@ -97,13 +97,13 @@ export default boot(async ({ app, store }) => {
     await new Promise((resolve) => {
       app.config.globalProperties.$q
         .dialog({
-          color: "primary",
+          color: 'primary',
           message: `<pre>cleos -u https://${process.env.NETWORK_HOST} push transaction '${trxJSON}'</pre>`,
           html: true,
           cancel: true,
           fullWidth: true,
           ok: {
-            label: "Copy",
+            label: 'Copy',
           },
         })
         .onOk(() => {
@@ -112,23 +112,23 @@ export default boot(async ({ app, store }) => {
           )
             .then(() => {
               app.config.globalProperties.$q.notify({
-                color: "green-4",
-                textColor: "white",
-                message: "Copied to clipboard",
+                color: 'green-4',
+                textColor: 'white',
+                message: 'Copied to clipboard',
                 timeout: 1000,
               });
             })
             .catch(() => {
               app.config.globalProperties.$q.notify({
-                color: "red-8",
-                textColor: "white",
-                message: "Could not copy",
+                color: 'red-8',
+                textColor: 'white',
+                message: 'Could not copy',
                 timeout: 1000,
               });
             });
         })
         .onCancel(() => {
-          throw "Cancelled!";
+          throw 'Cancelled!';
         })
         .onDismiss(() => {
           resolve(true);
@@ -145,7 +145,7 @@ export default boot(async ({ app, store }) => {
     }),
   ];
 
-  const ual = new UAL([mainChain], "tet-ual", authenticators);
-  store["$ual"] = ual;
+  const ual = new UAL([mainChain], 'tet-ual', authenticators);
+  store['$ual'] = ual;
   app.config.globalProperties.$ual = ual;
 });

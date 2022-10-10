@@ -15,20 +15,20 @@ q-page.q-pa-lg
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import ExpansionProposal from "./components/ExpansionProposal";
+import { mapActions } from 'vuex';
+import ExpansionProposal from './components/ExpansionProposal';
 export default {
-  name: "ProposalsPage",
+  name: 'ProposalsPage',
   components: {
     ExpansionProposal,
   },
   data() {
     return {
-      type: "active",
+      type: 'active',
     };
   },
   methods: {
-    ...mapActions("works", ["fetchWorks"]),
+    ...mapActions('works', ['fetchWorks']),
   },
   beforeMount() {
     this.fetchWorks();

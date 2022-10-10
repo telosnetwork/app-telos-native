@@ -19,14 +19,14 @@ main
 </template>
 
 <script>
-import ContactItem from "~/pages/profiles/list/ContactItem.vue";
-import { mapActions } from "vuex";
+import ContactItem from '~/pages/profiles/list/ContactItem.vue';
+import { mapActions } from 'vuex';
 export default {
-  name: "ContactList",
+  name: 'ContactList',
   components: { ContactItem },
   data() {
     return {
-      search: "",
+      search: '',
       limit: 10,
       isLoading: true,
       isFirst: true,
@@ -46,7 +46,7 @@ export default {
     this.clearProfilesList();
   },
   methods: {
-    ...mapActions("profiles", ["searchProfiles", "clearProfilesList"]),
+    ...mapActions('profiles', ['searchProfiles', 'clearProfilesList']),
     async onLoad(index, done) {
       if (
         this.isFirst ||

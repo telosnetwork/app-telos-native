@@ -1,17 +1,17 @@
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BallotStatus from "../components/BallotStatus";
-import BallotChip from "../components/BallotChip";
-import Btn from "../../../../components/CustomButton";
+import { mapActions, mapGetters } from 'vuex';
+import BallotStatus from '../components/BallotStatus';
+import BallotChip from '../components/BallotChip';
+import Btn from '../../../../components/CustomButton';
 
-const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, "m"); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
+const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm'); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 const regexWithUrl = new RegExp(
   /https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
-  "m"
+  'm'
 ); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 
 export default {
-  name: "BallotView",
+  name: 'BallotView',
   components: { BallotStatus, BallotChip, Btn },
   props: {
     isBallotOpened: { type: Function, required: true },
@@ -37,7 +37,7 @@ export default {
   async mounted() {
     this.getLoggedUserVotes(this.$route.params.id);
     await this.fetchBallot(this.$route.params.id);
-    window.addEventListener("scroll", this.updateScroll);
+    window.addEventListener('scroll', this.updateScroll);
     this.loading = false;
   },
   beforeUnmount() {
@@ -46,9 +46,9 @@ export default {
     // Commenting out to prevent the bug as it doesn't really cause any problems when the route isn't reset.
   },
   computed: {
-    ...mapGetters("notifications", ["notifications"]),
-    ...mapGetters("accounts", ["isAuthenticated", "account"]),
-    ...mapGetters("trails", ["ballot", "userVotes", "voters", "userTreasury"]),
+    ...mapGetters('notifications', ['notifications']),
+    ...mapGetters('accounts', ['isAuthenticated', 'account']),
+    ...mapGetters('trails', ['ballot', 'userVotes', 'voters', 'userTreasury']),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
@@ -57,7 +57,7 @@ export default {
       return diffDays;
     },
     getWinner() {
-      if (!this.ballot.total_voters) return "No votes";
+      if (!this.ballot.total_voters) return 'No votes';
       let winnerValue = -1;
       let winner;
       this.ballot.options.forEach((option, index) => {
@@ -71,8 +71,8 @@ export default {
     ballotDescription() {
       if (this.iframeUrl) {
         return this.ballot.description
-          .replace(regexWithUrl, "")
-          .replace(regex, "");
+          .replace(regexWithUrl, '')
+          .replace(regex, '');
       }
 
       const descriptionWithLinks = this.findLinks(this.ballot.description);
@@ -81,7 +81,7 @@ export default {
     },
     ballotContent() {
       if (this.ballot.content.match(regex)) {
-        return this.ballot.content.replace(regexWithUrl, "").replace(regex, "");
+        return this.ballot.content.replace(regexWithUrl, '').replace(regex, '');
       }
 
       return this.ballot.content;
@@ -107,9 +107,9 @@ export default {
       } catch (e) {}
 
       if (Array.isArray(file_path)) {
-        const r = "https://ipfs.io/ipfs/" + file_path[0];
+        const r = 'https://ipfs.io/ipfs/' + file_path[0];
         return r;
-      } else if (typeof content === "object") {
+      } else if (typeof content === 'object') {
         // prioritize content urls over image urls
         const r =
           content.contentUrl ||
@@ -132,43 +132,49 @@ export default {
       return newArr;
     },
     isUserRegisteredInTreasury() {
-        if (!this.ballot) return false;
-        return this.userTreasury.some(t => t.liquid.split(" ")[1] == this.ballot.treasury.supply.split(" ")[1]);
+      if (!this.ballot) return false;
+      return this.userTreasury.some(
+        (t) =>
+          t.liquid.split(' ')[1] == this.ballot.treasury.supply.split(' ')[1]
+      );
     },
     voteButtonText() {
-        console.log("BalllotView.voteButtonText() isUserRegisteredInTreasury: ", this.isUserRegisteredInTreasury);
-        if (this.isUserRegisteredInTreasury) {
-            return 'pages.trails.ballots.vote';
-        } else {
-            // ---- quickfix for #92 -------
-            return 'pages.trails.ballots.joinDAOFirst';
-            /*
+      console.log(
+        'BalllotView.voteButtonText() isUserRegisteredInTreasury: ',
+        this.isUserRegisteredInTreasury
+      );
+      if (this.isUserRegisteredInTreasury) {
+        return 'pages.trails.ballots.vote';
+      } else {
+        // ---- quickfix for #92 -------
+        return 'pages.trails.ballots.joinDAOFirst';
+        /*
             if (this.ballot.treasury.access == 'public') {
                 return 'pages.trails.ballots.joinAndVote';
             } else {
                 return 'pages.trails.ballots.joinDAO';
             }
             */
-            // ------------------------------
-        }
+        // ------------------------------
+      }
     },
   },
   methods: {
-    ...mapActions("trails", [
-      "fetchBallot",
-      "castVote",
-      "cancelBallot",
-      "fetchVotesForBallot",
-      "fetchUserVotesForThisBallot",
-      "fetchTreasuriesForUser"
+    ...mapActions('trails', [
+      'fetchBallot',
+      'castVote',
+      'cancelBallot',
+      'fetchVotesForBallot',
+      'fetchUserVotesForThisBallot',
+      'fetchTreasuriesForUser',
     ]),
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
     },
     getPercentofTotal(option) {
       const total =
-        (Number(option.value.split(" ")[0]) /
-          Number(this.ballot.total_raw_weight.split(" ")[0])) *
+        (Number(option.value.split(' ')[0]) /
+          Number(this.ballot.total_raw_weight.split(' ')[0])) *
         100;
       return Number.isInteger(total) ? total : +total.toFixed(2);
     },
@@ -185,15 +191,18 @@ export default {
       this.$q.notify({
         icon: this.notifications[0].icon,
         message:
-          this.notifications[0].status === "success"
-            ? this.$t("notifications.trails.successSigning")
-            : this.$t("notifications.trails.errorSigning"),
+          this.notifications[0].status === 'success'
+            ? this.$t('notifications.trails.successSigning')
+            : this.$t('notifications.trails.errorSigning'),
         color:
-          this.notifications[0].status === "success" ? "positive" : "negative",
+          this.notifications[0].status === 'success' ? 'positive' : 'negative',
       });
     },
     async showVoters() {
-      await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters })
+      await this.fetchVotesForBallot({
+        name: this.ballot.ballot_name,
+        limit: this.ballot.total_voters,
+      });
       this.voters.length > 0
         ? (this.showDetails = true)
         : (this.showDetails = false);
@@ -212,25 +221,25 @@ export default {
       return newArr;
     },
     async getLoggedUserVotes(ballot_name) {
-        await this.fetchUserVotesForThisBallot(ballot_name);
-        if (!this.userVotes) return;
-        if (!this.userVotes[ballot_name]) return;
-        let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
-        this.votes = this.votes.concat(votes);
+      await this.fetchUserVotesForThisBallot(ballot_name);
+      if (!this.userVotes) return;
+      if (!this.userVotes[ballot_name]) return;
+      let votes = this.userVotes[ballot_name].weighted_votes.map((v) => v.key);
+      this.votes = this.votes.concat(votes);
     },
     // ---- quickfix for #92 -------
     ...mapActions('trails', ['registerVoter']),
-    async onRegisterVoter (max_supply) {
+    async onRegisterVoter(max_supply) {
       await this.registerVoter(max_supply);
     },
     // -------------------------------
     async vote() {
-        let register = false;
-        if (this.isUserRegisteredInTreasury) {
-            register = false;
-        } else {
-            // ---- quickfix for #92 -------
-            /*
+      let register = false;
+      if (this.isUserRegisteredInTreasury) {
+        register = false;
+      } else {
+        // ---- quickfix for #92 -------
+        /*
             if (this.ballot.treasury.access == 'public') {
                 register = true;
             } else {
@@ -242,20 +251,20 @@ export default {
                 return; // Do not Cast Vote
             }
             */
-            await this.onRegisterVoter(this.ballot.treasury.max_supply);
-            this.showNotification();
-            this.fetchTreasuriesForUser(this.account);
-            return;
-            // -------------------------------
-        }
-
-        await this.onCastVote({
-            register,
-            options: this.votes,
-            ballotName: this.ballot.ballot_name,
-        });
-        await this.fetchBallot(this.$route.params.id);
+        await this.onRegisterVoter(this.ballot.treasury.max_supply);
         this.showNotification();
+        this.fetchTreasuriesForUser(this.account);
+        return;
+        // -------------------------------
+      }
+
+      await this.onCastVote({
+        register,
+        options: this.votes,
+        ballotName: this.ballot.ballot_name,
+      });
+      await this.fetchBallot(this.$route.params.id);
+      this.showNotification();
     },
     async cancel() {
       await this.cancelBallot(this.ballot);
@@ -300,7 +309,7 @@ export default {
       return text.replace(urlRegex, (url) => `<a href="${url}">${url}</a>`);
     },
     getRequestAmountRounded(requestAmount) {
-      const amountArr = requestAmount.split(" ");
+      const amountArr = requestAmount.split(' ');
       const amount = parseInt(amountArr[0]);
       const tokenSymbol = amountArr[1];
 
