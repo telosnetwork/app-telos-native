@@ -3,6 +3,12 @@ import { mapActions, mapGetters } from "vuex";
 import BallotStatus from "../components/BallotStatus";
 import BallotChip from "../components/BallotChip";
 import Btn from "../../../../components/CustomButton";
+import { supplyToSymbol } from "~/utils/assets";
+
+const FROM_BOTH = "both";
+const FROM_LIQUID = "liquid";
+const FROM_STAKE = "stake";
+
 
 const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, "m"); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 const regexWithUrl = new RegExp(
@@ -135,15 +141,50 @@ export default {
         if (!this.ballot) return false;
         return this.userTreasury.some(t => t.liquid.split(" ")[1] == this.ballot.treasury.supply.split(" ")[1]);
     },
+    isOfficialSymbol() {
+        return supplyToSymbol(this.ballot.treasury_symbol) == "VOTE";
+    },
+    votingPowerComesFrom() {
+        let voteliquid = this.ballot.settings.some(op => op.key == "voteliquid" && op.value > 0);
+        let votestake = this.ballot.settings.some(op => op.key == "votestake" && op.value > 0);
+        if (voteliquid && votestake) {
+            return FROM_BOTH;
+        }
+        if (voteliquid) {
+            return FROM_LIQUID;
+        }
+        if (votestake) {
+            return FROM_STAKE;
+        }
+    },
     isPositiveVotePower() {
-        if (!this.accountData) return false;
-        if (!this.accountData.self_delegated_bandwidth) return false;
+        let symbol = supplyToSymbol(this.ballot.treasury_symbol);
+        let power = 0;
+        if (this.isOfficialSymbol) {
+            if (!this.accountData) return false;
+            if (!this.accountData.self_delegated_bandwidth) return false;
 
-        let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || "0.0000 TLOS";
-        let net_weight = this.accountData.self_delegated_bandwidth.net_weight || "0.0000 TLOS";
-        let sum = parseFloat(cpu_weight.split(" ")[0]) + parseFloat(net_weight.split(" ")[0]);
+            let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || "0.0000 TLOS";
+            let net_weight = this.accountData.self_delegated_bandwidth.net_weight || "0.0000 TLOS";
+            power = parseFloat(cpu_weight.split(" ")[0]) + parseFloat(net_weight.split(" ")[0]);
+        } else {
+            let userTreas = this.userTreasury.find(t => supplyToSymbol(t.liquid) == symbol);
+            if (!userTreas) return false;
 
-        return sum > 0;
+            let powerComes = this.votingPowerComesFrom;
+            
+            if (powerComes == FROM_BOTH || powerComes == FROM_LIQUID) {
+                let liquid = userTreas.liquid;
+                power += parseFloat(liquid.split(" ")[0]);
+            }
+            
+            if (powerComes == FROM_BOTH || powerComes == FROM_STAKE) {
+                let staked = userTreas.staked;
+                power += parseFloat(staked.split(" ")[0]);
+            }
+        }
+
+        return power > 0;
     },
     voteButtonText() {
         if (this.isPositiveVotePower) {
@@ -157,7 +198,11 @@ export default {
                 }
             }
         } else {
-            return 'pages.trails.ballots.needPositiveVote';
+            if (this.isOfficialSymbol) {
+                return 'pages.trails.ballots.stakeBeforeVoting';
+            } else {
+                return 'pages.trails.ballots.needPositiveVote';
+            }
         }
     },
   },
@@ -189,6 +234,13 @@ export default {
       });
       this.voting = false;
     },
+    showAlert(message) {
+      this.$q.notify({
+        icon: "warning",
+        message: this.$t(message),
+        color: "warning",
+      });
+    },    
     showNotification() {
       this.$q.notify({
         icon: this.notifications[0].icon,
@@ -245,6 +297,11 @@ export default {
                 }
             }
         } else {
+            if (this.isOfficialSymbol) {
+                this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
+            } else {
+                this.showAlert('pages.trails.ballots.needPositiveVoteLong.' + this.votingPowerComesFrom );
+            }
             return;
         }
 
