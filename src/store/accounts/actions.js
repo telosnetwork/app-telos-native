@@ -37,7 +37,7 @@ export const login = async function (
       // PPP.setActiveUser(this.$ualUser)
       const defaultReturnUrl = localStorage.getItem("returning")
         ? "/"
-        : "/profiles/myProfile";
+        : `/profiles/display/${accountName}`;
       localStorage.setItem("autoLogin", authenticator.constructor.name);
       localStorage.setItem("account", accountName);
       localStorage.setItem("returning", true);

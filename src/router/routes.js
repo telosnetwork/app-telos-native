@@ -40,7 +40,7 @@ const routes = [
     meta: { guest: false },
     alias: "/",
   },
-  
+
   // Ballot
   {
     name: "Ballot",
@@ -48,7 +48,7 @@ const routes = [
     component: () => import("pages/trails/ballots/list/BallotsList.vue"),
     meta: { guest: false },
   },
-  
+
   // DAOs
   {
     name: "DAOs",
@@ -107,23 +107,22 @@ const routes = [
     component: () => import("pages/poc/smartsafe/SmartSafe.vue"),
     meta: { title: "pages.poc.smartSafe.title" },
   },
-
-  {
-    path: "/profiles/myProfile/add",
-    component: () => import("pages/profiles/add/SignUp.vue"),
-    meta: { needBackendLogin: false },
-    name: "userRegister",
-  },
   {
     path: "/profiles/contacts",
     component: () => import("pages/profiles/list/ContactList.vue"),
     meta: { needVerifyComm: true, needBackendLogin: false },
   },
   {
-    path: "/profiles/myProfile",
+    path: "/profiles/display/:id",
     component: () => import("pages/profiles/read/MyProfile.vue"),
     meta: { needBackendLogin: false },
     name: "myProfile",
+  },
+  {
+    path: "/profiles/edit/:id",
+    component: () => import("pages/profiles/add/SignUp.vue"),
+    meta: { needBackendLogin: false },
+    name: "userRegister",
   },
   {
     path: "/profiles/contacts/profileDetail",

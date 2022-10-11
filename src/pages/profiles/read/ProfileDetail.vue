@@ -34,7 +34,7 @@ main.column.items-center.back(v-if="Profile")
 
       .row.justify-end(v-if='owner')
         .col-2.fab-edit
-          q-btn(fab icon='edit' color='primary' to="/profiles/myProfile/add")
+          q-btn(fab icon='edit' color='primary' :to="`/profiles/edit/${Profile.account_name}`")
 sign-up(v-else)
 </template>
 
