@@ -51,7 +51,7 @@ export default {
       } else this.$router.push({ name: "profileDetail" });
     },
     goToEditOwnProfile() {
-      this.$router.push({ path: "/profiles/myProfile/add" });
+      this.$router.push({ path: `/profiles/edit/${this.contact.account_name}` });
     },
   },
 };
