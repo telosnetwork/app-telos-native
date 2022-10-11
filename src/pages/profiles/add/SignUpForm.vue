@@ -108,7 +108,9 @@ export default {
       }
     },
     imageUploaded(info) {
-      console.log(123123);
+      const response = JSON.parse(info.xhr.response);
+      this.avatar = response.data.link;
+      this.showUpload = false;
     },
     onReset() {
       this.avatar = null;
