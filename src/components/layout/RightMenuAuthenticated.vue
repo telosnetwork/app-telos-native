@@ -41,6 +41,9 @@ export default {
       this.isDialogOpen = true;
     },
   },
+  mounted() {
+    console.log(this.account);
+  },
 };
 </script>
 
@@ -65,8 +68,8 @@ div
           q-btn.item-btn.edit-profile-btn(
           :label="$t('menu.myProfile')"
           icon="far fa-user"
-          to="/profiles/myProfile"
           flat
+          :to="`/profiles/display/${account}`"
           color="dark"
           align="left"
           no-caps
@@ -102,9 +105,9 @@ div
         )
       div.dialog-btn-wrapper.column
         q-btn.dialog-btn(
-          :label="$t('common.buttons.editProfile')"
-          icon="far fa-edit"
-          to="/profiles/myProfile"
+          :label="$t('menu.myProfile')"
+          icon="far fa-user"
+          :to="`/profiles/display/${account}`"
           flat
           align="left"
           no-caps
