@@ -135,8 +135,11 @@ div
 
       div.text-section-row
         div.statics-section-item.section-item-btn
-          btn(
-            :labelText="mainButtonTextSmall"
+          q-btn(
+            no-caps
+            color="primary"
+            outline
+            :label="mainButtonTextSmall"
             btnWidth='220'
             fontSize='16'
             hoverBlue=true
@@ -175,13 +178,16 @@ div
         div.statics-section-item.voted(:class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
           span.voted__text Voted!
 
-    q-card-section().row.justify-center.btn-section
-      btn(
-        :labelText="mainButtonText"
-        btnWidth='332'
-        fontSize='16'
-        hoverBlue=true
-      )
+    q-card-section().column.q-ma-lg.justify-end.btn-section
+      q-btn(
+          no-caps
+          color="primary"
+          outline
+          :label="mainButtonText"
+          btnWidth='332'
+          fontSize='16'
+          hoverBlue=true
+        )
 </template>
 
 <style lang="sass">
@@ -339,10 +345,6 @@ div
 .row-direction .btn-section
   position: relative
   flex: 1 1 auto
-  & > .q-btn
-    position: absolute
-    bottom: 24px
-    height: 41px
 .btn-section
   padding: 0
 .bgr-icon1, .bgr-icon2
@@ -424,8 +426,6 @@ div
   .row-direction .bgr-icon2
     top: 60px
     right: 33px
-  .btn-section > .q-btn
-      width: 296px !important
   @media (max-width: 400px)
     .row-direction > div
       width: 100%

@@ -385,26 +385,26 @@ export default {
                                                     div {{ option.key }}
                                                     div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
-                                        q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" :color="isBallotOpened(ballot)?'primary':'grey-8'")
-                            q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
-                                q-item-section.btn-wrapper
-                                    btn(
+                                        q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
+                            q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").options-btn
+                                q-btn(
+                                    no-caps
+                                    :color="userCanVote ? 'primary' : 'info'"
+                                    class="col"
                                     v-if="isAuthenticated"
                                     :disable="!userCanVote"
-                                    :labelText="$t(voteButtonText)"
-                                    btnWidth='220'
-                                    fontSize='16'
-                                    hoverBlue=true
-                                    @clickBtn="vote()"
-                                    )
-                                    btn(
+                                    :label="$t(voteButtonText)"
+                                    @click="vote()"
+                                )
+                                q-btn(
+                                    no-caps
+                                    outline
+                                    color="primary"
+                                    class="col"
                                     v-if="isAuthenticated && ballot.publisher === account"
-                                    :labelText="$t('common.buttons.cancel')"
-                                    btnWidth='220'
-                                    fontSize='16'
-                                    hoverRed=true
-                                    @clickBtn="cancel()"
-                                    )
+                                    :label="$t('common.buttons.cancel')"
+                                    @click="cancel()"
+                                )
                     q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-620
                         div.text-section.column
                             div(v-if="ballot.total_voters > 0")
@@ -521,30 +521,30 @@ export default {
                                                 :class="displayWinner(ballot) ? displayWinner(ballot) === option.key ? 'visible-checkbox' : '' : ''"
                                                 :color="isBallotOpened(ballot)?'primary':'grey-8'"
                                                 :val="option.key"
+                                                @click.native="toggleOption(option.key)"
                                                 )
                                                     div.checkbox-text.row.space-between
                                                         div {{ option.key }}
                                                         div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                         div.linear-progress(v-if="displayWinner(ballot)")
-                                            q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" :color="isBallotOpened(ballot)?'primary':'grey-8'")
-                                q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
-                                    q-item-section.btn-wrapper
-                                        btn.btn-vote-320(
-                                        :labelText="$t(voteButtonText)"
+                                            q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
+                                q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").column.options-btn
+                                    q-btn(
+                                        no-caps
+                                        :color="userCanVote ? 'primary' : 'info'"
+                                        v-if="isAuthenticated"
                                         :disable="!userCanVote"
-                                        btnWidth='220'
-                                        fontSize='16'
-                                        hoverBlue=true
-                                        @clickBtn="isAuthenticated ? vote() : openNotice()"
-                                        )
-                                        btn.btn-vote-320(
+                                        :label="$t(voteButtonText)"
+                                        @click="isAuthenticated ? vote() : openNotice()"
+                                    )
+                                    q-btn(
+                                        no-caps
+                                        outline
+                                        color="primary"
                                         v-if="isAuthenticated && ballot.publisher === account"
-                                        :labelText="$t('common.buttons.cancel')"
-                                        btnWidth='220'
-                                        fontSize='16'
-                                        hoverRed=true
-                                        @clickBtn="cancel()"
-                                        )
+                                        :label="$t('common.buttons.cancel')"
+                                        @click="cancel()"
+                                    )
                             q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-320
                                 div.text-section.column
                                     div.statics-section-item(v-if="ballot.total_voters > 0")
@@ -625,17 +625,6 @@ export default {
     display: flex
     justify-content: space-between
     margin-bottom: 5px
-
-.btn-wrapper
-    width: 100%
-    display: flex
-    flex-direction: row
-    flex-wrap: nowrap
-    gap: 12px
-    & > button:nth-child(2)
-        width: 45% !important
-        &:hover
-            background-color: #f44336 !important
 
 embed
     width: 90%
@@ -745,6 +734,7 @@ embed
             line-height: 130%
 
 .options-btn
+    gap: 10px
     width: 100%
     padding: 0 !important
     margin: 6px 0 0
@@ -890,9 +880,6 @@ embed
     .description-section-wrapper
         height: max-content
     @media (max-width: 620px)
-        .btn-wrapper
-            & > button:nth-child(2)
-                width: 35% !important
         .popup-wrapper
             & > .popup-left-col-wrapper,
             & > .popup-right-col-wrapper
@@ -932,8 +919,6 @@ embed
         .statics-section-620,
         .popup-right-col > .q-card__section > .q-btn-item
             display: none
-        .btn-vote-320
-            width: 100% !important
         .custom-caption > .caption-text
             font-size: 16px
         .options-wrapper
