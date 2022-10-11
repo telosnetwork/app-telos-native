@@ -40,10 +40,7 @@ export default {
     showProfileMenuDialog() {
       this.isDialogOpen = true;
     },
-  },
-  mounted() {
-    console.log(this.account);
-  },
+  }
 };
 </script>
 
