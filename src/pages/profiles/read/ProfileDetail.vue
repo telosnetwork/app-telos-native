@@ -3,7 +3,7 @@ main.column.items-center.back(v-if="Profile")
     q-card.my-card
       q-card-section
         .column.items-center
-          profile-gravatar(size='200px' :avatar='Profile.avatar' :account='Profile.account_name')
+          profile-avatar(size='200px' :avatar='Profile.avatar' :account='Profile.account_name')
       q-card-section
         .row.justify-center.q-gutter-x-md
           p.text-h4 {{ ` ${Profile.account_name}` }}
