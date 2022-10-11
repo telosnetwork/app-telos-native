@@ -62,6 +62,16 @@ div
     )
       q-list.profile-menu-list(dense)
         q-item
+          q-btn.item-btn.edit-profile-btn(
+          :label="$t('menu.myProfile')"
+          icon="far fa-user"
+          to="/profiles/myProfile"
+          flat
+          color="dark"
+          align="left"
+          no-caps
+        )
+        q-item
           q-btn.item-btn.logout-btn(
             :label="$t('common.buttons.logout')"
             icon="power_settings_new"
