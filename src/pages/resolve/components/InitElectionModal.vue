@@ -4,18 +4,8 @@
       <div class="text-h6">Start Election Preparation</div>
     </q-card-section>
 
-    <q-card-section class="q-pt-none">
-      <q-input
-        filled
-        v-model="credentialsLink"
-        label="Info Link"
-        bottom-slots
-        hint="46 or 49 character IPFS hash"
-        error-message="Must be valid IPFS hash (ie 'Qmdn7bZ8z25b...')"
-        dense
-        autofocus
-        :error="!isCredentialsLinkValid"
-      />
+    <q-card-section class="q-pt-none input-row">
+      <file-upload-input />
     </q-card-section>
 
     <q-card-actions align="right" class="text-primary">
@@ -31,19 +21,18 @@
 </template>
 
 <script>
-import { validateIpfsHash } from "../util";
+import { mapGetters } from "vuex";
+import FileUploadInput from "./FileUploadInput.vue";
 
 export default {
   props: ["close", "onSubmit"],
-  data() {
-    return {
-      credentialsLink: "",
-    };
+  components: {
+    FileUploadInput,
   },
   computed: {
-    isCredentialsLinkValid() {
-      return validateIpfsHash(this.credentialsLink);
-    },
+    ...mapGetters({
+      account: "accounts/account",
+    }),
     account_name() {
       return this.$store.state.accounts.account;
     },
@@ -76,13 +65,7 @@ export default {
       }
     },
   },
-  mounted: function () {
-    console.log(
-      "initElectionModal mounted, this.$store.state",
-      this.$store.state
-    );
-  },
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="scss" scoped></style>
