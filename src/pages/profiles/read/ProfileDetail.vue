@@ -1,5 +1,5 @@
 <template lang="pug">
-main.column.items-center.back(v-if="Profile && Profile.account_name")
+main.column.items-center.back
     q-card.my-card
       q-card-section
         .column.items-center
@@ -35,7 +35,7 @@ main.column.items-center.back(v-if="Profile && Profile.account_name")
       .row.justify-end(v-if='isOwner')
         .col-2.fab-edit
           q-btn(fab icon='edit' color='primary' :to="`/profiles/edit/${Profile.account_name || account}`")
-sign-up(v-else)
+          
 </template>
 
 <script>
