@@ -5,7 +5,7 @@
     </q-card-section>
 
     <q-card-section class="q-pt-none input-row">
-      <file-upload-input />
+      <file-upload-input @update:link="setCredentialsLink" />
     </q-card-section>
 
     <q-card-actions align="right" class="text-primary">
@@ -13,7 +13,7 @@
         flat
         label="Submit"
         @click="initElection"
-        :disable="!isCredentialsLinkValid"
+        :disable="!isCredentialsLinkValid(credentialsLink)"
       />
       <q-btn flat label="Cancel" @click="close" />
     </q-card-actions>
@@ -22,10 +22,16 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { validateIpfsHash } from "../util";
 import FileUploadInput from "./FileUploadInput.vue";
 
 export default {
   props: ["close", "onSubmit"],
+  data() {
+    return {
+      credentialsLink: "",
+    };
+  },
   components: {
     FileUploadInput,
   },
@@ -46,6 +52,15 @@ export default {
     // }
   },
   methods: {
+    setCredentialsLink(link) {
+      console.log("setCredentialsLink", link);
+      this.credentialsLink = link;
+    },
+    isCredentialsLinkValid(value) {
+      const isValid = validateIpfsHash(value);
+      console.log("isValid", isValid, value);
+      return isValid;
+    },
     async initElection() {
       const initElectionActions = [
         {

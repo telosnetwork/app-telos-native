@@ -1,15 +1,16 @@
 <template>
   <q-input
     filled
-    v-model="credentialsLink"
+    v-model="link"
     label="Info Link"
     bottom-slots
     hint="46 or 49 character IPFS hash"
-    error-message="Must be valid IPFS hash (ie 'Qmdn7bZ8z25b...')"
+    error-message="Must be valid IPFS hash (eg 'Qmdn7bZ8z25b...')"
     dense
     autofocus
     :loading="isUploading"
-    :error="!isUploading && !isCredentialsLinkValid"
+    :error="!isUploading && !islinkValid"
+    @update:model-value="onLinkChange"
   >
     <template v-slot:prepend>
       <q-icon name="attach_file" id="attach-file-button" />
@@ -35,15 +36,18 @@ import { validateIpfsHash } from "../util";
 export default {
   data() {
     return {
-      credentialsLink: "",
+      link: "",
       progress: 0,
-      isUploading: true,
+      isUploading: false,
     };
   },
   methods: {
+    onLinkChange(link) {
+      this.$emit("update:link", link);
+    },
     async onFileSelect() {
       this.isUploading = true;
-      this.credentialsLink = "";
+      this.link = "";
       const file = document.getElementById("file-input")?.files[0];
       const formData = new FormData();
       formData.append("file", file);
@@ -141,7 +145,9 @@ export default {
               clearInterval(statusInterval);
               this.progress = 100;
               setTimeout(() => {
-                this.credentialsLink = statusData.data[0].Hash;
+                const newHash = statusData.data[0].Hash;
+                this.link = newHash;
+                this.onLinkChange(newHash);
                 this.isUploading = false;
                 this.progress = 0;
               }, 1000);
@@ -158,8 +164,8 @@ export default {
     ...mapGetters({
       account: "accounts/account",
     }),
-    isCredentialsLinkValid() {
-      return validateIpfsHash(this.credentialsLink);
+    islinkValid() {
+      return validateIpfsHash(this.link);
     },
   },
   mounted: function () {
