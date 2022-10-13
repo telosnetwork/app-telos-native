@@ -1,7 +1,7 @@
 <template>
   <q-input
     filled
-    v-model="link"
+    v-model="hash"
     label="Info Link"
     bottom-slots
     hint="46 or 49 character IPFS hash"
@@ -10,7 +10,7 @@
     autofocus
     :loading="isUploading"
     :error="!isUploading && !islinkValid"
-    @update:model-value="onLinkChange"
+    @update:model-value="onHashChange"
   >
     <template v-slot:prepend>
       <q-icon name="attach_file" id="attach-file-button" />
@@ -42,12 +42,12 @@ export default {
     };
   },
   methods: {
-    onLinkChange(link) {
+    onHashChange(link) {
       this.$emit("update:link", link);
     },
     async onFileSelect() {
       this.isUploading = true;
-      this.link = "";
+      this.hash = "";
       const file = document.getElementById("file-input")?.files[0];
       const formData = new FormData();
       formData.append("file", file);
@@ -146,8 +146,8 @@ export default {
               this.progress = 100;
               setTimeout(() => {
                 const newHash = statusData.data[0].Hash;
-                this.link = newHash;
-                this.onLinkChange(newHash);
+                this.hash = newHash;
+                this.onHashChange(newHash);
                 this.isUploading = false;
                 this.progress = 0;
               }, 1000);
@@ -165,7 +165,7 @@ export default {
       account: "accounts/account",
     }),
     islinkValid() {
-      return validateIpfsHash(this.link);
+      return validateIpfsHash(this.hash);
     },
   },
   mounted: function () {
