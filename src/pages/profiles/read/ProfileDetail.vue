@@ -6,9 +6,9 @@ main.column.items-center.back(v-if="Profile && Profile.account_name")
           profile-avatar(size='200px' :avatar='Profile.avatar' :account='Profile.account_name')
       q-card-section
         .row.justify-center.q-gutter-x-md
-          p.text-h4 {{ ` ${Profile.account_name}` }}
+          p.text-h4 {{ Profile.account_name || account }}
         .row.justify-center.q-gutter-x-md
-          p.text-h6 {{ ` ${Profile.status}` }}
+          p.text-h6 {{ Profile.status || account }}
       q-card-section.q-mx-md
         q-list(padding, separator)
           q-item.q-mx-md
@@ -39,7 +39,7 @@ sign-up(v-else)
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 import SignUp from "src/pages/profiles/add/SignUp.vue";
 export default {
@@ -48,13 +48,14 @@ export default {
     ProfileAvatar, SignUp
   },
   computed: {
+    ...mapGetters("accounts", ["account"]),
     Profile() {
       if (this.isOwner) {
         return this.$store.state.profiles.myProfile;
       } else return this.$store.state.profiles.selectedProfile;
     },
     isOwner() {
-      return this.$store.state.profiles.myProfile?.account_name === this.$route.params.id;
+      return this.account === this.$route.params.id;
     },
     missingProfile() {
       return this.isOwner && !this.$store.state.profiles.myProfile;
