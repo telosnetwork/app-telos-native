@@ -6,9 +6,9 @@ main.column.items-center.back
           profile-avatar(size='200px' :avatar='Profile.avatar' :account='Profile.account_name')
       q-card-section
         .row.justify-center.q-gutter-x-md
-          p.text-h4 {{ Profile.account_name || account }}
+          p.text-h4 {{ Profile.account_name || $route.params.id }}
         .row.justify-center.q-gutter-x-md
-          p.text-h6 {{ Profile.status || account }}
+          p.text-h6 {{ Profile.status || $route.params.id }}
       q-card-section.q-mx-md
         q-list(padding, separator)
           q-item.q-mx-md
@@ -35,7 +35,7 @@ main.column.items-center.back
       .row.justify-end(v-if='isOwner')
         .col-2.fab-edit
           q-btn(fab icon='edit' color='primary' :to="`/profiles/edit/${Profile.account_name || account}`")
-          
+
 </template>
 
 <script>
