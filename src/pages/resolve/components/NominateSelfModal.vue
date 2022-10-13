@@ -4,18 +4,8 @@
       <div class="text-h6">Nominate Self ({{ account_name }})</div>
     </q-card-section>
 
-    <q-card-section class="q-pt-none">
-      <q-input
-        filled
-        v-model="credentialsLink"
-        label="Credentials Link"
-        bottom-slots
-        hint="46 or 49 character IPFS hash"
-        error-message="Must be valid IPFS hash (ie 'Qmdn7bZ8z25b...')"
-        dense
-        autofocus
-        :error="!isCredentialsLinkValid"
-      />
+    <q-card-section class="q-pt-none input-row">
+      <file-upload-input @update:hash="setCredentialsLink" />
     </q-card-section>
 
     <q-card-actions align="right" class="text-primary">
@@ -32,12 +22,16 @@
 
 <script>
 import { validateIpfsHash } from "../util";
+import FileUploadInput from "./FileUploadInput.vue";
 
 export default {
   props: ["close", "onSubmit"],
+  components: {
+    FileUploadInput,
+  },
   data() {
     return {
-      credentialsLink: ""
+      credentialsLink: "",
     };
   },
   computed: {
@@ -46,9 +40,12 @@ export default {
     },
     account_name() {
       return this.$store.state.accounts.account;
-    }
+    },
   },
   methods: {
+    setCredentialsLink(link) {
+      this.credentialsLink = link;
+    },
     async nominateSelf() {
       const nominateSelfActions = [
         {
@@ -56,9 +53,9 @@ export default {
           name: "regarb",
           data: {
             credentials_link: this.credentialsLink,
-            nominee: this.account_name
-          }
-        }
+            nominee: this.account_name,
+          },
+        },
       ];
       try {
         console.log("this.$store: ", this.$store);
@@ -68,14 +65,14 @@ export default {
       } catch (err) {
         console.log("nominateSelf error: ", err);
       }
-    }
+    },
   },
-  mounted: function() {
+  mounted: function () {
     console.log(
       "nominateSelfModal mounted, this.$store.state",
       this.$store.state
     );
-  }
+  },
 };
 </script>
 
