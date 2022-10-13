@@ -32,7 +32,7 @@ main.column.items-center.back(v-if="Profile")
             :options='langs',
           )
 
-      .row.justify-end(v-if='owner')
+      .row.justify-end(v-if='isOwner')
         .col-2.fab-edit
           q-btn(fab icon='edit' color='primary' :to="`/profiles/edit/${Profile.account_name}`")
 sign-up(v-else)
@@ -44,18 +44,20 @@ import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 import SignUp from "src/pages/profiles/add/SignUp.vue";
 export default {
   name: "ProfileDetail",
-  props: { owner: Boolean },
   components: {
     ProfileAvatar, SignUp
   },
   computed: {
     Profile() {
-      if (this.owner) {
+      if (isOwner) {
         return this.$store.state.profiles.myProfile;
       } else return this.$store.state.profiles.selectedProfile;
     },
+    isOwner() {
+      return this.$store.state.profiles.myProfile === this.$route.params.id
+    },
     missingProfile() {
-      return this.owner && !this.$store.state.profiles.myProfile;
+      return this.isOwer && !this.$store.state.profiles.myProfile;
     },
     fullName() {
       return this.Profile.display_name;
