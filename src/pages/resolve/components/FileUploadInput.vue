@@ -27,6 +27,7 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from "vuex";
 import { validateIpfsHash } from "../util";
 
 export default {
@@ -51,6 +52,7 @@ export default {
         } = await axios({
           url: "https://api.dstor.cloud/v1/dev/temp-token",
           headers: {
+            // todo: remove later
             "api-key":
               "OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg",
             "x-expiration": new Date().getTime() / 1000 + 3600,
@@ -75,7 +77,7 @@ export default {
           },
           data: {
             chunks_number: 1,
-            folder_path: "test",
+            folder_path: `arbitration/${this.account}`,
           },
         });
         this.progress = 20;
@@ -136,21 +138,24 @@ export default {
             case "DONE":
               clearInterval(statusInterval);
               this.progress = 100;
-              this.credentialsLink = statusData.data[0].Hash;
               setTimeout(() => {
+                this.credentialsLink = statusData.data[0].Hash;
                 this.isUploading = false;
                 this.progress = 0;
-              }, 2000);
+              }, 1000);
           }
         } catch (err) {
           console.log("status error: ", err);
         }
       };
-
+      checkStatus();
       let statusInterval = setInterval(checkStatus, 2000);
     },
   },
   computed: {
+    ...mapGetters({
+      account: "accounts/account",
+    }),
     isCredentialsLinkValid() {
       return validateIpfsHash(this.credentialsLink);
     },
