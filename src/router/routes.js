@@ -114,7 +114,7 @@ const routes = [
   },
   {
     path: "/profiles/display/:id",
-    component: () => import("pages/profiles/read/MyProfile.vue"),
+    component: () => import("pages/profiles/read/ProfileDetail.vue"),
     meta: { needBackendLogin: false },
     name: "myProfile",
   },
