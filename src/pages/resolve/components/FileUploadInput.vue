@@ -8,10 +8,18 @@
     error-message="Must be valid IPFS hash (ie 'Qmdn7bZ8z25b...')"
     dense
     autofocus
-    :error="!isCredentialsLinkValid"
+    :loading="isUploading"
   >
     <template v-slot:prepend>
       <q-icon name="attach_file" id="attach-file-button" />
+    </template>
+    <template v-slot:loading>
+      <q-circular-progress
+        :value="progress"
+        size="24px"
+        color="primary"
+        class="q-ma-md"
+      />
     </template>
     <input type="file" id="file-input" />
   </q-input>
@@ -25,11 +33,13 @@ export default {
   data() {
     return {
       credentialsLink: "",
-      percentage: 0,
+      progress: 0,
+      isUploading: true,
     };
   },
   methods: {
     async onFileSelect() {
+      this.isUploading = true;
       console.log("has attached file");
       const file = document.getElementById("file-input")?.files[0];
       console.log("file to attach: ", file);
@@ -50,6 +60,7 @@ export default {
             "x-expiration": new Date().getTime() / 1000 + 3600,
           },
         });
+        this.progress = 20;
         console.log("setting access token", access_token);
         accessToken = access_token;
       } catch (err) {
@@ -73,6 +84,7 @@ export default {
             folder_path: "test",
           },
         });
+        this.progress = 40;
         console.log("setting upload token", token);
         uploadToken = token;
       } catch (err) {
@@ -106,6 +118,7 @@ export default {
           formData,
           config
         );
+        this.progress = 60;
         console.log("data: ", data);
         console.log("Hash: ", Hash);
       } catch (err) {
@@ -124,7 +137,13 @@ export default {
             }
           );
           console.log("statusData: ", statusData);
-          if (statusData.status === "DONE") clearInterval(statusInterval);
+          if (statusData.status === "DONE") {
+            clearInterval(statusInterval);
+            this.progress = 100;
+            setTimeout(() => {
+              this.isUploading = false;
+            }, 2000);
+          }
         } catch (err) {
           console.log("status error: ", err);
         }
