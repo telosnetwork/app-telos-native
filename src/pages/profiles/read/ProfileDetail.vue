@@ -54,7 +54,7 @@ export default {
       } else return this.$store.state.profiles.selectedProfile;
     },
     isOwner() {
-      return this.$store.state.profiles.myProfile.account_name === this.$route.params.id;
+      return this.$store.state.profiles.myProfile?.account_name === this.$route.params.id;
     },
     missingProfile() {
       return this.isOwner && !this.$store.state.profiles.myProfile;
