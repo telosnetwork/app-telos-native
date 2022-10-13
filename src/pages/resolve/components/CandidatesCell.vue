@@ -12,13 +12,13 @@
           <div class="info">
             <div class="text candidate-item">
               {{ candidate.name }}&nbsp;
-              <q-icon
+              <!--<q-icon
                 v-if="isRemoveCandidateButtonVisible(candidate.name)"
                 name="remove"
                 color="white"
                 size="1rem"
                 class="remove-icon"
-              />
+              />-->
             </div>
             <div class="text">({{ candidate.votes }})</div>
           </div>
