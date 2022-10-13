@@ -40,16 +40,12 @@ export default {
   methods: {
     async onFileSelect() {
       this.isUploading = true;
-      console.log("has attached file");
+      this.credentialsLink = "";
       const file = document.getElementById("file-input")?.files[0];
-      console.log("file to attach: ", file);
       const formData = new FormData();
-      console.log(1);
       formData.append("file", file);
-      console.log(2);
       let accessToken;
       try {
-        console.log(3);
         const {
           data: { access_token },
         } = await axios({
@@ -60,8 +56,7 @@ export default {
             "x-expiration": new Date().getTime() / 1000 + 3600,
           },
         });
-        this.progress = 20;
-        console.log("setting access token", access_token);
+        this.progress = 10;
         accessToken = access_token;
       } catch (err) {
         console.log("access_token error: ", err);
@@ -72,7 +67,6 @@ export default {
         console.log(3);
         const {
           data: { token },
-          data,
         } = await axios({
           method: "POST",
           url: "https://api.dstor.cloud/v1/upload/get-token/",
@@ -84,12 +78,18 @@ export default {
             folder_path: "test",
           },
         });
-        this.progress = 40;
-        console.log("setting upload token", token);
+        this.progress = 20;
         uploadToken = token;
       } catch (err) {
         console.log("upload token error: ", err);
       }
+
+      const updateProgress = (event) => {
+        console.log("progress: ", event);
+        this.progress =
+          Math.round((event.loaded * 100) / event.total) * 0.4 + 30;
+        console.log(this.progress);
+      };
 
       try {
         const config = {
@@ -102,25 +102,14 @@ export default {
             "x-dstor-comment": `Upload from Resolve by ${this.account}`,
             "x-dstor-upload-token": uploadToken,
           },
-          onUploadProgress: function (progressEvent) {
-            console.log("progress: ", progressEvent);
-            this.percentage = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-          },
+          onUploadProgress: updateProgress,
         };
         console.log("uploading");
-        const {
-          data: { Hash },
-          data,
-        } = await axios.post(
+        const { data } = await axios.post(
           "https://api.dstor.cloud/v1/upload/",
           formData,
           config
         );
-        this.progress = 60;
-        console.log("data: ", data);
-        console.log("Hash: ", Hash);
       } catch (err) {
         console.log("upload error: ", err);
       }
@@ -137,12 +126,21 @@ export default {
             }
           );
           console.log("statusData: ", statusData);
-          if (statusData.status === "DONE") {
-            clearInterval(statusInterval);
-            this.progress = 100;
-            setTimeout(() => {
-              this.isUploading = false;
-            }, 2000);
+          switch (statusData.status) {
+            case "ADDING_TO_IPFS":
+              this.progress = 80;
+              break;
+            case "SAVING_DATA":
+              this.progress = 90;
+              break;
+            case "DONE":
+              clearInterval(statusInterval);
+              this.progress = 100;
+              this.credentialsLink = statusData.data[0].Hash;
+              setTimeout(() => {
+                this.isUploading = false;
+                this.progress = 0;
+              }, 2000);
           }
         } catch (err) {
           console.log("status error: ", err);
