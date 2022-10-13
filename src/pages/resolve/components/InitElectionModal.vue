@@ -5,7 +5,7 @@
     </q-card-section>
 
     <q-card-section class="q-pt-none input-row">
-      <file-upload-input @update:link="setCredentialsLink" />
+      <file-upload-input @update:hash="setCredentialsLink" />
     </q-card-section>
 
     <q-card-actions align="right" class="text-primary">
@@ -53,12 +53,10 @@ export default {
   },
   methods: {
     setCredentialsLink(link) {
-      console.log("setCredentialsLink", link);
       this.credentialsLink = link;
     },
     isCredentialsLinkValid(value) {
       const isValid = validateIpfsHash(value);
-      console.log("isValid", isValid, value);
       return isValid;
     },
     async initElection() {

@@ -9,7 +9,7 @@
     dense
     autofocus
     :loading="isUploading"
-    :error="!isUploading && !islinkValid"
+    :error="!isUploading && !isHashValid"
     @update:model-value="onHashChange"
   >
     <template v-slot:prepend>
@@ -36,14 +36,14 @@ import { validateIpfsHash } from "../util";
 export default {
   data() {
     return {
-      link: "",
+      hash: "",
       progress: 0,
       isUploading: false,
     };
   },
   methods: {
-    onHashChange(link) {
-      this.$emit("update:link", link);
+    onHashChange(hash) {
+      this.$emit("update:hash", hash);
     },
     async onFileSelect() {
       this.isUploading = true;
@@ -72,7 +72,6 @@ export default {
 
       let uploadToken;
       try {
-        console.log(3);
         const {
           data: { token },
         } = await axios({
@@ -133,7 +132,6 @@ export default {
               },
             }
           );
-          console.log("statusData: ", statusData);
           switch (statusData.status) {
             case "ADDING_TO_IPFS":
               this.progress = 80;
@@ -164,16 +162,11 @@ export default {
     ...mapGetters({
       account: "accounts/account",
     }),
-    islinkValid() {
+    isHashValid() {
       return validateIpfsHash(this.hash);
     },
   },
   mounted: function () {
-    console.log(
-      "initElectionModal mounted, this.$store.state",
-      // @ts-ignore
-      this.$store.state
-    );
     const fileSelect = document.getElementById("attach-file-button");
     const fileElem = document.getElementById("file-input");
     fileElem.addEventListener("change", this.onFileSelect);
