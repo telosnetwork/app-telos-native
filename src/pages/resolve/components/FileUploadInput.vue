@@ -9,12 +9,14 @@
     dense
     autofocus
     :loading="isUploading"
+    :error="!isUploading && !isCredentialsLinkValid"
   >
     <template v-slot:prepend>
       <q-icon name="attach_file" id="attach-file-button" />
     </template>
     <template v-slot:loading>
       <q-circular-progress
+        v-if="isUploading"
         :value="progress"
         size="24px"
         color="primary"
