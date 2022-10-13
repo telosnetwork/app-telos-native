@@ -1,5 +1,5 @@
 <template lang="pug">
-main.column.items-center.back(v-if="Profile")
+main.column.items-center.back(v-if="Profile && Profile.account_name")
     q-card.my-card
       q-card-section
         .column.items-center
