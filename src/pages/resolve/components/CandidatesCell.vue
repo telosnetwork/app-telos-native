@@ -20,7 +20,7 @@
                 class="remove-icon"
               />-->
             </div>
-            <div class="text">({{ candidate.votes }})</div>
+            <div class="text">({{ getCandidateVotes(candidate.name) }})</div>
           </div>
         </div>
         <div class="bar-wrap">
@@ -40,24 +40,56 @@ import { mapGetters } from "vuex";
 import { getBallot, getSymbolInfo } from "../util";
 
 export default {
-  props: ["election", "totalVotes"],
+  props: ["election"],
   components: {
     ProfileAvatar,
   },
   data() {
     return {
-      results: null,
+      results: [],
       interval: null,
     };
   },
   methods: {
+    totalVotes() {
+      if (!this.results.length) return 0;
+      const sum = this.results.reduce((previous, current) => {
+        const { amount } = getSymbolInfo(current.value);
+        return previous + parseFloat(amount);
+      }, 0);
+      // console.log("sum: ", sum);
+      return sum;
+    },
+    getCandidateVotes(account_name) {
+      // console.log("getCandidateVotes, account_name: ", account_name);
+      if (this.election.status < 2) return "0.0000 VOTE";
+      else {
+        const option = this.results.find(
+          (result) => result.key === account_name
+        );
+        if (!option) return "0.0000 VOTE";
+        return option.value;
+      }
+    },
     async getBallotResults() {
-      if (this.election.status !== 2) return;
+      // console.log(
+      //   "getBallotResults this.election: ",
+      //   this.election.ballot_name,
+      //   this.election.status
+      // );
+
+      if (this.election.status < 2) return;
       try {
-        const ballot = await getBallot(this.election.ballot_name);
+        const ballot = await getBallot(this, this.election.ballot_name);
+        // console.log("ballot: ", ballot);
         if (!ballot) return;
         this.results = ballot.options;
-        console.log("this.ballotResults: ", this.ballotResults);
+        // console.log(
+        //   "ballot.options: ",
+        //   this.election.ballot_name,
+        //   ballot.options
+        // );
+        // console.log("this.results: ", this.results);
       } catch (err) {
         console.log("getBallotResults error: ", err);
       }
@@ -73,14 +105,17 @@ export default {
       return false;
     },
     getPercentage(searchName) {
-      if (!this.totalVotes) return 0;
-      const candidateData = this.election.candidates.find(
-        ({ name }) => name === searchName
-      );
+      if (!this.results.length) return 0;
+      const candidateData = this.results.find(({ key }) => key === searchName);
       if (!candidateData) return 0;
-      const { votes } = candidateData;
-      const { whole } = getSymbolInfo(votes);
-      return (100 * whole) / this.totalVotes;
+      const { value } = candidateData;
+      const { amount } = getSymbolInfo(value);
+      const voteAmount = parseFloat(amount);
+      const totalVotes = this.totalVotes();
+      // console.log("vote: ", voteAmount, totalVotes);
+      const percentage = voteAmount / totalVotes;
+      // console.log("percentage: ", percentage, typeof percentage);
+      return percentage;
     },
   },
   computed: {
@@ -91,6 +126,7 @@ export default {
     }),
   },
   mounted() {
+    console.log("CandidatesCell mounted");
     this.getBallotResults();
     this.interval = setInterval(this.getBallotResults, 10000);
   },

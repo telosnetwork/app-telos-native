@@ -57,7 +57,7 @@
             </q-td>
           </q-tr>
           <q-tr
-            v-show="expandedRows[props.row.election_id]"
+            v-if="expandedRows[props.row.election_id]"
             class="expanded-row"
             :props="props"
           >
@@ -66,7 +66,6 @@
               :election="props.row"
               colspan="100%"
               class="text-left"
-              :totalVotes="totalVotes(props.row)"
             />
           </q-tr>
         </template>
@@ -79,7 +78,6 @@
 import CandidatesCell from "./CandidatesCell.vue";
 import { ELECTION_STATUS } from "../constants";
 // import IpfsLink from './IpfsLink.vue'
-import { getSymbolInfo } from "../util";
 import { mapGetters } from "vuex";
 
 export default {
@@ -112,16 +110,6 @@ export default {
     };
   },
   methods: {
-    totalVotes(election) {
-      if (election && election.candidates) {
-        return election.candidates.reduce((previous, current) => {
-          const { whole } = getSymbolInfo(current.votes);
-          return previous + whole;
-        }, 0);
-      } else {
-        return 0;
-      }
-    },
     toggleRow(electionId) {
       this.expandedRows[electionId] = !this.expandedRows[electionId];
     },
