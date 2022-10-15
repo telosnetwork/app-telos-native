@@ -18,7 +18,7 @@
     </div>
     <div class="form-wrapper">
       <q-dialog v-model="isModalVisible">
-        <create-new-case-modal />
+        <create-new-case-modal :close="toggleModal" />
       </q-dialog>
     </div>
     <case-files-table />
@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      isModalVisible: true,
+      isModalVisible: false,
     };
   },
   methods: {

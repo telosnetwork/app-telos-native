@@ -1,4 +1,3 @@
-import { DECISION_CLASS_LIST } from '../../constants/claim';
 <template>
   <q-card style="min-width: 450px">
     <q-card-section>
@@ -14,7 +13,6 @@ import { DECISION_CLASS_LIST } from '../../constants/claim';
         bottom-slots
         hint="Telos account name"
         error-message="Must be valid Telos account name"
-        dense
       />
     </q-card-section>
 
@@ -26,8 +24,9 @@ import { DECISION_CLASS_LIST } from '../../constants/claim';
         label="Respondant"
         bottom-slots
         hint="Telos account name"
-        error-message="Must be valid Telos account name"
-        dense
+        :rules="[
+          (val) => validateId(val) || 'Must be valid Telos account name',
+        ]"
       />
     </q-card-section>
 
@@ -52,14 +51,14 @@ import { DECISION_CLASS_LIST } from '../../constants/claim';
 </template>
 
 <script>
-import { ref } from "vue";
 import { mapGetters } from "vuex";
 import { DECISION_CLASS_LIST } from "../../constants";
-import { validateIpfsHash } from "../../util";
+import { validateIpfsHash, validateId } from "../../util";
 import FileUploadInput from "../../components/FileUploadInput.vue";
 
 // claimant, claim_link, respondant, claim_category
 export default {
+  props: ["close"],
   components: {
     FileUploadInput,
   },
@@ -81,6 +80,7 @@ export default {
     }),
   },
   methods: {
+    validateId,
     setClaimLink(link) {
       this.claimLink = link;
     },
@@ -90,12 +90,26 @@ export default {
       return isValid;
     },
     async submit() {
-      console.log(
-        "submit: ",
-        this.category.value,
-        this.respondant,
-        this.claimLink
-      );
+      const newCaseActions = [
+        {
+          account: "testtelosarb",
+          name: "filecase",
+          data: {
+            claimant: this.account,
+            claim_link: this.claimLink,
+            respondant: this.respondant,
+            claim_category: this.category.value,
+            lang_codes: [0],
+          },
+        },
+      ];
+      try {
+        await this.$store.$api.signTransaction(newCaseActions);
+        this.close();
+        // setTimeout(this.onSubmit, 5000);
+      } catch (err) {
+        console.log("submit error: ", err);
+      }
     },
   },
   updated() {

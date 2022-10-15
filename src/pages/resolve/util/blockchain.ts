@@ -1,6 +1,6 @@
 import { SymbolInfo } from "../types";
 
-const VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz123456";
+const VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz12345";
 
 export const validateId = (name: string) => {
   const validCharacterList = VALID_CHARACTERS.split("");
