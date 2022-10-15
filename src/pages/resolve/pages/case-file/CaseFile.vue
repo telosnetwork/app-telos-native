@@ -15,8 +15,16 @@
           </p>
           <template v-slot:buttons>
             <div class="intro-buttons-wrap">
-              <q-btn color="primary" label="Add claim to case" />&nbsp;
-              <q-btn color="primary" label="Respond to claim" />
+              <q-btn
+                v-if="isAddClaimButtonVisible()"
+                color="primary"
+                label="Add claim to case"
+              />&nbsp;
+              <q-btn
+                v-if="isRespondToClaimButtonVisible()"
+                color="primary"
+                label="Respond to claim"
+              />
             </div>
           </template>
         </intro-card>
@@ -71,7 +79,6 @@ export default {
   },
   methods: {
     async fetchCaseFile() {
-      console.log("fetchCaseFile id: ", id);
       const id = this.$route.params.id;
       if (!id) return;
       try {
@@ -94,14 +101,19 @@ export default {
       }
     },
     isAddClaimButtonVisible() {
-      if (!isClaimant) return false;
-      if (this.caseFile.status !== 0) return false;
+      if (!this.isClaimant) return false;
+      console.log("isClaimaint");
+      if (this.caseFile.case_status !== 0) return false;
       if (this.caseFile.number_claims > this.config.max_claims_per_case)
         return false;
       return true;
     },
     isUpdateClaimButtonVisible() {},
-    isRespondToClaimButtonVisible() {},
+    isRespondToClaimButtonVisible() {
+      if (!this.isRespondant) return false;
+      if (this.caseFile.case_status !== 3) return false;
+      return true;
+    },
   },
   computed: {
     ...mapGetters({
@@ -112,9 +124,6 @@ export default {
     config() {
       return this.$store.state.resolve.config;
     },
-    caseData() {
-      return this.caseFile;
-    },
     isClaimant() {
       if (!this.caseFile) return false;
       return this.account === this.caseFile.claimant;
@@ -123,32 +132,17 @@ export default {
       if (!this.caseFile) return false;
       return this.account === this.caseFile.respondant;
     },
-    beforeCreate() {
-      console.log("beforeCreate before fetch");
-      this.fetchCaseFile();
-      console.log("beforeCreate after fetch");
-    },
-    created() {
-      console.log("created before fetch");
-      this.fetchCaseFile();
-      console.log("created after fetch");
-    },
-    beforeMount() {
-      console.log("beforeMount before fetch");
-      this.fetchCaseFile();
-      console.log("beforeMount after fetch");
-    },
-    async mounted() {
-      console.log("mounted");
-      const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
-        this,
-        // @ts-ignore
-        this.$route.params.id
-      );
-      console.log("actionsHistory: ", actionsHistory);
+  },
+  async mounted() {
+    this.fetchCaseFile();
+    const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
+      this,
       // @ts-ignore
-      this.caseActionsHistory = actionsHistory;
-    },
+      this.$route.params.id
+    );
+    console.log("actionsHistory: ", actionsHistory);
+    // @ts-ignore
+    this.caseActionsHistory = actionsHistory;
   },
 };
 </script>
