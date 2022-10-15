@@ -28,13 +28,8 @@ export default {
       statuses: [],
       categories: [],
       isBallotListRowDirection: true,
-      currentPage: 1,
-      page: 1,
       sortMode: "",
-      startY: 0,
       timerAction: null,
-      limit: 100,
-      maxLimit: 500,
       loading: false,
     };
   },
@@ -53,62 +48,35 @@ export default {
       this.treasury = this.$route.query.treasury;
       this.$refs.actionBar ? this.$refs.actionBar.setTreasuryBar(this.treasury) : "";
     }
-    this.resetBallots();
     await this.fetchFees();
-    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.reset() : "";
-    this.$refs.infiniteScroll ? this.$refs.infiniteScroll.poll() : "";
+    this.fetchUserVotes();
   },
-  created() {
-    window.addEventListener("scroll", this.onLoad);
-  },
-  unmounted() {
-    window.removeEventListener("scroll", this.onLoad);
-  },
-
   methods: {
     ...mapActions("trails", [
       "fetchFees",
-      "fetchBallots",
+      "fetchMoreBallots",
       "castVote",
       "fetchTreasuries",
       "fetchBallotsByStatus",
+      "fetchUserVotesForThisBallot",
+      "resetUserVotes",
     ]),
-    ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
-
-    async onLoad(reseted) {
-      let scrollY = window.scrollY;
+    async onLoad(_, done) {
+      let isFirstFetch = this.ballots.length == 0;
       this.loading = true;
-      if (
-        (scrollY > this.startY && this.limit <= this.maxLimit) ||
-        reseted === true
-      ) {
-        this.$refs.infiniteScroll ? this.$refs.infiniteScroll.resume() : "";
-        // Start always with a limit of 200 and then go +100 on next query
-        if (reseted === true) {
-          this.limit = 300;
-        } else {
-          this.limit += 100;
-        }
-        const filter = {
-          index: 4,
-          lower:
-            this.treasury || (this.$route.query && this.$route.query.treasury),
-          upper:
-            this.treasury || (this.$route.query && this.$route.query.treasury),
-          limit: this.limit,
-        };
-        await this.fetchBallots(filter);
-        if (scrollY === this.startY) {
-          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
-          this.loading = false;
-        }
+      await this.fetchMoreBallots();
+      this.loading = false;
+      setTimeout(() => {
+        this.fetchUserVotes();
+        done(isFirstFetch || !this.ballotsPagination.more);
+      }, 1000);
+    },
+    async fetchUserVotes() {
+      if (this.isAuthenticated) {
+        this.filterBallots(this.ballots).forEach(b => this.fetchUserVotesForThisBallot(b.ballot_name));
       } else {
-        setTimeout(() => {
-          this.$refs.infiniteScroll ? this.$refs.infiniteScroll.stop() : "";
-          this.loading = false;
-        }, 3000);
+        this.resetUserVotes();
       }
-      this.startY = scrollY;
     },
     openBallotForm() {
       this.show = true;
@@ -117,10 +85,6 @@ export default {
       this.$router.go(-1);
     },
     openBallot(ballot) {
-      if (this.showBallot) {
-        this.showBallot = false;
-        return;
-      }
       this.timeAtMount = Date.now();
       this.$router.push(
         `/trails/${this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
@@ -170,19 +134,16 @@ export default {
       return localStorage.isNewUser;
     },
     updateTreasury(newTreasury) {
-      this.limit = 100;
       this.treasury = newTreasury;
-      this.onLoad(true);
+      this.$refs.infiniteScroll.resume();
     },
     updateStatuses(newStatuses) {
-      this.limit = 100;
       this.statuses = newStatuses;
-      this.onLoad(true);
+      this.$refs.infiniteScroll.resume();
     },
     updateCategories(newCategories) {
-      this.limit = 100;
       this.categories = newCategories;
-      this.onLoad(true);
+      this.$refs.infiniteScroll.resume();
     },
     filterBallots(ballots) {
       const ballotFilteredByStatuses = ballots.filter((b) => {
@@ -218,7 +179,6 @@ export default {
             return this.categories.includes(b.category);
           } else {
             if(this.$route.path.indexOf('election') > 0) {
-              // console.log("election page. -> b.category: ", b.category);
               return ["election","referendum","leaderboard"].includes(b.category);
             } else {
               return ["poll","proposal"].includes(b.category);
@@ -243,7 +203,6 @@ export default {
     changeDirection(isBallotListRowDirection) {
       this.limit = 100;
       this.isBallotListRowDirection = isBallotListRowDirection;
-      this.onLoad(true);
     },
     getLoser() {
       if (!this.ballot.total_voters || this.ballot.options.length !== 2)
@@ -275,7 +234,6 @@ export default {
     changeSortOption(option) {
       this.limit = 100;
       this.sortMode = option;
-      this.onLoad(true);
     },
     ballotContentImg(ballot) {
       try {
@@ -291,20 +249,22 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-    ...mapGetters("trails", ["ballots", "ballotsLoaded", "treasuriesOptions"]),
+    ...mapGetters("accounts", ["isAuthenticated", "account"]),
+    ...mapGetters("trails", ["ballots", "ballotsPagination", "treasuriesOptions"]),
   },
   watch: {
     $route(to, from) {
       this.showBallot = !!to.params.id
-      this.onLoad(true);
     },
+    account() {
+      this.fetchUserVotes();
+    }
   },
 };
 </script>
 
 <template lang="pug">
-q-page
+q-page(v-if="!renderComponent")
   welcome-card(v-if="!isNewUser() && isAuthenticated")
   action-bar(
     ref="actionBar"
@@ -316,7 +276,8 @@ q-page
     @change-sort-option="changeSortOption"
     @update-cards="updateCards"
     :treasuriesOptions="treasuriesOptions"
-    :activeFilter="activeFilter")
+    :activeFilter="activeFilter"
+    :election="$route.path.indexOf('election') > 0")
   ballot-form(
     :show.sync="show"
     @close="show = false"
@@ -324,7 +285,8 @@ q-page
   .ballots(ref="ballotsRef")
     q-infinite-scroll(
       ref="infiniteScroll"
-      :offset="250"
+      @load="onLoad"
+      :offset="50"
     )
       div(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
         ballot-list-item(

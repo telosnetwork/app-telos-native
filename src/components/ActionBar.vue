@@ -71,7 +71,6 @@ export default {
       "fetchTreasuries",
       "fetchBallotsByStatus",
     ]),
-    ...mapMutations("trails", ["resetBallots", "stopAddBallots"]),
     addToLocalStorage() {
       localStorage.isNewUser = false;
       this.isNewUser = false;
@@ -246,22 +245,17 @@ export default {
       this.setFilterParams(this.activeFilter);
     },
     treasuryBar: function (val, old) {
-      if (val !== old) {
-        this.resetBallots();
-      }
       this.$emit("update-treasury", this.treasuryBar);
     },
     submitStatusesResult: function (val, old) {
       if (val !== old) {
         this.statusGroup = this.submitStatusesResult;
-        this.resetBallots();
         this.$emit("update-statuses", this.submitStatusesResult);
       }
     },
     submitTypesResult: function (val, old) {
       if (val !== old) {
         this.typeGroup = this.submitTypesResult;
-        this.resetBallots();
         this.$emit("update-categories", this.submitTypesResult);
       }
     },
@@ -298,7 +292,7 @@ div.bar-filter-wrapper
               :label="$t('pages.trails.ballots.actionBar.sorting')"
               icon-right="fas fa-chevron-down"
               @click="toggleMenu('isSortingDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
               outline
               flat
@@ -318,7 +312,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 q-scroll-area
                   q-option-group.bar-filter-menu-options.options-320(
@@ -330,7 +324,7 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.left-btn.left-btn-320(
               :label="sortMode"
               @click="toggleMenu('isSortingDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
             )
             q-dialog(
@@ -347,7 +341,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 q-scroll-area
                   q-option-group.bar-filter-menu-options.options-320(
@@ -358,14 +352,14 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.right-btn.right-btn-320(
               @click="clearSort()"
               icon="close"
-              color="dark"
+              color="primary"
             )
           div(v-if="submitTypesResult.length === 0")
             q-btn.dialog-btn.filter-type-btn-320(
               :label="$t('pages.trails.ballots.actionBar.typeFilter')"
               icon-right="fas fa-chevron-down"
               @click="toggleMenu('isTypeDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
               outline
               flat
@@ -386,7 +380,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 div
                   q-form.bar-filter-menu-form.dialog-form(@submit="onSubmitTypes")
@@ -416,7 +410,7 @@ div.bar-filter-wrapper
               v-if="!election"
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               @click="toggleMenu('isTypeDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
             )
             q-dialog(
@@ -433,7 +427,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 div
                   q-form.bar-filter-menu-form.dialog-form(@submit="onSubmitTypes")
@@ -461,14 +455,14 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.right-btn.right-btn-320(
               @click="clearFilter('submitTypesResult', 'isTypeMenuOpen')"
               icon="close"
-              color="dark"
+              color="primary"
             )
           div(v-if="submitStatusesResult.length === 0")
             q-btn.dialog-btn.filter-type-btn-320(
               :label="$t('pages.trails.ballots.actionBar.statusFilter')"
               icon-right="fas fa-chevron-down"
               @click="toggleMenu('isStatusDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
               outline
               flat
@@ -488,7 +482,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 div
                   q-form.bar-filter-menu-form.dialog-form(@submit="onSubmitStatuses")
@@ -517,7 +511,7 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.left-btn.left-btn-320(
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
               @click="toggleMenu('isStatusDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
             )
             q-dialog(
@@ -534,7 +528,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 div
                   q-form.bar-filter-menu-form.dialog-form(@submit="onSubmitStatuses")
@@ -562,14 +556,14 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.right-btn.right-btn-320(
               @click="clearFilter('submitStatusesResult', 'isStatusDialogOpen')"
               icon="close"
-              color="dark"
+              color="primary"
             )
           div(v-if="!treasuryBar")
             q-btn.dialog-btn.filter-type-btn-320(
               :label="$t('pages.trails.ballots.actionBar.groupFilter')"
               icon-right="fas fa-chevron-down"
               @click="toggleMenu('isGroupDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
               outline
               flat
@@ -589,7 +583,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 q-scroll-area
                   q-option-group.bar-filter-menu-options.options-320(
@@ -601,7 +595,7 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.left-btn.left-btn-320(
               :label="treasuryBar"
               @click="toggleMenu('isGroupDialogOpen')"
-              color="dark"
+              color="primary"
               no-caps
             )
             q-dialog(
@@ -618,7 +612,7 @@ div.bar-filter-wrapper
                     round
                     v-close-popup
                     icon="close"
-                    text-color="dark"
+                    text-color="primary"
                   )
                 q-scroll-area
                   q-option-group.bar-filter-menu-options.options-320(
@@ -629,7 +623,7 @@ div.bar-filter-wrapper
             q-btn.bar-filter-btn.right-btn.right-btn-320(
               @click="clearGroupFilter()"
               icon="close"
-              color="dark"
+              color="primary"
             )
         btn.discard-all-btn(
           v-if="isFiltersApplied()"
@@ -648,8 +642,6 @@ div.bar-filter-wrapper
           @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
         )
     div.bar-wrapper.row.items-center(:class="{'menu-visible': isFilterMenu320Open}")
-      div.bar-linear-gradient-left
-      div.bar-linear-gradient-right
       q-btn-toggle.bar-btns-toggle(
         v-model="isBallotListRowDirection"
         flat
@@ -663,15 +655,15 @@ div.bar-filter-wrapper
       div.bar-custom-separator
       div.bar-filters
         div.row.bar-filter-btns-wrapper
-          //- new button
-          q-btn.bar-filter-btn(
+          //- 'Sort by' button
+          q-btn.q-mr-md(
             v-if="!sortMode"
             :label="'Sort by'"
             :class="{'menu-open': isSortingMenuOpen}"
             :icon-right="isSortingMenuOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
-            color="dark"
+            color="primary"
             no-caps
-            outline
+            flat
           )
             q-menu(
               @show="toggleMenu('isSortingMenuOpen')"
@@ -685,10 +677,11 @@ div.bar-filter-wrapper
                   color="primary"
                 )
           div(v-else)
-            q-btn.bar-filter-btn.left-btn(
+            q-btn.q-mr-md.left-btn(
               :label="sortMode"
-              color="dark"
+              color="primary"
               no-caps
+              outline
             )
               q-menu(
                 @show="toggleMenu('isSortingMenuOpen')"
@@ -701,19 +694,21 @@ div.bar-filter-wrapper
                     :options="sortOptions"
                     color="primary"
                   )
-            q-btn.bar-filter-btn.right-btn(
+            q-btn.q-mr-md.right-btn(
               @click="clearSort"
               icon="close"
-              color="dark"
+              color="primary"
+              outline
             )
-          q-btn.bar-filter-btn(
+          //- 'Type' button
+          q-btn.q-mr-md(
             v-if="submitTypesResult.length === 0 && !election"
             :label="$t('pages.trails.ballots.actionBar.typeFilter')"
             :class="{'menu-open': isTypeMenuOpen}"
             :icon-right="isTypeMenuOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
-            color="dark"
+            color="primary"
             no-caps
-            outline
+            flat
           )
             q-menu(
               ref="typesMenu"
@@ -738,10 +733,11 @@ div.bar-filter-wrapper
                   fontSize='16'
                 )
           div(v-else-if="!election")
-            q-btn.bar-filter-btn.left-btn(
+            q-btn.q-mr-md.left-btn(
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
-              color="dark"
+              color="primary"
               no-caps
+              outline
             )
               q-menu(
                 ref="typesMenu"
@@ -765,19 +761,21 @@ div.bar-filter-wrapper
                     btnWidth='161'
                     fontSize='16'
                   )
-            q-btn.bar-filter-btn.right-btn(
+            q-btn.q-mr-md.right-btn(
               @click="clearFilter('submitTypesResult', 'isTypeMenuOpen')"
               icon="close"
-              color="dark"
+              color="primary"
+              outline
             )
-          q-btn.bar-filter-btn(
+          //- 'State' button
+          q-btn.q-mr-md(
             v-if="submitStatusesResult.length === 0"
             :label="$t('pages.trails.ballots.actionBar.statusFilter')"
             :class="{'menu-open': isStatusMenuOpen}"
             :icon-right="isStatusMenuOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
-            color="dark"
+            color="primary"
             no-caps
-            outline
+            flat
           )
             q-menu(
               ref="statusesMenu"
@@ -802,10 +800,11 @@ div.bar-filter-wrapper
                   fontSize='16'
                 )
           div(v-else)
-            q-btn.bar-filter-btn.left-btn(
+            q-btn.q-mr-md.left-btn(
               :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
-              color="dark"
+              color="primary"
               no-caps
+              outline
             )
               q-menu(
                 ref="statusesMenu"
@@ -829,19 +828,21 @@ div.bar-filter-wrapper
                     btnWidth='161'
                     fontSize='16'
                   )
-            q-btn.bar-filter-btn.right-btn(
+            q-btn.q-mr-md.right-btn(
               @click="clearFilter('submitStatusesResult', 'isStatusMenuOpen')"
               icon="close"
-              color="dark"
+              color="primary"
+              outline
             )
-          q-btn.bar-filter-btn(
+          //- 'DAO' button
+          q-btn.q-mr-md(
             v-if="!treasuryBar"
             :label="$t('pages.trails.ballots.actionBar.groupFilter')"
             :class="{'menu-open': isGroupMenuOpen}"
             :icon-right="isGroupMenuOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
-            color="dark"
+            color="primary"
             no-caps
-            outline
+            flat
           )
             q-menu(
               @show="toggleMenu('isGroupMenuOpen')"
@@ -855,10 +856,11 @@ div.bar-filter-wrapper
                   color="primary"
                 )
           div(v-else)
-            q-btn.bar-filter-btn.left-btn(
+            q-btn.q-mr-md.left-btn(
               :label="treasuryBar"
-              color="dark"
+              color="primary"
               no-caps
+              outline
             )
               q-menu(
                 @show="toggleMenu('isGroupMenuOpen')"
@@ -871,16 +873,17 @@ div.bar-filter-wrapper
                     :options="treasuriesOptions"
                     color="primary"
                   )
-            q-btn.bar-filter-btn.right-btn(
+            q-btn.q-mr-md.right-btn(
               @click="clearGroupFilter()"
               icon="close"
-              color="dark"
+              color="primary"
+              outline
             )
       q-btn.bar-filter-btn-320(
         :label="$t('pages.trails.ballots.actionBar.filterTitle')"
         icon-right="filter_list"
         @click="handleFilterBtnClick()"
-        color="dark"
+        color="primary"
         no-caps
         outline
       )
@@ -907,11 +910,14 @@ div.bar-filter-wrapper
 <style lang="sass">
 .scroll-anim
   height: 0px !important
-  margin: 10px !important
+  margin-top: 10px !important
+  margin-bottom: 10px !important
   pointer-events: none
   opacity: 0
+main.q-page
+  padding-top: 40px
 .bar-filter-wrapper
-  margin: 40px 0 8px 0
+  margin: 0 0 8px 0
 .bar-wrapper
   position: relative
   width: 100%
@@ -919,17 +925,6 @@ div.bar-filter-wrapper
   background: white
   box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
   border-radius: 12px
-.bar-linear-gradient-left,
-.bar-linear-gradient-right
-  display: none
-  position: absolute
-  width: 36px
-  height: 100%
-  background: linear-gradient(270deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)
-  z-index: 2
-.bar-linear-gradient-left
-  transform: rotate(180deg)
-  border-radius: 0 12px 12px 0
 .q-btn-group
   margin-left: 24px
   gap: 4px
@@ -957,19 +952,6 @@ div.bar-filter-wrapper
 .create-poll-btn
   height: 40px
   margin-right: 27px
-.bar-filter-btns-wrapper
-  gap: 16px
-.bar-filter-btn
-  height: 40px
-  font-size: 16px
-  & .q-btn__wrapper
-    padding: 0 12px
-  & .q-btn__wrapper::before
-    border: 1px solid #F2F3F4
-  & .q-icon
-    margin-top: 4px
-  & .on-right
-    margin-left: 16px
 .bar-filter-menu-form
   padding: 12px
 .left-btn
@@ -1041,7 +1023,7 @@ div.bar-filter-wrapper
   &:last-child
     border-radius: 0 0 6px 6px !important
 .q-scrollarea
-  height: 200px
+  height: 60vh
 .left-btn-320
   height: 40px
   width: -webkit-fill-available
@@ -1082,24 +1064,12 @@ div.bar-filter-wrapper
     left: 70%
 @media (max-width: 1070px)
   .bar-filters
-    max-width: 68%
+    max-width: 100%
   .bar-linear-gradient-right
-    left: 65%
+    display: none
 @media (max-width: 940px)
   .bar-filters
-    max-width: 63%
-  .bar-linear-gradient-right
-    left: 60%
-@media (max-width: 750px)
-  .bar-filters
-    max-width: 60%
-  .bar-linear-gradient-right
-    left: 55%
-@media (max-width: 660px)
-  .bar-filters
-    max-width: 55%
-  .bar-linear-gradient-right
-    left: 50%
+    max-width: 100%
 @media (max-width: 600px)
   .bar-filter-menu-320-wrapper
     display: flex

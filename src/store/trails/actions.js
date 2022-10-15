@@ -17,36 +17,42 @@ export const fetchFees = async function ({ commit }) {
 // Fees
 
 // Ballots
-export const fetchBallots = async function ({ commit, state }, query) {
+export const fetchMoreBallots = async function ({ commit, state }) {
   const result = await this.$api.getTableRows({
     code: "telos.decide",
     scope: "telos.decide",
     table: "ballots",
-    limit: query.limit,
-    index_position: query.index || 0,
+    limit: state.ballots.list.pagination.limit,
+    index_position: 5,
+    reverse: true,
     key_type: "i64",
-    lower_bound: query.lower,
-    upper_bound: query.upper,
+    lower_bound: state.ballots.list.pagination.next_key
   });
-  let treasuries = {};
+  let treasuries = {rows:[]};
+  state.treasuries.list.data.forEach(t => treasuries[t.symbol] = t);
 
   for await (const ballot of result.rows) {
-    let supply = supplyToSymbol(ballot.treasury_symbol);
-    if (!treasuries.hasOwnProperty(supply)) {
+    let symbol = supplyToSymbol(ballot.treasury_symbol);
+    if (!treasuries.hasOwnProperty(symbol)) {
       const treasury = await this.$api.getTableRows({
         code: "telos.decide",
         scope: "telos.decide",
         table: "treasuries",
         limit: 1,
-        lower_bound: supply,
-        upper_bound: supply,
+        lower_bound: symbol,
+        upper_bound: symbol,
       });
-      treasuries[supply] = treasury.rows[0];
+      treasuries[symbol] = treasury.rows[0];
+      treasuries.rows.push(treasuries[symbol]);
     }
 
-    ballot.treasury = treasuries[supply];
+    ballot.treasury = treasuries[symbol];
   }
   commit("addBallots", result);
+  if (treasuries.rows.length > 0) {
+    commit("addTreasuries", treasuries);
+  }  
+  commit("updateTreasuries");
 };
 
 export const fetchTreasuriesForUser = async function ({ commit }, account) {
@@ -54,21 +60,55 @@ export const fetchTreasuriesForUser = async function ({ commit }, account) {
     code: "telos.decide",
     scope: account,
     table: "voters",
-    key_type: "i64",
+    limit: 1000,
   });
 
   commit("setUserTreasuries", res);
+  commit("updateTreasuries");
 };
 
 export const fetchVotesForBallot = async function ({ commit }, ballot) {
   const res = await this.$api.getTableRows({
     code: "telos.decide",
-    scope: ballot,
+    scope: ballot.name,
     table: "votes",
-    limit: 20,
+    limit: ballot.limit,
   });
 
   commit("setBallotVotes", res.rows);
+};
+
+export const resetUserVotes = async function ({ rootState, commit }) {
+  commit("setUserVotes", {});
+};
+
+export const fetchUserVotesForThisBallot = async function ({ rootState, commit }, ballot) {
+  let res = {rows:[]};
+  if (rootState.accounts.account) {
+    res = await this.$api.getTableRows({
+      code: "telos.decide",
+      scope: ballot,
+      table: "votes",
+      upper_bound: rootState.accounts.account,
+      lower_bound: rootState.accounts.account,
+      limit: 1,
+    });
+  }
+
+  let userVotes = Object.assign({}, rootState.trails.userVotes);
+  userVotes[ballot] = res.rows[0];
+
+  for (const [key, value] of Object.entries(userVotes)) {
+    if (!value || value.voter != rootState.accounts.account) {
+      delete userVotes[key]
+    }
+  }
+
+  let list = rootState.trails.ballotVoters || [];
+  list = list.filter(a => a.voter != rootState.accounts.account).concat(res.rows);
+
+  commit("setUserVotes", userVotes);
+  commit("setBallotVotes", list);
 };
 
 export const fetchBallot = async function ({ commit }, ballot) {
@@ -104,7 +144,7 @@ export const fetchBallot = async function ({ commit }, ballot) {
   }
 
   result.rows[0].treasury = treasury.rows[0];
-
+  commit("addBallots", result);
   commit("setBallot", result.rows[0]);
 };
 
@@ -201,7 +241,6 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
     !isBoth && actions.splice(2, 0, togglebal);
 
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetBallots");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {
@@ -237,7 +276,6 @@ export const deleteBallot = async function ({ commit }, ballot) {
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetBallots");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {
@@ -266,7 +304,6 @@ export const cancelBallot = async function ({ commit }, ballot) {
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetBallots");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {
@@ -307,7 +344,7 @@ export const castVote = async function (
     ];
 
     if (register) {
-      let ballot = rootState.trails.ballots.list.data.find(b => b.ballot_name == ballotName);
+      let ballot = rootState.trails.ballots.list.rows.find(b => b.ballot_name == ballotName);
       let treasury_symbol = ballot.treasury_symbol;
       actions.unshift({
         account: "telos.decide",
@@ -373,7 +410,7 @@ export const registerVoter = async function (
 // Ballots
 
 // Treasuries
-export const fetchTreasuries = async function ({ commit, state, rootState }) {
+export const fetchTreasuries = async function ({ commit, state }) {
   const result = await this.$api.getTableRows({
     code: "telos.decide",
     scope: "telos.decide",
@@ -381,20 +418,8 @@ export const fetchTreasuries = async function ({ commit, state, rootState }) {
     limit: state.treasuries.list.pagination.limit,
   });
 
-  const voter = await this.$api.getTableRows({
-    code: "telos.decide",
-    scope: rootState.accounts.account,
-    table: "voters",
-    limit: 1000,
-  });
-
-  for await (const treasury of result.rows) {
-    treasury.isRegistered = voter.rows.some(
-      (v) => supplyToSymbol(v.liquid) === supplyToSymbol(treasury.max_supply)
-    );
-  }
-
   commit("addTreasuries", result);
+  commit("updateTreasuries");
 };
 
 export const fetchTreasury = async function ({ commit }, treasury) {
@@ -406,7 +431,9 @@ export const fetchTreasury = async function ({ commit }, treasury) {
     lower_bound: treasury,
     upper_bound: treasury,
   });
+  commit("addTreasuries", result);
   commit("setTreasury", result.rows[0]);
+  commit("updateTreasuries");
 };
 
 export const addTreasury = async function (
@@ -452,7 +479,6 @@ export const addTreasury = async function (
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    commit("resetTreasuries");
     notification.status = "success";
     notification.transaction = transaction;
   } catch (e) {

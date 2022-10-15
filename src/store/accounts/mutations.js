@@ -12,6 +12,10 @@ export const setAccount = (state, account) => {
   state.account = account;
 };
 
+export const setAccountData = (state, data) => {
+  state.accountData = data ? markRaw(data) : data;
+};
+
 export const setAutoLogin = (state, status) => {
   state.autoLogin = status;
 };

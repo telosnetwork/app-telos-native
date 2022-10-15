@@ -42,6 +42,7 @@ export const login = async function (
       localStorage.setItem("account", accountName);
       localStorage.setItem("returning", true);
       this.$router.push({ path: returnUrl || defaultReturnUrl });
+      await dispatch("getAccount");
     }
   } catch (e) {
     const error =
@@ -67,27 +68,12 @@ export const memoryAutoLogin = async function ({
   if (account) {
     // check state and set account
     if (!rootState.accounts.account) {
-      autoLogin.bind(this)({ commit, dispatch }, location.pathname);
+      await dispatch("autoLogin", location.pathname);
     }
   } else {
     return null;
   }
 };
-
-/*
-export const loginToBackend = async function ({ commit }) {
-  try {
-    const authApi = PPP.authApi()
-    await authApi.signIn()
-    await this.dispatch('profiles/getProfile', { root: true })
-    return true
-  } catch (e) {
-    console.log('Failed to login to backend: ', e)
-    commit('general/setErrorMsg', e.message || e, { root: true })
-    return false
-  }
-}
-*/
 
 export const logout = async function ({ commit }) {
   // await PPP.authApi().signOut()
@@ -101,6 +87,7 @@ export const logout = async function ({ commit }) {
   commit("setAccount");
 
   localStorage.removeItem("account");
+  localStorage.removeItem("autoLogin");
   if (this.$router.path !== "/") {
     this.$router.push({ path: "/" });
   }
@@ -255,4 +242,14 @@ export const claimAccount = async function ({ commit }, accountName) {
   }
   commit("notifications/addNotification", notification, { root: true });
   return notification.status === "success";
+};
+
+export const getAccount = async function ({ rootState, commit }) {
+  let accountData = null;
+  if (rootState.accounts.account) {
+    accountData = await this.$api.getAccount(rootState.accounts.account);
+    accountData.core_liquid_balance = accountData.core_liquid_balance || "0.0000 TLOS";
+  }
+  commit("setAccountData", accountData);
+  return accountData;
 };

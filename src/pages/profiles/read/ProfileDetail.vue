@@ -1,14 +1,14 @@
 <template lang="pug">
-main.column.items-center.back(v-if="this.Profile")
+main.column.items-center.back(v-if="Profile")
     q-card.my-card
       q-card-section
         .column.items-center
-          profile-gravatar(size='200px' :avatar='this.Profile.avatar' :account='this.Profile.account_name')
+          profile-gravatar(size='200px' :avatar='Profile.avatar' :account='Profile.account_name')
       q-card-section
         .row.justify-center.q-gutter-x-md
-          p.text-h4 {{ ` ${this.Profile.account_name}` }}
+          p.text-h4 {{ ` ${Profile.account_name}` }}
         .row.justify-center.q-gutter-x-md
-          p.text-h6 {{ ` ${this.Profile.status}` }}
+          p.text-h6 {{ ` ${Profile.status}` }}
       q-card-section.q-mx-md
         q-list(padding, separator)
           q-item.q-mx-md
@@ -23,7 +23,7 @@ main.column.items-center.back(v-if="this.Profile")
             q-item-section
               q-item-label {{ $t('pages.signUp.form.presentation') }}
               //- q-item-label(caption) {{ this.Profile.bio }}
-              q-item-label(caption, v-html='this.Profile.bio')
+              q-item-label(caption, v-html='Profile.bio')
           q-select(
             v-if="!$i18n.locale",
             filled,
@@ -35,16 +35,18 @@ main.column.items-center.back(v-if="this.Profile")
       .row.justify-end(v-if='owner')
         .col-2.fab-edit
           q-btn(fab icon='edit' color='primary' to="/profiles/myProfile/add")
+sign-up(v-else)
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
+import SignUp from "src/pages/profiles/add/SignUp.vue";
 export default {
   name: "ProfileDetail",
   props: { owner: Boolean },
   components: {
-    ProfileAvatar,
+    ProfileAvatar, SignUp
   },
   computed: {
     Profile() {

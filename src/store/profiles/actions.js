@@ -3,8 +3,6 @@
 export const signUp = async function ({ commit }, profileData) {
   const actions = []
 
-  await getProfile({ commit })
-
   if (!this.state.profiles.myProfile) {
     actions.push({
       account: 'profiles',
@@ -39,13 +37,13 @@ export const signUp = async function ({ commit }, profileData) {
       })
     }
 
-    if (profileData.display !== undefined && myProfile.display !== profileData.display) {
+    if (profileData.display_name !== undefined && myProfile.display_name !== profileData.display) {
       actions.push({
         account: 'profiles',
         name: 'editdisplay',
         data: {
           account: this.$ualUser.accountName,
-          new_display_name: profileData.display || ''
+          new_display_name: profileData.display_name || ''
         }
       })
     }
@@ -60,6 +58,7 @@ export const signUp = async function ({ commit }, profileData) {
         }
       })
     }
+
   }
 
   let transaction = null
@@ -112,7 +111,7 @@ export const clearProfilesList = function ({ commit }, options = {}) {
 }
 
 export const getProfile = async function ({ commit }) {
-  if (!this.$ualUser || !this.$ualUser.accountName) {
+  if (!this.$ualUser && !this.state.profiles) {
     return
   }
 

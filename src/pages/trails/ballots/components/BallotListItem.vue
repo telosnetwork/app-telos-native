@@ -25,6 +25,25 @@ export default {
   },
   computed: {
     ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters("trails", ["userVotes"]),
+    mainButtonTextSmall() {
+      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+        if (this.userVotes[this.ballot.ballot_name]) {
+          return "View / Update vote"
+        }
+      }
+      return this.mainButtonText;
+    },
+    mainButtonText() {
+      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+        if (this.userVotes[this.ballot.ballot_name]) {
+          return "View proposal / Update vote"
+        } else {
+          return "View proposal & vote"
+        }
+      }
+      return "View proposal";
+    },
     getWinner() {
       if (!this.ballot.total_voters) return "No votes";
       let winnerValue = -1;
@@ -81,7 +100,9 @@ div
         template(v-else)
           img(:src="`statics/app-icons/inactive-bgr-icon1.png`").bgr-icon1
           img(:src="`statics/app-icons/inactive-bgr-icon2.png`").bgr-icon2
-    ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened").absolute-top-left
+    div.column.items-start.absolute-top-left
+      ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened")
+      ballot-chip(:type="'voted'", :isBallotOpened="isBallotOpened", :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
 
     q-separator.card-separator-vertical(vertical inset)
 
@@ -115,8 +136,11 @@ div
 
       div.text-section-row
         div.statics-section-item.section-item-btn
-          btn(
-            :labelText="(isBallotOpened && ballot.status === 'voting') ? 'View proposal & vote' : 'View proposal'"
+          q-btn(
+            no-caps
+            color="primary"
+            outline
+            :label="mainButtonTextSmall"
             btnWidth='220'
             fontSize='16'
             hoverBlue=true
@@ -153,16 +177,34 @@ div
           span.opacity06 {{ ballot.total_raw_weight.split(' ')[1]  }}&nbsp
           span.opacity06 tokens
 
-    q-card-section().row.justify-center.btn-section
-      btn(
-        :labelText="(isBallotOpened && ballot.status === 'voting' && isAuthenticated) ? 'View proposal & vote' : 'View proposal'"
-        btnWidth='332'
-        fontSize='16'
-        hoverBlue=true
-      )
+    q-card-section().column.q-ma-lg.justify-end.btn-section
+      q-btn(
+          no-caps
+          color="primary"
+          outline
+          :label="mainButtonText"
+          btnWidth='332'
+          fontSize='16'
+          hoverBlue=true
+        )
 </template>
 
 <style lang="sass">
+.voted
+  align-self: end
+  flex-direction: column
+  align-items: flex-end
+.voted__text
+  color: #ff9501
+  border: 3px solid #ff9501
+  border-radius: 10px
+  padding: 13px 10px 11px 10px
+  font-size: 22px !important
+  font-weight: bold
+.voted__text--absolute
+  line-height: 16px
+  .row-direction &
+    display: none
 .column-direction > div
   margin-top: 32px
 .poll-item
@@ -302,10 +344,6 @@ div
 .row-direction .btn-section
   position: relative
   flex: 1 1 auto
-  & > .q-btn
-    position: absolute
-    bottom: 24px
-    height: 41px
 .btn-section
   padding: 0
 .bgr-icon1, .bgr-icon2
@@ -387,8 +425,6 @@ div
   .row-direction .bgr-icon2
     top: 60px
     right: 33px
-  .btn-section > .q-btn
-      width: 296px !important
   @media (max-width: 400px)
     .row-direction > div
       width: 100%
