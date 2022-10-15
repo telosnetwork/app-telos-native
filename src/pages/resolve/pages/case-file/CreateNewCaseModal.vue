@@ -32,19 +32,7 @@ import { DECISION_CLASS_LIST } from '../../constants/claim';
     </q-card-section>
 
     <q-card-section class="q-pt-none">
-      <q-input
-        v-model="infoLink"
-        filled
-        label="Info Link"
-        bottom-slots
-        hint="46 or 49 character IPFS hash"
-        error-message=""
-        :rules="[
-          isLinkValid() || 'Must be valid IPFS hash (ie \'Qmdn7bZ8z25b...\')',
-        ]"
-        dense
-        autofocus
-      />
+      <file-upload-input @update:hash="setClaimLink" />
     </q-card-section>
 
     <q-card-section class="q-pt-none">
@@ -68,8 +56,13 @@ import { ref } from "vue";
 import { mapGetters } from "vuex";
 import { DECISION_CLASS_LIST } from "../../constants";
 import { validateIpfsHash } from "../../util";
+import FileUploadInput from "../../components/FileUploadInput.vue";
+
 // claimant, claim_link, respondant, claim_category
 export default {
+  components: {
+    FileUploadInput,
+  },
   data() {
     const options = DECISION_CLASS_LIST.map((item, index) => ({
       label: item,
@@ -78,7 +71,7 @@ export default {
     return {
       category: null,
       respondant: "",
-      infoLink: "",
+      claimLink: "",
       categories: options,
     };
   },
@@ -88,9 +81,12 @@ export default {
     }),
   },
   methods: {
+    setClaimLink(link) {
+      this.claimLink = link;
+    },
     isLinkValid() {
-      console.log("isLinkValid: ", this.infoLink);
-      const isValid = validateIpfsHash(this.infoLink);
+      console.log("isLinkValid: ", this.claimLink);
+      const isValid = validateIpfsHash(this.claimLink);
       return isValid;
     },
     async submit() {
@@ -98,7 +94,7 @@ export default {
         "submit: ",
         this.category.value,
         this.respondant,
-        this.infoLink
+        this.claimLink
       );
     },
   },
