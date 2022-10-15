@@ -104,6 +104,7 @@ export default {
       caseActionsHistory: [],
       form: null,
       formType: null,
+      fetchCaseInterval: null,
     };
   },
   methods: {
@@ -175,6 +176,10 @@ export default {
     console.log("actionsHistory: ", actionsHistory);
     // @ts-ignore
     this.caseActionsHistory = actionsHistory;
+    this.fetchCaseInterval = setInterval(this.fetchCaseFile, 10000);
+  },
+  beforeUnmount() {
+    clearInterval(this.fetchCaseInterval);
   },
 };
 </script>

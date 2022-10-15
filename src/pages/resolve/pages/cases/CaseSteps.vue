@@ -13,7 +13,16 @@
             "
             color="primary"
             label="Add Claim"
-          />
+          />&nbsp;
+          <q-btn
+            v-if="isClaimant"
+            @click="
+              form = true;
+              formType = 'readycase';
+            "
+            color="primary"
+            label="Ready Case"
+          />&nbsp;
           <q-btn
             v-if="isRespondant"
             @click="
@@ -89,8 +98,9 @@
     </div>
     <div class="form-wrapper" persistent>
       <q-dialog v-model="form">
-        <nominate-self-modal
-          v-if="formType === 'nominate-self'"
+        <ready-case-form
+          v-if="formType === 'readycase'"
+          :caseId="caseFile.case_id"
           :close="closeModal"
         />
       </q-dialog>
@@ -100,24 +110,24 @@
 
 <script>
 import { mapGetters } from "vuex";
-import NominateSelfModal from "../../components/NominateSelfModal.vue";
+import ReadyCaseForm from "../../components/ReadyCaseForm.vue";
 
 export default {
   props: ["caseFile"],
   components: {
-    NominateSelfModal,
+    ReadyCaseForm,
   },
   data() {
     return {
       form: null,
       formType: null,
-      account: this.$store.state.accounts.account,
     };
   },
   computed: {
     ...mapGetters({
       isResolveAdmin: "resolve/isResolveAdmin",
       isArbitrator: "resolve/isArbitrator",
+      account: "accounts/account",
     }),
     caseStatus() {
       if (!this.caseFile) return null;
@@ -183,19 +193,6 @@ export default {
       ];
       try {
         await this.$store.$api.signTransaction(validateCaseActions);
-      } catch (err) {
-        console.log("endElection error: ", err);
-      }
-    },
-    async endElection() {
-      const endElectionActions = [
-        {
-          account: "testtelosarb",
-          name: "endelection",
-        },
-      ];
-      try {
-        await this.$store.$api.signTransaction(endElectionActions);
       } catch (err) {
         console.log("endElection error: ", err);
       }
