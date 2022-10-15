@@ -19,11 +19,19 @@
                 v-if="isAddClaimButtonVisible()"
                 color="primary"
                 label="Add claim to case"
+                @click="
+                  form = true;
+                  formType = 'addclaim';
+                "
               />&nbsp;
               <q-btn
                 v-if="isRespondToClaimButtonVisible()"
                 color="primary"
                 label="Respond to claim"
+                @click="
+                  form = true;
+                  formType = 'respond';
+                "
               />
             </div>
           </template>
@@ -39,6 +47,15 @@
     <div class="q-pa-md">
       <case-file-actions :actions="caseActionsHistory" />
     </div>
+    <div class="case-file-modal-wrap">
+      <q-dialog id="case-file-modal" v-model="form">
+        <add-claim-form
+          v-if="formType === 'addclaim'"
+          :caseId="$route.params.id"
+          :close="closeModal"
+        />
+      </q-dialog>
+    </div>
   </div>
 </template>
 
@@ -49,6 +66,7 @@ import ClaimsTable from "../../components/ClaimsTable.vue";
 import IntroCard from "../../components/IntroCard.vue";
 import CaseSteps from "../cases/CaseSteps.vue";
 import CaseFileActions from "./CaseFileActions.vue";
+import AddClaimForm from "./AddClaimForm.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -57,6 +75,7 @@ export default {
     IntroCard,
     CaseSteps,
     CaseFileActions,
+    AddClaimForm,
   },
   data() {
     return {
@@ -75,9 +94,14 @@ export default {
         { name: "actions", label: "Actions", field: "actions" },
       ],
       caseActionsHistory: [],
+      form: null,
+      formType: null,
     };
   },
   methods: {
+    closeModal() {
+      this.form = null;
+    },
     async fetchCaseFile() {
       const id = this.$route.params.id;
       if (!id) return;
@@ -157,6 +181,10 @@ export default {
 
   .intro-buttons-wrap {
     flex-direction: column;
+  }
+
+  .case-file-modal-wrap {
+    flex: 1;
   }
 }
 </style>
