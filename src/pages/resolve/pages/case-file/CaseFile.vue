@@ -34,18 +34,16 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { GET_TABLE_ROWS } from "../../constants";
 import { FETCH_CASE_ACTIONS_HISTORY } from "../../util/case";
 import ClaimsTable from "../../components/ClaimsTable.vue";
 import IntroCard from "../../components/IntroCard.vue";
 import CaseSteps from "../cases/CaseSteps.vue";
 import CaseFileActions from "./CaseFileActions.vue";
-import { defineComponent } from "@vue/runtime-core";
 import { mapGetters } from "vuex";
 
-export default defineComponent({
-  props: ["id"],
+export default {
   components: {
     ClaimsTable,
     IntroCard,
@@ -54,7 +52,7 @@ export default defineComponent({
   },
   data() {
     return {
-      caseFile: {},
+      caseFile: null,
       columns: [
         { name: "case_id", label: "ID", field: "case_id" },
         { name: "claimant", label: "Claimant", field: "claimant" },
@@ -73,6 +71,7 @@ export default defineComponent({
   },
   methods: {
     async fetchCaseFile() {
+      console.log("fetchCaseFile id: ", id);
       const id = this.$route.params.id;
       if (!id) return;
       try {
@@ -81,7 +80,6 @@ export default defineComponent({
           scope: "testtelosarb",
           table: "casefiles",
           key_type: "i64",
-          // @ts-ignore
           index_position: "1",
           // @ts-ignore
           upper_bound: this.$route.params.id,
@@ -95,31 +93,64 @@ export default defineComponent({
         console.log("fetchCaseFile error:", err);
       }
     },
-    isAddClaimButtonVisible() {},
+    isAddClaimButtonVisible() {
+      if (!isClaimant) return false;
+      if (this.caseFile.status !== 0) return false;
+      if (this.caseFile.number_claims > this.config.max_claims_per_case)
+        return false;
+      return true;
+    },
     isUpdateClaimButtonVisible() {},
     isRespondToClaimButtonVisible() {},
-  },
-  mounted: async function () {
-    this.fetchCaseFile();
-    const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
-      this,
-      // @ts-ignore
-      this.$route.params.id
-    );
-    console.log("actionsHistory: ", actionsHistory);
-    // @ts-ignore
-    this.caseActionsHistory = actionsHistory;
   },
   computed: {
     ...mapGetters({
       isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
       isResolveAdmin: "resolve/isResolveAdmin",
+      account: "accounts/account",
     }),
+    config() {
+      return this.$store.state.resolve.config;
+    },
     caseData() {
       return this.caseFile;
     },
+    isClaimant() {
+      if (!this.caseFile) return false;
+      return this.account === this.caseFile.claimant;
+    },
+    isRespondant() {
+      if (!this.caseFile) return false;
+      return this.account === this.caseFile.respondant;
+    },
+    beforeCreate() {
+      console.log("beforeCreate before fetch");
+      this.fetchCaseFile();
+      console.log("beforeCreate after fetch");
+    },
+    created() {
+      console.log("created before fetch");
+      this.fetchCaseFile();
+      console.log("created after fetch");
+    },
+    beforeMount() {
+      console.log("beforeMount before fetch");
+      this.fetchCaseFile();
+      console.log("beforeMount after fetch");
+    },
+    async mounted() {
+      console.log("mounted");
+      const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
+        this,
+        // @ts-ignore
+        this.$route.params.id
+      );
+      console.log("actionsHistory: ", actionsHistory);
+      // @ts-ignore
+      this.caseActionsHistory = actionsHistory;
+    },
   },
-});
+};
 </script>
 
 <style scoped lang="scss">
