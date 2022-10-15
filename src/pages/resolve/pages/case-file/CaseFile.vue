@@ -25,12 +25,12 @@
                 "
               />&nbsp;
               <q-btn
-                v-if="isRespondToClaimButtonVisible()"
-                color="primary"
-                label="Respond to claim"
+                v-if="isShredCaseButtonVisible()"
+                color="red"
+                label="Delete Case"
                 @click="
                   form = true;
-                  formType = 'respond';
+                  formType = 'shredcase';
                 "
               />
             </div>
@@ -54,6 +54,12 @@
           :caseId="$route.params.id"
           :close="closeModal"
         />
+        <shred-case-form
+          v-if="formType === 'shredcase'"
+          :caseId="$route.params.id"
+          :close="closeModal"
+          :afterShredCase="fetchCaseFile"
+        />
       </q-dialog>
     </div>
   </div>
@@ -67,6 +73,7 @@ import IntroCard from "../../components/IntroCard.vue";
 import CaseSteps from "../cases/CaseSteps.vue";
 import CaseFileActions from "./CaseFileActions.vue";
 import AddClaimForm from "./AddClaimForm.vue";
+import ShredCaseForm from "../../components/ShredCaseForm.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -76,6 +83,7 @@ export default {
     CaseSteps,
     CaseFileActions,
     AddClaimForm,
+    ShredCaseForm,
   },
   data() {
     return {
@@ -132,10 +140,10 @@ export default {
         return false;
       return true;
     },
-    isUpdateClaimButtonVisible() {},
-    isRespondToClaimButtonVisible() {
-      if (!this.isRespondant) return false;
-      if (this.caseFile.case_status !== 3) return false;
+    isShredCaseButtonVisible() {
+      if (!this.isClaimant) return false;
+      console.log("isClaimaint");
+      if (this.caseFile.case_status !== 0) return false;
       return true;
     },
   },
