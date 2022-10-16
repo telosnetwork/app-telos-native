@@ -7,6 +7,7 @@ export type TableRowsConfig = {
   lower_bound?: string | null;
   reverse?: boolean;
   index_position?: string;
+  key_type?: string;
 };
 
 export type CaseFile = {
