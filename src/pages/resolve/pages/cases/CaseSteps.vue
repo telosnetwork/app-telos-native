@@ -52,6 +52,8 @@
             color="primary"
             label="Submit Offer"
           />
+          <br />
+          <offers-table :caseId="caseFile.case_id" />
         </q-step>
 
         <q-step :name="2" title="Arbitrators Assigned" icon="assignment">
@@ -120,12 +122,14 @@
 import { mapGetters } from "vuex";
 import ReadyCaseForm from "../../components/ReadyCaseForm.vue";
 import MakeOfferForm from "../../components/MakeOfferForm.vue";
+import OffersTable from "../../components/OffersTable.vue";
 
 export default {
   props: ["caseFile"],
   components: {
     ReadyCaseForm,
     MakeOfferForm,
+    OffersTable,
   },
   data() {
     return {
