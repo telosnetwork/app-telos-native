@@ -85,8 +85,7 @@ export default {
       ];
       try {
         await this.$store.$api.signTransaction(makeOfferActions);
-        setTimeout(this.afterReadyCase, 5000);
-        this.close();
+        setTimeout(this.close, 2000);
       } catch (err) {
         console.log("submit error: ", err);
       }

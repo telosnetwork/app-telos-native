@@ -44,7 +44,10 @@
           be returned in case of mistrial.
           <br /><br />
           <q-btn
-            v-if="canArbitratorSubmitOffer()"
+            v-if="
+              canArbitratorSubmitOffer() &&
+              (!existingArbOffer || existingArbOffer.status === 1)
+            "
             @click="
               form = true;
               formType = 'makeoffer';
@@ -57,13 +60,13 @@
             "
           />&nbsp;
           <q-btn
-            v-if="canArbitratorSubmitOffer() === 'update'"
+            v-if="existingArbOffer && existingArbOffer.status === 1"
             @click="
               form = true;
-              formType = 'dismisoffer';
+              formType = 'dismissoffer';
             "
             color="red"
-            label="Delete Offer"
+            label="Dismiss Offer"
           />
           <br /><br />
           <offers-table :caseId="caseFile.case_id" />
@@ -126,6 +129,11 @@
           :caseId="caseFile.case_id"
           :close="closeModal"
         />
+        <dismiss-offer-form
+          v-if="formType === 'dismissoffer'"
+          :caseId="caseFile.case_id"
+          :close="closeModal"
+        />
       </q-dialog>
     </div>
   </div>
@@ -136,6 +144,7 @@ import { mapGetters } from "vuex";
 import ReadyCaseForm from "../../components/ReadyCaseForm.vue";
 import MakeOfferForm from "../../components/MakeOfferForm.vue";
 import OffersTable from "../../components/OffersTable.vue";
+import DismissOfferForm from "../../components/DismissOfferForm.vue";
 
 export default {
   props: ["caseFile"],
@@ -143,6 +152,7 @@ export default {
     ReadyCaseForm,
     MakeOfferForm,
     OffersTable,
+    DismissOfferForm,
   },
   data() {
     return {
@@ -165,6 +175,13 @@ export default {
     isRespondant() {
       return this.account === this.caseFile.respondant;
     },
+    existingArbOffer() {
+      return this.$store.state.resolve.offers.find(
+        (offer) =>
+          offer.case_id === this.caseFile.case_id &&
+          offer.arbitrator === this.account
+      );
+    },
   },
   methods: {
     closeModal() {
@@ -179,13 +196,7 @@ export default {
         (arb) => arb.arb === this.account
       );
       if (foundArbitrator.arb_status !== 1) return false;
-      if (
-        this.$store.state.resolve.offers.find(
-          (offer) =>
-            offer.case_id === this.caseFile.case_id &&
-            offer.arbitrator === this.account
-        )
-      ) {
+      if (this.existingArbOffer) {
         return "update";
       }
       return "new";
