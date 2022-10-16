@@ -6,6 +6,7 @@
       :columns="columns"
       row-key="name"
       class="resolve-table"
+      :pagination="pagination"
     >
       <template v-slot:body-cell-claimant="props">
         <q-td :props="props">
@@ -93,6 +94,9 @@ export default {
         { name: "update_ts", label: "Last Updated", field: "update_ts" },
         { name: "actions", label: "Actions", field: "actions" },
       ],
+      pagination: {
+        rowsPerPage: 20,
+      },
     };
   },
   computed: {
