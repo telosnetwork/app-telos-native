@@ -13,6 +13,14 @@
             }}</strong
             >, assigned to the case.
           </p>
+          <p>
+            Case is currently in <strong>{{ getCaseStatus() }}</strong> mode
+          </p>
+          <p v-if="caseFile.case_status === 1">
+            Arbitrators have until
+            <strong>{{ formatContractDate() }}</strong>
+            to submit their offers
+          </p>
           <template v-slot:buttons>
             <div class="intro-buttons-wrap">
               <q-btn
@@ -66,7 +74,7 @@
 </template>
 
 <script>
-import { GET_TABLE_ROWS } from "../../constants";
+import { GET_TABLE_ROWS, CASE_STATUS_LIST } from "../../constants";
 import { FETCH_CASE_ACTIONS_HISTORY } from "../../util/case";
 import ClaimsTable from "../../components/ClaimsTable.vue";
 import IntroCard from "../../components/IntroCard.vue";
@@ -75,6 +83,7 @@ import CaseFileActions from "./CaseFileActions.vue";
 import AddClaimForm from "./AddClaimForm.vue";
 import ShredCaseForm from "../../components/ShredCaseForm.vue";
 import { mapGetters } from "vuex";
+import moment from "moment";
 
 export default {
   components: {
@@ -110,6 +119,16 @@ export default {
   methods: {
     closeModal() {
       this.form = null;
+    },
+    formatContractDate() {
+      const date = moment(
+        new Date(this.caseFile.sending_offers_until_ts + "Z")
+      ).format("YYYY-MM-DD HH:mm:ss");
+      return date;
+    },
+    getCaseStatus() {
+      const index = this.caseFile.case_status;
+      return CASE_STATUS_LIST[index];
     },
     async fetchCaseFile() {
       const id = this.$route.params.id;

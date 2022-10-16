@@ -45,7 +45,10 @@
           <br /><br />
           <q-btn
             v-if="canArbitratorSubmitOffer()"
-            @click="registerSelfCandidate"
+            @click="
+              form = true;
+              formType = 'makeoffer';
+            "
             color="primary"
             label="Submit Offer"
           />
@@ -103,6 +106,11 @@
           :caseId="caseFile.case_id"
           :close="closeModal"
         />
+        <make-offer-form
+          v-if="formType === 'makeoffer'"
+          :caseId="caseFile.case_id"
+          :close="closeModal"
+        />
       </q-dialog>
     </div>
   </div>
@@ -111,11 +119,13 @@
 <script>
 import { mapGetters } from "vuex";
 import ReadyCaseForm from "../../components/ReadyCaseForm.vue";
+import MakeOfferForm from "../../components/MakeOfferForm.vue";
 
 export default {
   props: ["caseFile"],
   components: {
     ReadyCaseForm,
+    MakeOfferForm,
   },
   data() {
     return {
@@ -130,7 +140,6 @@ export default {
       account: "accounts/account",
     }),
     caseStatus() {
-      if (!this.caseFile) return null;
       return this.caseFile.case_status;
     },
     isClaimant() {
