@@ -50,9 +50,22 @@
               formType = 'makeoffer';
             "
             color="primary"
-            label="Submit Offer"
+            :label="
+              canArbitratorSubmitOffer() === 'new'
+                ? 'Submit Offer'
+                : 'Update Offer'
+            "
+          />&nbsp;
+          <q-btn
+            v-if="canArbitratorSubmitOffer() === 'update'"
+            @click="
+              form = true;
+              formType = 'dismisoffer';
+            "
+            color="red"
+            label="Delete Offer"
           />
-          <br />
+          <br /><br />
           <offers-table :caseId="caseFile.case_id" />
         </q-step>
 
@@ -173,9 +186,9 @@ export default {
             offer.arbitrator === this.account
         )
       ) {
-        return false;
+        return "update";
       }
-      return true;
+      return "new";
     },
     async validateCase(isProceed) {
       const validateCaseActions = [

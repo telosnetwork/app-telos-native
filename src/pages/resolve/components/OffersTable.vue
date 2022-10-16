@@ -4,7 +4,6 @@
     :rows="offers"
     :columns="columns"
     row-key="name"
-    dense
     hide-bottom
   >
     <template v-slot:body-cell-status="props">

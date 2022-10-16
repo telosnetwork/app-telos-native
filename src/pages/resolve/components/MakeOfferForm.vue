@@ -1,7 +1,7 @@
 <template>
   <q-card style="min-width: 450px">
     <q-card-section>
-      <div class="text-h6">Make Offer</div>
+      <div class="text-h6">Submit Offer</div>
     </q-card-section>
 
     <q-card-section class="q-pt-none">
@@ -50,8 +50,8 @@ export default {
   props: ["close", "caseId", "afterReadyCase"],
   data() {
     return {
-      hourly_rate: 0,
-      estimated_hours: 0,
+      hourly_rate: 1,
+      estimated_hours: 1,
     };
   },
   computed: {
@@ -64,6 +64,12 @@ export default {
   },
   methods: {
     async submit() {
+      const { offers } = this.$store.state.resolve;
+      const arbCaseOffer = offers.find(
+        (offer) =>
+          offer.case_id === this.caseId && offer.arbitrator === this.account
+      );
+
       const makeOfferActions = [
         {
           account: "testtelosarb",
@@ -73,7 +79,7 @@ export default {
             arbitrator: this.account,
             hourly_rate: this.hourly_rate.toFixed(4) + " USD",
             estimated_hours: this.estimated_hours,
-            offer_id: -1,
+            offer_id: arbCaseOffer?.offer_id > -1 ? arbCaseOffer.offer_id : -1,
           },
         },
       ];
