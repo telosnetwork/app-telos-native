@@ -83,12 +83,14 @@ export default {
       }
     },
     openBallotForm() {
+      console.log("openBallotForm()");
       this.show = true;
     },
     closeBallot() {
       this.$router.go(-1);
     },
     openBallot(ballot) {
+      console.log("openBallot()", [ballot]);
       this.timeAtMount = Date.now();
       this.$router.push(
         `/trails/${
@@ -141,15 +143,15 @@ export default {
     },
     updateTreasury(newTreasury) {
       this.treasury = newTreasury;
-      this.$refs.infiniteScroll.resume();
+      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
     },
     updateStatuses(newStatuses) {
       this.statuses = newStatuses;
-      this.$refs.infiniteScroll.resume();
+      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
     },
     updateCategories(newCategories) {
       this.categories = newCategories;
-      this.$refs.infiniteScroll.resume();
+      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
     },
     filterBallots(ballots) {
       const ballotFilteredByStatuses = ballots.filter((b) => {
