@@ -172,12 +172,12 @@ export default {
             if (!userTreas) return false;
 
             let powerComes = this.votingPowerComesFrom;
-            
+
             if (powerComes == FROM_BOTH || powerComes == FROM_LIQUID) {
                 let liquid = userTreas.liquid;
                 power += parseFloat(liquid.split(" ")[0]);
             }
-            
+
             if (powerComes == FROM_BOTH || powerComes == FROM_STAKE) {
                 let staked = userTreas.staked;
                 power += parseFloat(staked.split(" ")[0]);
@@ -213,7 +213,9 @@ export default {
       "cancelBallot",
       "fetchVotesForBallot",
       "fetchUserVotesForThisBallot",
-      "fetchTreasuriesForUser"
+      "fetchTreasuriesForUser",
+      "resetUserVotes"
+
     ]),
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
@@ -240,7 +242,7 @@ export default {
         message: this.$t(message),
         color: "warning",
       });
-    },    
+    },
     showNotification() {
       this.$q.notify({
         icon: this.notifications[0].icon,
@@ -311,6 +313,8 @@ export default {
             ballotName: this.ballot.ballot_name,
         });
         await this.fetchBallot(this.$route.params.id);
+        await this.resetUserVotes();
+
         this.showNotification();
     },
     async cancel() {
