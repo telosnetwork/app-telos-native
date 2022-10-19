@@ -24,59 +24,88 @@
         }}
       </q-td>
     </template>
+    <template v-slot:body-cell-actions="props">
+      <q-td :props="props">
+        <q-btn
+          flat
+          color="primary"
+          v-if="canAccountAcceptOffer(props.row.status)"
+          @click="
+            offer_id = props.row.offer_id;
+            formType = 'respondoffer';
+            form = true;
+          "
+        >
+          Respond</q-btn
+        >
+      </q-td>
+    </template>
   </q-table>
+  <q-dialog v-model="form">
+    <respond-offer-form
+      v-if="formType === 'respondoffer'"
+      :caseId="caseFile.case_id"
+      :close="closeModal"
+      :offer_id="offer_id"
+    />
+  </q-dialog>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { fetchClaims } from "../util";
 import { OFFER_STATUS_LIST } from "../constants";
+import RespondOfferForm from "./RespondOfferForm.vue";
 
 export default {
-  props: ["caseId"],
+  props: ["caseId", "caseFile"],
+  components: {
+    RespondOfferForm,
+  },
   data() {
     return {
       interval: null,
+      offer_id: null,
+      form: false,
+      formType: null,
       columns: [
         { name: "status", label: "Status", field: "status" },
         { name: "estimated_hours", label: "Hours", field: "estimated_hours" },
         { name: "arbitrator", label: "Arbitrator", field: "arbitrator" },
         { name: "hourly_rate", label: "Rate", field: "hourly_rate" },
         { name: "total", label: "Total", field: "total" },
+        { name: "actions", label: "Actions", field: "actions" },
       ],
     };
   },
   methods: {
+    closeModal() {
+      this.form = false;
+      this.formType = null;
+    },
     getOfferStatus(index) {
       return OFFER_STATUS_LIST[index];
     },
     getStatus(statusId) {
       return DECISION_CLASS_LIST[statusId];
     },
+    canAccountAcceptOffer(status) {
+      if (this.account !== this.caseFile.claimant) return false;
+      if (status !== 1) return false;
+      return true;
+    },
   },
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({
+      account: "accounts/account",
+      offers: "resolve/offers",
+    }),
     offers() {
       return this.$store.state.resolve.offers.filter((offer) => {
-        console.log(offer.case_id);
         const isCase = offer.case_id === this.caseId;
         return isCase;
       });
     },
   },
-  updated() {
-    console.log("this.caseId: ", this.caseId);
-  },
-  // mounted() {
-  //   this.getClaims();
-  //   this.interval = setInterval(
-  //     () => this.getClaims(this, this.$route.params.id),
-  //     10000
-  //   );
-  // },
-  // unmounted() {
-  //   clearInterval(this.interval);
-  // },
 };
 </script>
 

@@ -69,7 +69,7 @@
             label="Dismiss Offer"
           />
           <br /><br />
-          <offers-table :caseId="caseFile.case_id" />
+          <offers-table :caseId="caseFile.case_id" :caseFile="caseFile" />
         </q-step>
 
         <q-step :name="2" title="Arbitrators Assigned" icon="assignment">

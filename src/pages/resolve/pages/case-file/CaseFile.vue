@@ -84,6 +84,7 @@ import AddClaimForm from "./AddClaimForm.vue";
 import ShredCaseForm from "../../components/ShredCaseForm.vue";
 import { mapGetters } from "vuex";
 import moment from "moment";
+import OffersTable from "../../components/OffersTable.vue";
 
 export default {
   components: {
@@ -93,6 +94,7 @@ export default {
     CaseFileActions,
     AddClaimForm,
     ShredCaseForm,
+    OffersTable,
   },
   data() {
     return {
@@ -145,7 +147,6 @@ export default {
           // @ts-ignore
           lower_bound: this.$route.params.id,
         });
-        console.log("fetchCaseFile rows", rows);
         const [caseFile] = rows;
         this.caseFile = caseFile;
       } catch (err) {
@@ -154,7 +155,6 @@ export default {
     },
     isAddClaimButtonVisible() {
       if (!this.isClaimant) return false;
-      console.log("isClaimaint");
       if (this.caseFile.case_status !== 0) return false;
       if (this.caseFile.number_claims > this.config.max_claims_per_case)
         return false;
@@ -162,7 +162,6 @@ export default {
     },
     isShredCaseButtonVisible() {
       if (!this.isClaimant) return false;
-      console.log("isClaimaint");
       if (this.caseFile.case_status !== 0) return false;
       return true;
     },
@@ -208,7 +207,11 @@ export default {
   flex-direction: row;
 
   .part {
-    flex: 1;
+    flex: 4;
+
+    .part:last-child() {
+      flex: 6;
+    }
   }
 
   .intro-buttons-wrap {
