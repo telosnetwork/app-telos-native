@@ -1,39 +1,62 @@
 <template>
   <div class="container">
-    <q-chip v-if="statusIndex === 1" text-color="white" color="primary"
-      >Available</q-chip
+    <q-chip
+      v-if="getArbitratorStatus(arbitrator) === 1"
+      text-color="white"
+      color="primary"
+      >{{ getStatusText(getArbitratorStatus(arbitrator)) }}</q-chip
     >
-    <q-chip v-if="statusIndex === 2" text-color="white" color="orange"
-      >Unavailable</q-chip
+    <q-chip
+      v-if="getArbitratorStatus(arbitrator) === 2"
+      text-color="white"
+      color="orange"
+      >{{ getStatusText(getArbitratorStatus(arbitrator)) }}</q-chip
     >
-    <q-chip v-if="statusIndex === 3" text-color="white" color="red"
-      >Removed</q-chip
+    <q-chip
+      v-if="getArbitratorStatus(arbitrator) === 3"
+      text-color="white"
+      color="red"
+      >{{ getStatusText(getArbitratorStatus(arbitrator)) }}</q-chip
     >
-    <q-chip v-if="statusIndex === 4" text-color="white" color="deep-orange"
-      >Expired</q-chip
+    <q-chip
+      v-if="getArbitratorStatus(arbitrator) === 4"
+      text-color="white"
+      color="deep-orange"
+      >{{ getStatusText(getArbitratorStatus(arbitrator)) }}</q-chip
     >
   </div>
 </template>
 
 <script lang="ts">
 import { ARBITRATOR_STATUS_LIST } from "../constants";
+import { Arbitrator } from "../types";
 export default {
-  props: ["statusIndex"],
-  computed: {
-    arbitrators(): any[] {
-      // @ts-ignore
-      return this.$store.state.resolve.arbitrators || [];
-    },
-  },
+  props: ["arbitrator"],
+  computed: {},
   methods: {
-    getArbitratorStatus(index: number) {
-      return ARBITRATOR_STATUS_LIST[index];
+    getStatusText(status: number) {
+      return ARBITRATOR_STATUS_LIST[status];
+    },
+    getArbitratorStatus(arbitrator: Arbitrator) {
+      console.log("arbitrator", JSON.parse(JSON.stringify(arbitrator)));
+      if (
+        // @ts-ignore
+        new Date(this.arbitrator.term_expiration + "Z") < new Date() &&
+        // @ts-ignore
+        [1, 2].includes(this.arbitrator.arb_status)
+      ) {
+        return 4;
+      }
+      return arbitrator.arb_status;
     },
   },
   mounted() {
-    console.log("hi");
     // @ts-ignore
-    console.log("this.statusIndex", this.statusIndex);
+    console.log(
+      "this.arbitrator.term_expiration",
+      // @ts-ignore
+      JSON.parse(JSON.stringify(this.arbitrator))
+    );
   },
 };
 </script>

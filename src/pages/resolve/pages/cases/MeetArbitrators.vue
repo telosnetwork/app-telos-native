@@ -18,7 +18,7 @@
             target="_blank"
             >{{ arbitrator.arb }}</a
           >
-          <arbitrator-status-chip :statusIndex="arbitrator.arb_status" />
+          <arbitrator-status-chip :arbitrator="arbitrator" />
         </li>
       </ul>
     </q-card>
