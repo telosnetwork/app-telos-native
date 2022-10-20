@@ -29,6 +29,7 @@ export default {
           route: "/resolve",
           children: [
             { label: this.$t("menu.welcome"), route: "/resolve" },
+            { label: this.$t("menu.elections"), route: "/resolve/elections" },
             {
               label: this.$t("menu.arbitrator"),
               route: "/resolve/arbitrator",
