@@ -2,7 +2,8 @@
   <div v-if="isResolveStoresAvailable" class="container">
     <div class="q-pa-md stepper-wrap">
       <q-btn-toggle
-        :model-value="status"
+        :disable="[3, 4].includes(getArbitratorStatus)"
+        :model-value="getArbitratorStatus"
         no-caps
         toggle-color="primary"
         color="white"
@@ -19,31 +20,15 @@
     <div>
       <assigned-cases />
     </div>
-    <div class="form-wrapper">
-      <q-dialog v-model="form">
-        <init-election-modal
-          v-if="formType === 'initelection'"
-          :close="closeModal"
-        />
-        <begin-voting-modal
-          v-if="formType === 'beginvoting'"
-          :close="closeModal"
-        />
-      </q-dialog>
-    </div>
   </div>
 </template>
 
 <script>
-import InitElectionModal from "../../components/InitElectionModal.vue";
-import BeginVotingModal from "../../components/BeginVotingModal.vue";
 import AssignedCases from "./AssignedCases.vue";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
-    InitElectionModal,
-    BeginVotingModal,
     AssignedCases,
   },
   data() {
@@ -82,42 +67,17 @@ export default {
       selfArbitrator: "resolve/isArbitrator",
       account: "accounts/account",
     }),
-    electionStatus() {
-      const resolve = this.$store.state.resolve;
-      if (resolve && resolve.config && resolve.elections) {
-        const { current_election_id } = resolve;
-        const currentElection = resolve.elections.find(
-          (e) => e.id === current_election_id
-        );
-        if (!currentElection) return null;
-        const { status, end_voting_ts, end_add_candidates_ts } =
-          currentElection;
-        if (status === 1) {
-          const endAddCandidateUnixTimestamp = new Date(
-            `${end_add_candidates_ts}Z`
-          ).getTime();
-          const rightNow = new Date().getTime();
-          if (endAddCandidateUnixTimestamp > rightNow) {
-            return "candidate-registration";
-          } else {
-            return "election-ready";
-          }
-        }
-        if (status === 2) {
-          // see if voting period has ended
-          const endVotingUnixTimestamp = new Date(
-            `${end_voting_ts}Z`
-          ).getTime();
-          const rightNow = new Date().getTime();
-          if (endVotingUnixTimestamp > rightNow) {
-            return "voting";
-          } else {
-            return "election-finalization";
-          }
-        }
-        return status;
+    getArbitratorStatus() {
+      if (!this.selfArbitrator) return null;
+      if (
+        // @ts-ignore
+        new Date(this.selfArbitrator.term_expiration + "Z") < new Date() &&
+        // @ts-ignore
+        [1, 2].includes(this.selfArbitrator.arb_status)
+      ) {
+        return 4;
       }
-      return null;
+      return this.selfArbitrator.arb_status;
     },
   },
   updated() {
