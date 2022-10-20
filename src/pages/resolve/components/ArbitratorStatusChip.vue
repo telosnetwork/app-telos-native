@@ -38,7 +38,6 @@ export default {
       return ARBITRATOR_STATUS_LIST[status];
     },
     getArbitratorStatus(arbitrator: Arbitrator) {
-      console.log("arbitrator", JSON.parse(JSON.stringify(arbitrator)));
       if (
         // @ts-ignore
         new Date(this.arbitrator.term_expiration + "Z") < new Date() &&
@@ -49,14 +48,6 @@ export default {
       }
       return arbitrator.arb_status;
     },
-  },
-  mounted() {
-    // @ts-ignore
-    console.log(
-      "this.arbitrator.term_expiration",
-      // @ts-ignore
-      JSON.parse(JSON.stringify(this.arbitrator))
-    );
   },
 };
 </script>
