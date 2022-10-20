@@ -67,18 +67,8 @@ export default {
       selfArbitrator: "resolve/isArbitrator",
       account: "accounts/account",
     }),
-    getArbitratorStatus() {
-      if (!this.selfArbitrator) return null;
-      if (
-        // @ts-ignore
-        new Date(this.selfArbitrator.term_expiration + "Z") < new Date() &&
-        // @ts-ignore
-        [1, 2].includes(this.selfArbitrator.arb_status)
-      ) {
-        return 4;
-      }
-      return this.selfArbitrator.arb_status;
-    },
+    getArbitratorStatus: () =>
+      getAvailableArbitratorStatus(this.selfArbitrator),
   },
   updated() {
     const selfArbitrator = this.selfArbitrator;

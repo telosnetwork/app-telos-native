@@ -1,4 +1,4 @@
-import { SymbolInfo } from "../types";
+import { Arbitrator, SymbolInfo } from "../types";
 
 const VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz12345";
 
@@ -150,4 +150,15 @@ export const getSymbolInfo = (balance: string): SymbolInfo => {
     symbol,
     amount,
   };
+};
+
+export const getAvailableArbitratorStatus = (arbitrator: Arbitrator) => {
+  if (!arbitrator) return null;
+  if (
+    new Date(arbitrator.term_expiration + "Z") < new Date() &&
+    [1, 2].includes(arbitrator.arb_status)
+  ) {
+    return 4;
+  }
+  return arbitrator.arb_status;
 };

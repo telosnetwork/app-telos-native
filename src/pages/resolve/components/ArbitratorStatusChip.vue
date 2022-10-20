@@ -29,7 +29,8 @@
 
 <script lang="ts">
 import { ARBITRATOR_STATUS_LIST } from "../constants";
-import { Arbitrator } from "../types";
+import { getAvailableArbitratorStatus } from "../util";
+
 export default {
   props: ["arbitrator"],
   computed: {},
@@ -37,17 +38,7 @@ export default {
     getStatusText(status: number) {
       return ARBITRATOR_STATUS_LIST[status];
     },
-    getArbitratorStatus(arbitrator: Arbitrator) {
-      if (
-        // @ts-ignore
-        new Date(this.arbitrator.term_expiration + "Z") < new Date() &&
-        // @ts-ignore
-        [1, 2].includes(this.arbitrator.arb_status)
-      ) {
-        return 4;
-      }
-      return arbitrator.arb_status;
-    },
+    getArbitratorStatus: getAvailableArbitratorStatus,
   },
 };
 </script>
