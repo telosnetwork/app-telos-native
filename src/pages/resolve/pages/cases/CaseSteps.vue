@@ -196,6 +196,11 @@ export default {
         (arb) => arb.arb === this.account
       );
       if (foundArbitrator.arb_status !== 1) return false;
+      if (
+        this.caseFile.claimant === this.account ||
+        this.caseFile.respondant === this.account
+      )
+        return false;
       if (this.existingArbOffer) {
         return "update";
       }
