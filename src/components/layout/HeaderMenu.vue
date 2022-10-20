@@ -86,6 +86,7 @@ q-tabs(
           :key="index"
           clickable
           @click="$router.push(child.route)"
+          :class="{ hideMenuItem: child.label === 'Arbitrator' && !isArbitrator}"
         )
           q-item-section
             q-item-label {{ child.label }}
