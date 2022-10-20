@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  props: ["heading", "text", "buttonText", "onClickButton"]
+  props: ["heading", "text", "buttonText", "onClickButton"],
 };
 </script>
 

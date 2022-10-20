@@ -54,7 +54,7 @@ import IpfsLink from "./IpfsLink.vue";
 export default {
   components: {
     ProfileAvatar,
-    IpfsLink
+    IpfsLink,
   },
   data() {
     return {
@@ -66,21 +66,21 @@ export default {
         {
           name: "closed_case_ids",
           field: "closed_case_ids",
-          label: "Closed Cases"
+          label: "Closed Cases",
         },
         {
           name: "credentials_link",
           field: "credentials_link",
-          label: "Credentials"
+          label: "Credentials",
         },
         { name: "elected_time", field: "elected_time", label: "Elected" },
         {
           name: "term_expiration",
           field: "term_expiration",
-          label: "Term Ends"
+          label: "Term Ends",
         },
-        { name: "languages", field: "languages", label: "Languages" }
-      ]
+        { name: "languages", field: "languages", label: "Languages" },
+      ],
     };
   },
   methods: {
@@ -89,8 +89,8 @@ export default {
     },
     isArbExpired(props) {
       return false;
-    }
-  }
+    },
+  },
 };
 </script>
 

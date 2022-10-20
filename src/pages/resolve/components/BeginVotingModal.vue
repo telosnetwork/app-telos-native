@@ -45,13 +45,13 @@ export default {
   props: ["form", "close", "onSubmit"],
   data() {
     return {
-      ballot_name: generateRandomId()
+      ballot_name: generateRandomId(),
     };
   },
   computed: {
     isBallotNameValid() {
       return validateId(this.ballot_name);
-    }
+    },
   },
   methods: {
     generateNewId() {
@@ -64,9 +64,9 @@ export default {
           name: "beginvoting",
           data: {
             ballot_name: this.ballot_name,
-            runoff: false
-          }
-        }
+            runoff: false,
+          },
+        },
       ];
       try {
         await this.$store.$api.signTransaction(beginVotingActions);
@@ -75,8 +75,8 @@ export default {
       } catch (err) {
         console.log("beginVoting error: ", err);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

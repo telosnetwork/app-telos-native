@@ -31,7 +31,7 @@ import IpfsLink from "./IpfsLink.vue";
 export default {
   props: ["caseId"],
   components: {
-    IpfsLink
+    IpfsLink,
   },
   data() {
     return {
@@ -43,8 +43,8 @@ export default {
         { name: "decision_class", label: "Class", field: "decision_class" },
         { name: "decision_link", label: "Decision", field: "decision_link" },
         { name: "response_link", label: "Response", field: "response_link" },
-        { name: "status", label: "Status", field: "status" }
-      ]
+        { name: "status", label: "Status", field: "status" },
+      ],
     };
   },
   methods: {
@@ -58,7 +58,7 @@ export default {
     },
     getStatus(statusId) {
       return DECISION_CLASS_LIST[statusId];
-    }
+    },
   },
   mounted() {
     this.getClaims();
@@ -69,7 +69,7 @@ export default {
   },
   unmounted() {
     clearInterval(this.interval);
-  }
+  },
 };
 </script>
 

@@ -8,8 +8,8 @@ export default {
   computed: {
     hashLink() {
       return `https://api.dstor.cloud/ipfs/${this.hash}`;
-    }
-  }
+    },
+  },
 };
 </script>
 
