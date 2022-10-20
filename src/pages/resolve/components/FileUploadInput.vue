@@ -59,12 +59,13 @@ export default {
           url: "https://api.dstor.cloud/v1/dev/temp-token",
           headers: {
             // todo: remove later
-            "api-key":
+            "x-api-key":
               "OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg",
-            "x-expiration": new Date().getTime() / 1000 + 3600,
+            "x-expiration": new Date().getTime() / 1000 + 3600 * 24,
           },
         });
         this.progress = 10;
+        console.log("access_token: ", access_token);
         accessToken = access_token;
       } catch (err) {
         console.log("access_token error: ", err);
@@ -121,6 +122,7 @@ export default {
         console.log("upload error: ", err);
       }
 
+      let interval = 2000;
       const checkStatus = async () => {
         try {
           const { data: statusData } = await axios(
@@ -132,6 +134,9 @@ export default {
               },
             }
           );
+          interval = interval + 250;
+          console.log("setting interval: ", interval);
+          setTimeout(checkStatus, interval);
           switch (statusData.status) {
             case "ADDING_TO_IPFS":
               this.progress = 80;
@@ -155,7 +160,6 @@ export default {
         }
       };
       checkStatus();
-      let statusInterval = setInterval(checkStatus, 2000);
     },
   },
   computed: {
