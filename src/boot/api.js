@@ -24,6 +24,7 @@ const signTransaction = async function (actions) {
         expireSeconds: 30,
       }
     );
+    Notify.create({ type: "positive", message: "Transaction signed" });
   } catch (e) {
     if (e.cause.error) {
       const msg = e.cause.error.details[0].message.replace(
