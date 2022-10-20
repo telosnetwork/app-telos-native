@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="q-pa-md">
-      <claims-table></claims-table>
+      <claims-table :caseFile="caseFile" />
     </div>
     <div class="q-pa-md">
       <case-file-actions :actions="caseActionsHistory" />

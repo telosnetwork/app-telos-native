@@ -23,15 +23,6 @@
             color="primary"
             label="Ready Case"
           />&nbsp;
-          <q-btn
-            v-if="isRespondant"
-            @click="
-              form = true;
-              formType = 'respond-claim';
-            "
-            color="primary"
-            label="Respond to Claim"
-          />
         </q-step>
 
         <q-step :name="1" title="Awaiting Arbitrators" icon="assignment">
@@ -171,9 +162,6 @@ export default {
     },
     isClaimant() {
       return this.account === this.caseFile.claimant;
-    },
-    isRespondant() {
-      return this.account === this.caseFile.respondant;
     },
     existingArbOffer() {
       return this.$store.state.resolve.offers.find(
