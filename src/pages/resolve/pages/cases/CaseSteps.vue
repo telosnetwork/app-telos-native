@@ -9,15 +9,6 @@
             v-if="isClaimant"
             @click="
               form = true;
-              formType = 'add-claim';
-            "
-            color="primary"
-            label="Add Claim"
-          />&nbsp;
-          <q-btn
-            v-if="isClaimant"
-            @click="
-              form = true;
               formType = 'readycase';
             "
             color="primary"
