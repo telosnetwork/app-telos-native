@@ -18,8 +18,9 @@
           />
           <q-btn
             v-if="isRemoveNomineeButtonVisible"
-            color="secondary"
+            color="primary"
             label="Remove Nomination"
+            @click="removeSelfNomination"
           />
         </q-step>
 
@@ -100,6 +101,7 @@
 <script>
 import { mapGetters } from "vuex";
 import NominateSelfModal from "../../components/NominateSelfModal.vue";
+import { getAvailableArbitratorStatus } from "../../util/blockchain";
 
 export default {
   components: {
@@ -179,6 +181,7 @@ export default {
         console.log("removeSelfCandidacy error: ", err);
       }
     },
+    getArbStatus: (arb) => getAvailableArbitratorStatus(arb),
   },
   computed: {
     ...mapGetters({
@@ -190,11 +193,13 @@ export default {
       const {
         resolve: { nominees, arbitrators },
       } = this.$store.state;
+      // is already a nominee
       const foundNominee = nominees.find(
         (nominee) => nominee.nominee_name === this.account
       );
+      // this account already an active arbitrator
       const foundUnavailableArbitrator = arbitrators.find(
-        (arb) => [1, 2].includes(arb.arb_status) && arb.arb === this.account
+        (arb) => [1, 2].includes(arb) && arb.arb === this.account
       );
       return !foundNominee && !foundUnavailableArbitrator;
     },
