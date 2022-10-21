@@ -43,14 +43,8 @@ module.exports = {
     // 'prettier'
   ],
 
-  plugins: [
-    // required to apply rules which need type information
-    // '@typescript-eslint',
+  plugins: ['vue'],
 
-    // https://eslint.vuejs.org/user-guide/#why-doesn-t-it-work-on-vue-file
-    // required to lint *.vue files
-    'vue',
-  ],
 
   globals: {
     ga: 'readonly', // Google Analytics
