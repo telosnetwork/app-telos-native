@@ -46,6 +46,7 @@ export default {
     // Commenting out to prevent the bug as it doesn't really cause any problems when the route isn't reset.
   },
   computed: {
+
     ...mapGetters('notifications', ['notifications']),
     ...mapGetters('accounts', ['isAuthenticated', 'account']),
     ...mapGetters('trails', ['ballot', 'userVotes', 'voters', 'userTreasury']),
@@ -53,8 +54,9 @@ export default {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
       const startDate = new Date(this.ballot.begin_time).getTime();
-      const diffDays = Math.round(Math.abs((today - startDate) / oneDay));
+      let diffDays = Math.round(Math.abs((today - startDate) / oneDay));
       return diffDays;
+
     },
     getWinner() {
       if (!this.ballot.total_voters) return 'No votes';

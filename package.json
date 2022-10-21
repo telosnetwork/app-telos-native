@@ -10,7 +10,8 @@
     "lint": "eslint --ext .js,.ts,.vue src",
     "lint:fix": "eslint --fix --ext .js,.vue src",
     "test": "echo \"No test specified\" && exit 0",
-    "build": "quasar build -m spa"
+    "build": "quasar build -m spa",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
