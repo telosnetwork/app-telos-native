@@ -16,7 +16,7 @@ export default {
 </script>
 
 <template lang="pug">
-q-chip(square text-color="white" :color="`${type}`").capitalize.no-margin.text-weight-bold.ballot-type
+q-chip(square text-color="white" :color="isBallotOpened ? `${type}` : 'ended'").capitalize.no-margin.text-weight-bold.ballot-type
   q-avatar
     template(v-if="isBallotOpened")
       img(:src="`statics/app-icons/${type.toLowerCase()}-icon.svg`").poll-icon

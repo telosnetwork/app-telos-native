@@ -13,7 +13,7 @@ main
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'ProfileLogin',
   data() {
@@ -21,11 +21,14 @@ export default {
       loading: true,
     };
   },
+  computed: {
+    ...mapGetters('accounts', ['account']),
+  },
   async mounted() {
     const isLogged = await this.loginToBackend();
     if (isLogged) {
       const returnUrl = this.$route.query.returnUrl;
-      this.$router.push({ path: returnUrl || '/profiles/myProfile' });
+      this.$router.push({ path: returnUrl || `/profiles/display/${this.account}` });
     } else {
       this.loading = false;
     }

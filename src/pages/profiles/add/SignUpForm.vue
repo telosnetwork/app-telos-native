@@ -2,8 +2,11 @@
 .row.justify-center.items-center
   .col-xs-11.col-md-8.q-gutter-y-md.q-pa-md
     q-dialog(v-model='showUpload')
-      q-uploader(label="Upload image to Imgur" url="https://api.imgur.com/3/image" accept=".jpg, image/*" field-name="image" :headers="[authHeader]" @uploaded="imageUploaded")
+      q-uploader(label="Upload image to Imgur" url="https://api.imgur.com/3/image" accept=".jpg, .jpeg, .png, image/*" field-name="image" :headers="[authHeader]" @uploaded="imageUploaded")
     q-form.q-gutter-y-md(@submit='onSubmit', @reset='onReset')
+      div.head-nav(@click="goBack")
+        img.self-center.title-img(src="statics/app-icons/back.svg")
+        div.text-h6.q-pl-md Go back
       div.text-h4.q-pl-md {{ headerText }}
       q-card-section
         .column.items-center.q-gutter-y-md
@@ -79,6 +82,9 @@ export default {
     onSubmit() {
       this.doSignup();
     },
+    goBack() {
+        this.$router.go(-1)
+    },
     async doSignup() {
       this.showIsLoading(true);
 
@@ -115,4 +121,8 @@ export default {
 };
 </script>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.head-nav
+  display: flex
+  cursor: pointer
+</style>

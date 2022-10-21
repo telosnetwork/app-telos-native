@@ -130,7 +130,14 @@ export default {
     },
     trails: {
       ballots: {
-        joinDAOFirst: 'Join DAO first',
+        stakeBeforeVoting: 'Stake before voting',
+        needPositiveVote: 'You need voting power',
+        stakeBeforeVotingLong: 'Make sure you have any positive amount of TLOS tokens staked (for CPU or NET) before voting on this ballot',
+        needPositiveVoteLong: {
+          liquid: 'You need a positive balance for this token before voting on this ballot.',
+          stake: 'You need to aquire and stake any amount of this token before voting on this ballot.',
+          both: 'You need any amount of liquid or staked tokens before voting on this ballot.',
+        },
         joinDAO: 'Join DAO',
         joinAndVote: 'Join DAO & Vote',
         vote: 'Vote',

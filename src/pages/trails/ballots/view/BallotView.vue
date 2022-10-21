@@ -3,6 +3,12 @@ import { mapActions, mapGetters } from 'vuex';
 import BallotStatus from '../components/BallotStatus';
 import BallotChip from '../components/BallotChip';
 import Btn from '../../../../components/CustomButton';
+import { supplyToSymbol } from '~/utils/assets';
+
+const FROM_BOTH = 'both';
+const FROM_LIQUID = 'liquid';
+const FROM_STAKE = 'stake';
+
 
 const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm'); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 const regexWithUrl = new RegExp(
@@ -46,17 +52,15 @@ export default {
     // Commenting out to prevent the bug as it doesn't really cause any problems when the route isn't reset.
   },
   computed: {
-
     ...mapGetters('notifications', ['notifications']),
-    ...mapGetters('accounts', ['isAuthenticated', 'account']),
+    ...mapGetters('accounts', ['isAuthenticated', 'account', 'accountData']),
     ...mapGetters('trails', ['ballot', 'userVotes', 'voters', 'userTreasury']),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
       const startDate = new Date(this.ballot.begin_time).getTime();
-      const diffDays =   Math.round(Math.abs((today - startDate) / oneDay));
+      const diffDays = Math.round(Math.abs((today - startDate) / oneDay));
       return diffDays;
-
     },
     getWinner() {
       if (!this.ballot.total_voters) return 'No votes';
@@ -104,13 +108,12 @@ export default {
       try {
         content = JSON.parse(this.ballot.content);
       } catch (e) {
-        return e
-
+        console.error(e)
       }
       try {
         file_path = regex.exec(this.ballot.description);
       } catch (e) {
-        return e
+        console.error(e)
       }
 
       if (Array.isArray(file_path)) {
@@ -139,31 +142,72 @@ export default {
       return newArr;
     },
     isUserRegisteredInTreasury() {
-      if (!this.ballot) return false;
-      return this.userTreasury.some(
-        (t) =>
-          t.liquid.split(' ')[1] == this.ballot.treasury.supply.split(' ')[1]
-      );
+        if (!this.ballot) return false;
+        return this.userTreasury.some(t => t.liquid.split(' ')[1] == this.ballot.treasury.supply.split(' ')[1]);
+    },
+    isOfficialSymbol() {
+        return supplyToSymbol(this.ballot.treasury_symbol) == 'VOTE';
+    },
+    votingPowerComesFrom() {
+        let voteliquid = this.ballot.settings.some(op => op.key == 'voteliquid' && op.value > 0);
+        let votestake = this.ballot.settings.some(op => op.key == 'votestake' && op.value > 0);
+        if (voteliquid && votestake) {
+            return FROM_BOTH;
+        } else if (voteliquid) {
+            return FROM_LIQUID;
+        } else if (votestake) {
+            return FROM_STAKE;
+        } else {
+          return null;
+        }
+    },
+    isPositiveVotePower() {
+        let symbol = supplyToSymbol(this.ballot.treasury_symbol);
+        let power = 0;
+        if (this.isOfficialSymbol) {
+            if (!this.accountData) return false;
+            if (!this.accountData.self_delegated_bandwidth) return false;
+
+            let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || '0.0000 TLOS';
+            let net_weight = this.accountData.self_delegated_bandwidth.net_weight || '0.0000 TLOS';
+            power = parseFloat(cpu_weight.split(' ')[0]) + parseFloat(net_weight.split(' ')[0]);
+        } else {
+            let userTreas = this.userTreasury.find(t => supplyToSymbol(t.liquid) == symbol);
+            if (!userTreas) return false;
+
+            let powerComes = this.votingPowerComesFrom;
+
+            if (powerComes == FROM_BOTH || powerComes == FROM_LIQUID) {
+                let liquid = userTreas.liquid;
+                power += parseFloat(liquid.split(' ')[0]);
+            }
+
+            if (powerComes == FROM_BOTH || powerComes == FROM_STAKE) {
+                let staked = userTreas.staked;
+                power += parseFloat(staked.split(' ')[0]);
+            }
+        }
+
+        return power > 0;
     },
     voteButtonText() {
-      console.log(
-        'BalllotView.voteButtonText() isUserRegisteredInTreasury: ',
-        this.isUserRegisteredInTreasury
-      );
-      if (this.isUserRegisteredInTreasury) {
-        return 'pages.trails.ballots.vote';
-      } else {
-        // ---- quickfix for #92 -------
-        return 'pages.trails.ballots.joinDAOFirst';
-        /*
-            if (this.ballot.treasury.access == 'public') {
-                return 'pages.trails.ballots.joinAndVote';
+        if (this.isPositiveVotePower) {
+            if (this.isUserRegisteredInTreasury) {
+                return 'pages.trails.ballots.vote';
             } else {
-                return 'pages.trails.ballots.joinDAO';
+                if (this.ballot.treasury.access == 'public') {
+                    return 'pages.trails.ballots.joinAndVote';
+                } else {
+                    return 'pages.trails.ballots.joinDAO';
+                }
             }
-            */
-        // ------------------------------
-      }
+        } else {
+            if (this.isOfficialSymbol) {
+                return 'pages.trails.ballots.stakeBeforeVoting';
+            } else {
+                return 'pages.trails.ballots.needPositiveVote';
+            }
+        }
     },
   },
   methods: {
@@ -174,6 +218,8 @@ export default {
       'fetchVotesForBallot',
       'fetchUserVotesForThisBallot',
       'fetchTreasuriesForUser',
+      'resetUserVotes'
+
     ]),
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
@@ -194,6 +240,13 @@ export default {
       });
       this.voting = false;
     },
+    showAlert(message) {
+      this.$q.notify({
+        icon: 'warning',
+        message: this.$t(message),
+        color: 'warning',
+      });
+    },
     showNotification() {
       this.$q.notify({
         icon: this.notifications[0].icon,
@@ -206,10 +259,7 @@ export default {
       });
     },
     async showVoters() {
-      await this.fetchVotesForBallot({
-        name: this.ballot.ballot_name,
-        limit: this.ballot.total_voters,
-      });
+      await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters })
       this.voters.length > 0
         ? (this.showDetails = true)
         : (this.showDetails = false);
@@ -228,50 +278,48 @@ export default {
       return newArr;
     },
     async getLoggedUserVotes(ballot_name) {
-      await this.fetchUserVotesForThisBallot(ballot_name);
-      if (!this.userVotes) return;
-      if (!this.userVotes[ballot_name]) return;
-      let votes = this.userVotes[ballot_name].weighted_votes.map((v) => v.key);
-      this.votes = this.votes.concat(votes);
+        await this.fetchUserVotesForThisBallot(ballot_name);
+        if (!this.userVotes) return;
+        if (!this.userVotes[ballot_name]) return;
+        let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
+        this.votes = this.votes.concat(votes);
     },
-    // ---- quickfix for #92 -------
-    ...mapActions('trails', ['registerVoter']),
-    async onRegisterVoter(max_supply) {
-      await this.registerVoter(max_supply);
-    },
-    // -------------------------------
     async vote() {
-      let register = false;
-      if (this.isUserRegisteredInTreasury) {
-        register = false;
-      } else {
-        // ---- quickfix for #92 -------
-        /*
-            if (this.ballot.treasury.access == 'public') {
-                register = true;
-            } else {
-                // redirect to treasuties page with filter
-                this.$router.push({
-                    path: "/trails/treasuries",
-                    query: { treasury: this.ballot.treasury.supply.split(" ")[1] },
-                });
-                return; // Do not Cast Vote
-            }
-            */
-        await this.onRegisterVoter(this.ballot.treasury.max_supply);
-        this.showNotification();
-        this.fetchTreasuriesForUser(this.account);
-        return;
-        // -------------------------------
-      }
+        let register = false;
 
-      await this.onCastVote({
-        register,
-        options: this.votes,
-        ballotName: this.ballot.ballot_name,
-      });
-      await this.fetchBallot(this.$route.params.id);
-      this.showNotification();
+        if (this.isPositiveVotePower) {
+            if (this.isUserRegisteredInTreasury) {
+                register = false;
+            } else {
+                if (this.ballot.treasury.access == 'public') {
+                    register = true;
+                } else {
+                    // redirect to treasuties page with filter
+                    this.$router.push({
+                        path: '/trails/treasuries',
+                        query: { treasury: this.ballot.treasury.supply.split(' ')[1] },
+                    });
+                    return; // Do not Cast Vote
+                }
+            }
+        } else {
+            if (this.isOfficialSymbol) {
+                this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
+            } else {
+                this.showAlert('pages.trails.ballots.needPositiveVoteLong.' + this.votingPowerComesFrom );
+            }
+            return;
+        }
+
+        await this.onCastVote({
+            register,
+            options: this.votes,
+            ballotName: this.ballot.ballot_name,
+        });
+        await this.fetchBallot(this.$route.params.id);
+        await this.resetUserVotes();
+
+        this.showNotification();
     },
     async cancel() {
       await this.cancelBallot(this.ballot);
@@ -401,26 +449,26 @@ export default {
                                                     div {{ option.key }}
                                                     div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
-                                        q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" :color="isBallotOpened(ballot)?'primary':'grey-8'")
-                            q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
-                                q-item-section.btn-wrapper
-                                    btn(
+                                        q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
+                            q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").options-btn
+                                q-btn(
+                                    no-caps
+                                    :color="userCanVote ? 'primary' : 'info'"
+                                    class="col"
                                     v-if="isAuthenticated"
                                     :disable="!userCanVote"
-                                    :labelText="$t(voteButtonText)"
-                                    btnWidth='220'
-                                    fontSize='16'
-                                    hoverBlue=true
-                                    @clickBtn="vote()"
-                                    )
-                                    btn(
+                                    :label="$t(voteButtonText)"
+                                    @click="vote()"
+                                )
+                                q-btn(
+                                    no-caps
+                                    outline
+                                    color="primary"
+                                    class="col"
                                     v-if="isAuthenticated && ballot.publisher === account"
-                                    :labelText="$t('common.buttons.cancel')"
-                                    btnWidth='220'
-                                    fontSize='16'
-                                    hoverRed=true
-                                    @clickBtn="cancel()"
-                                    )
+                                    :label="$t('common.buttons.cancel')"
+                                    @click="cancel()"
+                                )
                     q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-620
                         div.text-section.column
                             div(v-if="ballot.total_voters > 0")
@@ -537,30 +585,30 @@ export default {
                                                 :class="displayWinner(ballot) ? displayWinner(ballot) === option.key ? 'visible-checkbox' : '' : ''"
                                                 :color="isBallotOpened(ballot)?'primary':'grey-8'"
                                                 :val="option.key"
+                                                @click.native="toggleOption(option.key)"
                                                 )
                                                     div.checkbox-text.row.space-between
                                                         div {{ option.key }}
                                                         div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                         div.linear-progress(v-if="displayWinner(ballot)")
-                                            q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" :color="isBallotOpened(ballot)?'primary':'grey-8'")
-                                q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
-                                    q-item-section.btn-wrapper
-                                        btn.btn-vote-320(
-                                        :labelText="$t(voteButtonText)"
+                                            q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
+                                q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").column.options-btn
+                                    q-btn(
+                                        no-caps
+                                        :color="userCanVote ? 'primary' : 'info'"
+                                        v-if="isAuthenticated"
                                         :disable="!userCanVote"
-                                        btnWidth='220'
-                                        fontSize='16'
-                                        hoverBlue=true
-                                        @clickBtn="isAuthenticated ? vote() : openNotice()"
-                                        )
-                                        btn.btn-vote-320(
+                                        :label="$t(voteButtonText)"
+                                        @click="isAuthenticated ? vote() : openNotice()"
+                                    )
+                                    q-btn(
+                                        no-caps
+                                        outline
+                                        color="primary"
                                         v-if="isAuthenticated && ballot.publisher === account"
-                                        :labelText="$t('common.buttons.cancel')"
-                                        btnWidth='220'
-                                        fontSize='16'
-                                        hoverRed=true
-                                        @clickBtn="cancel()"
-                                        )
+                                        :label="$t('common.buttons.cancel')"
+                                        @click="cancel()"
+                                    )
                             q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-320
                                 div.text-section.column
                                     div.statics-section-item(v-if="ballot.total_voters > 0")
@@ -641,17 +689,6 @@ export default {
     display: flex
     justify-content: space-between
     margin-bottom: 5px
-
-.btn-wrapper
-    width: 100%
-    display: flex
-    flex-direction: row
-    flex-wrap: nowrap
-    gap: 12px
-    & > button:nth-child(2)
-        width: 45% !important
-        &:hover
-            background-color: #f44336 !important
 
 embed
     width: 90%
@@ -761,6 +798,7 @@ embed
             line-height: 130%
 
 .options-btn
+    gap: 10px
     width: 100%
     padding: 0 !important
     margin: 6px 0 0
@@ -906,9 +944,6 @@ embed
     .description-section-wrapper
         height: max-content
     @media (max-width: 620px)
-        .btn-wrapper
-            & > button:nth-child(2)
-                width: 35% !important
         .popup-wrapper
             & > .popup-left-col-wrapper,
             & > .popup-right-col-wrapper
@@ -948,8 +983,6 @@ embed
         .statics-section-620,
         .popup-right-col > .q-card__section > .q-btn-item
             display: none
-        .btn-vote-320
-            width: 100% !important
         .custom-caption > .caption-text
             font-size: 16px
         .options-wrapper

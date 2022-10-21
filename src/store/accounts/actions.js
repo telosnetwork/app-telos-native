@@ -37,11 +37,12 @@ export const login = async function (
       // PPP.setActiveUser(this.$ualUser)
       const defaultReturnUrl = localStorage.getItem('returning')
         ? '/'
-        : '/profiles/myProfile';
+        : `/profiles/display/${accountName}`;
       localStorage.setItem('autoLogin', authenticator.constructor.name);
       localStorage.setItem('account', accountName);
       localStorage.setItem('returning', true);
       this.$router.push({ path: returnUrl || defaultReturnUrl });
+      await dispatch('getAccount');
     }
   } catch (e) {
     const error =
@@ -85,6 +86,7 @@ export const logout = async function ({ commit }) {
   commit('setAccount');
 
   localStorage.removeItem('account');
+  localStorage.removeItem('autoLogin');
   if (this.$router.path !== '/') {
     this.$router.push({ path: '/' });
   }
@@ -154,6 +156,7 @@ export const verifyOTP = async function (
 };
 
 export const createAccount = async function (
+
   { account, recaptchaResponse, publicKey }
 ) {
   try {
@@ -238,4 +241,14 @@ export const claimAccount = async function ({ commit }, accountName) {
   }
   commit('notifications/addNotification', notification, { root: true });
   return notification.status === 'success';
+};
+
+export const getAccount = async function ({ rootState, commit }) {
+  let accountData = null;
+  if (rootState.accounts.account) {
+    accountData = await this.$api.getAccount(rootState.accounts.account);
+    accountData.core_liquid_balance = accountData.core_liquid_balance || '0.0000 TLOS';
+  }
+  commit('setAccountData', accountData);
+  return accountData;
 };

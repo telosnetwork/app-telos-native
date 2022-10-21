@@ -108,7 +108,9 @@ div
         template(v-else)
           img(:src="`statics/app-icons/inactive-bgr-icon1.png`").bgr-icon1
           img(:src="`statics/app-icons/inactive-bgr-icon2.png`").bgr-icon2
-    ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened").absolute-top-left
+    div.column.items-start.absolute-top-left
+      ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened")
+      ballot-chip(:type="'voted'", :isBallotOpened="isBallotOpened", :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
 
     q-separator.card-separator-vertical(vertical inset)
 
@@ -121,7 +123,6 @@ div
     )
 
     q-card-section().q-pb-none.cursor-pointer.title-section
-      span.voted__text.voted__text--absolute.absolute-top-right.q-mt-md.q-mr-md(:class="userVotes[ballot.ballot_name] ? '' : 'hidden'") Voted!
       div.text-section.row.ballot-card-title-wrapper
         span.ballot-card-title {{ ballot.title || "Untitled Ballot" }}
       div.ballot-card-sub-title-wrapper.row
@@ -143,8 +144,11 @@ div
 
       div.text-section-row
         div.statics-section-item.section-item-btn
-          btn(
-            :labelText="mainButtonTextSmall"
+          q-btn(
+            no-caps
+            color="primary"
+            outline
+            :label="mainButtonTextSmall"
             btnWidth='220'
             fontSize='16'
             hoverBlue=true
@@ -180,16 +184,17 @@ div
           span.text-weight-bold {{ ballot.total_raw_weight.split(' ')[0].split('.')[0] }}&nbsp
           span.opacity06 {{ ballot.total_raw_weight.split(' ')[1]  }}&nbsp
           span.opacity06 tokens
-        div.statics-section-item.voted(:class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
-          span.voted__text Voted!
 
-    q-card-section().row.justify-center.btn-section
-      btn(
-        :labelText="mainButtonText"
-        btnWidth='332'
-        fontSize='16'
-        hoverBlue=true
-      )
+    q-card-section().column.q-ma-lg.justify-end.btn-section
+      q-btn(
+          no-caps
+          color="primary"
+          outline
+          :label="mainButtonText"
+          btnWidth='332'
+          fontSize='16'
+          hoverBlue=true
+        )
 </template>
 
 <style lang="sass">
@@ -347,10 +352,6 @@ div
 .row-direction .btn-section
   position: relative
   flex: 1 1 auto
-  & > .q-btn
-    position: absolute
-    bottom: 24px
-    height: 41px
 .btn-section
   padding: 0
 .bgr-icon1, .bgr-icon2
@@ -432,8 +433,6 @@ div
   .row-direction .bgr-icon2
     top: 60px
     right: 33px
-  .btn-section > .q-btn
-      width: 296px !important
   @media (max-width: 400px)
     .row-direction > div
       width: 100%

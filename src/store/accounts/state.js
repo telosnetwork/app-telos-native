@@ -4,6 +4,7 @@ export default () => ({
     smsNumber: null,
   },
   account: null,
+  accountData: null,
   user: null,
   autoLogin: false,
   loading: {}, // Wallets loading status

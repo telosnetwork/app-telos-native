@@ -1,5 +1,6 @@
 export const isAuthenticated = ({ account }) => !!account;
 export const account = ({ account }) => account;
+export const accountData = ({ accountData }) => accountData;
 export const user = ({ user }) => user;
 export const loading = ({ loading }) => loading;
 export const isAutoLoading = ({ autoLogin }) => autoLogin;

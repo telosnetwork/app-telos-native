@@ -40,7 +40,7 @@ export default {
     showProfileMenuDialog() {
       this.isDialogOpen = true;
     },
-  },
+  }
 };
 </script>
 
@@ -61,6 +61,16 @@ div
       fit
     )
       q-list.profile-menu-list(dense)
+        q-item
+          q-btn.item-btn.edit-profile-btn(
+          :label="$t('menu.myProfile')"
+          icon="far fa-user"
+          flat
+          :to="`/profiles/display/${account}`"
+          color="dark"
+          align="left"
+          no-caps
+        )
         q-item
           q-btn.item-btn.logout-btn(
             :label="$t('common.buttons.logout')"
@@ -92,9 +102,9 @@ div
         )
       div.dialog-btn-wrapper.column
         q-btn.dialog-btn(
-          :label="$t('common.buttons.editProfile')"
-          icon="far fa-edit"
-          to="/profiles/myProfile"
+          :label="$t('menu.myProfile')"
+          icon="far fa-user"
+          :to="`/profiles/display/${account}`"
           flat
           align="left"
           no-caps
