@@ -4,7 +4,7 @@
       <q-card-section>
         <div v-if="logo_lg">
           <q-img :src="logo_lg">
-            <template v-slot:error>
+            <template #error>
               <div
                 class="absolute-full flex flex-center bg-negative text-white"
               >
@@ -13,27 +13,43 @@
             </template>
           </q-img>
         </div>
-        <div v-if="name" class="text-h2 q-mb-xs">{{ name }}</div>
+        <div
+          v-if="name"
+          class="text-h2 q-mb-xs"
+        >
+          {{ name }}
+        </div>
         <div class="text-h4 q-mb-xs">
           <div class="row">
             <q-avatar v-if="logo_sm">
               <q-img :src="logo_sm">
-                <template v-slot:error>
+                <template #error>
                   <div
                     class="absolute-full flex flex-center bg-negative text-white"
                   >
                     E
                   </div>
-                </template> </q-img
-              >>
+                </template>
+              </q-img>>
             </q-avatar>
-            <div v-if="symbol" class="text-h6">{{ symbol }}</div>
+            <div
+              v-if="symbol"
+              class="text-h6"
+            >
+              {{ symbol }}
+            </div>
           </div>
         </div>
-        <div v-if="decimals" class="text-h8 q-mb-xs">
+        <div
+          v-if="decimals"
+          class="text-h8 q-mb-xs"
+        >
           {{ decimals }} decimals of precision
         </div>
-        <div v-if="supply" class="text-h8 q-mb-xs">
+        <div
+          v-if="supply"
+          class="text-h8 q-mb-xs"
+        >
           {{
             supply.toLocaleString(undefined, {
               minimumFractionDigits: decimals,
@@ -41,10 +57,16 @@
           }}
           max supply
         </div>
-        <div v-if="owner" class="text-h8 q-mb-xs">
+        <div
+          v-if="owner"
+          class="text-h8 q-mb-xs"
+        >
           {{ owner }} owner account
         </div>
-        <div v-if="contract" class="text-h8 q-mb-xs">
+        <div
+          v-if="contract"
+          class="text-h8 q-mb-xs"
+        >
           {{ contract }} contract account
         </div>
       </q-card-section>

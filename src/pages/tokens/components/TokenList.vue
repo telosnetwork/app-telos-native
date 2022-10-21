@@ -1,25 +1,28 @@
 <template>
   <div class="q-pa-md">
-    <token-detail v-bind="mapSelectedToDetails"></token-detail>
+    <token-detail v-bind="mapSelectedToDetails" />
     <q-table
-      title="Tokens"
       v-model:pagination="pagination"
+      title="Tokens"
       :rows="tokens"
       :columns="columns"
       row-key="name"
       @row-click="rowClicked"
     >
-      <template v-slot:body-cell-name="props">
+      <template #body-cell-name="props">
         <q-td :props="props">
           <div>
             <q-avatar rounded>
-              <img :src="props.row.logo_sm" />
+              <img :src="props.row.logo_sm">
             </q-avatar>
             {{ props.row.token_name }}
           </div>
         </q-td>
       </template>
-      <template v-slot:top-right v-if="!createToken && isAuthenticated">
+      <template
+        v-if="!createToken && isAuthenticated"
+        #top-right
+      >
         <q-btn
           color="primary"
           icon-right="plus"

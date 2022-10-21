@@ -1,7 +1,7 @@
 <template>
   <q-page class="row justify-center">
-    <token-edit v-if="createToken || editingToken"></token-edit>
-    <token-list></token-list>
+    <token-edit v-if="createToken || editingToken" />
+    <token-list />
   </q-page>
 </template>
 

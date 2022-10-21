@@ -1,5 +1,5 @@
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import BallotForm from '~/pages/trails/ballots/components/BallotForm';
 import BallotListItem from '~/pages/trails/ballots/components/BallotListItem';
 import BallotView from '~/pages/trails/ballots/view/BallotView';
@@ -14,6 +14,11 @@ export default {
     BallotView,
     WelcomeCard,
     ActionBar,
+  },
+  props: {
+    activeFilter: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -32,11 +37,6 @@ export default {
       timerAction: null,
       loading: false,
     };
-  },
-  props: {
-    activeFilter: {
-      type: String,
-    },
   },
   async mounted() {
     this.timeAtMount = Date.now();
@@ -261,7 +261,7 @@ export default {
     ]),
   },
   watch: {
-    $route(to, from) {
+    $route(to) {
       this.showBallot = !!to.params.id;
     },
     account() {

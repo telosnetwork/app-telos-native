@@ -78,7 +78,7 @@ export const fetchVotesForBallot = async function ({ commit }, ballot) {
   commit('setBallotVotes', res.rows);
 };
 
-export const resetUserVotes = async function ({ rootState, commit }) {
+export const resetUserVotes = async function ({ commit }) {
   commit('setUserVotes', {});
 };
 

@@ -1,5 +1,5 @@
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import TreasuryCard from '../components/TreasuryCard';
 import TreasuryForm from '../components/TreasuryForm';
 

@@ -58,7 +58,6 @@ export const login = async function (
 };
 
 export const memoryAutoLogin = async function ({
-  commit,
   dispatch,
   rootState,
 }) {
@@ -132,7 +131,7 @@ export const sendOTP = async function ({ commit }, form) {
 };
 
 export const verifyOTP = async function (
-  { commit, state },
+  { state },
   { password, publicKey }
 ) {
   try {
@@ -155,7 +154,6 @@ export const verifyOTP = async function (
 };
 
 export const createAccount = async function (
-  { state },
   { account, recaptchaResponse, publicKey }
 ) {
   try {
@@ -185,7 +183,7 @@ export const fetchAvailableAccounts = async function ({ commit }, idx) {
   commit('setAvailableAccounts', accounts);
 };
 
-export const isAccountClaimed = async function ({ commit }, accountName) {
+export const isAccountClaimed = async function ( accountName) {
   const unstake = await this.$api.getTableRows({
     code: 'tlosrecovery',
     scope: 'tlosrecovery',

@@ -8,6 +8,7 @@
 
 <script>
 export default {
-  name: 'page-404',
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Page404',
 };
 </script>

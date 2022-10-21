@@ -16,9 +16,6 @@ export default {
       await this.setClaimed();
     },
   },
-  async mounted() {
-    await this.setClaimed();
-  },
   data() {
     return {
       form: {
@@ -27,6 +24,9 @@ export default {
       submitting: false,
       isClaimed: false,
     };
+  },
+  async mounted() {
+    await this.setClaimed();
   },
   computed: {
     ...mapGetters('accounts', ['account', 'isAuthenticated']),

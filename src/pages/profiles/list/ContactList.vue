@@ -66,7 +66,7 @@ export default {
         this.$refs.infiniteScroll.stop();
       }
     },
-    async onSearch(v) {
+    async onSearch() {
       // await this.searchProfiles({ search: this.search, clean: true, lastEvaluatedKey: this.profileList.lastEvaluatedKey })
       this.clearProfilesList();
       this.isFirst = true;

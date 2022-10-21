@@ -88,10 +88,10 @@ export default {
     toggleView() {
       this.showCpu = !this.showCpu;
     },
-    castVote(e) {
+    castVote() {
       this.$refs.ValidatorDataTable.sendVoteTransaction();
     },
-    resetVote(e) {
+    resetVote() {
       this.$refs.ValidatorDataTable.resetVotes();
     },
     toggleVoteButtons(val) {

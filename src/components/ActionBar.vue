@@ -1,6 +1,6 @@
 <script>
 import Btn from './CustomButton';
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { scroll } from 'quasar';
 
 export default {
@@ -234,7 +234,7 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
+    $route(to) {
       if (to.params.id !== undefined) {
         this.showBallot = true;
       } else {
@@ -244,7 +244,7 @@ export default {
     activeFilter: function () {
       this.setFilterParams(this.activeFilter);
     },
-    treasuryBar: function (val, old) {
+    treasuryBar: function () {
       this.$emit('update-treasury', this.treasuryBar);
     },
     submitStatusesResult: function (val, old) {

@@ -44,10 +44,10 @@ import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 import SignUp from 'src/pages/profiles/add/SignUp.vue';
 export default {
   name: 'ProfileDetail',
-  props: { owner: Boolean },
   components: {
     ProfileAvatar, SignUp
   },
+  props: { owner: Boolean },
   computed: {
     Profile() {
       if (this.owner) {
@@ -87,14 +87,13 @@ export default {
     if (this.missingProfile) {
       this.$router.push({ name: 'userRegister' });
     }
+    this.$store.commit('profiles/setSelectedProfile', []);
+
     /*
     if (!this.$store.getters['profiles/isRegistered']) {
       this.$router.push({ name: 'userRegister' })
     }
     */
-  },
-  beforeMount: function () {
-    this.$store.commit('profiles/setSelectedProfile', []);
   },
   methods: {
     ...mapActions('profiles', ['getProfile']),

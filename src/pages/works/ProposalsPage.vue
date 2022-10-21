@@ -30,13 +30,13 @@ export default {
   methods: {
     ...mapActions('works', ['fetchWorks']),
   },
-  beforeMount() {
-    this.fetchWorks();
-  },
   computed: {
     proposals() {
       return this.$store.state.works[this.type];
     },
+  },
+  beforeMount() {
+    this.fetchWorks();
   },
 };
 </script>

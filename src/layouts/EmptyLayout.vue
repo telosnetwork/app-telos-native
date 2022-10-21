@@ -29,16 +29,19 @@ export default {
     <q-header class="bg-white">
       <q-toolbar>
         <q-toolbar-title class="flex items-center">
-          <img class="toolbar-img" src="statics/telos-logo-new.svg" />
+          <img
+            class="toolbar-img"
+            src="statics/telos-logo-new.svg"
+          >
         </q-toolbar-title>
         <right-menu-authenticated
           v-if="isAuthenticated"
           :landing-page="true"
-        ></right-menu-authenticated>
+        />
         <right-menu-guest
           v-if="!isAuthenticated"
           :landing-page="true"
-        ></right-menu-guest>
+        />
       </q-toolbar>
     </q-header>
 

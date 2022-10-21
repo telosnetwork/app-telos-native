@@ -3,7 +3,7 @@ import { h } from 'vue';
 import md5 from 'md5';
 
 export default {
-  name: 'vue-gravatar',
+  name: 'VueGravatar',
   props: {
     hash: {
       type: String,
@@ -25,6 +25,12 @@ export default {
   data() {
     return { finalSize: 200 };
   },
+  computed: {
+    gravatarUrl() {
+      const hash = md5(this.hash.trim().toLowerCase());
+      return `https://www.gravatar.com/avatar/${hash}?s=${this.finalSize}&d=${this.defaultImage}`;
+    },
+  },
   created() {
     this.finalSize = Number(this.size);
 
@@ -35,12 +41,6 @@ export default {
     if (this.finalSize > 2048) {
       this.finalSize = 2048;
     }
-  },
-  computed: {
-    gravatarUrl() {
-      const hash = md5(this.hash.trim().toLowerCase());
-      return `https://www.gravatar.com/avatar/${hash}?s=${this.finalSize}&d=${this.defaultImage}`;
-    },
   },
   render() {
     return h('img', {

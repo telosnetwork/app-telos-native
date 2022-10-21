@@ -1,12 +1,22 @@
 <template>
   <div>
     <highcharts
-      :options="chartOptions"
-      :updateArgs="[true, false]"
       ref="highcharts"
-    ></highcharts>
-    <q-btn class="q-pa-sm" @click="toggleVisible(true)">Select all</q-btn>
-    <q-btn class="q-pa-sm" @click="toggleVisible(false)">Deselect all</q-btn>
+      :options="chartOptions"
+      :update-args="[true, false]"
+    />
+    <q-btn
+      class="q-pa-sm"
+      @click="toggleVisible(true)"
+    >
+      Select all
+    </q-btn>
+    <q-btn
+      class="q-pa-sm"
+      @click="toggleVisible(false)"
+    >
+      Deselect all
+    </q-btn>
   </div>
 </template>
 
@@ -16,6 +26,9 @@ import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'ValidatorDataChart',
+  components: {
+    highcharts: Chart,
+  },
   data() {
     return {
       chartOptions: {
@@ -45,14 +58,8 @@ export default {
       benchmarkDays: 1,
     };
   },
-  components: {
-    highcharts: Chart,
-  },
   computed: {
     ...mapState('validators', ['benchmarks']),
-  },
-  async mounted() {
-    this.loadBenchmarks({ days: this.benchmarkDays });
   },
   watch: {
     benchmarks() {
@@ -65,6 +72,9 @@ export default {
         );
       }
     },
+  },
+  async mounted() {
+    this.loadBenchmarks({ days: this.benchmarkDays });
   },
   methods: {
     ...mapActions('validators', ['loadBenchmarks']),

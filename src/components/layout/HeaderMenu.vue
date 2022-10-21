@@ -32,7 +32,7 @@ export default {
     activeFilter: function () {
       this.localFileter = this.activeFilter;
     },
-    $route(to, from) {
+    $route(to) {
       if (!to.path.includes('/trails/ballots')) {
         this.localFileter = '';
       }

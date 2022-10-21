@@ -7,15 +7,15 @@ export default {
   components: {
     ProfileAvatar,
   },
+  props: {
+    landingPage: Boolean,
+  },
   data() {
     return {
       isProfileMenuOpen: false,
       isDialogOpen: false,
       avatar: '',
     };
-  },
-  props: {
-    landingPage: Boolean,
   },
   computed: {
     ...mapGetters('accounts', ['account']),

@@ -1,4 +1,4 @@
-export const fetchWorks = async function ({ commit, state }) {
+export const fetchWorks = async function ({ commit }) {
   commit('clearWorks');
   let more = true;
   let nextKey = '';

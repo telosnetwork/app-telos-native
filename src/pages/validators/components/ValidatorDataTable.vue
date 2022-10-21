@@ -181,7 +181,7 @@ export default {
           field: (row) => (row.total_votes / 10000).toFixed(0),
           align: 'right',
           sortable: true,
-          sort: (a, b, rowA, rowB) => parseInt(a, 10) - parseInt(b, 10),
+          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
         },
         {
           name: 'sslVerified',
@@ -217,7 +217,7 @@ export default {
           field: 'lifetime_produced_blocks',
           align: 'center',
           sortable: true,
-          sort: (a, b, rowA, rowB) => parseInt(a, 10) - parseInt(b, 10),
+          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
         },
         {
           name: 'lifetimeMissedBlocks',
@@ -225,7 +225,7 @@ export default {
           field: 'lifetime_missed_blocks',
           align: 'center',
           sortable: true,
-          sort: (a, b, rowA, rowB) => parseInt(a, 10) - parseInt(b, 10),
+          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
         },
         {
           name: 'missedBlocksPer',
@@ -242,14 +242,10 @@ export default {
                 ).toFixed(3),
           align: 'left',
           sortable: true,
-          sort: (a, b, rowA, rowB) => parseFloat(a, 10) - parseFloat(b, 10),
+          sort: (a, b) => parseFloat(a, 10) - parseFloat(b, 10),
         },
       ],
     };
-  },
-  mounted() {
-    this.checkHeader();
-    this.resetVotes();
   },
   watch: {
     producerVotes(val) {
@@ -273,6 +269,10 @@ export default {
     account() {
       this.checkHeader();
     },
+  },
+  mounted() {
+    this.checkHeader();
+    this.resetVotes();
   },
   computed: {
     ...mapGetters('accounts', ['account']),

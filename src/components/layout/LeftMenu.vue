@@ -1,17 +1,6 @@
 <script>
 export default {
   name: 'LeftMenu',
-  methods: {
-    closeMenu: function () {
-      this.$emit('close');
-    },
-    goToHomePage: function () {
-      this.$emit('goToHomePage');
-    },
-    updateWidth() {
-      this.clientWidth = window.innerWidth;
-    },
-  },
   props: {
     activeFilter: {},
   },
@@ -33,7 +22,7 @@ export default {
     activeFilter: function () {
       this.localFilter = this.activeFilter;
     },
-    $route(to, from) {
+    $route(to) {
       if (!to.path.includes('/trails/ballots')) {
         this.localFilter = '';
       }
@@ -49,6 +38,17 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.updateWidth);
+  },
+  methods: {
+    closeMenu: function () {
+      this.$emit('close');
+    },
+    goToHomePage: function () {
+      this.$emit('goToHomePage');
+    },
+    updateWidth() {
+      this.clientWidth = window.innerWidth;
+    },
   },
 };
 </script>

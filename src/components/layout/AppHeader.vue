@@ -11,14 +11,14 @@ export default {
     RightMenuAuthenticated,
     RightMenuGuest,
   },
+  props: {
+    activeFilter: {},
+  },
   data() {
     return {
       scrollPosition: null,
       isMenuOpened: false,
     };
-  },
-  props: {
-    activeFilter: {},
   },
   computed: {
     ...mapGetters('accounts', ['isAuthenticated']),

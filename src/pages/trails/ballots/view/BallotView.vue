@@ -54,7 +54,7 @@ export default {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
       const startDate = new Date(this.ballot.begin_time).getTime();
-      let diffDays = Math.round(Math.abs((today - startDate) / oneDay));
+      const diffDays =   Math.round(Math.abs((today - startDate) / oneDay));
       return diffDays;
 
     },
@@ -103,10 +103,15 @@ export default {
       // catch parse possible errors
       try {
         content = JSON.parse(this.ballot.content);
-      } catch (e) {}
+      } catch (e) {
+        return e
+
+      }
       try {
         file_path = regex.exec(this.ballot.description);
-      } catch (e) {}
+      } catch (e) {
+        return e
+      }
 
       if (Array.isArray(file_path)) {
         const r = 'https://ipfs.io/ipfs/' + file_path[0];

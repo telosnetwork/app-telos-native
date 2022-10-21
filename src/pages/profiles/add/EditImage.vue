@@ -43,10 +43,10 @@ export default {
     };
   },
   watch: {
-    imgKey: async function (val) {
+    imgKey: async function () {
       this.updateUrl();
     },
-    identity: async function (val) {
+    identity: async function () {
       this.updateUrl();
     },
   },
