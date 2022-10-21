@@ -337,6 +337,8 @@ q-page(v-if="!renderComponent")
       //- q-btn(v-close-popup color="secondary").float-right Close
 </template>
 <style lang="sass" scoped>
+main.q-page
+  padding-top: 40px
 .link
   text-decoration: none
 .banner

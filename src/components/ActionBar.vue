@@ -906,12 +906,10 @@ div.bar-filter-wrapper
         q-card-actions(align="right" class="bg-white")
           q-btn(flat label="OK" v-close-popup)
 </template>
-<style lang="sass">
+<style lang="sass" scoped>
 .scroll-anim
   margin-top: 10px !important
   margin-bottom: 10px !important
-main.q-page
-  padding-top: 40px
 .bar-filter-wrapper
   margin: 0 0 8px 0
 .bar-wrapper
