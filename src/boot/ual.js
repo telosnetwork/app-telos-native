@@ -19,23 +19,10 @@ export default boot(async ({ app, store }) => {
     ],
   };
 
-  const getAuthenticator = function (ual, wallet = null) {
-    wallet = wallet || localStorage.getItem("autoLogin");
-    const idx = ual.authenticators.findIndex(
-      (auth) => auth.constructor.name === wallet
-    );
-    return {
-      authenticator: ual.authenticators[idx],
-      idx,
-    };
-  };
-
   async function loginHandler() {
     let accountName = "eosio";
     let permission = "active";
-    
-    const { authenticator } = getAuthenticator(ual);
-    if (authenticator instanceof CleosAuthenticator) {
+    if (localStorage.getItem("autoLogin") === "cleos") {
       accountName = localStorage.getItem("account");
     } else {
       await new Promise((resolve) => {
