@@ -20,8 +20,7 @@
         <strong>
           Since your balance of {{ balance }} is not enough to cover the fee,
           this transaction will also include a transfer of
-          {{ (deficit * 1.02).toFixed(4) }} TLOS from your account to the
-          contract.
+          {{ this.adjustedDeficit }} TLOS from your account to the contract.
         </strong>
       </p>
     </q-card-section>
@@ -58,6 +57,9 @@ export default {
     deficit() {
       if (!this.balance) return 0;
       return this.tlosFee - this.balance.replace(" TLOS", "");
+    },
+    adjustedDeficit() {
+      return deficit * 1.02;
     },
   },
   methods: {
