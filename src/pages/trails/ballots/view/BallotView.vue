@@ -367,7 +367,9 @@ export default {
                                 template(v-else)
                                     img(:src="`statics/app-icons/inactive-bgr-icon1.png`").bgr-icon1
                                     img(:src="`statics/app-icons/inactive-bgr-icon2.png`").bgr-icon2
-                            ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened(ballot)").absolute-top-left
+                            div.column.items-start.absolute-top-left
+                                ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened(ballot)")
+                                ballot-chip(:type="'voted'", :isBallotOpened="isBallotOpened(ballot)", :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
                             ballot-status(
                             :ballot="ballot"
                             :isBallotOpened="isBallotOpened(ballot)"
@@ -391,7 +393,7 @@ export default {
                                             :disable="ballot.status !== 'cancelled' && !isBallotOpened"
                                             keep-color
                                             :class="displayWinner(ballot) ? displayWinner(ballot) === option.key ? 'visible-checkbox' : '' : ''"
-                                            color="$primary"
+                                            :color="isBallotOpened(ballot)?'primary':'grey-8'"
                                             :val="option.key"
                                             @click.native="toggleOption(option.key)"
                                             )
@@ -399,7 +401,7 @@ export default {
                                                     div {{ option.key }}
                                                     div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
-                                        q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
+                                        q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" :color="isBallotOpened(ballot)?'primary':'grey-8'")
                             q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
                                 q-item-section.btn-wrapper
                                     btn(
@@ -533,14 +535,14 @@ export default {
                                                 :disable="ballot.status !== 'cancelled' && !isBallotOpened"
                                                 keep-color
                                                 :class="displayWinner(ballot) ? displayWinner(ballot) === option.key ? 'visible-checkbox' : '' : ''"
-                                                color="$primary"
+                                                :color="isBallotOpened(ballot)?'primary':'grey-8'"
                                                 :val="option.key"
                                                 )
                                                     div.checkbox-text.row.space-between
                                                         div {{ option.key }}
                                                         div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                         div.linear-progress(v-if="displayWinner(ballot)")
-                                            q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
+                                            q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" :color="isBallotOpened(ballot)?'primary':'grey-8'")
                                 q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").capitalize.options-btn
                                     q-item-section.btn-wrapper
                                         btn.btn-vote-320(
