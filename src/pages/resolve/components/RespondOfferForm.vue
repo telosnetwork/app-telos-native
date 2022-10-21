@@ -45,7 +45,7 @@ export default {
       account: "accounts/account",
     }),
     adjustedDeficit() {
-      return this.deficit * 1.02;
+      return this.deficit * 1.01;
     },
     tlosFee() {
       // todo use strings for math

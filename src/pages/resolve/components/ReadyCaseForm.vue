@@ -59,7 +59,7 @@ export default {
       return this.tlosFee - this.balance.replace(" TLOS", "");
     },
     adjustedDeficit() {
-      return deficit * 1.02;
+      return this.deficit * 1.01;
     },
   },
   methods: {
@@ -72,7 +72,7 @@ export default {
           data: {
             from: this.account,
             to: "testtelosarb",
-            quantity: `${(this.deficit * 1.02).toFixed(4)} TLOS`,
+            quantity: `${this.adjustedDeficit.toFixed(4)} TLOS`,
             memo: "For arbitration fee",
           },
         });
