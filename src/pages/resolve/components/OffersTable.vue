@@ -31,7 +31,7 @@
           color="primary"
           v-if="canAccountAcceptOffer(props.row.status)"
           @click="
-            offer_id = props.row.offer_id;
+            offer = props.row;
             formType = 'respondoffer';
             form = true;
           "
@@ -46,7 +46,7 @@
       v-if="formType === 'respondoffer'"
       :caseId="caseFile.case_id"
       :close="closeModal"
-      :offer_id="offer_id"
+      :offer="offer"
     />
   </q-dialog>
 </template>
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       interval: null,
-      offer_id: null,
+      offer: null,
       form: false,
       formType: null,
       columns: [
