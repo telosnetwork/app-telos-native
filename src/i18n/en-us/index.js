@@ -31,11 +31,16 @@ export default {
       copyKey: "Copy the key to a safe place",
       dateFuture: "The date must be in the future",
       greaterOrEqualThan:
-        "The value must be greater than than or equal to {value}",
+        "The value must be greater than or equal to {value}",
+      lowerOrEqualThan:
+        "The value must be lower than or equal to {value}",
       integer: "Please type an integer",
+      natural: "Please type a natural number (>=0)",
       phoneFormat: "Please type a valid phone",
       positiveInteger: "The value must be greater than 0",
       required: "This field is required",
+      atLeast: "You need at least {what}",
+      unique: "Repeated values are not allowed",
       token: "The field must contain between 2 and 6 characters",
       tokenDecimals: "The decimals must be between 2 and 9",
     },
