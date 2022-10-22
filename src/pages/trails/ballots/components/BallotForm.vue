@@ -5,7 +5,6 @@ import * as IPFS from "ipfs-core";
 import BallotListItem from "~/pages/trails/ballots/components/BallotListItem";
 import moment from "moment";
 import { ref } from 'vue'
-import slugify from "slugify";
 import { supplyToDecimals, supplyToSymbol } from "~/utils/assets";
 
 
@@ -77,7 +76,6 @@ export default {
     ...mapGetters("trails", ["treasuries", "userTreasury", "ballotFees"]),
     ...mapGetters("accounts", ["account","accountData"]),
     optionsAsText() {
-      console.log("computed optionsAsText() ->", this.form.optionsLabels.join());
       return this.form.optionsLabels.join() + this.form.minOptions + this.form.maxOptions;
     },
     ballot() {
@@ -85,25 +83,15 @@ export default {
       zero_supply = `${parseFloat(0).toFixed(
         supplyToDecimals(zero_supply)
       )} ${supplyToSymbol(zero_supply)}`
-
       return {
         treasury: this.treasury,
-        description:
-          this.form.IPFSString && this.form.IPFSString.trim() !== ""
-            ? `${this.form.description} ${this.form.IPFSString}`
-            : this.form.description,
-        content: this.form.imageUrl
-          ? `{\"imageUrl\":\"${this.form.imageUrl}\"}`
-          : "",
+        description: this.form.description,
+        content: this.createContentField(),
         publisher: this.account,
         title: this.form.title,
         category: this.form.category,
         status: 'voting',
-        ballot_name: slugify(this.form.title, {
-          replacement: "-",
-          remove: /[*+~.()'"!:@?]/g,
-          lower: true,
-        }),
+        ballot_name: this.slugify(this.form.title),
         total_voters: 0,
         options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
         this.form.optionsLabels.map((key, i) => ({key, value:zero_supply})),
@@ -150,17 +138,6 @@ export default {
       return selectedTreasurySettings
         ? selectedTreasurySettings.find((i) => i.key === "stakeable").value
         : null;
-    },
-    configEnable() {
-      return this.form.treasurySymbol?.symbol !== "VOTE" && this.isStakeable;
-    },
-    available() {
-      if (this.userBalance) {
-        const ballotFee = this.onlyNumbers(this.ballotFees.value);
-        return this.userBalance >= ballotFee;
-      } else {
-        return null;
-      }
     },
     fee() {
       return this.ballotFees ? this.ballotFees.value : 0;
@@ -217,9 +194,39 @@ export default {
       }
     },
     validateImage(active) {
-      console.log("validateImage(",active,")");
       this.rules.setActive(active);
       this.$refs.img.validate();
+    },
+    slugify(text) {
+      return text
+        .toLowerCase()
+        .replace(/[^a-z12345]/gi, "")
+        .substring(0,12);
+    },
+    createContentField() {
+
+      // final object
+      let final = {
+        version: "DCMSv2",
+        optionData: {}
+      };
+
+      // Option display texts
+      this.updateOptionValues().forEach((v,i) => {
+        final.optionData[v] = {displayText:this.form.optionsLabels[i]};
+      });
+
+      // image
+      if (this.form.imageUrl) {
+        final.imageUrls = [this.form.imageUrl];
+      }
+
+      // PDF hash
+      if (this.form.IPFSString) {
+        final.contentUrls = [this.form.IPFSString];
+      }
+
+      return JSON.stringify(final);
     },
     treasuryToOption(treasury) {
       if (!treasury) return null;
@@ -235,7 +242,6 @@ export default {
       let off_tr = this.treasuries.find((v) => v.symbol === "VOTE");
       this.form.treasurySymbol = this.treasuryToOption(off_tr);
       this.form.config = "votestake";
-      console.log("this.treasury", this.treasury);
     },
     isNewOptionRequired(val) {
       return !this.form.newOptionRequired || !!val || this.$t('forms.errors.required')
@@ -257,20 +263,10 @@ export default {
       this.form.optionsLabels = [];
     },
     updateOptionValues() {
-      console.log("updateOptionValues()");
-
-      this.form.optionsValues = this.form.optionsLabels.map(
-        t => slugify(t, {
-          replacement: "-",
-          remove: /[*+~.()'"!:@?]/g,
-          lower: true,
-        })
-      )
-
+      this.form.optionsValues = this.form.optionsLabels.map( t => this.slugify(t) )
       return this.form.optionsValues;
     },
     setDefaultOptions(num) {
-      console.log("setDefaultOptions()", num);
       this.form.optionsLabels = this.form.defaultLabels.map(t => t).filter((_,i) => i<num);
     },
     // empty functions BallotListItem, to use it as preview
@@ -356,19 +352,14 @@ export default {
       return {
         title: this.form.title,
         category: this.form.category,
-        description:
-          this.form.IPFSString && this.form.IPFSString.trim() !== ""
-            ? `${this.form.description} ${this.form.IPFSString}`
-            : this.form.description,
-        content: this.form.imageUrl
-          ? `{\"imageUrl\":\"${this.form.imageUrl}\"}`
-          : "",
+        description: this.form.description,
+        content: this.createContentField(),
         treasurySymbol: this.form.treasurySymbol,
         votingMethod: this.form.votingMethod,
         maxOptions: this.form.maxOptions,
         minOptions: this.form.minOptions,
-        initialOptions: this.form.initialOptions,
-        endDate: this.form.endDate,
+        initialOptions: this.updateOptionValues(),
+        endDate: this.openForVoting ? this.form.endDate : null,
         config: this.form.config,
         settings: this.isStakeable,
       };
@@ -403,7 +394,6 @@ export default {
       }      
     },
     typeOfBallot() {
-      console.log("typeOfBallot()", this.typeOfBallot);
       switch(this.typeOfBallot) {
         case (TYPE_OF_BALLOT_0):
           this.setDefaultOptions(2);
@@ -426,12 +416,10 @@ export default {
       } 
     },
     optionsAsText() {
-      console.log("watch optionsAsText()");
       this.rules.setActive(true);
       this.validate({optionsLabels:1, minimun:1, maximun:1});
     },
     onlyOneOption() {
-      console.log("onlyOneOption()", this.typeOfBallot);
       if (!this.onlyOneOption) {
         this.form.minOptions = 1;
         this.form.maxOptions = this.form.optionsLabels.length;
@@ -446,7 +434,6 @@ export default {
     },
     show() {
       if (this.show) {
-        console.log("Show Ballot-creation wizzard");
         this.setOfficialDAO();
         this.rules.setActive(false);
         this.fetchFees();
@@ -455,7 +442,6 @@ export default {
       }
     },
     badImage() {
-      console.log("badImage():",this.badImage);
       this.validateImage(this.badImage);
     },
     "form.imageUrl"() {
