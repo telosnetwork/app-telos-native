@@ -38,9 +38,9 @@ export const login = async function (
       const defaultReturnUrl = localStorage.getItem('returning')
         ? '/'
         : `/profiles/display/${accountName}`;
-      localStorage.setItem("autoLogin", authenticator.getName());
-      localStorage.setItem("account", accountName);
-      localStorage.setItem("returning", true);
+      localStorage.setItem('autoLogin', authenticator.getName());
+      localStorage.setItem('account', accountName);
+      localStorage.setItem('returning', true);
       this.$router.push({ path: returnUrl || defaultReturnUrl });
       await dispatch('getAccount');
     }
