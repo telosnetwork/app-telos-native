@@ -2061,10 +2061,10 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@telosnetwork/ual-cleos@1.12.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@telosnetwork/ual-cleos/-/ual-cleos-1.12.0.tgz#a9708118a06fe9e22dd002564855d314a47d3aba"
-  integrity sha512-SqnktBqCqGnyHAenHePgaWh2OeGBxcDqVWpOLE3QKkTWToadrZJtp9Ps4ALZ+UyzRQlgv04Lfp5PmDzQaBFXSQ==
+"@telosnetwork/ual-cleos@1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@telosnetwork/ual-cleos/-/ual-cleos-1.13.0.tgz#4e02c3e11e4683cd72968ad894aeeb2cd82a8af8"
+  integrity sha512-4u9mk5ju4/Z8+1d17Q3frti+ANhpmQpoxHJ/3bpypLDwShZNxfE9s9GWpX7K65I/zz/hZya9isXDWDd4Yw+q+w==
   dependencies:
     eosjs "^20.0.3"
     text-encoding "^0.7.0"
