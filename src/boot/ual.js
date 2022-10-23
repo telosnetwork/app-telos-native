@@ -22,7 +22,7 @@ export default boot(async ({ app, store }) => {
   async function loginHandler() {
     let accountName = "eosio";
     let permission = "active";
-    if (localStorage.getItem("autoLogin") === "CleosAuthenticator") {
+    if (localStorage.getItem("autoLogin") === "cleos") {
       accountName = localStorage.getItem("account");
     } else {
       await new Promise((resolve) => {

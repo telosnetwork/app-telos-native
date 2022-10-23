@@ -3,7 +3,7 @@
 const getAuthenticator = function (ual, wallet = null) {
   wallet = wallet || localStorage.getItem("autoLogin");
   const idx = ual.authenticators.findIndex(
-    (auth) => auth.constructor.name === wallet
+    (auth) => auth.getName() === wallet
   );
   return {
     authenticator: ual.authenticators[idx],
@@ -38,7 +38,7 @@ export const login = async function (
       const defaultReturnUrl = localStorage.getItem("returning")
         ? "/"
         : `/profiles/display/${accountName}`;
-      localStorage.setItem("autoLogin", authenticator.constructor.name);
+      localStorage.setItem("autoLogin", authenticator.getName());
       localStorage.setItem("account", accountName);
       localStorage.setItem("returning", true);
       this.$router.push({ path: returnUrl || defaultReturnUrl });
