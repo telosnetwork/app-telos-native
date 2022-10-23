@@ -1,10 +1,10 @@
 <script>
-import Btn from "./CustomButton";
-import { mapActions, mapMutations, mapGetters } from "vuex";
-import { scroll } from "quasar";
+import Btn from './CustomButton';
+import { mapActions, mapGetters } from 'vuex';
+import { scroll } from 'quasar';
 
 export default {
-  name: "ActionBar",
+  name: 'ActionBar',
   components: { Btn },
   props: {
     treasuriesOptions: {},
@@ -18,7 +18,7 @@ export default {
   },
   data() {
     return {
-      model: "one",
+      model: 'one',
       isTypeMenuOpen: false,
       isStatusMenuOpen: false,
       isGroupMenuOpen: false,
@@ -31,52 +31,52 @@ export default {
       isFilterMenu320Open: false,
       typeGroup: [],
       electionsPageTypeOptions: [
-        { label: "Election", value: "election" },
-        { label: "Referendum", value: "referendum" },
-        { label: "Leaderboard", value: "leaderboard" },
+        { label: 'Election', value: 'election' },
+        { label: 'Referendum', value: 'referendum' },
+        { label: 'Leaderboard', value: 'leaderboard' },
       ],
       proposalsPageTypeOptions: [
-        { label: "Poll", value: "poll" },
-        { label: "Proposal", value: "proposal" },
+        { label: 'Poll', value: 'poll' },
+        { label: 'Proposal', value: 'proposal' },
       ],
       statusGroup: [],
       statusOptions: [
-        { label: "Active", value: "active" },
-        { value: "not_started", label: "Not started" },
-        { label: "Expired", value: "expired" },
-        { label: "Closed", value: "closed" },
-        { label: "Cancelled", value: "cancelled" },
-        { label: "Archived", value: "archived" },
-        { label: "Setup", value: "setup" },
+        { label: 'Active', value: 'active' },
+        { value: 'not_started', label: 'Not started' },
+        { label: 'Expired', value: 'expired' },
+        { label: 'Closed', value: 'closed' },
+        { label: 'Cancelled', value: 'cancelled' },
+        { label: 'Archived', value: 'archived' },
+        { label: 'Setup', value: 'setup' },
       ],
-      sortMode: "",
+      sortMode: '',
       sortOptions: [
-        { label: "A-Z", value: "A-Z" },
-        { label: "Z-A", value: "Z-A" },
-        { label: "Most popular", value: "Most popular" },
-        { label: "Least popular", value: "Least popular" },
+        { label: 'A-Z', value: 'A-Z' },
+        { label: 'Z-A', value: 'Z-A' },
+        { label: 'Most popular', value: 'Most popular' },
+        { label: 'Least popular', value: 'Least popular' },
       ],
       submitTypesResult: [],
       submitStatusesResult: [],
-      treasuryBar: "VOTE",
+      treasuryBar: 'VOTE',
       isBallotListRowDirection: true,
       notice: false,
     };
   },
   methods: {
-    ...mapActions("trails", [
-      "fetchFees",
-      "fetchBallots",
-      "castVote",
-      "fetchTreasuries",
-      "fetchBallotsByStatus",
+    ...mapActions('trails', [
+      'fetchFees',
+      'fetchBallots',
+      'castVote',
+      'fetchTreasuries',
+      'fetchBallotsByStatus',
     ]),
     addToLocalStorage() {
       localStorage.isNewUser = false;
       this.isNewUser = false;
     },
     openBallotForm() {
-      this.$emit("open-ballot-form");
+      this.$emit('open-ballot-form');
     },
     toggleMenu(isMenuOpen, group, submitResult) {
       if (this[submitResult]) {
@@ -139,7 +139,7 @@ export default {
       this.isGroupMenuOpen = false;
     },
     clearSort() {
-      this.sortMode = "";
+      this.sortMode = '';
       this.isSortingMenuOpen = false;
     },
     isFiltersApplied() {
@@ -160,17 +160,17 @@ export default {
       return `${filter}: ${this[submitResult].length}`;
     },
     handleScroll() {
-      const obj = this.$el.querySelector(".scroll-anim");
-      const filter320 = this.$el.querySelector(".bar-filter-menu-320-wrapper");
+      const obj = this.$el.querySelector('.scroll-anim');
+      const filter320 = this.$el.querySelector('.bar-filter-menu-320-wrapper');
       const { bottom } = obj.getBoundingClientRect();
       const height = document.documentElement.clientHeight;
       this.isFilterMenu320Open =
         bottom + height < height &&
-        window.getComputedStyle(filter320).display !== "none";
+        window.getComputedStyle(filter320).display !== 'none';
     },
     handleFilterBtnClick() {
       const { getScrollTarget, setScrollPosition } = scroll;
-      const filter = this.$el.querySelector(".bar-filter-menu-320-wrapper");
+      const filter = this.$el.querySelector('.bar-filter-menu-320-wrapper');
       const offset = filter.offsetTop;
       const target = getScrollTarget(filter);
       setScrollPosition(target, offset, 0);
@@ -182,32 +182,32 @@ export default {
       this.notice = true;
     },
     setTreasuryBar: function (treasury) {
-      console.log("ActionBar.setTreasuryBar()", treasury);
+      console.log('ActionBar.setTreasuryBar()', treasury);
       this.treasuryBar = treasury;
     },
     setFilterParams(path) {
-      if (path === "amend-ballots") {
+      if (path === 'amend-ballots') {
         this.typeGroup = [];
         this.submitTypesResult = [];
-        this.statusGroup = ["active"];
-        this.submitStatusesResult = ["active"];
-      } else if (path === "worker-proposals") {
-        this.typeGroup = ["proposal"];
-        this.submitTypesResult = ["proposal"];
-        this.statusGroup = ["active"];
-        this.submitStatusesResult = ["active"];
-      } else if (path === "t-f-election") {
-        this.typeGroup = ["election"];
-        this.submitTypesResult = ["election"];
-        this.statusGroup = ["active"];
-        this.submitStatusesResult = ["active"];
-      } else if (path === "polls") {
-        this.typeGroup = ["poll"];
-        this.submitTypesResult = ["poll"];
-        this.statusGroup = ["active"];
-        this.submitStatusesResult = ["active"];
+        this.statusGroup = ['active'];
+        this.submitStatusesResult = ['active'];
+      } else if (path === 'worker-proposals') {
+        this.typeGroup = ['proposal'];
+        this.submitTypesResult = ['proposal'];
+        this.statusGroup = ['active'];
+        this.submitStatusesResult = ['active'];
+      } else if (path === 't-f-election') {
+        this.typeGroup = ['election'];
+        this.submitTypesResult = ['election'];
+        this.statusGroup = ['active'];
+        this.submitStatusesResult = ['active'];
+      } else if (path === 'polls') {
+        this.typeGroup = ['poll'];
+        this.submitTypesResult = ['poll'];
+        this.statusGroup = ['active'];
+        this.submitStatusesResult = ['active'];
       }
-      this.$emit("update-cards", {
+      this.$emit('update-cards', {
         type: this.typeGroup,
         status: this.statusGroup,
         treasury: this.treasuryBar,
@@ -218,15 +218,15 @@ export default {
     this.setFilterParams(this.activeFilter);
   },
   created() {
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener('scroll', this.handleScroll);
   },
   unmounted() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener('scroll', this.handleScroll);
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters('accounts', ['isAuthenticated']),
     typeOptions() {
-      if(this.$route.path.indexOf('election') > 0) {
+      if (this.$route.path.indexOf('election') > 0) {
         return this.electionsPageTypeOptions;
       } else {
         return this.proposalsPageTypeOptions;
@@ -234,7 +234,7 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
+    $route(to) {
       if (to.params.id !== undefined) {
         this.showBallot = true;
       } else {
@@ -244,19 +244,19 @@ export default {
     activeFilter: function () {
       this.setFilterParams(this.activeFilter);
     },
-    treasuryBar: function (val, old) {
-      this.$emit("update-treasury", this.treasuryBar);
+    treasuryBar: function () {
+      this.$emit('update-treasury', this.treasuryBar);
     },
     submitStatusesResult: function (val, old) {
       if (val !== old) {
         this.statusGroup = this.submitStatusesResult;
-        this.$emit("update-statuses", this.submitStatusesResult);
+        this.$emit('update-statuses', this.submitStatusesResult);
       }
     },
     submitTypesResult: function (val, old) {
       if (val !== old) {
         this.typeGroup = this.submitTypesResult;
-        this.$emit("update-categories", this.submitTypesResult);
+        this.$emit('update-categories', this.submitTypesResult);
       }
     },
     treasuriesOptions: {
@@ -270,11 +270,11 @@ export default {
     },
     isBallotListRowDirection: function (val, old) {
       if (val !== old) {
-        this.$emit("change-diraction", this.isBallotListRowDirection);
+        this.$emit('change-diraction', this.isBallotListRowDirection);
       }
     },
     sortMode: function () {
-      this.$emit("change-sort-option", this.sortMode);
+      this.$emit('change-sort-option', this.sortMode);
     },
   },
 };

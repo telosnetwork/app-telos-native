@@ -1,25 +1,18 @@
 <script>
 export default {
-  name: "LeftMenu",
-  methods: {
-    closeMenu: function () {
-      this.$emit("close");
-    },
-    goToHomePage: function () {
-      this.$emit("goToHomePage");
-    },
-    updateWidth() {
-      this.clientWidth = window.innerWidth;
-    },
-  },
+  name: 'LeftMenu',
   props: {
     activeFilter: {},
   },
   data() {
     return {
       menuItems: [
-        { label: this.$t("menu.daos"), route: "/trails/treasuries" },
-        { label: this.$t("menu.proposals"), route: "/trails/ballots", filter: "worker-proposals" },
+        { label: this.$t('menu.daos'), route: '/trails/treasuries' },
+        {
+          label: this.$t('menu.proposals'),
+          route: '/trails/ballots',
+          filter: 'worker-proposals',
+        },
       ],
       localFilter: this.activeFilter,
       clientWidth: 0,
@@ -29,9 +22,9 @@ export default {
     activeFilter: function () {
       this.localFilter = this.activeFilter;
     },
-    $route(to, from) {
-      if (!to.path.includes("/trails/ballots")) {
-        this.localFilter = "";
+    $route(to) {
+      if (!to.path.includes('/trails/ballots')) {
+        this.localFilter = '';
       }
     },
     clientWidth: function () {
@@ -41,10 +34,21 @@ export default {
     },
   },
   created() {
-    window.addEventListener("resize", this.updateWidth);
+    window.addEventListener('resize', this.updateWidth);
   },
   beforeUnmount() {
-    window.removeEventListener("resize", this.updateWidth);
+    window.removeEventListener('resize', this.updateWidth);
+  },
+  methods: {
+    closeMenu: function () {
+      this.$emit('close');
+    },
+    goToHomePage: function () {
+      this.$emit('goToHomePage');
+    },
+    updateWidth() {
+      this.clientWidth = window.innerWidth;
+    },
   },
 };
 </script>

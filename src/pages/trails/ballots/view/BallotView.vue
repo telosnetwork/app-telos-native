@@ -1,23 +1,23 @@
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BallotStatus from "../components/BallotStatus";
-import BallotChip from "../components/BallotChip";
-import Btn from "../../../../components/CustomButton";
-import { supplyToSymbol } from "~/utils/assets";
+import { mapActions, mapGetters } from 'vuex';
+import BallotStatus from '../components/BallotStatus';
+import BallotChip from '../components/BallotChip';
+import Btn from '../../../../components/CustomButton';
+import { supplyToSymbol } from '~/utils/assets';
 
-const FROM_BOTH = "both";
-const FROM_LIQUID = "liquid";
-const FROM_STAKE = "stake";
+const FROM_BOTH = 'both';
+const FROM_LIQUID = 'liquid';
+const FROM_STAKE = 'stake';
 
 
-const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, "m"); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
+const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm'); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 const regexWithUrl = new RegExp(
   /https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
-  "m"
+  'm'
 ); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 
 export default {
-  name: "BallotView",
+  name: 'BallotView',
   components: { BallotStatus, BallotChip, Btn },
   props: {
     isBallotOpened: { type: Function, required: true },
@@ -43,7 +43,7 @@ export default {
   async mounted() {
     this.getLoggedUserVotes(this.$route.params.id);
     await this.fetchBallot(this.$route.params.id);
-    window.addEventListener("scroll", this.updateScroll);
+    window.addEventListener('scroll', this.updateScroll);
     this.loading = false;
   },
   beforeUnmount() {
@@ -52,9 +52,9 @@ export default {
     // Commenting out to prevent the bug as it doesn't really cause any problems when the route isn't reset.
   },
   computed: {
-    ...mapGetters("notifications", ["notifications"]),
-    ...mapGetters("accounts", ["isAuthenticated", "account", "accountData"]),
-    ...mapGetters("trails", ["ballot", "userVotes", "voters", "userTreasury"]),
+    ...mapGetters('notifications', ['notifications']),
+    ...mapGetters('accounts', ['isAuthenticated', 'account', 'accountData']),
+    ...mapGetters('trails', ['ballot', 'userVotes', 'voters', 'userTreasury']),
     daysSinceStarted() {
       const oneDay = 24 * 60 * 60 * 1000;
       const today = Date.now();
@@ -63,7 +63,7 @@ export default {
       return diffDays;
     },
     getWinner() {
-      if (!this.ballot.total_voters) return "No votes";
+      if (!this.ballot.total_voters) return 'No votes';
       let winnerValue = -1;
       let winner;
       this.ballot.options.forEach((option, index) => {
@@ -77,8 +77,8 @@ export default {
     ballotDescription() {
       if (this.iframeUrl) {
         return this.ballot.description
-          .replace(regexWithUrl, "")
-          .replace(regex, "");
+          .replace(regexWithUrl, '')
+          .replace(regex, '');
       }
 
       const descriptionWithLinks = this.findLinks(this.ballot.description);
@@ -87,7 +87,7 @@ export default {
     },
     ballotContent() {
       if (this.ballot.content.match(regex)) {
-        return this.ballot.content.replace(regexWithUrl, "").replace(regex, "");
+        return this.ballot.content.replace(regexWithUrl, '').replace(regex, '');
       }
 
       return this.ballot.content;
@@ -107,15 +107,19 @@ export default {
       // catch parse possible errors
       try {
         content = JSON.parse(this.ballot.content);
-      } catch (e) {}
+      } catch (e) {
+        console.error(e)
+      }
       try {
         file_path = regex.exec(this.ballot.description);
-      } catch (e) {}
+      } catch (e) {
+        console.error(e)
+      }
 
       if (Array.isArray(file_path)) {
-        const r = "https://ipfs.io/ipfs/" + file_path[0];
+        const r = 'https://ipfs.io/ipfs/' + file_path[0];
         return r;
-      } else if (typeof content === "object") {
+      } else if (typeof content === 'object') {
         // prioritize content urls over image urls
         const r =
           content.contentUrl ||
@@ -139,22 +143,22 @@ export default {
     },
     isUserRegisteredInTreasury() {
         if (!this.ballot) return false;
-        return this.userTreasury.some(t => t.liquid.split(" ")[1] == this.ballot.treasury.supply.split(" ")[1]);
+        return this.userTreasury.some(t => t.liquid.split(' ')[1] == this.ballot.treasury.supply.split(' ')[1]);
     },
     isOfficialSymbol() {
-        return supplyToSymbol(this.ballot.treasury_symbol) == "VOTE";
+        return supplyToSymbol(this.ballot.treasury_symbol) == 'VOTE';
     },
     votingPowerComesFrom() {
-        let voteliquid = this.ballot.settings.some(op => op.key == "voteliquid" && op.value > 0);
-        let votestake = this.ballot.settings.some(op => op.key == "votestake" && op.value > 0);
+        let voteliquid = this.ballot.settings.some(op => op.key == 'voteliquid' && op.value > 0);
+        let votestake = this.ballot.settings.some(op => op.key == 'votestake' && op.value > 0);
         if (voteliquid && votestake) {
             return FROM_BOTH;
-        }
-        if (voteliquid) {
+        } else if (voteliquid) {
             return FROM_LIQUID;
-        }
-        if (votestake) {
+        } else if (votestake) {
             return FROM_STAKE;
+        } else {
+          return null;
         }
     },
     isPositiveVotePower() {
@@ -164,9 +168,9 @@ export default {
             if (!this.accountData) return false;
             if (!this.accountData.self_delegated_bandwidth) return false;
 
-            let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || "0.0000 TLOS";
-            let net_weight = this.accountData.self_delegated_bandwidth.net_weight || "0.0000 TLOS";
-            power = parseFloat(cpu_weight.split(" ")[0]) + parseFloat(net_weight.split(" ")[0]);
+            let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || '0.0000 TLOS';
+            let net_weight = this.accountData.self_delegated_bandwidth.net_weight || '0.0000 TLOS';
+            power = parseFloat(cpu_weight.split(' ')[0]) + parseFloat(net_weight.split(' ')[0]);
         } else {
             let userTreas = this.userTreasury.find(t => supplyToSymbol(t.liquid) == symbol);
             if (!userTreas) return false;
@@ -175,12 +179,12 @@ export default {
 
             if (powerComes == FROM_BOTH || powerComes == FROM_LIQUID) {
                 let liquid = userTreas.liquid;
-                power += parseFloat(liquid.split(" ")[0]);
+                power += parseFloat(liquid.split(' ')[0]);
             }
 
             if (powerComes == FROM_BOTH || powerComes == FROM_STAKE) {
                 let staked = userTreas.staked;
-                power += parseFloat(staked.split(" ")[0]);
+                power += parseFloat(staked.split(' ')[0]);
             }
         }
 
@@ -207,14 +211,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions("trails", [
-      "fetchBallot",
-      "castVote",
-      "cancelBallot",
-      "fetchVotesForBallot",
-      "fetchUserVotesForThisBallot",
-      "fetchTreasuriesForUser",
-      "resetUserVotes"
+    ...mapActions('trails', [
+      'fetchBallot',
+      'castVote',
+      'cancelBallot',
+      'fetchVotesForBallot',
+      'fetchUserVotesForThisBallot',
+      'fetchTreasuriesForUser',
+      'resetUserVotes'
 
     ]),
     openUrl(url) {
@@ -222,8 +226,8 @@ export default {
     },
     getPercentofTotal(option) {
       const total =
-        (Number(option.value.split(" ")[0]) /
-          Number(this.ballot.total_raw_weight.split(" ")[0])) *
+        (Number(option.value.split(' ')[0]) /
+          Number(this.ballot.total_raw_weight.split(' ')[0])) *
         100;
       return Number.isInteger(total) ? total : +total.toFixed(2);
     },
@@ -238,20 +242,20 @@ export default {
     },
     showAlert(message) {
       this.$q.notify({
-        icon: "warning",
+        icon: 'warning',
         message: this.$t(message),
-        color: "warning",
+        color: 'warning',
       });
     },
     showNotification() {
       this.$q.notify({
         icon: this.notifications[0].icon,
         message:
-          this.notifications[0].status === "success"
-            ? this.$t("notifications.trails.successSigning")
-            : this.$t("notifications.trails.errorSigning"),
+          this.notifications[0].status === 'success'
+            ? this.$t('notifications.trails.successSigning')
+            : this.$t('notifications.trails.errorSigning'),
         color:
-          this.notifications[0].status === "success" ? "positive" : "negative",
+          this.notifications[0].status === 'success' ? 'positive' : 'negative',
       });
     },
     async showVoters() {
@@ -292,8 +296,8 @@ export default {
                 } else {
                     // redirect to treasuties page with filter
                     this.$router.push({
-                        path: "/trails/treasuries",
-                        query: { treasury: this.ballot.treasury.supply.split(" ")[1] },
+                        path: '/trails/treasuries',
+                        query: { treasury: this.ballot.treasury.supply.split(' ')[1] },
                     });
                     return; // Do not Cast Vote
                 }
@@ -360,7 +364,7 @@ export default {
       return text.replace(urlRegex, (url) => `<a href="${url}">${url}</a>`);
     },
     getRequestAmountRounded(requestAmount) {
-      const amountArr = requestAmount.split(" ");
+      const amountArr = requestAmount.split(' ');
       const amount = parseInt(amountArr[0]);
       const tokenSymbol = amountArr[1];
 

@@ -1,5 +1,5 @@
-import { boot } from "quasar/wrappers";
-import axios from "axios";
+import { boot } from 'quasar/wrappers';
+import axios from 'axios';
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -10,13 +10,13 @@ import axios from "axios";
 export const http = axios.create({
   baseURL: process.env.WEBSERVICES_URL,
   headers: {
-    "Content-Type": "application/json",
-    "x-api-key": `${process.env.WEBSERVICES_API_KEY}`,
+    'Content-Type': 'application/json',
+    'x-api-key': `${process.env.WEBSERVICES_API_KEY}`,
   },
 });
 
 function getErrorMessage(error) {
-  if (error.response.data.hasOwnProperty("message")) {
+  if (error.response.data.hasOwnProperty('message')) {
     return error.response.data.message;
   }
 
@@ -40,5 +40,5 @@ export default boot(({ app, store }) => {
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
 
-  store["$axios"] = http;
+  store['$axios'] = http;
 });

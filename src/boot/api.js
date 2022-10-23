@@ -1,5 +1,5 @@
-import { boot } from "quasar/wrappers";
-import { Api, JsonRpc } from "eosjs";
+import { boot } from 'quasar/wrappers';
+import { Api, JsonRpc } from 'eosjs';
 
 const signTransaction = async function (actions) {
 
@@ -8,7 +8,7 @@ const signTransaction = async function (actions) {
       action.authorization = [
         {
           actor: this.state.accounts.account,
-          permission: "active",
+          permission: 'active',
         },
       ];
     }
@@ -28,7 +28,7 @@ const signTransaction = async function (actions) {
     if (e.cause.error) {
       throw e.cause.error.details[0].message.replace(
         /assertion failure with message: /g,
-        ""
+        ''
       );
     } else {
       throw e
@@ -63,13 +63,13 @@ export default boot(async ({ store }) => {
   const rpc = new JsonRpc(
     `${process.env.NETWORK_PROTOCOL}://${process.env.NETWORK_HOST}:${process.env.NETWORK_PORT}`
   );
-  store["$defaultApi"] = new Api({
+  store['$defaultApi'] = new Api({
     rpc,
     textDecoder: new TextDecoder(),
     textEncoder: new TextEncoder(),
   });
 
-  store["$api"] = {
+  store['$api'] = {
     signTransaction: signTransaction.bind(store),
     getTableRows: getTableRows.bind(store),
     getAccount: getAccount.bind(store),

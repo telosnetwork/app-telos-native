@@ -1,20 +1,20 @@
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: "RequestAccount",
+  name: 'RequestAccount',
   computed: {
-    ...mapGetters("accounts", [
-      "requestAccount",
-      "availableAccounts",
-      "availableAccountsLoaded",
+    ...mapGetters('accounts', [
+      'requestAccount',
+      'availableAccounts',
+      'availableAccountsLoaded',
     ]),
   },
   methods: {
-    ...mapMutations("accounts", ["setRequestAccount"]),
+    ...mapMutations('accounts', ['setRequestAccount']),
     async onContinue(account) {
       this.setRequestAccount(false);
-      this.$emit("accountEntered", account);
+      this.$emit('accountEntered', account);
     },
   },
 };

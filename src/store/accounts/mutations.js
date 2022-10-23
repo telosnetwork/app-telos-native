@@ -1,4 +1,4 @@
-import { markRaw } from "vue";
+import { markRaw } from 'vue';
 
 export const setLoadingWallet = (state, wallet) => {
   state.loading = wallet;

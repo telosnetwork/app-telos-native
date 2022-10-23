@@ -1,18 +1,18 @@
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'RightMenuNotifications',
   computed: {
-    ...mapGetters('notifications', ['notifications'])
+    ...mapGetters('notifications', ['notifications']),
   },
   methods: {
     ...mapMutations('notifications', ['clearNotifications']),
-    openUrl (url) {
-      window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`)
-    }
-  }
-}
+    openUrl(url) {
+      window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`);
+    },
+  },
+};
 </script>
 
 <template lang="pug">

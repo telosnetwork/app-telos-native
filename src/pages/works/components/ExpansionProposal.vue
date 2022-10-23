@@ -31,25 +31,25 @@ q-expansion-item(
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, "m");
+import { mapGetters } from 'vuex';
+const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm');
 const regexWithIpfs = new RegExp(
   /\/ipfs\/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
-  "m"
+  'm'
 );
 const regexWithUrl = new RegExp(
   /https?\:\/\/.*\/ipfs\/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
-  "m"
+  'm'
 );
-const IPFS_URL_BASE = "https://ipfs.telos.miami/ipfs/";
+const IPFS_URL_BASE = 'https://ipfs.telos.miami/ipfs/';
 
 export default {
-  name: "ExpansionProposal",
+  name: 'ExpansionProposal',
   props: {
     proposal: Object,
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated", "account"]),
+    ...mapGetters('accounts', ['isAuthenticated', 'account']),
   },
   data() {
     return {
@@ -70,8 +70,8 @@ export default {
   methods: {
     setYesVotes() {
       const opts = this.proposal.ballotData.options;
-      const yes = parseFloat(opts[2].value.split(" ")[0]);
-      const no = parseFloat(opts[1].value.split(" ")[0]);
+      const yes = parseFloat(opts[2].value.split(' ')[0]);
+      const no = parseFloat(opts[1].value.split(' ')[0]);
       // const total = parseFloat(this.proposal.ballotData.total_raw_weight.split(' ')[1])
       this.yesVotes = yes / (yes + no);
     },
@@ -82,9 +82,9 @@ export default {
       if (contentText.match(regex)) {
         contentUrl = IPFS_URL_BASE + regex.exec(contentText)[0];
         contentText = contentText
-          .replace(regexWithUrl, "")
-          .replace(regexWithIpfs, "")
-          .replace(regex, "");
+          .replace(regexWithUrl, '')
+          .replace(regexWithIpfs, '')
+          .replace(regex, '');
       }
 
       this.contentText = contentText;
@@ -94,21 +94,21 @@ export default {
     },
     setIcon() {
       switch (this.proposal.category) {
-        case "marketing":
-          this.icon = "campaign";
-          this.iconColor = "positive";
+        case 'marketing':
+          this.icon = 'campaign';
+          this.iconColor = 'positive';
           break;
-        case "apps":
-          this.icon = "web";
-          this.iconColor = "primary";
+        case 'apps':
+          this.icon = 'web';
+          this.iconColor = 'primary';
           break;
-        case "developers":
-          this.icon = "code";
-          this.iconColor = "accent";
+        case 'developers':
+          this.icon = 'code';
+          this.iconColor = 'accent';
           break;
-        case "education":
-          this.icon = "school";
-          this.iconColor = "negative";
+        case 'education':
+          this.icon = 'school';
+          this.iconColor = 'negative';
           break;
       }
     },
@@ -118,9 +118,9 @@ export default {
       }
 
       const result = await this.$api.getTableRows({
-        code: "telos.decide",
+        code: 'telos.decide',
         scope: this.proposal.proposal_name,
-        table: "votes",
+        table: 'votes',
         lower_bound: this.account,
         upper_bound: this.account,
       });

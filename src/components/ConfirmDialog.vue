@@ -25,17 +25,17 @@ q-dialog(
 export default {
   name: 'ConfirmDialog',
   props: {
-    show: { type: Boolean, required: true }
+    show: { type: Boolean, required: true },
   },
   methods: {
-    onCancel () {
-      this.$emit('update:show', false)
-      this.$emit('Canceled', true)
+    onCancel() {
+      this.$emit('update:show', false);
+      this.$emit('Canceled', true);
     },
-    onConfirmed () {
-      this.$emit('update:show', false)
-      this.$emit('Confirmed', true)
-    }
-  }
-}
+    onConfirmed() {
+      this.$emit('update:show', false);
+      this.$emit('Confirmed', true);
+    },
+  },
+};
 </script>

@@ -1,13 +1,13 @@
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 
-import { validation } from "~/mixins/validation";
-import { VueRecaptcha } from "vue-recaptcha";
+import { validation } from '~/mixins/validation';
+import { VueRecaptcha } from 'vue-recaptcha';
 
-import { generateKeys } from "~/utils/eosio";
+import { generateKeys } from '~/utils/eosio';
 
 export default {
-  name: "CreateAccount",
+  name: 'CreateAccount',
   mixins: [validation],
   data() {
     return {
@@ -30,15 +30,15 @@ export default {
     this.form.privateKey = keyPairs.privateKey;
     this.form.publicKey = keyPairs.publicKey;
     this.generating = false;
-    let recaptchaScript = document.createElement("script");
+    let recaptchaScript = document.createElement('script');
     recaptchaScript.setAttribute(
-      "src",
-      "https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit"
+      'src',
+      'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
     );
     document.head.appendChild(recaptchaScript);
   },
   methods: {
-    ...mapActions("accounts", ["createAccount"]),
+    ...mapActions('accounts', ['createAccount']),
     async onCreateAccount() {
       this.resetValidation(this.form);
       this.error = null;
@@ -48,13 +48,13 @@ export default {
         this.submitting = true;
         const { success, error } = await this.createAccount(this.form);
         if (success) {
-          this.$router.push({ path: "/accounts/add/congratulations" });
+          this.$router.push({ path: '/accounts/add/congratulations' });
         } else {
           this.error = error;
         }
         this.submitting = false;
       } else {
-        this.error = "Please complete reCaptcha";
+        this.error = 'Please complete reCaptcha';
       }
       this.submitting = false;
     },
@@ -71,7 +71,7 @@ export default {
     },
   },
   components: {
-    "vue-recaptcha": VueRecaptcha,
+    'vue-recaptcha': VueRecaptcha,
   },
 };
 </script>

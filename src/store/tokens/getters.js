@@ -1,1 +1,1 @@
-export const tokens = ({ tokens }) => tokens
+export const tokens = ({ tokens }) => tokens;

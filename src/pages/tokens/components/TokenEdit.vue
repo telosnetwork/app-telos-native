@@ -6,7 +6,10 @@
         {{ editingToken ? "Edit your token's info" : "Create a new token" }}
       </div>
       <q-card-section>
-        <div class="q-pa-md" v-html="getTermsHtml"></div>
+        <div
+          class="q-pa-md"
+          v-html="getTermsHtml"
+        />
         <q-field
           ref="toggle"
           :value="acceptedTerms"
@@ -14,31 +17,33 @@
           borderless
           dense
         >
-          <template v-slot:control>
+          <template #control>
             <q-checkbox
               v-model="acceptedTerms"
               color="green"
               label="Please acknowledge these terms"
-            >
-            </q-checkbox>
+            />
           </template>
         </q-field>
       </q-card-section>
       <q-card-section>
-        <q-input v-model="token.name" label="Token name"></q-input>
+        <q-input
+          v-model="token.name"
+          label="Token name"
+        />
         <q-input
           v-model="token.symbol"
           counter
           :readonly="!!editingToken"
           label="Symbol"
-          @input="
-            (val) => (token.symbol = val.toUpperCase().replace(/[^A-Z]/g, ''))
-          "
           :rules="[
             !!val || '* Required',
             (val) => val.length <= 6 || 'Symbols can only be 6 characters',
           ]"
-        ></q-input>
+          @input="
+            (val) => (token.symbol = val.toUpperCase().replace(/[^A-Z]/g, ''))
+          "
+        />
         <q-input
           v-model.number="token.decimals"
           type="number"
@@ -48,41 +53,59 @@
             (val) => !!val || '* Required',
             (val) => val <= 9 || 'Can only have up to 9 decimals of precision',
           ]"
-        ></q-input>
+        />
         <q-input
+          v-if="createToken && token.decimals"
           v-model.number="token.supply"
           type="number"
-          v-if="createToken && token.decimals"
           label="Max supply"
-          @input="
-            (val) =>
-              token.decimals &&
-              (token.supply = parseFloat(val.toFixed(token.decimals)))
-          "
           lazy-rules
           :rules="[
             (val) => !!val || '* Required',
             (val) => {
               return (
                 parseInt(val.toFixed(token.decimals).replace(/\./g, '')) <
-                  4611686018427388000 ||
+                4611686018427388000 ||
                 '* supply (without decimals) must be less than 4611686018427388000'
               );
             },
           ]"
-        ></q-input>
-        <q-input v-model="token.logo_sm" label="Small logo URL"></q-input>
-        <q-input v-model="token.logo_lg" label="Large logo URL"></q-input>
+          @input="
+            (val) =>
+              token.decimals &&
+              (token.supply = parseFloat(val.toFixed(token.decimals)))
+          "
+        />
+        <q-input
+          v-model="token.logo_sm"
+          label="Small logo URL"
+        />
+        <q-input
+          v-model="token.logo_lg"
+          label="Large logo URL"
+        />
       </q-card-section>
       <q-card-section>
-        <div class="text-h6">Balance: {{ balance }}</div>
+        <div class="text-h6">
+          Balance: {{ balance }}
+        </div>
       </q-card-section>
       <q-card-section>
         <q-card-actions>
-          <q-btn flat @click="submit">{{
-            createToken ? `Create for ${this.config.create_price}` : "Save"
-          }}</q-btn>
-          <q-btn flat @click="cancelEdit">Cancel</q-btn>
+          <q-btn
+            flat
+            @click="submit"
+          >
+            {{
+              createToken ? `Create for ${config.create_price}` : "Save"
+            }}
+          </q-btn>
+          <q-btn
+            flat
+            @click="cancelEdit"
+          >
+            Cancel
+          </q-btn>
           <q-btn-dropdown
             v-if="!createToken"
             color="primary"
@@ -91,8 +114,8 @@
             <q-list>
               <q-item
                 v-if="canIssue()"
-                clickable
                 v-close-popup
+                clickable
                 @click="issueDialog = true"
               >
                 <q-item-section>
@@ -102,8 +125,8 @@
 
               <q-item
                 v-if="hasBalance()"
-                clickable
                 v-close-popup
+                clickable
                 @click="retireDialog = true"
               >
                 <q-item-section>
@@ -113,8 +136,8 @@
 
               <q-item
                 v-if="hasBalance()"
-                clickable
                 v-close-popup
+                clickable
                 @click="transferDialog = true"
               >
                 <q-item-section>
@@ -133,16 +156,21 @@
       :supply="token.supply"
       :logo_sm="token.logo_sm"
       :logo_lg="token.logo_lg"
-    ></token-detail>
+    />
 
-    <q-dialog v-model="issueDialog" persistent>
+    <q-dialog
+      v-model="issueDialog"
+      persistent
+    >
       <q-card>
         <q-card-section>
-          <div class="text-h6">Issue</div>
+          <div class="text-h6">
+            Issue
+          </div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          Issue more {{ this.token.symbol }} tokens
+          Issue more {{ token.symbol }} tokens
         </q-card-section>
         <q-card-section>
           <q-input
@@ -154,25 +182,43 @@
               (val) => !!val || '* Required',
               (val) => {
                 return (
-                  val <= this.getUnissued() ||
-                  `Can only issue ${this.getUnissued()}`
+                  val <= getUnissued() ||
+                  `Can only issue ${getUnissued()}`
                 );
               },
             ]"
-          ></q-input>
-          <q-input v-model="issueMemo" label="Memo"> </q-input>
+          />
+          <q-input
+            v-model="issueMemo"
+            label="Memo"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Issue" color="primary" @click="doIssue" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Issue"
+            color="primary"
+            @click="doIssue"
+          />
+          <q-btn
+            v-close-popup
+            flat
+            label="Cancel"
+            color="primary"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="retireDialog" persistent>
+    <q-dialog
+      v-model="retireDialog"
+      persistent
+    >
       <q-card>
         <q-card-section>
-          <div class="text-h6">Retire {{ this.token.symbol }} tokens</div>
+          <div class="text-h6">
+            Retire {{ token.symbol }} tokens
+          </div>
         </q-card-section>
 
         <q-card-section>
@@ -185,25 +231,40 @@
               (val) => !!val || '* Required',
               (val) => {
                 return (
-                  val <= this.getBalanceNumber() ||
-                  `Can only retire ${this.getBalanceNumber()}`
+                  val <= getBalanceNumber() ||
+                  `Can only retire ${getBalanceNumber()}`
                 );
               },
             ]"
-          ></q-input>
-          <q-input v-model="retireMemo" label="Memo"> </q-input>
+          />
+          <q-input
+            v-model="retireMemo"
+            label="Memo"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Retire" @click="doRetire" color="primary" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Retire"
+            color="primary"
+            @click="doRetire"
+          />
+          <q-btn
+            v-close-popup
+            flat
+            label="Cancel"
+            color="primary"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
     <q-dialog v-model="transferDialog">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Transfer tokens</div>
+          <div class="text-h6">
+            Transfer tokens
+          </div>
         </q-card-section>
 
         <q-card-section>
@@ -216,19 +277,35 @@
               (val) => !!val || '* Required',
               (val) => {
                 return (
-                  val <= this.getBalanceNumber() ||
-                  `Can only transfer ${this.getBalanceNumber()}`
+                  val <= getBalanceNumber() ||
+                  `Can only transfer ${getBalanceNumber()}`
                 );
               },
             ]"
-          ></q-input>
-          <q-input v-model="transferTo" label="To"> </q-input>
-          <q-input v-model="transferMemo" label="Memo"> </q-input>
+          />
+          <q-input
+            v-model="transferTo"
+            label="To"
+          />
+          <q-input
+            v-model="transferMemo"
+            label="Memo"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Transfer" @click="doTransfer" color="primary" />
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Transfer"
+            color="primary"
+            @click="doTransfer"
+          />
+          <q-btn
+            v-close-popup
+            flat
+            label="Cancel"
+            color="primary"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -236,10 +313,10 @@
 </template>
 
 <script>
-import TokenDetail from "./TokenDetail.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import TokenDetail from './TokenDetail.vue';
+import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
-  name: "TokenEdit",
+  name: 'TokenEdit',
   components: {
     TokenDetail,
   },
@@ -271,14 +348,14 @@ export default {
     };
   },
   computed: {
-    ...mapState("tokens", ["createToken", "editingToken", "config"]),
-    ...mapGetters("accounts", ["account"]),
+    ...mapState('tokens', ['createToken', 'editingToken', 'config']),
+    ...mapGetters('accounts', ['account']),
     getTermsHtml() {
       return `Terms:
             ${
               !this.editingToken
                 ? `There will be a fee of <strong>${this.config.create_price}</strong> to create a new token.  `
-                : ""
+                : ''
             }
           If this token is found to be misleading, scamming or attempting to
           present itself as another existing token then it will be removed from the token registry (the token itself will remain untouched).
@@ -287,26 +364,26 @@ export default {
           <strong>We reserve the right to delist tokens for any reason.</strong>`;
     },
   },
-  mounted() {
-    this.setToken();
-  },
   watch: {
-    editingToken(val) {
+    editingToken() {
       this.setToken();
     },
   },
+  mounted() {
+    this.setToken();
+  },
   methods: {
-    ...mapActions("accounts", ["isAccountFree"]),
-    ...mapActions("tokens", [
-      "setMeta",
-      "loadTokens",
-      "doCreateToken",
-      "issueTokens",
-      "retireTokens",
-      "transferTokens",
+    ...mapActions('accounts', ['isAccountFree']),
+    ...mapActions('tokens', [
+      'setMeta',
+      'loadTokens',
+      'doCreateToken',
+      'issueTokens',
+      'retireTokens',
+      'transferTokens',
     ]),
     checkTerms(val) {
-      return val || "You must accept the terms";
+      return val || 'You must accept the terms';
     },
     canIssue() {
       return this.stat && this.getUnissued() > 0;
@@ -315,17 +392,17 @@ export default {
       if (!this.stat) return;
 
       return (
-        parseFloat(this.stat.max_supply.split(" ")[0]) -
-        parseFloat(this.stat.supply.split(" ")[0])
+        parseFloat(this.stat.max_supply.split(' ')[0]) -
+        parseFloat(this.stat.supply.split(' ')[0])
       );
     },
     hasBalance() {
       if (!this.balance) return false;
 
-      return parseFloat(this.balance.split(" ")[0]) > 0;
+      return parseFloat(this.balance.split(' ')[0]) > 0;
     },
     getBalanceNumber() {
-      return this.hasBalance() ? parseFloat(this.balance.split(" ")[0]) : 0.0;
+      return this.hasBalance() ? parseFloat(this.balance.split(' ')[0]) : 0.0;
     },
     async submit() {
       if (!this.acceptedTerms) {
@@ -343,8 +420,8 @@ export default {
 
       let result = await this.$store.$api.getTableRows({
         code: this.editingToken.contract_account,
-        scope: this.editingToken.token_symbol.split(",")[1],
-        table: "stat",
+        scope: this.editingToken.token_symbol.split(',')[1],
+        table: 'stat',
       });
       if (result.rows.length) {
         this.stat = result.rows[0];
@@ -358,15 +435,15 @@ export default {
       let result = await this.$store.$api.getTableRows({
         code: this.editingToken.contract_account,
         scope: this.account,
-        table: "accounts",
-        lower_bound: this.editingToken.token_symbol.split(",")[1],
+        table: 'accounts',
+        lower_bound: this.editingToken.token_symbol.split(',')[1],
       });
       if (result.rows.length) {
         this.balance = result.rows[0].balance;
       } else {
         this.balance = (0).toFixed(
-          `${parseInt(this.editingToken.token_symbol.split(",")[0])} ${
-            this.editingToken.token_symbol.split(",")[1]
+          `${parseInt(this.editingToken.token_symbol.split(',')[0])} ${
+            this.editingToken.token_symbol.split(',')[1]
           }`
         );
       }
@@ -389,8 +466,8 @@ export default {
         !this.token.symbol
       ) {
         this.$q.notify({
-          type: "negative",
-          message: "Please fill out all the token fields",
+          type: 'negative',
+          message: 'Please fill out all the token fields',
         });
         return;
       }
@@ -406,9 +483,9 @@ export default {
     setToken() {
       if (this.editingToken) {
         this.token.name = this.editingToken.token_name;
-        this.token.symbol = this.editingToken.token_symbol.split(",")[1];
+        this.token.symbol = this.editingToken.token_symbol.split(',')[1];
         this.token.decimals = parseInt(
-          this.editingToken.token_symbol.split(",")[0]
+          this.editingToken.token_symbol.split(',')[0]
         );
         this.token.logo_sm = this.editingToken.logo_sm;
         this.token.logo_lg = this.editingToken.logo_lg;
@@ -423,15 +500,15 @@ export default {
     async doIssue() {
       if (!this.amountToIssue) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to issue",
+          type: 'negative',
+          message: 'Please specify an amount to issue',
         });
         return;
       }
       await this.issueTokens({
         ...this.token,
         contractAccount: this.token.contract_account,
-        memo: this.issueMemo ? this.issueMemo : "",
+        memo: this.issueMemo ? this.issueMemo : '',
         amount: this.amountToIssue,
       });
       this.setBalance();
@@ -443,15 +520,15 @@ export default {
     async doRetire() {
       if (!this.amountToRetire) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to retire",
+          type: 'negative',
+          message: 'Please specify an amount to retire',
         });
         return;
       }
       await this.retireTokens({
         ...this.token,
         contractAccount: this.token.contract_account,
-        memo: this.retireMemo ? this.retireMemo : "",
+        memo: this.retireMemo ? this.retireMemo : '',
         amount: this.amountToRetire,
       });
       this.setBalance();
@@ -463,22 +540,22 @@ export default {
     async doTransfer() {
       if (!this.amountToTransfer) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an amount to transfer",
+          type: 'negative',
+          message: 'Please specify an amount to transfer',
         });
         return;
       }
       if (!this.transferTo) {
         this.$q.notify({
-          type: "negative",
-          message: "Please specify an account to transfer to",
+          type: 'negative',
+          message: 'Please specify an account to transfer to',
         });
         return;
       }
       let invalidAccount = await this.isAccountFree(this.transferTo);
       if (invalidAccount) {
         this.$q.notify({
-          type: "negative",
+          type: 'negative',
           message: `Account ${this.transferTo} does not exist`,
         });
         return;
@@ -486,7 +563,7 @@ export default {
       await this.transferTokens({
         ...this.token,
         contractAccount: this.token.contract_account,
-        memo: this.transferMemo ? this.transferMemo : "",
+        memo: this.transferMemo ? this.transferMemo : '',
         amount: this.amountToTransfer,
         to: this.transferTo,
       });
@@ -498,8 +575,8 @@ export default {
       this.transferDialog = false;
     },
     cancelEdit() {
-      this.$store.commit("tokens/createToken", false);
-      this.$store.commit("tokens/editToken", null);
+      this.$store.commit('tokens/createToken', false);
+      this.$store.commit('tokens/editToken', null);
     },
   },
 };

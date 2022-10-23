@@ -1,3 +1,3 @@
-export function setBenchmarks (state, benchmarks) {
-  state.benchmarks = benchmarks
+export function setBenchmarks(state, benchmarks) {
+  state.benchmarks = benchmarks;
 }

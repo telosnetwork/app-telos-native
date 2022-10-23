@@ -1,7 +1,7 @@
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
-import RightMenuAuthenticated from "~/components/layout/RightMenuAuthenticated";
-import RightMenuGuest from "~/components/layout/RightMenuGuest";
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import RightMenuAuthenticated from '~/components/layout/RightMenuAuthenticated';
+import RightMenuGuest from '~/components/layout/RightMenuGuest';
 
 export default {
   components: {
@@ -9,18 +9,18 @@ export default {
     RightMenuGuest,
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-    ...mapGetters("notifications", ["successCount", "errorCount"]),
+    ...mapGetters('accounts', ['isAuthenticated']),
+    ...mapGetters('notifications', ['successCount', 'errorCount']),
   },
   methods: {
-    ...mapMutations("notifications", [
-      "initNotifications",
-      "unmarkRead",
-      "unmarkNew",
+    ...mapMutations('notifications', [
+      'initNotifications',
+      'unmarkRead',
+      'unmarkNew',
     ]),
-    ...mapActions("accounts", ["autoLogin"]),
+    ...mapActions('accounts', ['autoLogin']),
   },
-  name: "EmptyLayout",
+  name: 'EmptyLayout',
 };
 </script>
 
@@ -29,16 +29,19 @@ export default {
     <q-header class="bg-white">
       <q-toolbar>
         <q-toolbar-title class="flex items-center">
-          <img class="toolbar-img" src="statics/telos-logo-new.svg" />
+          <img
+            class="toolbar-img"
+            src="statics/telos-logo-new.svg"
+          >
         </q-toolbar-title>
         <right-menu-authenticated
           v-if="isAuthenticated"
           :landing-page="true"
-        ></right-menu-authenticated>
+        />
         <right-menu-guest
           v-if="!isAuthenticated"
           :landing-page="true"
-        ></right-menu-guest>
+        />
       </q-toolbar>
     </q-header>
 

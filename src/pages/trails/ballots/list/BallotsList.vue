@@ -1,19 +1,24 @@
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
-import BallotForm from "~/pages/trails/ballots/components/BallotForm";
-import BallotListItem from "~/pages/trails/ballots/components/BallotListItem";
-import BallotView from "~/pages/trails/ballots/view/BallotView";
-import WelcomeCard from "~/components/WelcomeCard";
-import ActionBar from "~/components/ActionBar";
+import { mapActions, mapGetters } from 'vuex';
+import BallotForm from '~/pages/trails/ballots/components/BallotForm';
+import BallotListItem from '~/pages/trails/ballots/components/BallotListItem';
+import BallotView from '~/pages/trails/ballots/view/BallotView';
+import WelcomeCard from '~/components/WelcomeCard';
+import ActionBar from '~/components/ActionBar';
 
 export default {
-  name: "BallotsList",
+  name: 'BallotsList',
   components: {
     BallotForm,
     BallotListItem,
     BallotView,
     WelcomeCard,
     ActionBar,
+  },
+  props: {
+    activeFilter: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -24,19 +29,14 @@ export default {
       timeAtMount: undefined,
       openedBallot: {},
       voting: false,
-      treasury: "VOTE",
+      treasury: 'VOTE',
       statuses: [],
       categories: [],
       isBallotListRowDirection: true,
-      sortMode: "",
+      sortMode: '',
       timerAction: null,
       loading: false,
     };
-  },
-  props: {
-    activeFilter: {
-      type: String,
-    },
   },
   async mounted() {
     this.timeAtMount = Date.now();
@@ -46,20 +46,22 @@ export default {
     }
     if (this.$route.query && this.$route.query.treasury) {
       this.treasury = this.$route.query.treasury;
-      this.$refs.actionBar ? this.$refs.actionBar.setTreasuryBar(this.treasury) : "";
+      this.$refs.actionBar
+        ? this.$refs.actionBar.setTreasuryBar(this.treasury)
+        : '';
     }
     await this.fetchFees();
     this.fetchUserVotes();
   },
   methods: {
-    ...mapActions("trails", [
-      "fetchFees",
-      "fetchMoreBallots",
-      "castVote",
-      "fetchTreasuries",
-      "fetchBallotsByStatus",
-      "fetchUserVotesForThisBallot",
-      "resetUserVotes",
+    ...mapActions('trails', [
+      'fetchFees',
+      'fetchMoreBallots',
+      'castVote',
+      'fetchTreasuries',
+      'fetchBallotsByStatus',
+      'fetchUserVotesForThisBallot',
+      'resetUserVotes',
     ]),
     async onLoad(_, done) {
       let isFirstFetch = this.ballots.length == 0;
@@ -73,7 +75,9 @@ export default {
     },
     async fetchUserVotes() {
       if (this.isAuthenticated) {
-        this.filterBallots(this.ballots).forEach(b => this.fetchUserVotesForThisBallot(b.ballot_name));
+        this.filterBallots(this.ballots).forEach((b) =>
+          this.fetchUserVotesForThisBallot(b.ballot_name)
+        );
       } else {
         this.resetUserVotes();
       }
@@ -87,7 +91,9 @@ export default {
     openBallot(ballot) {
       this.timeAtMount = Date.now();
       this.$router.push(
-        `/trails/${this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'}/${ballot.ballot_name}/${this.timeAtMount}`
+        `/trails/${
+          this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'
+        }/${ballot.ballot_name}/${this.timeAtMount}`
       );
       // the timestamp prevents scroll glitches on the infinite list
     },
@@ -151,54 +157,52 @@ export default {
           if (this.statuses.length === 0) {
             return true;
           } else if (
-            this.statuses.includes("active") &&
-            this.statuses.includes("expired")
+            this.statuses.includes('active') &&
+            this.statuses.includes('expired')
           ) {
-            return this.statuses.includes(b.status) || b.status === "voting";
-          } else if (this.statuses.includes("active")) {
+            return this.statuses.includes(b.status) || b.status === 'voting';
+          } else if (this.statuses.includes('active')) {
             return Date.now() < Date.parse(b.end_time);
-          } else if (this.statuses.includes("expired")) {
+          } else if (this.statuses.includes('expired')) {
             return (
               this.statuses.includes(b.status) ||
               (!this.isBallotOpened(b) &&
                 this.votingHasBegun(b) &&
-                b.status === "voting")
+                b.status === 'voting')
             );
-          } else if (this.statuses.includes("not started")) {
+          } else if (this.statuses.includes('not started')) {
             return (
               this.statuses.includes(b.status) ||
-              (this.isBallotNotStarted(b) && b.status === "voting")
+              (this.isBallotNotStarted(b) && b.status === 'voting')
             );
           }
           return this.statuses.includes(b.status);
         }
       });
-      const ballotFilteredByCategory = ballotFilteredByStatuses.filter(
-        (b) => {
-          if (this.categories.length > 0) {
-            return this.categories.includes(b.category);
+      const ballotFilteredByCategory = ballotFilteredByStatuses.filter((b) => {
+        if (this.categories.length > 0) {
+          return this.categories.includes(b.category);
+        } else {
+          if (this.$route.path.indexOf('election') > 0) {
+            return ['election', 'referendum', 'leaderboard'].includes(
+              b.category
+            );
           } else {
-            if(this.$route.path.indexOf('election') > 0) {
-              return ["election","referendum","leaderboard"].includes(b.category);
-            } else {
-              return ["poll","proposal"].includes(b.category);
-            }
+            return ['poll', 'proposal'].includes(b.category);
           }
         }
-      );
-      const ballotFilteredByTreasury = ballotFilteredByCategory.filter(
-        (b) => {
-          if (!this.treasury) return true;
-          try {
-            return b.treasury_symbol.split(",")[1] == this.treasury;
-          } catch (e) {
-            console.log("Problematic ballot: ", b);
-            console.error(e);
-          }
-          return false;
+      });
+      const ballotFilteredByTreasury = ballotFilteredByCategory.filter((b) => {
+        if (!this.treasury) return true;
+        try {
+          return b.treasury_symbol.split(',')[1] == this.treasury;
+        } catch (e) {
+          console.log('Problematic ballot: ', b);
+          console.error(e);
         }
-      );
-      return ballotFilteredByTreasury
+        return false;
+      });
+      return ballotFilteredByTreasury;
     },
     changeDirection(isBallotListRowDirection) {
       this.limit = 100;
@@ -210,23 +214,23 @@ export default {
       return this.ballot.options.find((x) => x.key !== this.getWinner.key);
     },
     sortBallots(ballots, method) {
-      if (method === "A-Z") {
+      if (method === 'A-Z') {
         return ballots.sort((a, b) =>
           a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
         );
-      } else if (method === "Z-A") {
+      } else if (method === 'Z-A') {
         return ballots.sort((a, b) =>
           a.title.toLowerCase() < b.title.toLowerCase() ? 1 : -1
         );
-      } else if (method === "Most popular") {
+      } else if (method === 'Most popular') {
         return ballots.sort((a, b) =>
           a.total_voters < b.total_voters ? 1 : -1
         );
-      } else if (method === "Least popular") {
+      } else if (method === 'Least popular') {
         return ballots.sort((a, b) =>
           a.total_voters > b.total_voters ? 1 : -1
         );
-      } else if (method === "") {
+      } else if (method === '') {
         return ballots;
       }
     },
@@ -249,16 +253,20 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated", "account"]),
-    ...mapGetters("trails", ["ballots", "ballotsPagination", "treasuriesOptions"]),
+    ...mapGetters('accounts', ['isAuthenticated', 'account']),
+    ...mapGetters('trails', [
+      'ballots',
+      'ballotsPagination',
+      'treasuriesOptions',
+    ]),
   },
   watch: {
-    $route(to, from) {
-      this.showBallot = !!to.params.id
+    $route(to) {
+      this.showBallot = !!to.params.id;
     },
     account() {
       this.fetchUserVotes();
-    }
+    },
   },
 };
 </script>

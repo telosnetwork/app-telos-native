@@ -1,6 +1,6 @@
-import { supplyToSymbol } from "~/utils/assets";
+import { supplyToSymbol } from '~/utils/assets';
 
-const VOTE_SYMBOL = "VOTE";
+const VOTE_SYMBOL = 'VOTE';
 
 export const setFees = (state, config) => {
   state.fees = config.fees;
@@ -13,11 +13,11 @@ export const addBallots = (state, { rows, more, next_key }) => {
   let nextKey = parseInt(next_key);
   if (isNaN(currentKey) || isNaN(nextKey) || currentKey < nextKey) {
     state.ballots.list.pagination.pages++;
-    state.ballots.list.pagination.next_key = next_key;    
+    state.ballots.list.pagination.next_key = next_key;
   } else {
     state.ballots.list.pagination.next_key = new Number(nextKey + 1).toString();
   }
-  
+
   // create a ballot name list from incoming rows
   let incoming_names = rows.map(x => x.ballot_name);
 
@@ -50,10 +50,10 @@ export const addBallots = (state, { rows, more, next_key }) => {
   } else {
     state.ballots.list.pagination.more = true;
   }
-  
+
 };
 
-export const setBallots = (state, { rows, more }) => {
+export const setBallots = (state, { rows }) => {
   if (rows) {
     state.ballots.list.rows = rows;
   }
@@ -79,7 +79,7 @@ export const updateTreasuries = (state) => {
   // mark every treasury.isRegistered if the current user treasuries (userTreasuries) includes that treasury
   let open_ballots = state.ballots.list.open_ballots;
   let userTreasuries = state.userTreasuries ? state.userTreasuries.rows : [];
-  
+
   state.treasuries.list.data.forEach(t => {
     t.symbol = supplyToSymbol(t.max_supply);
     t.open_ballots = open_ballots.filter( b => b.treasury.max_supply == t.max_supply ).length;
@@ -99,7 +99,7 @@ export const addTreasuries = (state, { rows, more }) => {
       .filter(treasury => incoming_symbols.indexOf( supplyToSymbol(treasury.max_supply) ) == -1)
       // concat new ones
       .concat(rows);
-      
+
     // sort them by voters but allways put VOTE first
     state.treasuries.list.data.sort( (A, B) => {
       if (A.symbol === VOTE_SYMBOL) return 1;

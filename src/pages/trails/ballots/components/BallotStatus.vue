@@ -1,20 +1,20 @@
 <script>
-import Countdown from "~/pages/trails/ballots/components/CountdownBlock";
-import moment from "moment";
+import Countdown from '~/pages/trails/ballots/components/CountdownBlock';
+import moment from 'moment';
 export default {
-  name: "BallotStatus",
+  name: 'BallotStatus',
   components: { Countdown },
-  data() {
-    return {
-      moment: moment,
-    };
-  },
   props: {
     ballot: { type: Object, required: true },
     isBallotOpened: { type: Boolean, required: true },
     votingHasBegun: { type: Boolean, required: true },
     getStartTime: { type: Number, required: true },
     getEndTime: { type: Number, required: true },
+  },
+  data() {
+    return {
+      moment: moment,
+    };
   },
 };
 </script>

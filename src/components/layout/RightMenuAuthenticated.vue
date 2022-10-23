@@ -1,24 +1,24 @@
 <script>
-import { mapActions, mapGetters } from "vuex";
-import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
+import { mapActions, mapGetters } from 'vuex';
+import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 
 export default {
-  name: "RightMenuAuthenticated",
+  name: 'RightMenuAuthenticated',
   components: {
     ProfileAvatar,
+  },
+  props: {
+    landingPage: Boolean,
   },
   data() {
     return {
       isProfileMenuOpen: false,
       isDialogOpen: false,
-      avatar: "",
+      avatar: '',
     };
   },
-  props: {
-    landingPage: Boolean,
-  },
   computed: {
-    ...mapGetters("accounts", ["account"]),
+    ...mapGetters('accounts', ['account']),
     myProfile() {
       return this.$store.state.profiles.myProfile;
     },
@@ -32,8 +32,8 @@ export default {
     this.showIsLoading(false);
   },
   methods: {
-    ...mapActions("accounts", ["logout"]),
-    ...mapActions("profiles", ["getProfile"]),
+    ...mapActions('accounts', ['logout']),
+    ...mapActions('profiles', ['getProfile']),
     toggleProfileMenu() {
       this.isProfileMenuOpen = !this.isProfileMenuOpen;
     },

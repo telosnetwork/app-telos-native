@@ -1,30 +1,30 @@
 <script>
-import { mapGetters } from 'vuex'
-import AddVoterDialog from './AddVoterDialog'
-import MintTokenDialog from './MintTokenDialog'
-import TreasuryEditDialog from './TreasuryEditDialog'
+import { mapGetters } from 'vuex';
+import AddVoterDialog from './AddVoterDialog';
+import MintTokenDialog from './MintTokenDialog';
+import TreasuryEditDialog from './TreasuryEditDialog';
 
 export default {
   name: 'TreasuryCard',
   components: {
     AddVoterDialog,
     MintTokenDialog,
-    TreasuryEditDialog
+    TreasuryEditDialog,
   },
   props: {
-    treasury: { type: Object, required: true }
+    treasury: { type: Object, required: true },
   },
-  data () {
+  data() {
     return {
       show: false,
       showMint: false,
-      showEdit: false
-    }
+      showEdit: false,
+    };
   },
   computed: {
-    ...mapGetters('accounts', ['account', 'isAuthenticated'])
-  }
-}
+    ...mapGetters('accounts', ['account', 'isAuthenticated']),
+  },
+};
 </script>
 
 <template lang="pug">
@@ -99,18 +99,18 @@ div
 </template>
 
 <style scoped lang="scss">
-  .prefered {
-    background: purple !important
-  }
-  .btn-group {
-    display: flex;
-    justify-content: space-between;
-    @media (max-width: 1199px) {
-      flex-direction: column;
+.prefered {
+  background: purple !important;
+}
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 1199px) {
+    flex-direction: column;
 
-      .q-btn {
-        margin-bottom: 15px;
-      }
+    .q-btn {
+      margin-bottom: 15px;
     }
   }
+}
 </style>
