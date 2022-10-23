@@ -1,44 +1,44 @@
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { validation } from "~/mixins/validation";
-import * as IPFS from "ipfs-core";
+import { mapActions, mapGetters } from 'vuex';
+import { validation } from '~/mixins/validation';
+import * as IPFS from 'ipfs-core';
 
 export default {
-  name: "BallotForm",
+  name: 'BallotForm',
   mixins: [validation],
   props: {
     show: { type: Boolean, required: true },
   },
-  emits: ["close"],
+  emits: ['close'],
   data() {
     return {
       form: {
         title: null,
-        category: "poll",
+        category: 'poll',
         description: null,
         imageUrl: null,
         IPFSString: null,
         treasurySymbol: null,
-        votingMethod: "1token1vote",
+        votingMethod: '1token1vote',
         maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
         endDate: null,
-        config: "votestake",
+        config: 'votestake',
       },
       prompt: false,
       userBalance: null,
       votingMethodOptions: [
-        { value: "1acct1vote", label: "One vote per account" },
-        { value: "1tokennvote", label: "All tokens to each vote" },
-        { value: "1token1vote", label: "All tokens split to each vote" },
-        { value: "1tsquare1v", label: "One token equals one square vote" },
-        { value: "quadratic", label: "Quadratic" },
+        { value: '1acct1vote', label: 'One vote per account' },
+        { value: '1tokennvote', label: 'All tokens to each vote' },
+        { value: '1token1vote', label: 'All tokens split to each vote' },
+        { value: '1tsquare1v', label: 'One token equals one square vote' },
+        { value: 'quadratic', label: 'Quadratic' },
       ],
       categoryOptions: [
-        { value: "election", label: "Election" },
-        { value: "poll", label: "Poll" },
-        { value: "referendum", label: "Referendum" },
+        { value: 'election', label: 'Election' },
+        { value: 'poll', label: 'Poll' },
+        { value: 'referendum', label: 'Referendum' },
       ],
       submitting: false,
       file: null,
@@ -46,12 +46,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("trails", ["treasuries", "userTreasury", "ballotFees"]),
-    ...mapGetters("accounts", ["account","accountData"]),
+    ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees']),
+    ...mapGetters('accounts', ['account','accountData']),
     getTreasurySymbols() {
       if (this.userTreasury) {
         const symbols = this.userTreasury.map((treasury) => ({
-          symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, ""),
+          symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, ''),
         }));
         return this.treasuries
           .filter((v) => {
@@ -64,7 +64,7 @@ export default {
               ? `${treasury.title} (${treasury.supply})`
               : treasury.supply,
             value: treasury.supply,
-            symbol: treasury.supply.replace(/[^a-zA-Z]/gi, ""),
+            symbol: treasury.supply.replace(/[^a-zA-Z]/gi, ''),
           }));
       } else {
         return null;
@@ -73,15 +73,15 @@ export default {
     isStakeable() {
       let selectedTreasurySettings = this.treasuries.find(
         (t) =>
-          (t.access === "public" || t.manager === this.account) &&
+          (t.access === 'public' || t.manager === this.account) &&
           t.symbol === this.form.treasurySymbol?.symbol
       )?.settings;
       return selectedTreasurySettings
-        ? selectedTreasurySettings.find((i) => i.key === "stakeable").value
+        ? selectedTreasurySettings.find((i) => i.key === 'stakeable').value
         : null;
     },
     configEnable() {
-      return this.form.treasurySymbol?.symbol !== "VOTE" && this.isStakeable;
+      return this.form.treasurySymbol?.symbol !== 'VOTE' && this.isStakeable;
     },
     available() {
       if (this.userBalance) {
@@ -96,17 +96,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions("trails", [
-      "addBallot",
-      "fetchTreasuriesForUser",
-      "fetchFees",
+    ...mapActions('trails', [
+      'addBallot',
+      'fetchTreasuriesForUser',
+      'fetchFees',
     ]),
     async onAddBallot() {
       this.submitting = true;
       const success = await this.addBallot(this.createBallotObject());
       this.submitting = false;
       if (success) {
-        this.$emit("update:show", false);
+        this.$emit('update:show', false);
         this.resetBallot();
       }
     },
@@ -122,7 +122,7 @@ export default {
         description: null,
         imageUrl: null,
         treasurySymbol: null,
-        votingMethod: "1token1vote",
+        votingMethod: '1token1vote',
         initialOptions: [],
         endDate: null,
         IPFSString: null,
@@ -132,22 +132,22 @@ export default {
     },
     onCancel() {
       this.resetBallot();
-      this.$emit("close");
+      this.$emit('close');
     },
     addBallotOption(val, done) {
-      done(val.toLowerCase(), "add-unique");
+      done(val.toLowerCase(), 'add-unique');
     },
     createBallotObject() {
       return {
         title: this.form.title,
         category: this.form.category,
         description:
-          this.form.IPFSString && this.form.IPFSString.trim() !== ""
+          this.form.IPFSString && this.form.IPFSString.trim() !== ''
             ? `${this.form.description} ${this.form.IPFSString}`
             : this.form.description,
         content: this.form.imageUrl
           ? `{\"imageUrl\":\"${this.form.imageUrl}\"}`
-          : "",
+          : '',
         treasurySymbol: this.form.treasurySymbol,
         votingMethod: this.form.votingMethod,
         maxOptions: this.form.maxOptions,
@@ -163,7 +163,7 @@ export default {
         const ipfs = await IPFS.create();
         this.cid = await ipfs.add(file);
       } catch (e) {
-        if (e.code == "ERR_LOCK_EXISTS") return;
+        if (e.code == 'ERR_LOCK_EXISTS') return;
         console.error(e);
       }
     },

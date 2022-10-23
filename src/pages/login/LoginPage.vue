@@ -1,9 +1,9 @@
 <script>
-import { mapActions, mapGetters } from "vuex";
-import RequestAccount from "./components/RequestAccount";
+import { mapActions, mapGetters } from 'vuex';
+import RequestAccount from './components/RequestAccount';
 
 export default {
-  name: "LoginPage",
+  name: 'LoginPage',
   components: {
     RequestAccount,
   },
@@ -13,10 +13,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("accounts", ["loading"]),
+    ...mapGetters('accounts', ['loading']),
   },
   methods: {
-    ...mapActions("accounts", ["login"]),
+    ...mapActions('accounts', ['login']),
     async onLogin(idx) {
       this.idx = idx;
       await this.login({

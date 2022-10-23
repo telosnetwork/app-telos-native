@@ -1,37 +1,37 @@
-const CountriesNPM = require('i18n-iso-countries')
-CountriesNPM.registerLocale(require('i18n-iso-countries/langs/en.json'))
-CountriesNPM.registerLocale(require('i18n-iso-countries/langs/es.json'))
+const CountriesNPM = require('i18n-iso-countries');
+CountriesNPM.registerLocale(require('i18n-iso-countries/langs/en.json'));
+CountriesNPM.registerLocale(require('i18n-iso-countries/langs/es.json'));
 
 export const countriesLang = {
-  data () {
+  data() {
     return {
       countriesLang: [],
-      langs: ['es', 'en-us']
-    }
+      langs: ['es', 'en-us'],
+    };
   },
-  beforeMount () {
-    this.countriesLang = CountriesNPM.getNames(this.language)
+  beforeMount() {
+    this.countriesLang = CountriesNPM.getNames(this.language);
   },
   computed: {
-    language () {
-      let ln
+    language() {
+      let ln;
       switch (this.$i18n.locale) {
         case 'en-usa':
-          ln = 'en'
-          break
+          ln = 'en';
+          break;
         case 'es':
-          ln = 'es'
-          break
+          ln = 'es';
+          break;
         default:
-          ln = 'en'
-          break
+          ln = 'en';
+          break;
       }
-      return ln
-    }
+      return ln;
+    },
   },
   methods: {
     codeToNameCountry: function (code) {
-      return CountriesNPM.getName(code, this.language)
-    }
-  }
-}
+      return CountriesNPM.getName(code, this.language);
+    },
+  },
+};

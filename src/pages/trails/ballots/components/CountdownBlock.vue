@@ -1,34 +1,34 @@
 <script>
 export default {
-  name: "CountdownBlock",
-  props: ["endtime"],
+  name: 'CountdownBlock',
+  props: ['endtime'],
   data() {
     return {
-      timer: "",
+      timer: '',
       wordString: {
-        day: "Day",
-        hours: "Hours",
-        minutes: "Minutes",
-        seconds: "Seconds",
-        expired: "Event has been expired.",
-        running: "Till the end of event.",
-        upcoming: "Till start of event.",
+        day: 'Day',
+        hours: 'Hours',
+        minutes: 'Minutes',
+        seconds: 'Seconds',
+        expired: 'Event has been expired.',
+        running: 'Till the end of event.',
+        upcoming: 'Till start of event.',
         status: {
-          expired: "Expired",
-          running: "Running",
-          upcoming: "Future",
+          expired: 'Expired',
+          running: 'Running',
+          upcoming: 'Future',
         },
       },
-      start: "",
-      end: "",
-      interval: "",
-      days: "",
-      minutes: "",
-      hours: "",
-      seconds: "",
-      message: "",
-      statusType: "",
-      statusText: "",
+      start: '',
+      end: '',
+      interval: '',
+      days: '',
+      minutes: '',
+      hours: '',
+      seconds: '',
+      message: '',
+      statusType: '',
+      statusText: '',
     };
   },
   mounted() {
@@ -54,23 +54,23 @@ export default {
 
       if (distance < 0 && passTime < 0) {
         this.message = this.wordString.expired;
-        this.statusType = "expired";
+        this.statusType = 'expired';
         this.statusText = this.wordString.status.expired;
         clearInterval(this.interval);
       } else if (distance < 0 && passTime > 0) {
         this.calcTime(passTime);
         this.message = this.wordString.running;
-        this.statusType = "running";
+        this.statusType = 'running';
         this.statusText = this.wordString.status.running;
       } else if (distance > 0 && passTime > 0) {
         this.calcTime(distance);
         this.message = this.wordString.upcoming;
-        this.statusType = "upcoming";
+        this.statusType = 'upcoming';
         this.statusText = this.wordString.status.upcoming;
       }
     },
     pad(n) {
-      return n < 10 ? "0" + n : n;
+      return n < 10 ? '0' + n : n;
     },
     calcTime(dist) {
       // Time calculations for days, hours, minutes and seconds

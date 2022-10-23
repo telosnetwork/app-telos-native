@@ -1,9 +1,9 @@
 <script>
-import { mapGetters } from "vuex";
-import Btn from "./CustomButton";
+import { mapGetters } from 'vuex';
+import Btn from './CustomButton';
 
 export default {
-  name: "WelcomeCard",
+  name: 'WelcomeCard',
   components: { Btn },
   data() {
     return {
@@ -11,7 +11,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("accounts", ["account"]),
+    ...mapGetters('accounts', ['account']),
   },
   methods: {
     addToLocalStorage() {

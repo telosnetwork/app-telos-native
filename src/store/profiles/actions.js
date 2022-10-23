@@ -1,6 +1,6 @@
 // import PPP from '@smontero/ppp-client-api'
 
-export const signUp = async function ({ commit }, profileData) {
+export const signUp = async function (profileData) {
   const actions = []
 
   if (!this.state.profiles.myProfile) {
@@ -106,7 +106,7 @@ export const searchProfiles = async function ({ commit }, options = {}) {
   }
 }
 
-export const clearProfilesList = function ({ commit }, options = {}) {
+export const clearProfilesList = function ({ commit }) {
   commit('clearProfilesList')
 }
 

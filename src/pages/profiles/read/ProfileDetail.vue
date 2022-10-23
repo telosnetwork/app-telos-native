@@ -47,17 +47,17 @@ main.column.items-center.back
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
-import SignUp from "src/pages/profiles/add/SignUp.vue";
+import { mapActions, mapGetters } from 'vuex';
+import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
+import SignUp from 'src/pages/profiles/add/SignUp.vue';
 export default {
-  name: "ProfileDetail",
+  name: 'ProfileDetail',
   components: {
     ProfileAvatar,
     SignUp,
   },
   computed: {
-    ...mapGetters("accounts", ["account"]),
+    ...mapGetters('accounts', ['account']),
     Profile() {
       if (this.isOwner) {
         return this.$store.state.profiles.myProfile;
@@ -97,19 +97,19 @@ export default {
     }
     this.showIsLoading(false);
     if (this.missingProfile) {
-      this.$router.push({ name: "userRegister" });
+      this.$router.push({ name: 'userRegister' });
     }
+    this.$store.commit('profiles/setSelectedProfile', []);
+
     /*
     if (!this.$store.getters['profiles/isRegistered']) {
       this.$router.push({ name: 'userRegister' })
     }
     */
   },
-  beforeMount: function () {
-    this.$store.commit("profiles/setSelectedProfile", []);
-  },
+
   methods: {
-    ...mapActions("profiles", ["getProfile"]),
+    ...mapActions('profiles', ['getProfile']),
     /*
     goToChat () {
       this.$store.commit('messages/setActiveChat', { activeChat: this.Profile.eosAccount, avatarImage: this.Profile.publicData.avatarImage, s3Identity: this.Profile.publicData.s3Identity })

@@ -1,13 +1,13 @@
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 // import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber'
 
-import { validation } from "~/mixins/validation";
-import { countriesPhoneCode } from "~/mixins/countries-phone-code";
-import VueRecaptcha from "vue-recaptcha";
+import { validation } from '~/mixins/validation';
+import { countriesPhoneCode } from '~/mixins/countries-phone-code';
+import VueRecaptcha from 'vue-recaptcha';
 
 export default {
-  name: "SendOtp",
+  name: 'SendOtp',
   mixins: [validation, countriesPhoneCode],
   data() {
     return {
@@ -25,15 +25,15 @@ export default {
   },
   mounted() {
     this.phoneOptions = this.countriesPhoneCode;
-    let recaptchaScript = document.createElement("script");
+    let recaptchaScript = document.createElement('script');
     recaptchaScript.setAttribute(
-      "src",
-      "https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit"
+      'src',
+      'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
     );
     document.head.appendChild(recaptchaScript);
   },
   methods: {
-    ...mapActions("accounts", ["sendOTP"]),
+    ...mapActions('accounts', ['sendOTP']),
     async onSendOTP() {
       this.resetValidation(this.form);
       this.error = null;
@@ -44,9 +44,9 @@ export default {
       this.submitting = true
       const result = await this.sendOTP(this.form) */
       if (this.recaptcha) {
-        this.$router.push({ path: "/accounts/add/verifyOTP" });
+        this.$router.push({ path: '/accounts/add/verifyOTP' });
       } else {
-        this.error = "Please complete reCaptcha";
+        this.error = 'Please complete reCaptcha';
       }
       this.submitting = false;
     },
@@ -64,7 +64,7 @@ export default {
     } */
   },
   components: {
-    "vue-recaptcha": VueRecaptcha,
+    'vue-recaptcha': VueRecaptcha,
   },
 };
 </script>

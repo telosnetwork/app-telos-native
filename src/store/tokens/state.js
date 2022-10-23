@@ -3,6 +3,6 @@ export default function () {
     tokens: [],
     createToken: false,
     editingToken: null,
-    config: {}
-  }
+    config: {},
+  };
 }

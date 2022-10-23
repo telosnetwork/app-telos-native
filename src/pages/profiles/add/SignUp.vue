@@ -5,9 +5,9 @@ main
 
 <script>
 // import { SignUpForm } from '../components/SignUp'
-import SignUpForm from "~/pages/profiles/add/SignUpForm";
+import SignUpForm from '~/pages/profiles/add/SignUpForm';
 export default {
-  name: "SignUp",
+  name: 'SignUp',
   components: { SignUpForm },
 };
 </script>

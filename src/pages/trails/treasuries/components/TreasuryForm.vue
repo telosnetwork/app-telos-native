@@ -1,14 +1,14 @@
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import { validation } from '~/mixins/validation'
+import { mapActions, mapGetters } from 'vuex';
+import { validation } from '~/mixins/validation';
 
 export default {
   name: 'TreasuryForm',
   mixins: [validation],
   props: {
-    show: { type: Boolean, required: true }
+    show: { type: Boolean, required: true },
   },
-  data () {
+  data() {
     return {
       form: {
         manager: null,
@@ -18,57 +18,65 @@ export default {
         maxSupplyDecimals: null,
         access: null,
         title: null,
-        description: null
+        description: null,
       },
-      submitting: false
-    }
+      submitting: false,
+    };
   },
   computed: {
-    ...mapGetters('trails', ['treasuryFees'])
+    ...mapGetters('trails', ['treasuryFees']),
   },
   methods: {
     ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
-    async onAddTreasury () {
-      this.resetValidation(this.form)
-      if (!(await this.validate(this.form))) return
-      this.submitting = true
-      const success = await this.addTreasury(this.form)
-      this.submitting = false
+    async onAddTreasury() {
+      this.resetValidation(this.form);
+      if (!(await this.validate(this.form))) return;
+      this.submitting = true;
+      const success = await this.addTreasury(this.form);
+      this.submitting = false;
       if (success) {
-        this.$emit('update:show', false)
-        this.resetTreasury()
-        await this.fetchTreasuries()
+        this.$emit('update:show', false);
+        this.resetTreasury();
+        await this.fetchTreasuries();
       }
     },
-    resetTreasury () {
+    resetTreasury() {
       this.form = {
         manager: null,
         maxSupply: null,
         access: null,
         title: null,
-        description: null
+        description: null,
+      };
+    },
+    setMaxSupply() {
+      if (
+        this.form.maxSupplyDecimals &&
+        parseInt(this.form.maxSupplyDecimals) > 0
+      ) {
+        this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(
+          parseInt(this.form.maxSupplyDecimals),
+          '0'
+        )} ${this.form.maxSupplyToken}`;
+      } else {
+        this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${
+          this.form.maxSupplyToken
+        }`;
       }
     },
-    setMaxSupply () {
-      if (this.form.maxSupplyDecimals && parseInt(this.form.maxSupplyDecimals) > 0) {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(parseInt(this.form.maxSupplyDecimals), '0')} ${this.form.maxSupplyToken}`
-      } else {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${this.form.maxSupplyToken}`
-      }
-    }
   },
   watch: {
     'form.maxSupplyValue': function () {
-      this.setMaxSupply()
+      this.setMaxSupply();
     },
     'form.maxSupplyToken': function () {
-      this.setMaxSupply()
+      this.setMaxSupply();
     },
     'form.maxSupplyDecimals': function () {
-      this.setMaxSupply()
-    }
-  }
-}
+      this.setMaxSupply();
+    },
+  },
+};
 </script>
 
 <template lang="pug">
@@ -161,6 +169,6 @@ q-dialog(
 </template>
 
 <style lang="sass" scoped>
-  .fees
-    font-size: 12px
+.fees
+  font-size: 12px
 </style>

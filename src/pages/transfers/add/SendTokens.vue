@@ -1,9 +1,9 @@
 <script>
-import { mapActions, mapMutations } from "vuex";
-import { validation } from "~/mixins/validation";
+import { mapActions, mapMutations } from 'vuex';
+import { validation } from '~/mixins/validation';
 
 export default {
-  name: "SendTokens",
+  name: 'SendTokens',
   mixins: [validation],
   data() {
     return {
@@ -17,8 +17,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions("transfers", ["sendTokens"]),
-    ...mapMutations("general", ["setErrorMsg"]),
+    ...mapActions('transfers', ['sendTokens']),
+    ...mapMutations('general', ['setErrorMsg']),
     async onSendTokens() {
       this.resetValidation(this.form);
       if (!(await this.validate(this.form))) return;

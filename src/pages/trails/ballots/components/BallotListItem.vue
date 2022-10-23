@@ -1,11 +1,11 @@
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BallotStatus from "./BallotStatus";
-import BallotChip from "./BallotChip";
-import Btn from "../../../../components/CustomButton";
+import { mapActions, mapGetters } from 'vuex';
+import BallotStatus from './BallotStatus';
+import BallotChip from './BallotChip';
+import Btn from '../../../../components/CustomButton';
 
 export default {
-  name: "BallotListItem",
+  name: 'BallotListItem',
   components: { BallotStatus, BallotChip, Btn },
   props: {
     ballot: { type: Object, required: true },
@@ -24,28 +24,36 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-    ...mapGetters("trails", ["userVotes"]),
+    ...mapGetters('accounts', ['isAuthenticated']),
+    ...mapGetters('trails', ['userVotes']),
     mainButtonTextSmall() {
-      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+      if (
+        this.isBallotOpened &&
+        this.ballot.status === 'voting' &&
+        this.isAuthenticated
+      ) {
         if (this.userVotes[this.ballot.ballot_name]) {
-          return "View / Update vote"
+          return 'View / Update vote';
         }
       }
       return this.mainButtonText;
     },
     mainButtonText() {
-      if (this.isBallotOpened && this.ballot.status === 'voting' && this.isAuthenticated) {
+      if (
+        this.isBallotOpened &&
+        this.ballot.status === 'voting' &&
+        this.isAuthenticated
+      ) {
         if (this.userVotes[this.ballot.ballot_name]) {
-          return "View proposal / Update vote"
+          return 'View proposal / Update vote';
         } else {
-          return "View proposal & vote"
+          return 'View proposal & vote';
         }
       }
-      return "View proposal";
+      return 'View proposal';
     },
     getWinner() {
-      if (!this.ballot.total_voters) return "No votes";
+      if (!this.ballot.total_voters) return 'No votes';
       let winnerValue = -1;
       let winner;
       this.ballot.options.forEach((option, index) => {
@@ -58,7 +66,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("trails", ["castVote"]),
+    ...mapActions('trails', ['castVote']),
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
     },
@@ -67,8 +75,8 @@ export default {
     },
     getPercentofTotal(option) {
       const total =
-        (Number(option.value.split(" ")[0]) /
-          Number(this.ballot.total_raw_weight.split(" ")[0])) *
+        (Number(option.value.split(' ')[0]) /
+          Number(this.ballot.total_raw_weight.split(' ')[0])) *
         100;
       return this.trunc(total, 2);
     },

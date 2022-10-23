@@ -1,10 +1,10 @@
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
-  name: "HeaderMenu",
+  name: 'HeaderMenu',
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters('accounts', ['isAuthenticated']),
   },
   props: {
     activeFilter: {},
@@ -13,16 +13,16 @@ export default {
     return {
       menuItems: [
         {
-          label: this.$t("menu.daos"),
-          route: "/trails/treasuries",
+          label: this.$t('menu.daos'),
+          route: '/trails/treasuries',
         },
         {
-          label: this.$t("menu.elections"),
-          route: "/trails/elections",
-        },        
+          label: this.$t('menu.elections'),
+          route: '/trails/elections',
+        },
         {
-          label: this.$t("menu.proposals"),
-          route: "/trails/ballots",
+          label: this.$t('menu.proposals'),
+          route: '/trails/ballots',
         },
       ],
       localFileter: this.activeFilter,
@@ -32,9 +32,9 @@ export default {
     activeFilter: function () {
       this.localFileter = this.activeFilter;
     },
-    $route(to, from) {
-      if (!to.path.includes("/trails/ballots")) {
-        this.localFileter = "";
+    $route(to) {
+      if (!to.path.includes('/trails/ballots')) {
+        this.localFileter = '';
       }
     },
   },

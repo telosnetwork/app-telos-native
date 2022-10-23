@@ -1,8 +1,8 @@
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 
 export default {
-  name: "RotationPage",
+  name: 'RotationPage',
   data() {
     return {
       form: {
@@ -13,7 +13,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("testnet", ["produce"]),
+    ...mapActions('testnet', ['produce']),
     async onProduce() {
       this.submitting = true;
       const result = await this.produce(this.form.producer);

@@ -11,10 +11,10 @@ q-card(:class="{ own: isOwn }")
 </template>
 
 <script>
-import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
-import md5 from "md5";
+import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
+import md5 from 'md5';
 export default {
-  name: "ContactItem",
+  name: 'ContactItem',
   components: {
     ProfileAvatar,
   },
@@ -37,18 +37,18 @@ export default {
   },
   methods: {
     goToChat() {
-      this.$store.commit("messages/setActiveChat", {
+      this.$store.commit('messages/setActiveChat', {
         activeChat: this.contact.eosAccount,
         avatarImage: this.contact.publicData.avatarImage,
         s3Identity: this.contact.publicData.s3Identity,
       });
-      this.$router.push({ name: "chat" });
+      this.$router.push({ name: 'chat' });
     },
     goToProfileDetail() {
-      this.$store.commit("profiles/setSelectedProfile", this.contact);
+      this.$store.commit('profiles/setSelectedProfile', this.contact);
       if (this.isOwn) {
-        this.$router.push({ name: "myProfile" });
-      } else this.$router.push({ name: "profileDetail" });
+        this.$router.push({ name: 'myProfile' });
+      } else this.$router.push({ name: 'profileDetail' });
     },
     goToEditOwnProfile() {
       this.$router.push({ path: `/profiles/edit/${this.contact.account_name}` });

@@ -13,16 +13,16 @@ main
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
 export default {
-  name: "ProfileLogin",
+  name: 'ProfileLogin',
   data() {
     return {
       loading: true,
     };
   },
   computed: {
-    ...mapGetters("accounts", ["account"]),
+    ...mapGetters('accounts', ['account']),
   },
   async mounted() {
     const isLogged = await this.loginToBackend();
@@ -34,7 +34,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("accounts", ["loginToBackend"]),
+    ...mapActions('accounts', ['loginToBackend']),
   },
 };
 </script>

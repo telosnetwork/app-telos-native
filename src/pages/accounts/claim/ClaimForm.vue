@@ -1,33 +1,32 @@
 <script>
-import { mapActions } from 'vuex'
-import { validation } from '~/mixins/validation'
+import { mapActions } from 'vuex';
+import { validation } from '~/mixins/validation';
 
 export default {
   name: 'ClaimForm',
   mixins: [validation],
-  data () {
+  data() {
     return {
       form: {
-        accountName: null
+        accountName: null,
       },
       submitting: false,
-      state: null
-    }
+      state: null,
+    };
   },
   methods: {
     ...mapActions('accounts', ['isAccountClaimed']),
-    async onClaimCheck () {
-      this.resetValidation(this.form)
-      if (!(await this.validate(this.form))) return
-      this.state = await this.isAccountClaimed(this.form.accountName)
+    async onClaimCheck() {
+      this.resetValidation(this.form);
+      if (!(await this.validate(this.form))) return;
+      this.state = await this.isAccountClaimed(this.form.accountName);
     },
-    reset () {
-      this.state = null
-      this.form.accountName = null
-    }
-
-  }
-}
+    reset() {
+      this.state = null;
+      this.form.accountName = null;
+    },
+  },
+};
 </script>
 
 <template lang="pug">

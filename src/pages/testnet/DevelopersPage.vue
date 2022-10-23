@@ -1,9 +1,9 @@
 <script>
-import { mapActions } from "vuex";
-import { Notify } from "quasar";
+import { mapActions } from 'vuex';
+import { Notify } from 'quasar';
 
 export default {
-  name: "DevelopersPage",
+  name: 'DevelopersPage',
   data() {
     return {
       form: {
@@ -17,17 +17,17 @@ export default {
     };
   },
   methods: {
-    ...mapActions("testnet", ["faucet", "evmFaucet", "account"]),
+    ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
     async onFaucet() {
       this.submitting = true;
       const result = await this.faucet(this.form.send_to);
       if (result) {
         Notify.create({
           message: result,
-          position: "top",
-          color: "primary",
-          textColor: "white",
-          actions: [{ label: "Dismiss", color: "white" }],
+          position: 'top',
+          color: 'primary',
+          textColor: 'white',
+          actions: [{ label: 'Dismiss', color: 'white' }],
         });
         this.transactionId = result.transactionId;
       }
@@ -39,10 +39,10 @@ export default {
       if (result) {
         Notify.create({
           message: result,
-          position: "top",
-          color: "primary",
-          textColor: "white",
-          actions: [{ label: "Dismiss", color: "white" }],
+          position: 'top',
+          color: 'primary',
+          textColor: 'white',
+          actions: [{ label: 'Dismiss', color: 'white' }],
         });
         this.transactionId = result.transactionId;
       }
@@ -54,10 +54,10 @@ export default {
       if (result) {
         Notify.create({
           message: result,
-          position: "top",
-          color: "primary",
-          textColor: "white",
-          actions: [{ label: "Dismiss", color: "white" }],
+          position: 'top',
+          color: 'primary',
+          textColor: 'white',
+          actions: [{ label: 'Dismiss', color: 'white' }],
         });
         this.transactionId = result.transactionId;
       }

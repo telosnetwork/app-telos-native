@@ -1,19 +1,19 @@
 <script>
-import { mapActions, mapMutations, mapGetters } from "vuex";
-import SafeCard from "./components/SafeCard";
+import { mapActions, mapMutations, mapGetters } from 'vuex';
+import SafeCard from './components/SafeCard';
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "SmartSafe",
+  name: 'SmartSafe',
   components: {
     SafeCard,
   },
   methods: {
-    ...mapActions("poc", ["fetchSafes"]),
-    ...mapMutations("poc", ["resetSafes"]),
+    ...mapActions('poc', ['fetchSafes']),
+    ...mapMutations('poc', ['resetSafes']),
     async onLock() {
       this.submitting = true;
-      const result = await this.toggleLock("locksafe");
+      const result = await this.toggleLock('locksafe');
       if (result) {
         this.transactionId = result.transactionId;
       }
@@ -21,7 +21,7 @@ export default {
     },
     async onUnlock() {
       this.submitting = true;
-      const result = await this.toggleLock("unlocksafe");
+      const result = await this.toggleLock('unlocksafe');
       if (result) {
         this.transactionId = result.transactionId;
       }
@@ -33,8 +33,8 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("poc", ["safes", "safesLoaded"]),
-    ...mapGetters("accounts", ["accounts"]),
+    ...mapGetters('poc', ['safes', 'safesLoaded']),
+    ...mapGetters('accounts', ['accounts']),
   },
 };
 </script>

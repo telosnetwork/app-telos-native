@@ -1,11 +1,11 @@
 <script>
-import { mapActions, mapMutations } from "vuex";
-import { validation } from "~/mixins/validation";
-import { utils } from "~/mixins/utils";
-import { generateKeys } from "~/utils/eosio";
+import { mapActions, mapMutations } from 'vuex';
+import { validation } from '~/mixins/validation';
+import { utils } from '~/mixins/utils';
+import { generateKeys } from '~/utils/eosio';
 
 export default {
-  name: "VerifyOtp",
+  name: 'VerifyOtp',
   mixins: [validation, utils],
   data() {
     return {
@@ -21,8 +21,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions("accounts", ["verifyOTP"]),
-    ...mapMutations("general", ["setSuccessMsg"]),
+    ...mapActions('accounts', ['verifyOTP']),
+    ...mapMutations('general', ['setSuccessMsg']),
     async onVerifyOTP() {
       this.resetValidation(this.form);
       this.error = null;
@@ -30,7 +30,7 @@ export default {
       this.submitting = true;
       // const { success, error } = await this.verifyOTP(this.form)
       // if (success) {
-      this.$router.push({ path: "/accounts/add/congratulations" });
+      this.$router.push({ path: '/accounts/add/congratulations' });
       // } else {
       //  this.error = error
       // }

@@ -1,3 +1,3 @@
-import CustomRegex from './customRegex.js'
+import CustomRegex from './customRegex.js';
 
-export { CustomRegex }
+export { CustomRegex };

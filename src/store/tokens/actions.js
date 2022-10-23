@@ -6,7 +6,7 @@ export async function loadTokens({ commit }) {
     let query = {
       code: process.env.TOKENMANAGER_CONTRACT,
       scope: process.env.TOKENMANAGER_CONTRACT,
-      table: "tokens",
+      table: 'tokens',
       limit: 1000,
     };
 
@@ -19,17 +19,17 @@ export async function loadTokens({ commit }) {
     if (more) nextKey = response.next_key;
   }
 
-  commit("setTokens", tokens);
+  commit('setTokens', tokens);
 }
 
 export async function loadConfig({ commit }) {
   let response = await this.$api.getTableRows({
     code: process.env.TOKENMANAGER_CONTRACT,
     scope: process.env.TOKENMANAGER_CONTRACT,
-    table: "config",
+    table: 'config',
     limit: 1,
   });
-  commit("setConfig", response.rows[0]);
+  commit('setConfig', response.rows[0]);
 }
 
 export async function doCreateToken(
@@ -37,22 +37,22 @@ export async function doCreateToken(
   { symbol, name, logoSm, logoLg, maxSupply, decimals, createPrice }
 ) {
   const notification = {
-    icon: "fas fa-info",
-    title: "notifications.tokens.create",
+    icon: 'fas fa-info',
+    title: 'notifications.tokens.create',
     content: `Create token ${name} (${symbol})`,
   };
   try {
     const actions = [
       {
         account: process.env.TOKENMANAGER_CONTRACT,
-        name: "openacct",
+        name: 'openacct',
         data: {
           account_name: this.$ualUser.accountName.toLowerCase(),
         },
       },
       {
-        account: "eosio.token",
-        name: "transfer",
+        account: 'eosio.token',
+        name: 'transfer',
         data: {
           from: this.$ualUser.accountName.toLowerCase(),
           to: process.env.TOKENMANAGER_CONTRACT,
@@ -62,7 +62,7 @@ export async function doCreateToken(
       },
       {
         account: process.env.TOKENMANAGER_CONTRACT,
-        name: "createtoken",
+        name: 'createtoken',
         data: {
           owner: this.$ualUser.accountName.toLowerCase(),
           token_symbol: symbol,
@@ -74,27 +74,27 @@ export async function doCreateToken(
       },
     ];
     const transaction = await this.$api.signTransaction(actions);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 }
 
 export async function setMeta({ commit }, { symbol, name, logoSm, logoLg }) {
   const notification = {
-    icon: "fas fa-info",
-    title: "notifications.tokens.setmeta",
+    icon: 'fas fa-info',
+    title: 'notifications.tokens.setmeta',
     content: `Set token info for ${name} (${symbol})`,
   };
   try {
     const transaction = await this.$api.signTransaction([
       {
         account: process.env.TOKENMANAGER_CONTRACT,
-        name: "setmeta",
+        name: 'setmeta',
         data: {
           token_symbol: symbol,
           token_name: name,
@@ -103,14 +103,14 @@ export async function setMeta({ commit }, { symbol, name, logoSm, logoLg }) {
         },
       },
     ]);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 }
 
 export async function issueTokens(
@@ -119,15 +119,15 @@ export async function issueTokens(
 ) {
   let quantity = `${parseFloat(amount).toFixed(decimals)} ${symbol}`;
   const notification = {
-    icon: "fas fa-info",
-    title: "notifications.tokens.issue",
+    icon: 'fas fa-info',
+    title: 'notifications.tokens.issue',
     content: `Issue ${quantity}`,
   };
   try {
     const transaction = await this.$api.signTransaction([
       {
         account: contractAccount,
-        name: "issue",
+        name: 'issue',
         data: {
           to: this.$ualUser.accountName,
           quantity,
@@ -135,14 +135,14 @@ export async function issueTokens(
         },
       },
     ]);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 }
 
 export async function retireTokens(
@@ -151,29 +151,29 @@ export async function retireTokens(
 ) {
   let quantity = `${parseFloat(amount).toFixed(decimals)} ${symbol}`;
   const notification = {
-    icon: "fas fa-info",
-    title: "notifications.tokens.retire",
+    icon: 'fas fa-info',
+    title: 'notifications.tokens.retire',
     content: `Retire ${quantity}`,
   };
   try {
     const transaction = await this.$api.signTransaction([
       {
         account: contractAccount,
-        name: "retire",
+        name: 'retire',
         data: {
           quantity,
           memo,
         },
       },
     ]);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 }
 
 export async function transferTokens(
@@ -182,15 +182,15 @@ export async function transferTokens(
 ) {
   let quantity = `${parseFloat(amount).toFixed(decimals)} ${symbol}`;
   const notification = {
-    icon: "fas fa-info",
-    title: "notifications.tokens.transfer",
+    icon: 'fas fa-info',
+    title: 'notifications.tokens.transfer',
     content: `Transfer ${quantity}`,
   };
   try {
     const transaction = await this.$api.signTransaction([
       {
         account: contractAccount,
-        name: "transfer",
+        name: 'transfer',
         data: {
           from: this.$ualUser.accountName,
           to,
@@ -199,27 +199,27 @@ export async function transferTokens(
         },
       },
     ]);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 }
 
 export async function openToken({ commit }, { symbol, contractAccount }) {
   const notification = {
-    icon: "fas fa-info",
-    title: "notifications.tokens.transfer",
+    icon: 'fas fa-info',
+    title: 'notifications.tokens.transfer',
     content: `Opening token ${symbol}`,
   };
   try {
     const transaction = await this.$api.signTransaction([
       {
         account: contractAccount,
-        name: "open",
+        name: 'open',
         data: {
           owner: this.$ualUser.accountName,
           symbol,
@@ -227,12 +227,12 @@ export async function openToken({ commit }, { symbol, contractAccount }) {
         },
       },
     ]);
-    notification.status = "success";
+    notification.status = 'success';
     notification.transaction = transaction;
   } catch (e) {
-    notification.status = "error";
+    notification.status = 'error';
     notification.error = e;
   }
-  commit("notifications/addNotification", notification, { root: true });
-  return notification.status === "success";
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
 }
