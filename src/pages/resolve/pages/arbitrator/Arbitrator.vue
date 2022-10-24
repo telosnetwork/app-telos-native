@@ -1,6 +1,6 @@
 <template>
   <div v-if="isResolveStoresAvailable" class="container">
-    <div class="q-pa-md stepper-wrap">
+    <div class="q-pb-xl stepper-wrap">
       <q-btn-toggle
         :disable="[3, 4].includes(getArbitratorStatus)"
         :model-value="getArbitratorStatus"

@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="q-pa-md">
+    <div class="q-py-lg">
       <q-table
         title="Elections"
         :rows="electionData || []"

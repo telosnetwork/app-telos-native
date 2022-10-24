@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pt-xl">
     <q-table
       :title="finalTitle"
       :rows="caseFiles"

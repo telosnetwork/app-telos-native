@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="q-pa-md stepper-wrap">
+    <div class="q-py-md stepper-wrap">
       <q-stepper v-model="electionStatus" vertical color="primary" animated>
         <q-step :name="3" title="Nominee Registration" icon="settings">
           Admin is able to set the configuration parameters for the smart

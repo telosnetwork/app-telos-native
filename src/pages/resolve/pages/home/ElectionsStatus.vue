@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <h4 class="heading">Elections are open!</h4>
-    <p class="content">
+    <p class="content q-pb-lg">
       We are currently processing an election and every vote matters, especially
       yours! Head on over to Decide Voter and select this term’s arbitrators.
     </p>
