@@ -156,7 +156,7 @@ export const verifyOTP = async function (
 };
 
 export const createAccount = async function (
-
+  VueObject,
   { account, recaptchaResponse, publicKey }
 ) {
   try {
