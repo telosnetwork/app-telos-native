@@ -51,6 +51,7 @@ export default {
         initialOptions: [],
         endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
         config: 'votestake',
+        file: null
       },
       prompt: false,
       userBalance: null,
@@ -67,13 +68,18 @@ export default {
         { value: 'referendum', label: 'Referendum' },
       ],
       submitting: false,
-      file: null,
       cid: null,
     };
   },
   computed: {
     ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees']),
     ...mapGetters('accounts', ['account','accountData']),
+    filename() {
+      if (!this.form.file) return '';
+      console.log('this.form.file: ', [this.form.file]);
+      console.log('this.form.file.name: ', typeof this.form.file.name , [this.form.file.name]);
+      return this.form.file.name;
+    },
     optionsAsText() {
       return this.form.optionsLabels.join() + this.form.minOptions + this.form.maxOptions;
     },
@@ -162,6 +168,10 @@ export default {
       'fetchTreasuriesForUser',
       'fetchFees',
     ]),
+    debug(){
+      console.log('BallotForm:', [this]);
+      console.log('BallotForm.form:', [this.form]);
+    },
     // auxiliar not-implemented-yet functions
     async nextStep() {
       console.error('nextStep()', this.step);
@@ -352,10 +362,10 @@ export default {
         initialOptions: [],
         endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
         config: 'votestake',
+        file: null
       };
       this.step = 1;
       this.setOfficialDAO();
-      this.file = null;
       this.cid = null;
       this.rules.setActive(false);
     },
@@ -399,7 +409,7 @@ export default {
     },
   },
   watch: {
-    file: function () {
+    'form.file': function () {
       this.convertToIPFS(this.file);
     },
     account: async function (account) {
@@ -485,8 +495,8 @@ q-dialog(
     bordered
   )
 
-    q-card-section.bg-primary.text-white
-      .text-h6 Create a ballot
+    q-card-section.bg-primary.text-white(@click="debug")
+      .text-h6 Create a poll
 
     q-card-section
 
@@ -523,7 +533,7 @@ q-dialog(
               v-model="form.imageUrl"
               label="Image URL"
               placeholder="https://..."
-              hint="Upload an image and paste the url here to include it in your ballot."
+              hint="Upload an image and paste the url here to include it in your poll."
               :rules="[rules.required, (val) => !rules.isActive || !badImage || 'The image can not be load']"
             )
               template(v-slot:after v-if="form.imageUrl != ''")
@@ -532,7 +542,7 @@ q-dialog(
                     template(v-slot:error)
                       span.absolute-full.flex.flex-center.bg-negative.text-white.text-caption.q-pa-sm
                         | can not load image
-            q-file(v-model="file" label="Upload PDF")
+            q-file(v-model="form.file" label="Upload PDF")
               template(v-slot:prepend)
                 q-icon(name="attach_file")
         q-step(
@@ -771,6 +781,10 @@ q-dialog(
                 b description:
                 br
                 span {{form.description}}
+              .q-mt-sm
+                b PDF:&nbsp;
+                span(v-if="form.file") {{filename}}
+                span(v-if="!form.file") No pdf was attached
               .q-mt-sm
                 b DAO:&nbsp;
                 span {{form.treasurySymbol.label}}
