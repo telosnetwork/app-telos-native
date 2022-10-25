@@ -1,8 +1,7 @@
 // import PPP from '@smontero/ppp-client-api'
 
-export const signUp = async function (profileData) {
+export const signUp = async function ({}, profileData) {
   const actions = []
-
   if (!this.state.profiles.myProfile) {
     actions.push({
       account: 'profiles',
@@ -15,7 +14,7 @@ export const signUp = async function (profileData) {
   } else {
     const myProfile = this.state.profiles.myProfile
     // check undefined of all these in case the user is setting them to '' which would be falsy
-    if (profileData.avatar !== undefined && myProfile.avatar !== profileData.avatar) {
+    if (profileData.avatar && myProfile.avatar !== profileData.avatar) {
       actions.push({
         account: 'profiles',
         name: 'editavatar',
@@ -26,7 +25,7 @@ export const signUp = async function (profileData) {
       })
     }
 
-    if (profileData.bio !== undefined && myProfile.bio !== profileData.bio) {
+    if (profileData.bio && myProfile.bio !== profileData.bio) {
       actions.push({
         account: 'profiles',
         name: 'editbio',
@@ -37,7 +36,7 @@ export const signUp = async function (profileData) {
       })
     }
 
-    if (profileData.display_name !== undefined && myProfile.display_name !== profileData.display) {
+    if (profileData.display_name && myProfile.display_name !== profileData.display) {
       actions.push({
         account: 'profiles',
         name: 'editdisplay',
@@ -48,7 +47,7 @@ export const signUp = async function (profileData) {
       })
     }
 
-    if (profileData.status !== undefined && myProfile.status !== profileData.status) {
+    if (profileData.status && myProfile.status !== profileData.status) {
       actions.push({
         account: 'profiles',
         name: 'editstatus',
