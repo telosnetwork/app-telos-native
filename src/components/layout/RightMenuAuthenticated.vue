@@ -53,7 +53,7 @@ div
     color="dark"
     no-caps
   )
-    profile-avatar(size='32px' :avatar='avatar' :account='account')
+    profile-avatar(size='32px' :avatar='myProfile ? myProfile.avatar : avatar' :account='account')
     span.menu-title {{account}}
     q-menu(
       @show="toggleProfileMenu"
