@@ -619,7 +619,7 @@ q-dialog(
                   v-model="form.config"
                   label="Both"
                   val="both"
-                )            
+                )
         q-step(
           :name="3"
           title="Voting options"
@@ -773,7 +773,7 @@ q-dialog(
           :name="5"
           title="Create Ballot"
           icon="check"
-        )      
+        )
           .q-mt-sm.flex.row.gap
             .col.flex.column.preview-left(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
               ballot-list-item(
