@@ -83,14 +83,14 @@ export default {
       }
     },
     openBallotForm() {
-      console.log("openBallotForm()");
+      console.log('openBallotForm()');
       this.show = true;
     },
     closeBallot() {
       this.$router.go(-1);
     },
     openBallot(ballot) {
-      console.log("openBallot()", [ballot]);
+      console.log('openBallot()', [ballot]);
       this.timeAtMount = Date.now();
       this.$router.push(
         `/trails/${

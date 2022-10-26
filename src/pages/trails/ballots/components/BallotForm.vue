@@ -30,8 +30,8 @@ export default {
       typeOfBallot: TYPE_OF_BALLOT_0,
       ballotTypes: [TYPE_OF_BALLOT_0, TYPE_OF_BALLOT_1, TYPE_OF_BALLOT_2],
       isBallotListRowDirection: true,
+      openForVoting: true,
       form: {
-        openForVoting: true,
         onlyOneOption: true,
         newOptionLabel: '',
         newOptionValue: '',
@@ -248,8 +248,8 @@ export default {
       }
 
       let final_str = JSON.stringify(final);
-      console.log("final: ", [final]);
-      console.log("final_str: ", [final_str]);
+      console.log('final: ', [final]);
+      console.log('final_str: ', [final_str]);
 
       return final_str;
     },
@@ -408,8 +408,8 @@ export default {
         const ipfs = await IPFS.create();
         this.cid = await ipfs.add(file);
 
-        console.log("convertToIPFS() this.cid.path: ", this.cid.path);
-        console.log("convertToIPFS() this.form.IPFSString: ", this.form.IPFSString);
+        console.log('convertToIPFS() this.cid.path: ', this.cid.path);
+        console.log('convertToIPFS() this.form.IPFSString: ', this.form.IPFSString);
       } catch (e) {
         if (e.code == 'ERR_LOCK_EXISTS') return;
         console.error(e);

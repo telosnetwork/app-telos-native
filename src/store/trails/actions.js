@@ -1,4 +1,3 @@
-import slugify from 'slugify';
 import {
   supplyToAsset,
   supplyToDecimals,
@@ -155,8 +154,8 @@ export const fetchBallot = async function ({ commit }, ballot) {
 
 const createTogglebalFor = function(ballotName, text) {
   return {
-    account: "telos.decide",
-    name: "togglebal",
+    account: 'telos.decide',
+    name: 'togglebal',
     data: {
       ballot_name: ballotName,
       setting_name: text,
@@ -167,10 +166,10 @@ const createTogglebalFor = function(ballotName, text) {
 export const addBallot = async function ({ commit, state, rootState }, ballot) {
   const ballotName = ballot.title
     .toLowerCase()
-    .replace(/[^a-z12345]/gi, "")
+    .replace(/[^a-z12345]/gi, '')
     .substring(0,12);
 
-  const deposit = state.fees.find((fee) => fee.key === "ballot").value;
+  const deposit = state.fees.find((fee) => fee.key === 'ballot').value;
 
   let togglebal = {
     account: 'telos.decide',
@@ -230,15 +229,14 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
         },
       }
     ];
-    let isBoth = false;
-    if (ballot.treasurySymbol.symbol === "VOTE") {
-      actions.splice(2, 0, createTogglebalFor(ballotName, "votestake"));
+    if (ballot.treasurySymbol.symbol === 'VOTE') {
+      actions.splice(2, 0, createTogglebalFor(ballotName, 'votestake'));
     } else if (!ballot.settings) {
-      actions.splice(2, 0, createTogglebalFor(ballotName, "voteliquid"));
+      actions.splice(2, 0, createTogglebalFor(ballotName, 'voteliquid'));
     } else if (ballot.settings && ballot.config) {
-      if (ballot.config === "both") {
-        actions.splice(2, 0, createTogglebalFor(ballotName, "votestake"));
-        actions.splice(2, 0, createTogglebalFor(ballotName, "voteliquid"));
+      if (ballot.config === 'both') {
+        actions.splice(2, 0, createTogglebalFor(ballotName, 'votestake'));
+        actions.splice(2, 0, createTogglebalFor(ballotName, 'voteliquid'));
       } else {
         togglebal.data.setting_name = ballot.config;
       }
@@ -247,8 +245,8 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
     // do the user want to open the ballot immediatelly ?
     if (ballot.endDate) {
       actions.push({
-        account: "telos.decide",
-        name: "openvoting",
+        account: 'telos.decide',
+        name: 'openvoting',
         data: {
           ballot_name: ballotName,
           end_time: new Date(ballot.endDate).toISOString().slice(0, -5),
