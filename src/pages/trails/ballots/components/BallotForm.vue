@@ -422,7 +422,7 @@ export default {
   },
   watch: {
     'form.file': function () {
-      this.convertToIPFS(this.file);
+      this.convertToIPFS(this.form.file);
     },
     account: async function (account) {
       this.fetchTreasuriesForUser(account);
