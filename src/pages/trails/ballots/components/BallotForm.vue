@@ -90,8 +90,7 @@ export default {
       )} ${supplyToSymbol(zero_supply)}`
       return {
         treasury: this.treasury,
-        description:
-          this.form.IPFSString && this.form.IPFSString.trim() !== ''
+        description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
             ? `${this.form.description} ${this.form.IPFSString}`
             : this.form.description,
         content: this.createContentField(),
@@ -248,7 +247,11 @@ export default {
         final.contentUrls = [this.form.IPFSString];
       }
 
-      return JSON.stringify(final);
+      let final_str = JSON.stringify(final);
+      console.log("final: ", [final]);
+      console.log("final_str: ", [final_str]);
+
+      return final_str;
     },
     treasuryToOption(treasury) {
       if (!treasury) return null;
@@ -364,10 +367,16 @@ export default {
         config: 'votestake',
         file: null
       };
-      this.step = 1;
-      this.setOfficialDAO();
-      this.cid = null;
       this.rules.setActive(false);
+      this.step = 1;
+      this.typeOfBallot = this.ballotTypes[0];
+      this.isOfficial = true;
+      this.onlyOneOption = true;
+      this.openForVoting = true;
+      this.badImage = false;
+      this.cid = null;
+      this.setOfficialDAO();
+     
     },
     onCancel() {
       this.$emit('close');
@@ -398,6 +407,9 @@ export default {
       try {
         const ipfs = await IPFS.create();
         this.cid = await ipfs.add(file);
+
+        console.log("convertToIPFS() this.cid.path: ", this.cid.path);
+        console.log("convertToIPFS() this.form.IPFSString: ", this.form.IPFSString);
       } catch (e) {
         if (e.code == 'ERR_LOCK_EXISTS') return;
         console.error(e);
@@ -469,6 +481,8 @@ export default {
         this.fetchFees();
         this.updateUserBalance();
         this.fetchTreasuriesForUser(this.account);
+      } else {
+        this.resetBallot();
       }
     },
     badImage() {
@@ -709,7 +723,7 @@ q-dialog(
                   .flex.row.justify-end.gap-sm
                     q-checkbox(v-model="onlyOneOption" v-if="onlyOneOption") Voters can only choose one option
                     div.flex-grow
-                    q-btn(no-caps color="primary" icon="list" label="Reset" @click="setDefaultOptions(3)")
+                    q-btn(no-caps color="primary" icon="list" label="Default" @click="setDefaultOptions(3)")
                     q-btn(no-caps color="primary" icon="delete_sweep" label="Clean" @click="cleanOptions()")
                 .col.flex.column.options-right(v-if="!onlyOneOption")
                   q-checkbox(v-model="onlyOneOption") Voters can only choose one option
