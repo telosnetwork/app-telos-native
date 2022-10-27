@@ -746,7 +746,7 @@ q-dialog(
           :done="step > 4"
         )      
           p You can open this ballot for voting right away or you can create the ballot and skip this step for later.
-          q-checkbox(v-model="openForVoting") Open for voting right away
+          q-checkbox(v-model="openForVoting" disable) Open for voting right away
           q-input(
             ref="endDate"
             v-model="form.endDate"
@@ -769,6 +769,7 @@ q-dialog(
                     @input="() => $refs.qDateProxy.hide()"
                     mask="YYYY-MM-DD HH:mm"
                   )
+          small Note: Proposals will be eligible for voting once they are created.
         q-step(
           :name="5"
           title="Create Ballot"
