@@ -56,3 +56,64 @@ $ended-color:                   #F7F7F7
 @include new_color(election,    $election-color)
 @include new_color(ended,       $ended-color)
 
+// --------------------------------------
+
+@import '~quasar/src/css/variables'
+
+$container-padding: 20px
+
+div.container,
+div.container-sm,
+div.container-md,
+div.container-lg,
+div.container-xl 
+  width: 100%
+  margin-right: auto
+  margin-left: auto
+  max-width: none
+
+@media (min-width: $breakpoint-sm-min) 
+  div.container,
+  div.container-sm 
+    max-width: $breakpoint-xs - $container-padding
+
+@media (min-width: $breakpoint-md-min) 
+  div.container,
+  div.container-sm,
+  div.container-md 
+    max-width: $breakpoint-sm - $container-padding
+
+@media (min-width: $breakpoint-lg-min) 
+  div.container,
+  div.container-sm,
+  div.container-md,
+  div.container-lg 
+    max-width: $breakpoint-md - $container-padding
+
+@media (min-width: $breakpoint-xl-min) 
+  div.container,
+  div.container-sm,
+  div.container-md,
+  div.container-lg,
+  div.container-xl 
+    max-width: $breakpoint-lg - $container-padding
+    
+// --------------------------------------
+
+$container-padding: 20px
+
+.gap
+  gap: 25px
+.gap-xs
+  gap: 4px
+.gap-sm
+  gap: 8px
+.gap-md
+  gap: 15px
+.gap-lg
+  gap: 20px
+.gap-xl
+  gap: 25px
+.gap-xxl
+  gap: 40px
+  

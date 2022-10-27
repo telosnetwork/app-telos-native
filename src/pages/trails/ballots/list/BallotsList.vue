@@ -141,15 +141,15 @@ export default {
     },
     updateTreasury(newTreasury) {
       this.treasury = newTreasury;
-      this.$refs.infiniteScroll.resume();
+      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
     },
     updateStatuses(newStatuses) {
       this.statuses = newStatuses;
-      this.$refs.infiniteScroll.resume();
+      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
     },
     updateCategories(newCategories) {
       this.categories = newCategories;
-      this.$refs.infiniteScroll.resume();
+      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
     },
     filterBallots(ballots) {
       const ballotFilteredByStatuses = ballots.filter((b) => {
@@ -335,6 +335,8 @@ q-page(v-if="!renderComponent")
       //- q-btn(v-close-popup color="secondary").float-right Close
 </template>
 <style lang="sass" scoped>
+main.q-page
+  padding-top: 40px
 .link
   text-decoration: none
 .banner

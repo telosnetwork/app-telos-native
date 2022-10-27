@@ -1,4 +1,3 @@
-import slugify from 'slugify';
 import {
   supplyToAsset,
   supplyToDecimals,
@@ -153,12 +152,23 @@ export const fetchBallot = async function ({ commit }, ballot) {
   commit('setBallot', result.rows[0]);
 };
 
+const createTogglebalFor = function(ballotName, text) {
+  return {
+    account: 'telos.decide',
+    name: 'togglebal',
+    data: {
+      ballot_name: ballotName,
+      setting_name: text,
+    },
+  }
+}
+
 export const addBallot = async function ({ commit, state, rootState }, ballot) {
-  const ballotName = slugify(ballot.title, {
-    replacement: '-',
-    remove: /[*+~.()'"!:@?]/g,
-    lower: true,
-  });
+  const ballotName = ballot.title
+    .toLowerCase()
+    .replace(/[^a-z12345]/gi, '')
+    .substring(0,12);
+
   const deposit = state.fees.find((fee) => fee.key === 'ballot').value;
 
   let togglebal = {
@@ -214,36 +224,35 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
         name: 'editminmax',
         data: {
           ballot_name: ballotName,
-          new_min_options: ballot.minOptions,
-          new_max_options: ballot.maxOptions,
+          new_min_options: parseInt(ballot.minOptions),
+          new_max_options: parseInt(ballot.maxOptions),
         },
-      },
-      {
+      }
+    ];
+    if (ballot.treasurySymbol.symbol === 'VOTE') {
+      actions.splice(2, 0, createTogglebalFor(ballotName, 'votestake'));
+    } else if (!ballot.settings) {
+      actions.splice(2, 0, createTogglebalFor(ballotName, 'voteliquid'));
+    } else if (ballot.settings && ballot.config) {
+      if (ballot.config === 'both') {
+        actions.splice(2, 0, createTogglebalFor(ballotName, 'votestake'));
+        actions.splice(2, 0, createTogglebalFor(ballotName, 'voteliquid'));
+      } else {
+        togglebal.data.setting_name = ballot.config;
+      }
+    }
+
+    // do the user want to open the ballot immediatelly ?
+    if (ballot.endDate) {
+      actions.push({
         account: 'telos.decide',
         name: 'openvoting',
         data: {
           ballot_name: ballotName,
           end_time: new Date(ballot.endDate).toISOString().slice(0, -5),
         },
-      },
-    ];
-    let isBoth = false;
-    if (ballot.treasurySymbol.symbol === 'VOTE') {
-      togglebal.data.setting_name = 'votestake';
-    } else if (!ballot.settings) {
-      togglebal.data.setting_name = 'voteliquid';
-    } else if (ballot.settings && ballot.config) {
-      if (ballot.config === 'both') {
-        for (let i of ['voteliquid', 'votestake']) {
-          togglebal.data.setting_name = i;
-          isBoth = true;
-          actions.splice(2, 0, togglebal);
-        }
-      } else {
-        togglebal.data.setting_name = ballot.config;
-      }
+      });
     }
-    !isBoth && actions.splice(2, 0, togglebal);
 
     const transaction = await this.$api.signTransaction(actions);
     notification.status = 'success';

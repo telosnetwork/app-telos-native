@@ -654,7 +654,7 @@ div.bar-filter-wrapper
           q-icon.bar-btn-toggle(name="fas fa-bars")
       div.bar-custom-separator
       div.bar-filters
-        div.row.bar-filter-btns-wrapper
+        div.row
           //- 'Sort by' button
           q-btn.q-mr-md(
             v-if="!sortMode"
@@ -879,7 +879,7 @@ div.bar-filter-wrapper
               color="primary"
               outline
             )
-      q-btn.bar-filter-btn-320(
+      q-btn.bar-filter-btn-320.q-mx-md(
         :label="$t('pages.trails.ballots.actionBar.filterTitle')"
         icon-right="filter_list"
         @click="handleFilterBtnClick()"
@@ -888,16 +888,15 @@ div.bar-filter-wrapper
         outline
       )
       div.separator-320
-      div.right-bar-section.col-grow.row.items-center.justify-end.hidden
-        q-separator.bar-separator-vertical(vertical inset)
-        btn.create-poll-btn(
-          :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
-          iconRight
-          padding='0'
-          primary
-          btnWidth='155'
-          fontSize='16'
-          @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
+      div.right-bar-section.col-grow.row.items-center.justify-end
+        q-separator.bar-separator-vertical.q-mr-md(vertical inset)
+        q-btn.q-mx-md(
+          :label="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
+          icon-right="add"
+          color="primary"
+          no-caps
+          outline
+          @click="isAuthenticated ? openBallotForm() : openNotice()"
         )
     q-dialog(v-model="notice")
       q-card.notice
@@ -907,15 +906,10 @@ div.bar-filter-wrapper
         q-card-actions(align="right" class="bg-white")
           q-btn(flat label="OK" v-close-popup)
 </template>
-<style lang="sass">
+<style lang="sass" scoped>
 .scroll-anim
-  height: 0px !important
   margin-top: 10px !important
   margin-bottom: 10px !important
-  pointer-events: none
-  opacity: 0
-main.q-page
-  padding-top: 40px
 .bar-filter-wrapper
   margin: 0 0 8px 0
 .bar-wrapper
@@ -939,9 +933,7 @@ main.q-page
   border-radius: 2px
   margin: 0 26px
 .bar-separator-vertical
-  margin: 2px 0 2px 20px
-  height: 84px
-  margin-right: 32px
+  height: 68px
 .separator-320
   margin: 2px 20px
   display: none
@@ -970,7 +962,6 @@ main.q-page
     border: none
 .bar-filter-btn-320
   display: none
-  margin-left: 12px
 .q-btn__wrapper
   padding: 4px 12px
 .bar-filter-menu-320
@@ -1042,8 +1033,6 @@ main.q-page
   .bar-btns-toggle,
   .bar-custom-separator
     display: none !important
-  .bar-filter-btns-wrapper
-    margin-left: 16px
 @media (max-width: 1130px)
   .bar-linear-gradient-left,
   .bar-linear-gradient-right
@@ -1051,9 +1040,7 @@ main.q-page
   .bar-wrapper
     height: 72px
   .bar-separator-vertical
-    height: 60px
-  .bar-filter-btns-wrapper
-    min-width: 690px
+    height: 56px
   .bar-filters
     max-width: 73%
     overflow-x: scroll

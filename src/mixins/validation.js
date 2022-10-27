@@ -2,45 +2,86 @@ import { mapActions } from 'vuex';
 const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm'); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 
 export const validation = {
-  data() {
+  data () {
+    let off = false;
     return {
       rules: {
-        accountExists: async (account) =>
+        setActive: active => off = !active,
+        isActive: () => !off,
+        accountExists: async account =>
+          off ||
           !(await this.isAccountFree(account.toLowerCase())) ||
           this.$t('forms.errors.accountNotExists', { account }),
-        accountFormat: (val) =>
+        accountFormat: val =>
+          off ||
           /^([a-z]|[1-5]|.){1,12}$/.test(val.toLowerCase()) ||
           this.$t('forms.errors.accountFormat'),
-        accountFormatBasic: (val) =>
+        accountFormatBasic: val =>
+          off ||
           /^([a-z]|[1-5]){12}$/.test(val.toLowerCase()) ||
           this.$t('forms.errors.accountFormatBasic'),
-        accountLength: (val) =>
-          val.length <= 12 || this.$t('forms.errors.accountLength'),
-        dateFuture: (date) => (val) =>
+        accountLength: val =>
+          off ||
+          val.length <= 12 ||
+          this.$t('forms.errors.accountLength'),
+        dateFuture: date =>
+          val =>
+          off ||
           new Date(val).getTime() >= new Date(date).getTime() ||
           this.$t('forms.errors.dateFuture'),
-        greaterOrEqualThan: (value) => (val) =>
-          val >= value || this.$t('forms.errors.greaterOrEqualThan', { value }),
-        minimumOptions: (value) => (val) =>
+        greaterOrEqualThan: value =>
+          val =>
+          off ||
+          val >= value ||
+          this.$t('forms.errors.greaterOrEqualThan', { value }),
+        lowerOrEqualThan: value =>
+          val =>
+          off ||
+          val <= value ||
+          this.$t('forms.errors.lowerOrEqualThan', { value }),
+        minimumOptions: value =>
+          val =>
+          off ||
           val.length >= value ||
           this.$t('forms.errors.greaterOrEqualThan', { value }),
-        isAccountAvailable: async (account) =>
+        isAccountAvailable: async account =>
+          off ||
           (await this.isAccountFree(account.toLowerCase())) ||
           this.$t('forms.errors.accountNotAvailable', { account }),
-        isInteger: (val) =>
-          Number.isInteger(parseInt(val)) || this.$t('forms.errors.integer'),
-        isToken: (val) =>
-          (val.length >= 2 && val.length <= 6) || this.$t('forms.errors.token'),
-        isTokenDecimals: (val) =>
+        isInteger: val =>
+          off ||
+          Number.isInteger(parseInt(val)) ||
+          this.$t('forms.errors.integer'),
+        isNatural: val =>
+          off ||
+          Number.isInteger(parseInt(val)) && parseInt(val)>=0 ||
+          this.$t('forms.errors.natural'),
+        isToken: val =>
+          off ||
+          (val.length >= 2 && val.length <= 6) ||
+          this.$t('forms.errors.token'),
+        isTokenDecimals: val =>
+          off ||
           (parseInt(val) >= 0 && parseInt(val) <= 9) ||
           this.$t('forms.errors.tokenDecimals'),
-        positiveInteger: (val) =>
-          parseInt(val) > 0 || this.$t('forms.errors.positiveInteger'),
-        isValidIPFShash: (val) =>
-          val.match(regex) || 'Invalid IPFS HASH format',
-        required: (val) => !!val || this.$t('forms.errors.required'),
-      },
-    };
+        positiveInteger: val =>
+          off ||
+          parseInt(val) > 0 ||
+          this.$t('forms.errors.positiveInteger'),
+        isValidIPFShash: val =>
+          off ||
+          val.match(regex) ||
+          'Invalid IPFS HASH format',
+        arrayWithUniqueItems: arr =>
+          off ||
+          arr.length == new Set(arr).size ||
+          this.$t('forms.errors.unique'),
+        required: val =>
+          off ||
+          !!val ||
+          this.$t('forms.errors.required'),
+      }
+    }
   },
   methods: {
     ...mapActions('accounts', ['isAccountFree']),
