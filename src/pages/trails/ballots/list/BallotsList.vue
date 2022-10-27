@@ -90,7 +90,6 @@ export default {
       this.$router.go(-1);
     },
     openBallot(ballot) {
-      console.log('openBallot()', [ballot]);
       this.timeAtMount = Date.now();
       this.$router.push(
         `/trails/${
