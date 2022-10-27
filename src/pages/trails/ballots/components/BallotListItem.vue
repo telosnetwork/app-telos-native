@@ -11,7 +11,7 @@ export default {
     ballot: { type: Object, required: true },
     displayWinner: { type: Function, required: true },
     isBallotOpened: { type: Boolean, required: true },
-    votingHasBegun: { type: Boolean, required: true },
+    startTimeHasPassed: { type: Boolean, required: true },
     getStartTime: { type: Number, required: true },
     getEndTime: { type: Number, required: true },
     getLoser: { type: Function, required: true }
@@ -117,7 +117,7 @@ div
       :ballot="ballot"
       :isBallotOpened="isBallotOpened"
       :getEndTime="getEndTime"
-      :votingHasBegun="votingHasBegun"
+      :startTimeHasPassed="startTimeHasPassed"
       :getStartTime="getStartTime"
     )
 

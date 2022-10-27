@@ -120,6 +120,10 @@ export const fetchUserVotesForThisBallot = async function (
   commit('setBallotVotes', list);
 };
 
+export const setBallot = async function ({ commit }, ballot) {
+  commit('setBallot', ballot);
+};
+
 export const fetchBallot = async function ({ commit }, ballot) {
   const result = await this.$api.getTableRows({
     code: 'telos.decide',
@@ -248,7 +252,7 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
     }
 
     // do the user want to open the ballot immediatelly ?
-    if (ballot.endDate) {
+    if (ballot.endDate > new Date() ) {
       actions.push({
         account: 'telos.decide',
         name: 'openvoting',

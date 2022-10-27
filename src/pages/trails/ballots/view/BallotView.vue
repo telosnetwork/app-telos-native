@@ -15,7 +15,7 @@ export default {
   props: {
     isBallotOpened: { type: Function, required: true },
     displayWinner: { type: Function, required: true },
-    votingHasBegun: { type: Function, required: true },
+    startTimeHasPassed: { type: Function, required: true },
     getStartTime: { type: Function, required: true },
     getEndTime: { type: Function, required: true },
     getLoser: { type: Function, required: true },
@@ -168,6 +168,9 @@ export default {
       'fetchTreasuriesForUser',
       'resetUserVotes'
     ]),
+    debug() {
+        console.log(this.ballot);
+    },
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
     },
@@ -322,7 +325,7 @@ export default {
 </script>
 
 <template lang="pug">
-.row.bg-white.justify-between.popup-wrapper(@scroll="updatePopupScroll")
+.row.bg-white.justify-between.popup-wrapper(@scroll="updatePopupScroll" @click="debug")
         template(v-if="!loading && ballot")
             .col-xs.col-sm-auto.popup-left-col-wrapper(style="min-width: 268px;" v-if="showDetails")
                 q-card(
@@ -369,7 +372,7 @@ export default {
                             :ballot="ballot"
                             :isBallotOpened="isBallotOpened(ballot)"
                             :getEndTime="getEndTime(ballot)"
-                            :votingHasBegun="votingHasBegun(ballot)"
+                            :startTimeHasPassed="startTimeHasPassed(ballot)"
                             :getStartTime="getStartTime(ballot)"
                             )
 

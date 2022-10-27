@@ -46,7 +46,7 @@ export default {
         IPFSString: null,
         treasurySymbol: null,
         votingMethod: '1token1vote',
-        maxOptions: 3,
+        maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
         endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
@@ -72,7 +72,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees']),
+    ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees', 'ballot']),
     ...mapGetters('accounts', ['account','accountData']),
     filename() {
       if (!this.form.file) return '';
@@ -82,28 +82,6 @@ export default {
     },
     optionsAsText() {
       return this.form.optionsLabels.join() + this.form.minOptions + this.form.maxOptions;
-    },
-    ballot() {
-      let zero_supply = this.treasury.max_supply;
-      zero_supply = `${parseFloat(0).toFixed(
-        supplyToDecimals(zero_supply)
-      )} ${supplyToSymbol(zero_supply)}`
-      return {
-        treasury: this.treasury,
-        description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
-            ? `${this.form.description} ${this.form.IPFSString}`
-            : this.form.description,
-        content: this.createContentField(),
-        publisher: this.account,
-        title: this.form.title,
-        category: this.form.category,
-        status: 'voting',
-        ballot_name: this.slugify(this.form.title),
-        total_voters: 0,
-        options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
-        this.form.optionsLabels.map((key) => ({key, value:zero_supply})),
-        total_raw_weight: zero_supply
-      }
     },
     treasury() {
       if (!this.form.treasurySymbol) return null;
@@ -163,6 +141,7 @@ export default {
   },
   methods: {
     ...mapActions('trails', [
+      'setBallot',
       'addBallot',
       'fetchTreasuriesForUser',
       'fetchFees',
@@ -201,11 +180,13 @@ export default {
           } else {
             list = {};
           }
+          break;
       }
       this.rules.setActive(true);
       let ok = await this.validate(list);
       if (ok) {
         this.rules.setActive(false);
+        this.updateBallot();
         this.$refs.stepper.next();
       } else {
         console.error('errors:');
@@ -295,10 +276,6 @@ export default {
       this.form.optionsLabels = this.form.defaultLabels.map(t => t).filter((_,i) => i<num);
     },
     // empty functions BallotListItem, to use it as preview
-    displayWinner(ballot) {
-      if (!ballot) return false;
-      return false;
-    },
     getLoser() {
       return false;
     },
@@ -306,17 +283,8 @@ export default {
       if (!ballot) return false;
       return false;
     },
-    votingHasBegun(ballot) {
-      if (!ballot) return false;
-      return false;
-    },
-    getStartTime(ballot) {
-      if (!ballot) return new Date();
-      return new Date();
-    },
-    getEndTime(ballot) {
-      if (!ballot) return new Date();
-      return new Date();
+    getStartTime() {
+      return moment(new Date()).add(1,'minutes').toDate().getTime();
     },
     async onAddBallot() {
       this.submitting = true;
@@ -352,7 +320,7 @@ export default {
         IPFSString: null,
         treasurySymbol: null,
         votingMethod: '1token1vote',
-        maxOptions: 3,
+        maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
         endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
@@ -390,10 +358,33 @@ export default {
         maxOptions: this.form.maxOptions,
         minOptions: this.form.minOptions,
         initialOptions: this.updateOptionValues(),
-        endDate: this.openForVoting ? this.form.endDate : null,
+        endDate: this.openForVoting ? this.form.endDate : new Date(),
         config: this.form.config,
         settings: this.isStakeable,
       };
+    },
+    updateBallot() {
+      let zero_supply = this.treasury?.max_supply || '0.0000 VOTE';
+      zero_supply = `${parseFloat(0).toFixed(
+        supplyToDecimals(zero_supply)
+      )} ${supplyToSymbol(zero_supply)}`
+      let ballot = {
+        treasury: this.treasury,
+        description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
+            ? `${this.form.description} ${this.form.IPFSString}`
+            : this.form.description,
+        content: this.createContentField(),
+        publisher: this.account,
+        title: this.form.title,
+        category: this.form.category,
+        status: this.openForVoting ? 'voting' : 'setup',
+        ballot_name: this.slugify(this.form.title),
+        total_voters: 0,
+        options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
+        this.form.optionsLabels.map((key) => ({key, value:zero_supply})),
+        total_raw_weight: zero_supply
+      }
+      this.setBallot(ballot);
     },
     async convertToIPFS(file) {
       try {
@@ -738,7 +729,7 @@ q-dialog(
           :done="step > 4"
         )      
           p You can open this ballot for voting right away or you can create the ballot and skip this step for later.
-          q-checkbox(v-model="openForVoting" disable) Open for voting right away
+          q-checkbox(v-model="openForVoting") Open for voting right away
           q-input(
             ref="endDate"
             v-model="form.endDate"
@@ -761,7 +752,6 @@ q-dialog(
                     @input="() => $refs.qDateProxy.hide()"
                     mask="YYYY-MM-DD HH:mm"
                   )
-          small Note: Proposals will be eligible for voting once they are created.
         q-step(
           :name="5"
           title="Create Ballot"
@@ -771,12 +761,12 @@ q-dialog(
             .col.flex.column.preview-left(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
               ballot-list-item(
                 :ballot="ballot"
-                :displayWinner="displayWinner"
-                :isBallotOpened="true"
-                :votingHasBegun="true"
+                :displayWinner="false"
+                :isBallotOpened="false"
+                :startTimeHasPassed="false"
                 :getStartTime="getStartTime()"
                 :getEndTime="form.endDate"
-                :getLoser="getLoser"
+                :getLoser="false"
               )
             .col.flex.column.preview-right
               .q-mt-sm

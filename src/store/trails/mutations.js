@@ -79,9 +79,8 @@ const enhanceBallotMetadata = (ballot) => {
     // try to extract metadata from content
     // following standard (DCMS v2) https://github.com/telosnetwork/telos-decide/blob/master/dcms-v2.md
     content = JSON.parse(ballot.content);
-
   } catch (e) {
-    console.warn('ballot.content is not a valid JSON. ballot_name:', ballot.ballot_name);
+    // this content is not parseable to JSON
   }
 
   try {
