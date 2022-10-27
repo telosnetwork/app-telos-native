@@ -1,55 +1,55 @@
 <script>
 export default {
-  name: 'LeftMenu',
-  props: {
-    activeFilter: {},
-  },
-  data() {
-    return {
-      menuItems: [
-        { label: this.$t('menu.daos'), route: '/trails/treasuries' },
-        {
-          label: this.$t('menu.proposals'),
-          route: '/trails/ballots',
-          filter: 'worker-proposals',
+    name: 'LeftMenu',
+    props: {
+        activeFilter: {},
+    },
+    data() {
+        return {
+            menuItems: [
+                { label: this.$t('menu.daos'), route: '/trails/treasuries' },
+                {
+                    label: this.$t('menu.proposals'),
+                    route: '/trails/ballots',
+                    filter: 'worker-proposals',
+                },
+            ],
+            localFilter: this.activeFilter,
+            clientWidth: 0,
+        };
+    },
+    watch: {
+        activeFilter: function () {
+            this.localFilter = this.activeFilter;
         },
-      ],
-      localFilter: this.activeFilter,
-      clientWidth: 0,
-    };
-  },
-  watch: {
-    activeFilter: function () {
-      this.localFilter = this.activeFilter;
+        $route(to) {
+            if (!to.path.includes('/trails/ballots')) {
+                this.localFilter = '';
+            }
+        },
+        clientWidth: function () {
+            if (this.clientWidth > 760) {
+                this.closeMenu();
+            }
+        },
     },
-    $route(to) {
-      if (!to.path.includes('/trails/ballots')) {
-        this.localFilter = '';
-      }
+    created() {
+        window.addEventListener('resize', this.updateWidth);
     },
-    clientWidth: function () {
-      if (this.clientWidth > 760) {
-        this.closeMenu();
-      }
+    beforeUnmount() {
+        window.removeEventListener('resize', this.updateWidth);
     },
-  },
-  created() {
-    window.addEventListener('resize', this.updateWidth);
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.updateWidth);
-  },
-  methods: {
-    closeMenu: function () {
-      this.$emit('close');
+    methods: {
+        closeMenu: function () {
+            this.$emit('close');
+        },
+        goToHomePage: function () {
+            this.$emit('goToHomePage');
+        },
+        updateWidth() {
+            this.clientWidth = window.innerWidth;
+        },
     },
-    goToHomePage: function () {
-      this.$emit('goToHomePage');
-    },
-    updateWidth() {
-      this.clientWidth = window.innerWidth;
-    },
-  },
 };
 </script>
 

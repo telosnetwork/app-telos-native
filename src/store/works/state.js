@@ -1,6 +1,6 @@
 export default function () {
-  return {
-    active: [],
-    inactive: [],
-  };
+    return {
+        active: [],
+        inactive: [],
+    };
 }

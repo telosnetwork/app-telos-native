@@ -27,97 +27,97 @@ import { mapActions, mapGetters } from 'vuex';
 import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 
 export default {
-  name: 'SignUpForm',
-  components: {
-    ProfileAvatar,
-  },
-  data() {
-    return {
-      identity: '',
-      avatar: '',
-      name: '',
-      status: '',
-      bio: '',
-      url: '',
-      showUpload: false,
-      authHeader: {
-        name: 'Authorization',
-        value: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
-      },
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated', 'account']),
-    headerText() {
-      if (!this.isAuthenticated) {
-        return 'Login to manage your profile';
-      }
+    name: 'SignUpForm',
+    components: {
+        ProfileAvatar,
+    },
+    data() {
+        return {
+            identity: '',
+            avatar: '',
+            name: '',
+            status: '',
+            bio: '',
+            url: '',
+            showUpload: false,
+            authHeader: {
+                name: 'Authorization',
+                value: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
+            },
+        };
+    },
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated', 'account']),
+        headerText() {
+            if (!this.isAuthenticated) {
+                return 'Login to manage your profile';
+            }
 
-      return this.myProfile ? 'Edit your profile' : 'Setup your profile';
+            return this.myProfile ? 'Edit your profile' : 'Setup your profile';
+        },
+        myProfile() {
+            return this.$store.state.profiles.myProfile;
+        },
+        presentationSanitized() {
+            let sanitized = this.bio;
+            sanitized = sanitized.replace(/script/gi, '');
+            sanitized = sanitized.replace(/<a/gi, '');
+            sanitized = sanitized.replace(/href/gi, '');
+            return sanitized;
+        },
     },
-    myProfile() {
-      return this.$store.state.profiles.myProfile;
-    },
-    presentationSanitized() {
-      let sanitized = this.bio;
-      sanitized = sanitized.replace(/script/gi, '');
-      sanitized = sanitized.replace(/<a/gi, '');
-      sanitized = sanitized.replace(/href/gi, '');
-      return sanitized;
-    },
-  },
-  beforeMount: async function () {
-    this.showIsLoading(true);
-    const response = await this.getProfile();
-    if (response !== undefined) {
-      this.avatar = response.avatar;
-      this.name = response.display_name;
-      this.bio = response.bio;
-      this.status = response.status;
-    }
-    this.showIsLoading(false);
-  },
-  methods: {
-    ...mapActions('profiles', ['signUp', 'searchProfiles', 'getProfile']),
-    onSubmit() {
-      this.doSignup();
-    },
-    goBack() {
-        this.$router.go(-1)
-    },
-    async doSignup() {
-      this.showIsLoading(true);
-
-      const mData = {
-        display_name: this.name,
-        bio: this.presentationSanitized,
-        avatar: this.avatar,
-        status: this.status,
-      };
-
-      try {
+    beforeMount: async function () {
         this.showIsLoading(true);
-        await this.signUp(mData);
-        this.showSuccessMsg('Submited');
-        await this.getProfile();
+        const response = await this.getProfile();
+        if (response !== undefined) {
+            this.avatar = response.avatar;
+            this.name = response.display_name;
+            this.bio = response.bio;
+            this.status = response.status;
+        }
         this.showIsLoading(false);
-        this.$router.push({ name: 'myProfile' });
-      } catch (e) {
-        this.showIsLoading(false);
-        this.showErrorMsg(e.message);
-      }
     },
-    imageUploaded(info) {
-      const response = JSON.parse(info.xhr.response);
-      this.avatar = response.data.link;
-      this.showUpload = false;
+    methods: {
+        ...mapActions('profiles', ['signUp', 'searchProfiles', 'getProfile']),
+        onSubmit() {
+            this.doSignup();
+        },
+        goBack() {
+            this.$router.go(-1);
+        },
+        async doSignup() {
+            this.showIsLoading(true);
+
+            const mData = {
+                display_name: this.name,
+                bio: this.presentationSanitized,
+                avatar: this.avatar,
+                status: this.status,
+            };
+
+            try {
+                this.showIsLoading(true);
+                await this.signUp(mData);
+                this.showSuccessMsg('Submited');
+                await this.getProfile();
+                this.showIsLoading(false);
+                this.$router.push({ name: 'myProfile' });
+            } catch (e) {
+                this.showIsLoading(false);
+                this.showErrorMsg(e.message);
+            }
+        },
+        imageUploaded(info) {
+            const response = JSON.parse(info.xhr.response);
+            this.avatar = response.data.link;
+            this.showUpload = false;
+        },
+        onReset() {
+            this.avatar = null;
+            this.name = null;
+            this.age = null;
+        },
     },
-    onReset() {
-      this.avatar = null;
-      this.name = null;
-      this.age = null;
-    },
-  },
 };
 </script>
 

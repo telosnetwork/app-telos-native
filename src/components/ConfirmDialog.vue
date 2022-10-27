@@ -23,19 +23,19 @@ q-dialog(
 
 <script>
 export default {
-  name: 'ConfirmDialog',
-  props: {
-    show: { type: Boolean, required: true },
-  },
-  methods: {
-    onCancel() {
-      this.$emit('update:show', false);
-      this.$emit('Canceled', true);
+    name: 'ConfirmDialog',
+    props: {
+        show: { type: Boolean, required: true },
     },
-    onConfirmed() {
-      this.$emit('update:show', false);
-      this.$emit('Confirmed', true);
+    methods: {
+        onCancel() {
+            this.$emit('update:show', false);
+            this.$emit('Canceled', true);
+        },
+        onConfirmed() {
+            this.$emit('update:show', false);
+            this.$emit('Confirmed', true);
+        },
     },
-  },
 };
 </script>

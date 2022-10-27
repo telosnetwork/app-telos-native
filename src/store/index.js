@@ -19,25 +19,25 @@ import { store } from 'quasar/wrappers';
  */
 
 export default store(function (/* { ssrContext } */) {
-  const Store = createStore({
-    modules: {
-      accounts,
-      profiles,
-      works,
-      notifications,
-      poc,
-      testnet,
-      tokens,
-      trails,
-      transfers,
-      validators,
-      general,
-    },
+    const Store = createStore({
+        modules: {
+            accounts,
+            profiles,
+            works,
+            notifications,
+            poc,
+            testnet,
+            tokens,
+            trails,
+            transfers,
+            validators,
+            general,
+        },
 
-    // enable strict mode (adds overhead!)
-    // for dev mode only
-    strict: process.env.DEV,
-  });
+        // enable strict mode (adds overhead!)
+        // for dev mode only
+        strict: process.env.DEV,
+    });
 
-  return Store;
+    return Store;
 });

@@ -3,44 +3,44 @@ import { mapGetters } from 'vuex';
 import appIcons from '~/utils/app-icons';
 
 export default {
-  name: 'App',
-  computed: {
-    ...mapGetters('accounts', ['isAutoLoading']),
-    ...mapGetters('general', ['isLoading', 'errorMsg', 'successMsg']),
-    layout() {
-      return `layout-${this.$route.meta.layout || 'main'}`;
+    name: 'App',
+    computed: {
+        ...mapGetters('accounts', ['isAutoLoading']),
+        ...mapGetters('general', ['isLoading', 'errorMsg', 'successMsg']),
+        layout() {
+            return `layout-${this.$route.meta.layout || 'main'}`;
+        },
     },
-  },
-  watch: {
-    errorMsg(msg) {
-      console.log('error', msg);
-      if (msg) {
-        this.showNotification(msg, 'error');
-        this.showErrorMsg(null);
-      }
+    watch: {
+        errorMsg(msg) {
+            console.log('error', msg);
+            if (msg) {
+                this.showNotification(msg, 'error');
+                this.showErrorMsg(null);
+            }
+        },
+        successMsg(msg) {
+            if (msg) {
+                this.showNotification(msg, 'success');
+                this.showSuccessMsg(null);
+            }
+        },
+        isLoading(value) {
+            if (value) {
+                this.$q.loading.show();
+            } else {
+                this.$q.loading.hide();
+            }
+        },
     },
-    successMsg(msg) {
-      if (msg) {
-        this.showNotification(msg, 'success');
-        this.showSuccessMsg(null);
-      }
+    created() {
+        this.$q.iconMapFn = (iconName) => {
+            const icon = appIcons[iconName];
+            if (icon !== void 0) {
+                return { icon };
+            }
+        };
     },
-    isLoading(value) {
-      if (value) {
-        this.$q.loading.show();
-      } else {
-        this.$q.loading.hide();
-      }
-    },
-  },
-  created() {
-    this.$q.iconMapFn = (iconName) => {
-      const icon = appIcons[iconName];
-      if (icon !== void 0) {
-        return { icon };
-      }
-    };
-  },
 };
 </script>
 

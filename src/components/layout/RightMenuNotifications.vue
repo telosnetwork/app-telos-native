@@ -2,16 +2,16 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'RightMenuNotifications',
-  computed: {
-    ...mapGetters('notifications', ['notifications']),
-  },
-  methods: {
-    ...mapMutations('notifications', ['clearNotifications']),
-    openUrl(url) {
-      window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`);
+    name: 'RightMenuNotifications',
+    computed: {
+        ...mapGetters('notifications', ['notifications']),
     },
-  },
+    methods: {
+        ...mapMutations('notifications', ['clearNotifications']),
+        openUrl(url) {
+            window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`);
+        },
+    },
 };
 </script>
 

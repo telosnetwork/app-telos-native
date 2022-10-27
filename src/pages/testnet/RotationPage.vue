@@ -2,27 +2,27 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'RotationPage',
-  data() {
-    return {
-      form: {
-        producer: null,
-      },
-      transactionId: null,
-      submitting: false,
-    };
-  },
-  methods: {
-    ...mapActions('testnet', ['produce']),
-    async onProduce() {
-      this.submitting = true;
-      const result = await this.produce(this.form.producer);
-      if (result) {
-        this.transactionId = result.transactionId;
-      }
-      this.submitting = false;
+    name: 'RotationPage',
+    data() {
+        return {
+            form: {
+                producer: null,
+            },
+            transactionId: null,
+            submitting: false,
+        };
     },
-  },
+    methods: {
+        ...mapActions('testnet', ['produce']),
+        async onProduce() {
+            this.submitting = true;
+            const result = await this.produce(this.form.producer);
+            if (result) {
+                this.transactionId = result.transactionId;
+            }
+            this.submitting = false;
+        },
+    },
 };
 </script>
 

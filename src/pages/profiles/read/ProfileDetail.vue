@@ -51,28 +51,28 @@ import { mapActions, mapGetters } from 'vuex';
 import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 import SignUp from 'src/pages/profiles/add/SignUp.vue';
 export default {
-  name: 'ProfileDetail',
-  components: {
-    ProfileAvatar,
-    SignUp,
-  },
-  computed: {
-    ...mapGetters('accounts', ['account']),
-    Profile() {
-      if (this.isOwner) {
-        return this.$store.state.profiles.myProfile;
-      } else return this.$store.state.profiles.selectedProfile;
+    name: 'ProfileDetail',
+    components: {
+        ProfileAvatar,
+        SignUp,
     },
-    isOwner() {
-      return this.account === this.$route.params.id;
-    },
-    missingProfile() {
-      return this.isOwner && !this.$store.state.profiles.myProfile;
-    },
-    fullName() {
-      return this.Profile ? this.Profile.display_name : this.account;
-    },
-    /*
+    computed: {
+        ...mapGetters('accounts', ['account']),
+        Profile() {
+            if (this.isOwner) {
+                return this.$store.state.profiles.myProfile;
+            } else return this.$store.state.profiles.selectedProfile;
+        },
+        isOwner() {
+            return this.account === this.$route.params.id;
+        },
+        missingProfile() {
+            return this.isOwner && !this.$store.state.profiles.myProfile;
+        },
+        fullName() {
+            return this.Profile ? this.Profile.display_name : this.account;
+        },
+        /*
     verifySMSUrl () {
       return `/profiles/myProfile/verify/${CommMethods.SMS.value}`
     },
@@ -87,36 +87,36 @@ export default {
       } else return ''
     }
     */
-  },
-  async beforeMount() {
-    try {
-      this.showIsLoading(true);
-      await this.getProfile();
-    } catch (e) {
-      console.log(e);
-    }
-    this.showIsLoading(false);
-    if (this.missingProfile) {
-      this.$router.push({ name: 'userRegister' });
-    }
-    this.$store.commit('profiles/setSelectedProfile', []);
+    },
+    async beforeMount() {
+        try {
+            this.showIsLoading(true);
+            await this.getProfile();
+        } catch (e) {
+            console.log(e);
+        }
+        this.showIsLoading(false);
+        if (this.missingProfile) {
+            this.$router.push({ name: 'userRegister' });
+        }
+        this.$store.commit('profiles/setSelectedProfile', []);
 
     /*
     if (!this.$store.getters['profiles/isRegistered']) {
       this.$router.push({ name: 'userRegister' })
     }
     */
-  },
+    },
 
-  methods: {
-    ...mapActions('profiles', ['getProfile']),
+    methods: {
+        ...mapActions('profiles', ['getProfile']),
     /*
     goToChat () {
       this.$store.commit('messages/setActiveChat', { activeChat: this.Profile.eosAccount, avatarImage: this.Profile.publicData.avatarImage, s3Identity: this.Profile.publicData.s3Identity })
       this.$router.push({ name: 'chat' })
     }
     */
-  },
+    },
 };
 </script>
 

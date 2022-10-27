@@ -18,26 +18,26 @@ q-page.q-pa-lg
 import { mapActions } from 'vuex';
 import ExpansionProposal from './components/ExpansionProposal';
 export default {
-  name: 'ProposalsPage',
-  components: {
-    ExpansionProposal,
-  },
-  data() {
-    return {
-      type: 'active',
-    };
-  },
-  methods: {
-    ...mapActions('works', ['fetchWorks']),
-  },
-  computed: {
-    proposals() {
-      return this.$store.state.works[this.type];
+    name: 'ProposalsPage',
+    components: {
+        ExpansionProposal,
     },
-  },
-  beforeMount() {
-    this.fetchWorks();
-  },
+    data() {
+        return {
+            type: 'active',
+        };
+    },
+    methods: {
+        ...mapActions('works', ['fetchWorks']),
+    },
+    computed: {
+        proposals() {
+            return this.$store.state.works[this.type];
+        },
+    },
+    beforeMount() {
+        this.fetchWorks();
+    },
 };
 </script>
 
