@@ -1,23 +1,23 @@
 <script>
 export default {
-  name: 'CustomButton',
-  props: {
-    primary: Boolean,
-    labelText: String,
-    btnWidth: String,
-    iconRight: Boolean,
-    fontSize: String,
-    to: String,
-    type: String,
-    hoverBlue: Boolean,
-    hoverRed: Boolean,
-    disable: Boolean,
-  },
-  methods: {
-    clickBtn: function () {
-      this.$emit('clickBtn');
+    name: 'CustomButton',
+    props: {
+        primary: Boolean,
+        labelText: String,
+        btnWidth: String,
+        iconRight: Boolean,
+        fontSize: String,
+        to: String,
+        type: String,
+        hoverBlue: Boolean,
+        hoverRed: Boolean,
+        disable: Boolean,
     },
-  },
+    methods: {
+        clickBtn: function () {
+            this.$emit('clickBtn');
+        },
+    },
 };
 </script>
 

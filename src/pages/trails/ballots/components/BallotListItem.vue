@@ -5,91 +5,91 @@ import BallotChip from './BallotChip';
 import Btn from '../../../../components/CustomButton';
 
 export default {
-  name: 'BallotListItem',
-  components: { BallotStatus, BallotChip, Btn },
-  props: {
-    ballot: { type: Object, required: true },
-    displayWinner: { type: Function, required: true },
-    isBallotOpened: { type: Boolean, required: true },
-    votingHasBegun: { type: Boolean, required: true },
-    getStartTime: { type: Number, required: true },
-    getEndTime: { type: Number, required: true },
-    getLoser: { type: Function, required: true },
-    ballotContentImg: { type: Function, required: true },
-  },
-  data() {
-    return {
-      voting: false,
-      votes: [],
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-    ...mapGetters('trails', ['userVotes']),
-    mainButtonTextSmall() {
-      if (
-        this.isBallotOpened &&
+    name: 'BallotListItem',
+    components: { BallotStatus, BallotChip, Btn },
+    props: {
+        ballot: { type: Object, required: true },
+        displayWinner: { type: Function, required: true },
+        isBallotOpened: { type: Boolean, required: true },
+        votingHasBegun: { type: Boolean, required: true },
+        getStartTime: { type: Number, required: true },
+        getEndTime: { type: Number, required: true },
+        getLoser: { type: Function, required: true },
+        ballotContentImg: { type: Function, required: true },
+    },
+    data() {
+        return {
+            voting: false,
+            votes: [],
+        };
+    },
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
+        ...mapGetters('trails', ['userVotes']),
+        mainButtonTextSmall() {
+            if (
+                this.isBallotOpened &&
         this.ballot.status === 'voting' &&
         this.isAuthenticated
-      ) {
-        if (this.userVotes[this.ballot.ballot_name]) {
-          return 'View / Update vote';
-        }
-      }
-      return this.mainButtonText;
-    },
-    mainButtonText() {
-      if (
-        this.isBallotOpened &&
+            ) {
+                if (this.userVotes[this.ballot.ballot_name]) {
+                    return 'View / Update vote';
+                }
+            }
+            return this.mainButtonText;
+        },
+        mainButtonText() {
+            if (
+                this.isBallotOpened &&
         this.ballot.status === 'voting' &&
         this.isAuthenticated
-      ) {
-        if (this.userVotes[this.ballot.ballot_name]) {
-          return 'View proposal / Update vote';
-        } else {
-          return 'View proposal & vote';
-        }
-      }
-      return 'View proposal';
+            ) {
+                if (this.userVotes[this.ballot.ballot_name]) {
+                    return 'View proposal / Update vote';
+                } else {
+                    return 'View proposal & vote';
+                }
+            }
+            return 'View proposal';
+        },
+        getWinner() {
+            if (!this.ballot.total_voters) return 'No votes';
+            let winnerValue = -1;
+            let winner;
+            this.ballot.options.forEach((option, index) => {
+                if (parseFloat(option.value) > winnerValue) {
+                    winnerValue = parseFloat(option.value);
+                    winner = index;
+                }
+            });
+            return this.ballot.options[winner];
+        },
     },
-    getWinner() {
-      if (!this.ballot.total_voters) return 'No votes';
-      let winnerValue = -1;
-      let winner;
-      this.ballot.options.forEach((option, index) => {
-        if (parseFloat(option.value) > winnerValue) {
-          winnerValue = parseFloat(option.value);
-          winner = index;
-        }
-      });
-      return this.ballot.options[winner];
-    },
-  },
-  methods: {
-    ...mapActions('trails', ['castVote']),
-    openUrl(url) {
-      window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
-    },
-    log(msg, val) {
-      console.log(msg, val);
-    },
-    getPercentofTotal(option) {
-      const total =
+    methods: {
+        ...mapActions('trails', ['castVote']),
+        openUrl(url) {
+            window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
+        },
+        log(msg, val) {
+            console.log(msg, val);
+        },
+        getPercentofTotal(option) {
+            const total =
         (Number(option.value.split(' ')[0]) /
           Number(this.ballot.total_raw_weight.split(' ')[0])) *
         100;
-      return this.trunc(total, 2);
+            return this.trunc(total, 2);
+        },
+        async onCastVote({ options, option, ballotName }) {
+            this.voting = true;
+            await this.castVote({
+                ballotName,
+                options: options || [option],
+            });
+            this.voting = false;
+            this.votes = [];
+        },
     },
-    async onCastVote({ options, option, ballotName }) {
-      this.voting = true;
-      await this.castVote({
-        ballotName,
-        options: options || [option],
-      });
-      this.voting = false;
-      this.votes = [];
-    },
-  },
 };
 </script>
 

@@ -2,29 +2,29 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'LoginLayout',
-  data() {
-    return {
-      show: false,
-      error: null,
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['loading', 'isAutoLoading']),
-  },
-  methods: {
-    ...mapActions('accounts', ['login']),
-    async onLogin(idx) {
-      this.error = null;
-      const error = await this.login(idx);
-      if (!error) {
-        this.show = false;
-      }
+    name: 'LoginLayout',
+    data() {
+        return {
+            show: false,
+            error: null,
+        };
     },
-    openUrl(url) {
-      window.open(url);
+    computed: {
+        ...mapGetters('accounts', ['loading', 'isAutoLoading']),
     },
-  },
+    methods: {
+        ...mapActions('accounts', ['login']),
+        async onLogin(idx) {
+            this.error = null;
+            const error = await this.login(idx);
+            if (!error) {
+                this.show = false;
+            }
+        },
+        openUrl(url) {
+            window.open(url);
+        },
+    },
 };
 </script>
 

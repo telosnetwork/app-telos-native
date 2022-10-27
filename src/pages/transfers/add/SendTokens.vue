@@ -3,41 +3,41 @@ import { mapActions, mapMutations } from 'vuex';
 import { validation } from '~/mixins/validation';
 
 export default {
-  name: 'SendTokens',
-  mixins: [validation],
-  data() {
-    return {
-      form: {
-        to: null,
-        quantity: null,
-        memo: null,
-      },
-      transactionId: null,
-      submitting: false,
-    };
-  },
-  methods: {
-    ...mapActions('transfers', ['sendTokens']),
-    ...mapMutations('general', ['setErrorMsg']),
-    async onSendTokens() {
-      this.resetValidation(this.form);
-      if (!(await this.validate(this.form))) return;
-      this.submitting = true;
-      try {
-        const result = await this.sendTokens(this.form);
-        if (result) {
-          this.transactionId = result.transactionId;
-        }
-      } catch (e) {
-        const error = new Error(e);
-        this.setErrorMsg(error.message);
-      }
-      this.submitting = false;
+    name: 'SendTokens',
+    mixins: [validation],
+    data() {
+        return {
+            form: {
+                to: null,
+                quantity: null,
+                memo: null,
+            },
+            transactionId: null,
+            submitting: false,
+        };
     },
-    openUrl(url) {
-      window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`);
+    methods: {
+        ...mapActions('transfers', ['sendTokens']),
+        ...mapMutations('general', ['setErrorMsg']),
+        async onSendTokens() {
+            this.resetValidation(this.form);
+            if (!(await this.validate(this.form))) return;
+            this.submitting = true;
+            try {
+                const result = await this.sendTokens(this.form);
+                if (result) {
+                    this.transactionId = result.transactionId;
+                }
+            } catch (e) {
+                const error = new Error(e);
+                this.setErrorMsg(error.message);
+            }
+            this.submitting = false;
+        },
+        openUrl(url) {
+            window.open(`${process.env.BLOCKCHAIN_EXPLORER}${url}`);
+        },
     },
-  },
 };
 </script>
 

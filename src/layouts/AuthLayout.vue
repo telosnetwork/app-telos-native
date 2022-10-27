@@ -5,54 +5,54 @@ import LeftMenu from '~/components/layout/LeftMenu';
 import RightMenuNotifications from '~/components/layout/RightMenuNotifications';
 
 export default {
-  name: 'AuthLayout',
-  components: {
-    AppHeader,
-    LeftMenu,
-    RightMenuNotifications,
-  },
-  data() {
-    return {
-      menu: false,
-      right: false,
-      miniState: true,
-      activeFilter: 'amend-ballots',
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-    ...mapGetters('notifications', ['successCount', 'errorCount']),
-  },
-  methods: {
-    ...mapMutations('notifications', [
-      'initNotifications',
-      'unmarkRead',
-      'unmarkNew',
-    ]),
-    ...mapActions('accounts', ['memoryAutoLogin']),
-    toggleNotifications() {
-      if (this.right) {
-        this.unmarkRead();
-      }
-      this.right = !this.right;
+    name: 'AuthLayout',
+    components: {
+        AppHeader,
+        LeftMenu,
+        RightMenuNotifications,
     },
-    toLanding() {
-      this.$router.push({ path: '/' });
+    data() {
+        return {
+            menu: false,
+            right: false,
+            miniState: true,
+            activeFilter: 'amend-ballots',
+        };
     },
-    toggleMenu() {
-      this.menu = !this.menu;
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
+        ...mapGetters('notifications', ['successCount', 'errorCount']),
     },
-    setActiveFilter(filter) {
-      this.activeFilter = filter;
+    methods: {
+        ...mapMutations('notifications', [
+            'initNotifications',
+            'unmarkRead',
+            'unmarkNew',
+        ]),
+        ...mapActions('accounts', ['memoryAutoLogin']),
+        toggleNotifications() {
+            if (this.right) {
+                this.unmarkRead();
+            }
+            this.right = !this.right;
+        },
+        toLanding() {
+            this.$router.push({ path: '/' });
+        },
+        toggleMenu() {
+            this.menu = !this.menu;
+        },
+        setActiveFilter(filter) {
+            this.activeFilter = filter;
+        },
+        closeMenu() {
+            this.menu = false;
+        },
     },
-    closeMenu() {
-      this.menu = false;
+    async mounted() {
+        this.memoryAutoLogin();
+        this.initNotifications();
     },
-  },
-  async mounted() {
-    this.memoryAutoLogin();
-    this.initNotifications();
-  },
 };
 </script>
 

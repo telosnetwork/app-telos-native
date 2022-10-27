@@ -3,25 +3,25 @@ import Btn from '../CustomButton';
 
 import { mapActions } from 'vuex';
 export default {
-  name: 'RightMenuGuest',
-  components: { Btn },
-  props: {
-    landingPage: Boolean,
-  },
-  mounted() {
-    this.$router.isReady(() => {
-      this.autoLogin(this.$route.fullPath);
-    });
-  },
-  methods: {
-    ...mapActions('accounts', ['autoLogin']),
-    loginClick() {
-      this.$router.push({
-        path: '/login/',
-        query: { returnUrl: this.$route.path },
-      });
+    name: 'RightMenuGuest',
+    components: { Btn },
+    props: {
+        landingPage: Boolean,
     },
-  },
+    mounted() {
+        this.$router.isReady(() => {
+            this.autoLogin(this.$route.fullPath);
+        });
+    },
+    methods: {
+        ...mapActions('accounts', ['autoLogin']),
+        loginClick() {
+            this.$router.push({
+                path: '/login/',
+                query: { returnUrl: this.$route.path },
+            });
+        },
+    },
 };
 </script>
 

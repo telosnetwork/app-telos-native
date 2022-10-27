@@ -5,25 +5,25 @@ import MintTokenDialog from './MintTokenDialog';
 import TreasuryEditDialog from './TreasuryEditDialog';
 
 export default {
-  name: 'TreasuryCard',
-  components: {
-    AddVoterDialog,
-    MintTokenDialog,
-    TreasuryEditDialog,
-  },
-  props: {
-    treasury: { type: Object, required: true },
-  },
-  data() {
-    return {
-      show: false,
-      showMint: false,
-      showEdit: false,
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['account', 'isAuthenticated']),
-  },
+    name: 'TreasuryCard',
+    components: {
+        AddVoterDialog,
+        MintTokenDialog,
+        TreasuryEditDialog,
+    },
+    props: {
+        treasury: { type: Object, required: true },
+    },
+    data() {
+        return {
+            show: false,
+            showMint: false,
+            showEdit: false,
+        };
+    },
+    computed: {
+        ...mapGetters('accounts', ['account', 'isAuthenticated']),
+    },
 };
 </script>
 

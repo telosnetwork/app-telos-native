@@ -12,365 +12,365 @@ const FROM_STAKE = 'stake';
 
 const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm'); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 const regexWithUrl = new RegExp(
-  /https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
-  'm'
+    /https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
+    'm'
 ); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
 
 export default {
-  name: 'BallotView',
-  components: { BallotStatus, BallotChip, Btn },
-  props: {
-    isBallotOpened: { type: Function, required: true },
-    displayWinner: { type: Function, required: true },
-    votingHasBegun: { type: Function, required: true },
-    getStartTime: { type: Function, required: true },
-    getEndTime: { type: Function, required: true },
-    getLoser: { type: Function, required: true },
-    ballotContentImg: { type: Function, required: true },
-  },
-  data() {
-    return {
-      userCanVote: false,
-      loading: true,
-      voting: false,
-      votes: [],
-      defaultSlide: 0,
-      scrollPosition: null,
-      notice: false,
-      showDetails: false,
-    };
-  },
-  async mounted() {
-    this.getLoggedUserVotes(this.$route.params.id);
-    await this.fetchBallot(this.$route.params.id);
-    window.addEventListener('scroll', this.updateScroll);
-    this.loading = false;
-  },
-  beforeUnmount() {
+    name: 'BallotView',
+    components: { BallotStatus, BallotChip, Btn },
+    props: {
+        isBallotOpened: { type: Function, required: true },
+        displayWinner: { type: Function, required: true },
+        votingHasBegun: { type: Function, required: true },
+        getStartTime: { type: Function, required: true },
+        getEndTime: { type: Function, required: true },
+        getLoser: { type: Function, required: true },
+        ballotContentImg: { type: Function, required: true },
+    },
+    data() {
+        return {
+            userCanVote: false,
+            loading: true,
+            voting: false,
+            votes: [],
+            defaultSlide: 0,
+            scrollPosition: null,
+            notice: false,
+            showDetails: false,
+        };
+    },
+    async mounted() {
+        this.getLoggedUserVotes(this.$route.params.id);
+        await this.fetchBallot(this.$route.params.id);
+        window.addEventListener('scroll', this.updateScroll);
+        this.loading = false;
+    },
+    beforeUnmount() {
     // this.$router.push(`/trails/ballots/`)
     // This resets the route on modal close but also glitches out the scroll position for it's parent.
     // Commenting out to prevent the bug as it doesn't really cause any problems when the route isn't reset.
-  },
-  computed: {
-    ...mapGetters('notifications', ['notifications']),
-    ...mapGetters('accounts', ['isAuthenticated', 'account', 'accountData']),
-    ...mapGetters('trails', ['ballot', 'userVotes', 'voters', 'userTreasury']),
-    daysSinceStarted() {
-      const oneDay = 24 * 60 * 60 * 1000;
-      const today = Date.now();
-      const startDate = new Date(this.ballot.begin_time).getTime();
-      const diffDays = Math.round(Math.abs((today - startDate) / oneDay));
-      return diffDays;
     },
-    getWinner() {
-      if (!this.ballot.total_voters) return 'No votes';
-      let winnerValue = -1;
-      let winner;
-      this.ballot.options.forEach((option, index) => {
-        if (parseFloat(option.value) > winnerValue) {
-          winnerValue = parseFloat(option.value);
-          winner = index;
-        }
-      });
-      return this.ballot.options[winner];
-    },
-    ballotDescription() {
-      if (this.iframeUrl) {
-        return this.ballot.description
-          .replace(regexWithUrl, '')
-          .replace(regex, '');
-      }
+    computed: {
+        ...mapGetters('notifications', ['notifications']),
+        ...mapGetters('accounts', ['isAuthenticated', 'account', 'accountData']),
+        ...mapGetters('trails', ['ballot', 'userVotes', 'voters', 'userTreasury']),
+        daysSinceStarted() {
+            const oneDay = 24 * 60 * 60 * 1000;
+            const today = Date.now();
+            const startDate = new Date(this.ballot.begin_time).getTime();
+            const diffDays = Math.round(Math.abs((today - startDate) / oneDay));
+            return diffDays;
+        },
+        getWinner() {
+            if (!this.ballot.total_voters) return 'No votes';
+            let winnerValue = -1;
+            let winner;
+            this.ballot.options.forEach((option, index) => {
+                if (parseFloat(option.value) > winnerValue) {
+                    winnerValue = parseFloat(option.value);
+                    winner = index;
+                }
+            });
+            return this.ballot.options[winner];
+        },
+        ballotDescription() {
+            if (this.iframeUrl) {
+                return this.ballot.description
+                    .replace(regexWithUrl, '')
+                    .replace(regex, '');
+            }
 
-      const descriptionWithLinks = this.findLinks(this.ballot.description);
+            const descriptionWithLinks = this.findLinks(this.ballot.description);
 
-      return descriptionWithLinks;
-    },
-    ballotContent() {
-      if (this.ballot.content.match(regex)) {
-        return this.ballot.content.replace(regexWithUrl, '').replace(regex, '');
-      }
+            return descriptionWithLinks;
+        },
+        ballotContent() {
+            if (this.ballot.content.match(regex)) {
+                return this.ballot.content.replace(regexWithUrl, '').replace(regex, '');
+            }
 
-      return this.ballot.content;
-    },
-    ballotContentOptionData() {
-      try {
-        const data = Object.values(JSON.parse(this.ballot.content).optionData);
-        return data;
-      } catch (error) {
-        return null;
-      }
-    },
-    iframeUrl() {
-      let content = this.ballot.content;
-      let file_path = null;
+            return this.ballot.content;
+        },
+        ballotContentOptionData() {
+            try {
+                const data = Object.values(JSON.parse(this.ballot.content).optionData);
+                return data;
+            } catch (error) {
+                return null;
+            }
+        },
+        iframeUrl() {
+            let content = this.ballot.content;
+            let file_path = null;
 
-      // catch parse possible errors
-      try {
-        content = JSON.parse(this.ballot.content);
-      } catch (e) {
-        console.error(e)
-      }
-      try {
-        file_path = regex.exec(this.ballot.description);
-      } catch (e) {
-        console.error(e)
-      }
+            // catch parse possible errors
+            try {
+                content = JSON.parse(this.ballot.content);
+            } catch (e) {
+                console.error(e);
+            }
+            try {
+                file_path = regex.exec(this.ballot.description);
+            } catch (e) {
+                console.error(e);
+            }
 
-      if (Array.isArray(file_path)) {
-        const r = 'https://ipfs.io/ipfs/' + file_path[0];
-        return r;
-      } else if (typeof content === 'object') {
-        // prioritize content urls over image urls
-        const r =
+            if (Array.isArray(file_path)) {
+                const r = 'https://ipfs.io/ipfs/' + file_path[0];
+                return r;
+            } else if (typeof content === 'object') {
+                // prioritize content urls over image urls
+                const r =
           content.contentUrl ||
           (content.contentUrls || [])[0] ||
           content.imageUrl ||
           (content.imageUrls || [])[0];
-        return r;
-      } else {
-        return false;
-      }
-      // https://api.ipfsbrowser.com/ipfs/get.php?hash=QmS6QwbGDde7cdyvWfUSX5PPWrFkiumqTHouBV3jYhPXme
-    },
-    getVariants() {
-      let newArr = [];
-      for (let i of this.ballot.options) {
-        if (this.onlyNumbers(i.value) > 0) {
-          newArr.push(i);
-        }
-      }
-      return newArr;
-    },
-    isUserRegisteredInTreasury() {
-        if (!this.ballot) return false;
-        return this.userTreasury.some(t => t.liquid.split(' ')[1] == this.ballot.treasury.supply.split(' ')[1]);
-    },
-    isOfficialSymbol() {
-        return supplyToSymbol(this.ballot.treasury_symbol) == 'VOTE';
-    },
-    votingPowerComesFrom() {
-        let voteliquid = this.ballot.settings.some(op => op.key == 'voteliquid' && op.value > 0);
-        let votestake = this.ballot.settings.some(op => op.key == 'votestake' && op.value > 0);
-        if (voteliquid && votestake) {
-            return FROM_BOTH;
-        } else if (voteliquid) {
-            return FROM_LIQUID;
-        } else if (votestake) {
-            return FROM_STAKE;
-        } else {
-          return null;
-        }
-    },
-    isPositiveVotePower() {
-        let symbol = supplyToSymbol(this.ballot.treasury_symbol);
-        let power = 0;
-        if (this.isOfficialSymbol) {
-            if (!this.accountData) return false;
-            if (!this.accountData.self_delegated_bandwidth) return false;
-
-            let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || '0.0000 TLOS';
-            let net_weight = this.accountData.self_delegated_bandwidth.net_weight || '0.0000 TLOS';
-            power = parseFloat(cpu_weight.split(' ')[0]) + parseFloat(net_weight.split(' ')[0]);
-        } else {
-            let userTreas = this.userTreasury.find(t => supplyToSymbol(t.liquid) == symbol);
-            if (!userTreas) return false;
-
-            let powerComes = this.votingPowerComesFrom;
-
-            if (powerComes == FROM_BOTH || powerComes == FROM_LIQUID) {
-                let liquid = userTreas.liquid;
-                power += parseFloat(liquid.split(' ')[0]);
-            }
-
-            if (powerComes == FROM_BOTH || powerComes == FROM_STAKE) {
-                let staked = userTreas.staked;
-                power += parseFloat(staked.split(' ')[0]);
-            }
-        }
-
-        return power > 0;
-    },
-    voteButtonText() {
-        if (this.isPositiveVotePower) {
-            if (this.isUserRegisteredInTreasury) {
-                return 'pages.trails.ballots.vote';
+                return r;
             } else {
-                if (this.ballot.treasury.access == 'public') {
-                    return 'pages.trails.ballots.joinAndVote';
-                } else {
-                    return 'pages.trails.ballots.joinDAO';
+                return false;
+            }
+            // https://api.ipfsbrowser.com/ipfs/get.php?hash=QmS6QwbGDde7cdyvWfUSX5PPWrFkiumqTHouBV3jYhPXme
+        },
+        getVariants() {
+            let newArr = [];
+            for (let i of this.ballot.options) {
+                if (this.onlyNumbers(i.value) > 0) {
+                    newArr.push(i);
                 }
             }
-        } else {
-            if (this.isOfficialSymbol) {
-                return 'pages.trails.ballots.stakeBeforeVoting';
+            return newArr;
+        },
+        isUserRegisteredInTreasury() {
+            if (!this.ballot) return false;
+            return this.userTreasury.some(t => t.liquid.split(' ')[1] === this.ballot.treasury.supply.split(' ')[1]);
+        },
+        isOfficialSymbol() {
+            return supplyToSymbol(this.ballot.treasury_symbol) === 'VOTE';
+        },
+        votingPowerComesFrom() {
+            let voteliquid = this.ballot.settings.some(op => op.key === 'voteliquid' && op.value > 0);
+            let votestake = this.ballot.settings.some(op => op.key === 'votestake' && op.value > 0);
+            if (voteliquid && votestake) {
+                return FROM_BOTH;
+            } else if (voteliquid) {
+                return FROM_LIQUID;
+            } else if (votestake) {
+                return FROM_STAKE;
             } else {
-                return 'pages.trails.ballots.needPositiveVote';
+                return null;
             }
-        }
-    },
-  },
-  methods: {
-    ...mapActions('trails', [
-      'fetchBallot',
-      'castVote',
-      'cancelBallot',
-      'fetchVotesForBallot',
-      'fetchUserVotesForThisBallot',
-      'fetchTreasuriesForUser',
-      'resetUserVotes'
+        },
+        isPositiveVotePower() {
+            let symbol = supplyToSymbol(this.ballot.treasury_symbol);
+            let power = 0;
+            if (this.isOfficialSymbol) {
+                if (!this.accountData) return false;
+                if (!this.accountData.self_delegated_bandwidth) return false;
 
-    ]),
-    openUrl(url) {
-      window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
+                let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || '0.0000 TLOS';
+                let net_weight = this.accountData.self_delegated_bandwidth.net_weight || '0.0000 TLOS';
+                power = parseFloat(cpu_weight.split(' ')[0]) + parseFloat(net_weight.split(' ')[0]);
+            } else {
+                let userTreas = this.userTreasury.find(t => supplyToSymbol(t.liquid) === symbol);
+                if (!userTreas) return false;
+
+                let powerComes = this.votingPowerComesFrom;
+
+                if (powerComes === FROM_BOTH || powerComes === FROM_LIQUID) {
+                    let liquid = userTreas.liquid;
+                    power += parseFloat(liquid.split(' ')[0]);
+                }
+
+                if (powerComes === FROM_BOTH || powerComes === FROM_STAKE) {
+                    let staked = userTreas.staked;
+                    power += parseFloat(staked.split(' ')[0]);
+                }
+            }
+
+            return power > 0;
+        },
+        voteButtonText() {
+            if (this.isPositiveVotePower) {
+                if (this.isUserRegisteredInTreasury) {
+                    return 'pages.trails.ballots.vote';
+                } else {
+                    if (this.ballot.treasury.access === 'public') {
+                        return 'pages.trails.ballots.joinAndVote';
+                    } else {
+                        return 'pages.trails.ballots.joinDAO';
+                    }
+                }
+            } else {
+                if (this.isOfficialSymbol) {
+                    return 'pages.trails.ballots.stakeBeforeVoting';
+                } else {
+                    return 'pages.trails.ballots.needPositiveVote';
+                }
+            }
+        },
     },
-    getPercentofTotal(option) {
-      const total =
+    methods: {
+        ...mapActions('trails', [
+            'fetchBallot',
+            'castVote',
+            'cancelBallot',
+            'fetchVotesForBallot',
+            'fetchUserVotesForThisBallot',
+            'fetchTreasuriesForUser',
+            'resetUserVotes'
+
+        ]),
+        openUrl(url) {
+            window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
+        },
+        getPercentofTotal(option) {
+            const total =
         (Number(option.value.split(' ')[0]) /
           Number(this.ballot.total_raw_weight.split(' ')[0])) *
         100;
-      return Number.isInteger(total) ? total : +total.toFixed(2);
-    },
-    async onCastVote({ options, option, ballotName, register }) {
-      this.voting = true;
-      await this.castVote({
-        register,
-        ballotName,
-        options: options || [option],
-      });
-      this.voting = false;
-    },
-    showAlert(message) {
-      this.$q.notify({
-        icon: 'warning',
-        message: this.$t(message),
-        color: 'warning',
-      });
-    },
-    showNotification() {
-      this.$q.notify({
-        icon: this.notifications[0].icon,
-        message:
+            return Number.isInteger(total) ? total : +total.toFixed(2);
+        },
+        async onCastVote({ options, option, ballotName, register }) {
+            this.voting = true;
+            await this.castVote({
+                register,
+                ballotName,
+                options: options || [option],
+            });
+            this.voting = false;
+        },
+        showAlert(message) {
+            this.$q.notify({
+                icon: 'warning',
+                message: this.$t(message),
+                color: 'warning',
+            });
+        },
+        showNotification() {
+            this.$q.notify({
+                icon: this.notifications[0].icon,
+                message:
           this.notifications[0].status === 'success'
-            ? this.$t('notifications.trails.successSigning')
-            : this.$t('notifications.trails.errorSigning'),
-        color:
+              ? this.$t('notifications.trails.successSigning')
+              : this.$t('notifications.trails.errorSigning'),
+                color:
           this.notifications[0].status === 'success' ? 'positive' : 'negative',
-      });
-    },
-    async showVoters() {
-      await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters })
-      this.voters.length > 0
-        ? (this.showDetails = true)
-        : (this.showDetails = false);
-    },
-    getVoters(variant) {
-      let newArr = [];
-      const voter = JSON.stringify(this.voters);
-      for (let i of JSON.parse(voter)) {
-        for (let j of i.weighted_votes) {
-          if (j.key === variant) {
-            i.value = j.value;
-            newArr.push(i);
-          }
-        }
-      }
-      return newArr;
-    },
-    async getLoggedUserVotes(ballot_name) {
-        await this.fetchUserVotesForThisBallot(ballot_name);
-        if (!this.userVotes) return;
-        if (!this.userVotes[ballot_name]) return;
-        let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
-        this.votes = this.votes.concat(votes);
-    },
-    async vote() {
-        let register = false;
-
-        if (this.isPositiveVotePower) {
-            if (this.isUserRegisteredInTreasury) {
-                register = false;
-            } else {
-                if (this.ballot.treasury.access == 'public') {
-                    register = true;
-                } else {
-                    // redirect to treasuties page with filter
-                    this.$router.push({
-                        path: '/trails/treasuries',
-                        query: { treasury: this.ballot.treasury.supply.split(' ')[1] },
-                    });
-                    return; // Do not Cast Vote
+            });
+        },
+        async showVoters() {
+            await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters });
+            this.voters.length > 0
+                ? (this.showDetails = true)
+                : (this.showDetails = false);
+        },
+        getVoters(variant) {
+            let newArr = [];
+            const voter = JSON.stringify(this.voters);
+            for (let i of JSON.parse(voter)) {
+                for (let j of i.weighted_votes) {
+                    if (j.key === variant) {
+                        i.value = j.value;
+                        newArr.push(i);
+                    }
                 }
             }
-        } else {
-            if (this.isOfficialSymbol) {
-                this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
+            return newArr;
+        },
+        async getLoggedUserVotes(ballot_name) {
+            await this.fetchUserVotesForThisBallot(ballot_name);
+            if (!this.userVotes) return;
+            if (!this.userVotes[ballot_name]) return;
+            let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
+            this.votes = this.votes.concat(votes);
+        },
+        async vote() {
+            let register = false;
+
+            if (this.isPositiveVotePower) {
+                if (this.isUserRegisteredInTreasury) {
+                    register = false;
+                } else {
+                    if (this.ballot.treasury.access === 'public') {
+                        register = true;
+                    } else {
+                    // redirect to treasuties page with filter
+                        this.$router.push({
+                            path: '/trails/treasuries',
+                            query: { treasury: this.ballot.treasury.supply.split(' ')[1] },
+                        });
+                        return; // Do not Cast Vote
+                    }
+                }
             } else {
-                this.showAlert('pages.trails.ballots.needPositiveVoteLong.' + this.votingPowerComesFrom );
+                if (this.isOfficialSymbol) {
+                    this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
+                } else {
+                    this.showAlert('pages.trails.ballots.needPositiveVoteLong.' + this.votingPowerComesFrom );
+                }
+                return;
             }
-            return;
-        }
 
-        await this.onCastVote({
-            register,
-            options: this.votes,
-            ballotName: this.ballot.ballot_name,
-        });
-        await this.fetchBallot(this.$route.params.id);
-        await this.resetUserVotes();
+            await this.onCastVote({
+                register,
+                options: this.votes,
+                ballotName: this.ballot.ballot_name,
+            });
+            await this.fetchBallot(this.$route.params.id);
+            await this.resetUserVotes();
 
-        this.showNotification();
-    },
-    async cancel() {
-      await this.cancelBallot(this.ballot);
-      this.showNotification();
-    },
-    nextSlide() {
-      if (this.ballotContentOptionData.length - 1 > this.defaultSlide) {
-        this.defaultSlide++;
-      }
-    },
-    prevSlide() {
-      if (this.defaultSlide > 0) {
-        this.defaultSlide--;
-      }
-    },
-    updatePopupScroll(e) {
-      this.scrollPosition = e.target.scrollTop;
-    },
-    getPartOfTotalPercent(option) {
-      return this.trunc(this.getPartOfTotal(option) * 100, 2);
-    },
-    getPartOfTotal(option) {
-      if (option) {
-        return !isNaN(this.getPercentofTotal(option))
-          ? this.getPercentofTotal(option) / 100
-          : 0;
-      }
-    },
-    openNotice() {
-      this.notice = true;
-    },
+            this.showNotification();
+        },
+        async cancel() {
+            await this.cancelBallot(this.ballot);
+            this.showNotification();
+        },
+        nextSlide() {
+            if (this.ballotContentOptionData.length - 1 > this.defaultSlide) {
+                this.defaultSlide++;
+            }
+        },
+        prevSlide() {
+            if (this.defaultSlide > 0) {
+                this.defaultSlide--;
+            }
+        },
+        updatePopupScroll(e) {
+            this.scrollPosition = e.target.scrollTop;
+        },
+        getPartOfTotalPercent(option) {
+            return this.trunc(this.getPartOfTotal(option) * 100, 2);
+        },
+        getPartOfTotal(option) {
+            if (option) {
+                return !isNaN(this.getPercentofTotal(option))
+                    ? this.getPercentofTotal(option) / 100
+                    : 0;
+            }
+        },
+        openNotice() {
+            this.notice = true;
+        },
 
-    toggleOption(key) {
-      if (this.ballot.max_options === 1) {
-        this.votes = this.votes.includes(key) ? [key] : [];
-      }
-      this.userCanVote = this.votes.length > 0;
-    },
-    findLinks(text) {
-      const urlRegex =
+        toggleOption(key) {
+            if (this.ballot.max_options === 1) {
+                this.votes = this.votes.includes(key) ? [key] : [];
+            }
+            this.userCanVote = this.votes.length > 0;
+        },
+        findLinks(text) {
+            const urlRegex =
         /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-      return text.replace(urlRegex, (url) => `<a href="${url}">${url}</a>`);
-    },
-    getRequestAmountRounded(requestAmount) {
-      const amountArr = requestAmount.split(' ');
-      const amount = parseInt(amountArr[0]);
-      const tokenSymbol = amountArr[1];
+            return text.replace(urlRegex, (url) => `<a href="${url}">${url}</a>`);
+        },
+        getRequestAmountRounded(requestAmount) {
+            const amountArr = requestAmount.split(' ');
+            const amount = parseInt(amountArr[0]);
+            const tokenSymbol = amountArr[1];
 
-      return `${amount} ${tokenSymbol}`;
+            return `${amount} ${tokenSymbol}`;
+        },
     },
-  },
 };
 </script>
 

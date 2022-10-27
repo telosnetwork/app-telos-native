@@ -26,66 +26,66 @@ import 'vue-croppa/dist/vue-croppa.css';
 import croppa from 'vue-croppa';
 
 export default {
-  name: 'EditImage',
-  props: {
-    imgKey: String,
-    identity: String,
-  },
-  data: function () {
-    return {
-      url: '',
-      croppa: croppa,
-      loadingFile: false,
-      mImgKey: '',
-      mIdentity: '',
-      imageChanged: false,
-      isFirstDraw: true,
-    };
-  },
-  watch: {
-    imgKey: async function () {
-      this.updateUrl();
+    name: 'EditImage',
+    props: {
+        imgKey: String,
+        identity: String,
     },
-    identity: async function () {
-      this.updateUrl();
+    data: function () {
+        return {
+            url: '',
+            croppa: croppa,
+            loadingFile: false,
+            mImgKey: '',
+            mIdentity: '',
+            imageChanged: false,
+            isFirstDraw: true,
+        };
     },
-  },
-  async created() {
-    this.updateUrl();
-  },
-  methods: {
-    isEdited() {
-      if (!this.isFirstDraw) {
-        this.imageChanged = true;
-      } else this.isFirstDraw = false;
+    watch: {
+        imgKey: async function () {
+            this.updateUrl();
+        },
+        identity: async function () {
+            this.updateUrl();
+        },
     },
-    choseImage() {
-      this.imageChanged = true;
-      this.$refs.myCroppa.chooseFile();
+    async created() {
+        this.updateUrl();
     },
-    getBlob() {
-      const self = this;
-      return new Promise(function (resolve, reject) {
-        try {
-          if (!self.imageChanged) {
-            reject(new Error('No image has changed'));
-          }
-          if (self.croppa.hasImage()) {
-            self.croppa.generateBlob((blob) => {
-              resolve(blob);
+    methods: {
+        isEdited() {
+            if (!this.isFirstDraw) {
+                this.imageChanged = true;
+            } else this.isFirstDraw = false;
+        },
+        choseImage() {
+            this.imageChanged = true;
+            this.$refs.myCroppa.chooseFile();
+        },
+        getBlob() {
+            const self = this;
+            return new Promise(function (resolve, reject) {
+                try {
+                    if (!self.imageChanged) {
+                        reject(new Error('No image has changed'));
+                    }
+                    if (self.croppa.hasImage()) {
+                        self.croppa.generateBlob((blob) => {
+                            resolve(blob);
+                        });
+                    } else {
+                        reject(new Error('No selected image'));
+                    }
+                } catch (e) {
+                    reject(new Error(e));
+                }
             });
-          } else {
-            reject(new Error('No selected image'));
-          }
-        } catch (e) {
-          reject(new Error(e));
-        }
-      });
-    },
-    async updateUrl() {
-      this.url = '';
-      if (this.imgKey && this.identity) {
-        /*
+        },
+        async updateUrl() {
+            this.url = '';
+            if (this.imgKey && this.identity) {
+                /*
         await PPP.profileApi().getImageUrl(this.imgKey, this.identity).then((rUrl) => {
           this.url = rUrl
           // this.$emit('Change', rUrl)
@@ -97,23 +97,23 @@ export default {
           this.croppa.refresh()
         })
         */
-      }
-    },
-    onInit() {
-      this.croppa.addClipPlugin(function (ctx, x, y, w, h) {
-        /*
+            }
+        },
+        onInit() {
+            this.croppa.addClipPlugin(function (ctx, x, y, w, h) {
+                /*
          * ctx: canvas context
          * x: start point (top-left corner) x coordination
          * y: start point (top-left corner) y coordination
          * w: croppa width
          * h: croppa height
          */
-        ctx.beginPath();
-        ctx.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI, true);
-        ctx.closePath();
-      });
+                ctx.beginPath();
+                ctx.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI, true);
+                ctx.closePath();
+            });
+        },
     },
-  },
 };
 </script>
 

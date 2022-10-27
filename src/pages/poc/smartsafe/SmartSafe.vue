@@ -3,39 +3,39 @@ import { mapActions, mapMutations, mapGetters } from 'vuex';
 import SafeCard from './components/SafeCard';
 
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: 'SmartSafe',
-  components: {
-    SafeCard,
-  },
-  methods: {
-    ...mapActions('poc', ['fetchSafes']),
-    ...mapMutations('poc', ['resetSafes']),
-    async onLock() {
-      this.submitting = true;
-      const result = await this.toggleLock('locksafe');
-      if (result) {
-        this.transactionId = result.transactionId;
-      }
-      this.submitting = false;
+    // eslint-disable-next-line vue/multi-word-component-names
+    name: 'SmartSafe',
+    components: {
+        SafeCard,
     },
-    async onUnlock() {
-      this.submitting = true;
-      const result = await this.toggleLock('unlocksafe');
-      if (result) {
-        this.transactionId = result.transactionId;
-      }
-      this.submitting = false;
+    methods: {
+        ...mapActions('poc', ['fetchSafes']),
+        ...mapMutations('poc', ['resetSafes']),
+        async onLock() {
+            this.submitting = true;
+            const result = await this.toggleLock('locksafe');
+            if (result) {
+                this.transactionId = result.transactionId;
+            }
+            this.submitting = false;
+        },
+        async onUnlock() {
+            this.submitting = true;
+            const result = await this.toggleLock('unlocksafe');
+            if (result) {
+                this.transactionId = result.transactionId;
+            }
+            this.submitting = false;
+        },
+        async onLoad(index, done) {
+            await this.fetchSafes();
+            done();
+        },
     },
-    async onLoad(index, done) {
-      await this.fetchSafes();
-      done();
+    computed: {
+        ...mapGetters('poc', ['safes', 'safesLoaded']),
+        ...mapGetters('accounts', ['accounts']),
     },
-  },
-  computed: {
-    ...mapGetters('poc', ['safes', 'safesLoaded']),
-    ...mapGetters('accounts', ['accounts']),
-  },
 };
 </script>
 

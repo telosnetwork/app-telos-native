@@ -2,34 +2,34 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'SafeCard',
-  props: {
-    safe: { type: Object, required: true },
-  },
-  data() {
-    return {
-      show: false,
-    };
-  },
-  methods: {
-    ...mapActions('poc', ['toggleLock']),
-    onToggleLock() {
-      this.toggleLock({
-        lock: !this.safe.locked,
-        safeName: this.safe.safe_name,
-        accountName: this.account,
-      });
+    name: 'SafeCard',
+    props: {
+        safe: { type: Object, required: true },
     },
-  },
-  computed: {
-    ...mapGetters('accounts', ['account']),
-    lockedByUser() {
-      return this.safe.locked_by === this.account;
+    data() {
+        return {
+            show: false,
+        };
     },
-    userIsAdmin() {
-      return this.safe.admins.includes(this.account);
+    methods: {
+        ...mapActions('poc', ['toggleLock']),
+        onToggleLock() {
+            this.toggleLock({
+                lock: !this.safe.locked,
+                safeName: this.safe.safe_name,
+                accountName: this.account,
+            });
+        },
     },
-  },
+    computed: {
+        ...mapGetters('accounts', ['account']),
+        lockedByUser() {
+            return this.safe.locked_by === this.account;
+        },
+        userIsAdmin() {
+            return this.safe.admins.includes(this.account);
+        },
+    },
 };
 </script>
 

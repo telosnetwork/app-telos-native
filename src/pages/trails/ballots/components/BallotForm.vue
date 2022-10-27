@@ -4,195 +4,195 @@ import { validation } from '~/mixins/validation';
 import * as IPFS from 'ipfs-core';
 
 export default {
-  name: 'BallotForm',
-  mixins: [validation],
-  props: {
-    show: { type: Boolean, required: true },
-  },
-  emits: ['close'],
-  data() {
-    return {
-      form: {
-        title: null,
-        category: 'poll',
-        description: null,
-        imageUrl: null,
-        IPFSString: null,
-        treasurySymbol: null,
-        votingMethod: '1token1vote',
-        maxOptions: 1,
-        minOptions: 1,
-        initialOptions: [],
-        endDate: null,
-        config: 'votestake',
-      },
-      prompt: false,
-      userBalance: null,
-      votingMethodOptions: [
-        { value: '1acct1vote', label: 'One vote per account' },
-        { value: '1tokennvote', label: 'All tokens to each vote' },
-        { value: '1token1vote', label: 'All tokens split to each vote' },
-        { value: '1tsquare1v', label: 'One token equals one square vote' },
-        { value: 'quadratic', label: 'Quadratic' },
-      ],
-      categoryOptions: [
-        { value: 'election', label: 'Election' },
-        { value: 'poll', label: 'Poll' },
-        { value: 'referendum', label: 'Referendum' },
-      ],
-      submitting: false,
-      file: null,
-      cid: null,
-    };
-  },
-  computed: {
-    ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees']),
-    ...mapGetters('accounts', ['account','accountData']),
-    getTreasurySymbols() {
-      if (this.userTreasury) {
-        const symbols = this.userTreasury.map((treasury) => ({
-          symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, ''),
-        }));
-        return this.treasuries
-          .filter((v) => {
-            return symbols.some((v2) => {
-              return v.symbol === v2.symbol;
-            });
-          })
-          .map((treasury) => ({
-            label: treasury.title
-              ? `${treasury.title} (${treasury.supply})`
-              : treasury.supply,
-            value: treasury.supply,
-            symbol: treasury.supply.replace(/[^a-zA-Z]/gi, ''),
-          }));
-      } else {
-        return null;
-      }
+    name: 'BallotForm',
+    mixins: [validation],
+    props: {
+        show: { type: Boolean, required: true },
     },
-    isStakeable() {
-      let selectedTreasurySettings = this.treasuries.find(
-        (t) =>
-          (t.access === 'public' || t.manager === this.account) &&
+    emits: ['close'],
+    data() {
+        return {
+            form: {
+                title: null,
+                category: 'poll',
+                description: null,
+                imageUrl: null,
+                IPFSString: null,
+                treasurySymbol: null,
+                votingMethod: '1token1vote',
+                maxOptions: 1,
+                minOptions: 1,
+                initialOptions: [],
+                endDate: null,
+                config: 'votestake',
+            },
+            prompt: false,
+            userBalance: null,
+            votingMethodOptions: [
+                { value: '1acct1vote', label: 'One vote per account' },
+                { value: '1tokennvote', label: 'All tokens to each vote' },
+                { value: '1token1vote', label: 'All tokens split to each vote' },
+                { value: '1tsquare1v', label: 'One token equals one square vote' },
+                { value: 'quadratic', label: 'Quadratic' },
+            ],
+            categoryOptions: [
+                { value: 'election', label: 'Election' },
+                { value: 'poll', label: 'Poll' },
+                { value: 'referendum', label: 'Referendum' },
+            ],
+            submitting: false,
+            file: null,
+            cid: null,
+        };
+    },
+    computed: {
+        ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees']),
+        ...mapGetters('accounts', ['account','accountData']),
+        getTreasurySymbols() {
+            if (this.userTreasury) {
+                const symbols = this.userTreasury.map((treasury) => ({
+                    symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, ''),
+                }));
+                return this.treasuries
+                    .filter((v) => {
+                        return symbols.some((v2) => {
+                            return v.symbol === v2.symbol;
+                        });
+                    })
+                    .map((treasury) => ({
+                        label: treasury.title
+                            ? `${treasury.title} (${treasury.supply})`
+                            : treasury.supply,
+                        value: treasury.supply,
+                        symbol: treasury.supply.replace(/[^a-zA-Z]/gi, ''),
+                    }));
+            } else {
+                return null;
+            }
+        },
+        isStakeable() {
+            let selectedTreasurySettings = this.treasuries.find(
+                (t) =>
+                    (t.access === 'public' || t.manager === this.account) &&
           t.symbol === this.form.treasurySymbol?.symbol
-      )?.settings;
-      return selectedTreasurySettings
-        ? selectedTreasurySettings.find((i) => i.key === 'stakeable').value
-        : null;
+            )?.settings;
+            return selectedTreasurySettings
+                ? selectedTreasurySettings.find((i) => i.key === 'stakeable').value
+                : null;
+        },
+        configEnable() {
+            return this.form.treasurySymbol?.symbol !== 'VOTE' && this.isStakeable;
+        },
+        available() {
+            if (this.userBalance) {
+                const ballotFee = this.onlyNumbers(this.ballotFees.value);
+                return this.userBalance >= ballotFee;
+            } else {
+                return null;
+            }
+        },
+        fee() {
+            return this.ballotFees ? this.ballotFees.value : 0;
+        },
     },
-    configEnable() {
-      return this.form.treasurySymbol?.symbol !== 'VOTE' && this.isStakeable;
-    },
-    available() {
-      if (this.userBalance) {
-        const ballotFee = this.onlyNumbers(this.ballotFees.value);
-        return this.userBalance >= ballotFee;
-      } else {
-        return null;
-      }
-    },
-    fee() {
-      return this.ballotFees ? this.ballotFees.value : 0;
-    },
-  },
-  methods: {
-    ...mapActions('trails', [
-      'addBallot',
-      'fetchTreasuriesForUser',
-      'fetchFees',
-    ]),
-    async onAddBallot() {
-      this.submitting = true;
-      const success = await this.addBallot(this.createBallotObject());
-      this.submitting = false;
-      if (success) {
-        this.$emit('update:show', false);
-        this.resetBallot();
-      }
-    },
-    async openConfirmation() {
-      this.resetValidation(this.form);
-      if (!(await this.validate(this.form))) return;
-      this.prompt = true;
-    },
-    resetBallot() {
-      this.form = {
-        title: null,
-        category: null,
-        description: null,
-        imageUrl: null,
-        treasurySymbol: null,
-        votingMethod: '1token1vote',
-        initialOptions: [],
-        endDate: null,
-        IPFSString: null,
-      };
-      this.file = null;
-      this.cid = null;
-    },
-    onCancel() {
-      this.resetBallot();
-      this.$emit('close');
-    },
-    addBallotOption(val, done) {
-      done(val.toLowerCase(), 'add-unique');
-    },
-    createBallotObject() {
-      return {
-        title: this.form.title,
-        category: this.form.category,
-        description:
+    methods: {
+        ...mapActions('trails', [
+            'addBallot',
+            'fetchTreasuriesForUser',
+            'fetchFees',
+        ]),
+        async onAddBallot() {
+            this.submitting = true;
+            const success = await this.addBallot(this.createBallotObject());
+            this.submitting = false;
+            if (success) {
+                this.$emit('update:show', false);
+                this.resetBallot();
+            }
+        },
+        async openConfirmation() {
+            this.resetValidation(this.form);
+            if (!(await this.validate(this.form))) return;
+            this.prompt = true;
+        },
+        resetBallot() {
+            this.form = {
+                title: null,
+                category: null,
+                description: null,
+                imageUrl: null,
+                treasurySymbol: null,
+                votingMethod: '1token1vote',
+                initialOptions: [],
+                endDate: null,
+                IPFSString: null,
+            };
+            this.file = null;
+            this.cid = null;
+        },
+        onCancel() {
+            this.resetBallot();
+            this.$emit('close');
+        },
+        addBallotOption(val, done) {
+            done(val.toLowerCase(), 'add-unique');
+        },
+        createBallotObject() {
+            return {
+                title: this.form.title,
+                category: this.form.category,
+                description:
           this.form.IPFSString && this.form.IPFSString.trim() !== ''
-            ? `${this.form.description} ${this.form.IPFSString}`
-            : this.form.description,
-        content: this.form.imageUrl
-          ? `{\"imageUrl\":\"${this.form.imageUrl}\"}`
-          : '',
-        treasurySymbol: this.form.treasurySymbol,
-        votingMethod: this.form.votingMethod,
-        maxOptions: this.form.maxOptions,
-        minOptions: this.form.minOptions,
-        initialOptions: this.form.initialOptions,
-        endDate: this.form.endDate,
-        config: this.form.config,
-        settings: this.isStakeable,
-      };
+              ? `${this.form.description} ${this.form.IPFSString}`
+              : this.form.description,
+                content: this.form.imageUrl
+                    ? `{\"imageUrl\":\"${this.form.imageUrl}\"}`
+                    : '',
+                treasurySymbol: this.form.treasurySymbol,
+                votingMethod: this.form.votingMethod,
+                maxOptions: this.form.maxOptions,
+                minOptions: this.form.minOptions,
+                initialOptions: this.form.initialOptions,
+                endDate: this.form.endDate,
+                config: this.form.config,
+                settings: this.isStakeable,
+            };
+        },
+        async convertToIPFS(file) {
+            try {
+                const ipfs = await IPFS.create();
+                this.cid = await ipfs.add(file);
+            } catch (e) {
+                if (e.code === 'ERR_LOCK_EXISTS') return;
+                console.error(e);
+            }
+        },
+        async updateUserBalance() {
+            if (!this.accountData) return;
+            this.userBalance = this.onlyNumbers(this.accountData.core_liquid_balance);
+        },
     },
-    async convertToIPFS(file) {
-      try {
-        const ipfs = await IPFS.create();
-        this.cid = await ipfs.add(file);
-      } catch (e) {
-        if (e.code == 'ERR_LOCK_EXISTS') return;
-        console.error(e);
-      }
+    watch: {
+        file: function () {
+            this.convertToIPFS(this.file);
+        },
+        account: async function (account) {
+            this.fetchTreasuriesForUser(account);
+            this.updateUserBalance();
+        },
+        cid: function () {
+            if (this.cid) {
+                this.form.IPFSString = this.cid.path;
+            } else {
+                this.form.IPFSString = null;
+            }
+        },
     },
-    async updateUserBalance() {
-      if (!this.accountData) return;
-      this.userBalance = this.onlyNumbers(this.accountData.core_liquid_balance);
+    mounted() {
+        this.fetchFees();
+        this.updateUserBalance();
+        this.fetchTreasuriesForUser(this.account);
     },
-  },
-  watch: {
-    file: function () {
-      this.convertToIPFS(this.file);
-    },
-    account: async function (account) {
-      this.fetchTreasuriesForUser(account);
-      this.updateUserBalance();
-    },
-    cid: function () {
-      if (this.cid) {
-        this.form.IPFSString = this.cid.path;
-      } else {
-        this.form.IPFSString = null;
-      }      
-    },
-  },
-  mounted() {
-    this.fetchFees();
-    this.updateUserBalance();
-    this.fetchTreasuriesForUser(this.account);
-  },
 };
 </script>
 

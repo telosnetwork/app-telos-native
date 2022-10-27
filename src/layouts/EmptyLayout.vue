@@ -4,23 +4,23 @@ import RightMenuAuthenticated from '~/components/layout/RightMenuAuthenticated';
 import RightMenuGuest from '~/components/layout/RightMenuGuest';
 
 export default {
-  components: {
-    RightMenuAuthenticated,
-    RightMenuGuest,
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-    ...mapGetters('notifications', ['successCount', 'errorCount']),
-  },
-  methods: {
-    ...mapMutations('notifications', [
-      'initNotifications',
-      'unmarkRead',
-      'unmarkNew',
-    ]),
-    ...mapActions('accounts', ['autoLogin']),
-  },
-  name: 'EmptyLayout',
+    components: {
+        RightMenuAuthenticated,
+        RightMenuGuest,
+    },
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
+        ...mapGetters('notifications', ['successCount', 'errorCount']),
+    },
+    methods: {
+        ...mapMutations('notifications', [
+            'initNotifications',
+            'unmarkRead',
+            'unmarkNew',
+        ]),
+        ...mapActions('accounts', ['autoLogin']),
+    },
+    name: 'EmptyLayout',
 };
 </script>
 

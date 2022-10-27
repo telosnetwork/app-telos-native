@@ -25,68 +25,68 @@ import { Chart } from 'highcharts-vue';
 import { mapActions, mapState } from 'vuex';
 
 export default {
-  name: 'ValidatorDataChart',
-  components: {
-    highcharts: Chart,
-  },
-  data() {
-    return {
-      chartOptions: {
-        title: {
-          text: 'Validator CPU Performance',
-        },
-        credits: {
-          enabled: false,
-        },
-        xAxis: {
-          type: 'datetime',
-        },
-        yAxis: {
-          title: {
-            text: 'microseconds',
-          },
-        },
-        legend: {
-          layout: 'horizontal',
-          align: 'center',
-          verticalAlign: 'bottom',
-        },
-        chart: {
-          height: '85%',
-        },
-      },
-      benchmarkDays: 1,
-    };
-  },
-  computed: {
-    ...mapState('validators', ['benchmarks']),
-  },
-  watch: {
-    benchmarks() {
-      this.$refs.highcharts.chart.series = [];
-      for (let i = 0; i < this.benchmarks.length; i++) {
-        let benchmark = this.benchmarks[i];
-        this.$refs.highcharts.chart.addSeries(
-          benchmark,
-          i === this.benchmarks.length - 1
-        );
-      }
+    name: 'ValidatorDataChart',
+    components: {
+        highcharts: Chart,
     },
-  },
-  async mounted() {
-    this.loadBenchmarks({ days: this.benchmarkDays });
-  },
-  methods: {
-    ...mapActions('validators', ['loadBenchmarks']),
-    toggleVisible(show) {
-      this.$refs.highcharts.chart.series.forEach((series) => {
-        if (show) {
-          series.show();
-        } else {
-          series.hide();
-        }
-      });
+    data() {
+        return {
+            chartOptions: {
+                title: {
+                    text: 'Validator CPU Performance',
+                },
+                credits: {
+                    enabled: false,
+                },
+                xAxis: {
+                    type: 'datetime',
+                },
+                yAxis: {
+                    title: {
+                        text: 'microseconds',
+                    },
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom',
+                },
+                chart: {
+                    height: '85%',
+                },
+            },
+            benchmarkDays: 1,
+        };
     },
-  },
+    computed: {
+        ...mapState('validators', ['benchmarks']),
+    },
+    watch: {
+        benchmarks() {
+            this.$refs.highcharts.chart.series = [];
+            for (let i = 0; i < this.benchmarks.length; i++) {
+                let benchmark = this.benchmarks[i];
+                this.$refs.highcharts.chart.addSeries(
+                    benchmark,
+                    i === this.benchmarks.length - 1
+                );
+            }
+        },
+    },
+    async mounted() {
+        this.loadBenchmarks({ days: this.benchmarkDays });
+    },
+    methods: {
+        ...mapActions('validators', ['loadBenchmarks']),
+        toggleVisible(show) {
+            this.$refs.highcharts.chart.series.forEach((series) => {
+                if (show) {
+                    series.show();
+                } else {
+                    series.hide();
+                }
+            });
+        },
+    },
 };
 </script>

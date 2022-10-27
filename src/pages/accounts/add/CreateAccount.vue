@@ -7,72 +7,72 @@ import { VueRecaptcha } from 'vue-recaptcha';
 import { generateKeys } from '~/utils/eosio';
 
 export default {
-  name: 'CreateAccount',
-  mixins: [validation],
-  data() {
-    return {
-      form: {
-        account: null,
-        recaptchaResponse: null,
-        publicKey: null,
-        privateKey: null,
-      },
-      recaptcha: false,
-      generating: false,
-      error: null,
-      submitting: false,
-      copy: false,
-    };
-  },
-  async mounted() {
-    this.generating = true;
-    const keyPairs = await generateKeys();
-    this.form.privateKey = keyPairs.privateKey;
-    this.form.publicKey = keyPairs.publicKey;
-    this.generating = false;
-    let recaptchaScript = document.createElement('script');
-    recaptchaScript.setAttribute(
-      'src',
-      'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
-    );
-    document.head.appendChild(recaptchaScript);
-  },
-  methods: {
-    ...mapActions('accounts', ['createAccount']),
-    async onCreateAccount() {
-      this.resetValidation(this.form);
-      this.error = null;
-      if (!(await this.validate(this.form))) return;
+    name: 'CreateAccount',
+    mixins: [validation],
+    data() {
+        return {
+            form: {
+                account: null,
+                recaptchaResponse: null,
+                publicKey: null,
+                privateKey: null,
+            },
+            recaptcha: false,
+            generating: false,
+            error: null,
+            submitting: false,
+            copy: false,
+        };
+    },
+    async mounted() {
+        this.generating = true;
+        const keyPairs = await generateKeys();
+        this.form.privateKey = keyPairs.privateKey;
+        this.form.publicKey = keyPairs.publicKey;
+        this.generating = false;
+        let recaptchaScript = document.createElement('script');
+        recaptchaScript.setAttribute(
+            'src',
+            'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
+        );
+        document.head.appendChild(recaptchaScript);
+    },
+    methods: {
+        ...mapActions('accounts', ['createAccount']),
+        async onCreateAccount() {
+            this.resetValidation(this.form);
+            this.error = null;
+            if (!(await this.validate(this.form))) return;
 
-      if (this.recaptcha) {
-        this.submitting = true;
-        const { success, error } = await this.createAccount(this.form);
-        if (success) {
-          this.$router.push({ path: '/accounts/add/congratulations' });
-        } else {
-          this.error = error;
-        }
-        this.submitting = false;
-      } else {
-        this.error = 'Please complete reCaptcha';
-      }
-      this.submitting = false;
+            if (this.recaptcha) {
+                this.submitting = true;
+                const { success, error } = await this.createAccount(this.form);
+                if (success) {
+                    this.$router.push({ path: '/accounts/add/congratulations' });
+                } else {
+                    this.error = error;
+                }
+                this.submitting = false;
+            } else {
+                this.error = 'Please complete reCaptcha';
+            }
+            this.submitting = false;
+        },
+        async onVerify(response) {
+            if (response) {
+                this.recaptcha = true;
+                this.form.recaptchaResponse = response;
+                this.error = null;
+            }
+        },
+        onExpire: function () {
+            this.recaptcha = false;
+            this.recaptchaResponse = null;
+        },
     },
-    async onVerify(response) {
-      if (response) {
-        this.recaptcha = true;
-        this.form.recaptchaResponse = response;
-        this.error = null;
-      }
+    components: {
+        'vue-recaptcha': VueRecaptcha,
     },
-    onExpire: function () {
-      this.recaptcha = false;
-      this.recaptchaResponse = null;
-    },
-  },
-  components: {
-    'vue-recaptcha': VueRecaptcha,
-  },
 };
 </script>
 

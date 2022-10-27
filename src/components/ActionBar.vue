@@ -4,279 +4,279 @@ import { mapActions, mapGetters } from 'vuex';
 import { scroll } from 'quasar';
 
 export default {
-  name: 'ActionBar',
-  components: { Btn },
-  props: {
-    treasuriesOptions: {},
-    activeFilter: {
-      type: String,
-    },
-    election: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      model: 'one',
-      isTypeMenuOpen: false,
-      isStatusMenuOpen: false,
-      isGroupMenuOpen: false,
-      isSortingMenuOpen: false,
-      isTypeDialogOpen: false,
-      isStatusDialogOpen: false,
-      isGroupDialogOpen: false,
-      isSortingDialogOpen: false,
-      isConfirmBtn: false,
-      isFilterMenu320Open: false,
-      typeGroup: [],
-      electionsPageTypeOptions: [
-        { label: 'Election', value: 'election' },
-        { label: 'Referendum', value: 'referendum' },
-        { label: 'Leaderboard', value: 'leaderboard' },
-      ],
-      proposalsPageTypeOptions: [
-        { label: 'Poll', value: 'poll' },
-        { label: 'Proposal', value: 'proposal' },
-      ],
-      statusGroup: [],
-      statusOptions: [
-        { label: 'Active', value: 'active' },
-        { value: 'not_started', label: 'Not started' },
-        { label: 'Expired', value: 'expired' },
-        { label: 'Closed', value: 'closed' },
-        { label: 'Cancelled', value: 'cancelled' },
-        { label: 'Archived', value: 'archived' },
-        { label: 'Setup', value: 'setup' },
-      ],
-      sortMode: '',
-      sortOptions: [
-        { label: 'A-Z', value: 'A-Z' },
-        { label: 'Z-A', value: 'Z-A' },
-        { label: 'Most popular', value: 'Most popular' },
-        { label: 'Least popular', value: 'Least popular' },
-      ],
-      submitTypesResult: [],
-      submitStatusesResult: [],
-      treasuryBar: 'VOTE',
-      isBallotListRowDirection: true,
-      notice: false,
-    };
-  },
-  methods: {
-    ...mapActions('trails', [
-      'fetchFees',
-      'fetchBallots',
-      'castVote',
-      'fetchTreasuries',
-      'fetchBallotsByStatus',
-    ]),
-    addToLocalStorage() {
-      localStorage.isNewUser = false;
-      this.isNewUser = false;
-    },
-    openBallotForm() {
-      this.$emit('open-ballot-form');
-    },
-    toggleMenu(isMenuOpen, group, submitResult) {
-      if (this[submitResult]) {
-        this[group] = this[submitResult];
-      }
-      this[isMenuOpen] = !this[isMenuOpen];
-    },
-    onSubmitTypes(evt) {
-      const formData = new FormData(evt.target);
-      const submitResult = [];
-
-      for (const [name, value] of formData.entries()) {
-        submitResult.push({
-          name,
-          value,
-        });
-      }
-
-      this.submitTypesResult = JSON.parse(JSON.stringify(submitResult)).reduce(
-        (typeValues, item) => {
-          return [...typeValues, item.value];
+    name: 'ActionBar',
+    components: { Btn },
+    props: {
+        treasuriesOptions: {},
+        activeFilter: {
+            type: String,
         },
-        []
-      );
-      this.$refs.typesMenu.hide();
+        election: {
+            type: Boolean,
+            default: false,
+        },
     },
-    onSubmitStatuses(evt) {
-      const formData = new FormData(evt.target);
-      const submitResult = [];
+    data() {
+        return {
+            model: 'one',
+            isTypeMenuOpen: false,
+            isStatusMenuOpen: false,
+            isGroupMenuOpen: false,
+            isSortingMenuOpen: false,
+            isTypeDialogOpen: false,
+            isStatusDialogOpen: false,
+            isGroupDialogOpen: false,
+            isSortingDialogOpen: false,
+            isConfirmBtn: false,
+            isFilterMenu320Open: false,
+            typeGroup: [],
+            electionsPageTypeOptions: [
+                { label: 'Election', value: 'election' },
+                { label: 'Referendum', value: 'referendum' },
+                { label: 'Leaderboard', value: 'leaderboard' },
+            ],
+            proposalsPageTypeOptions: [
+                { label: 'Poll', value: 'poll' },
+                { label: 'Proposal', value: 'proposal' },
+            ],
+            statusGroup: [],
+            statusOptions: [
+                { label: 'Active', value: 'active' },
+                { value: 'not_started', label: 'Not started' },
+                { label: 'Expired', value: 'expired' },
+                { label: 'Closed', value: 'closed' },
+                { label: 'Cancelled', value: 'cancelled' },
+                { label: 'Archived', value: 'archived' },
+                { label: 'Setup', value: 'setup' },
+            ],
+            sortMode: '',
+            sortOptions: [
+                { label: 'A-Z', value: 'A-Z' },
+                { label: 'Z-A', value: 'Z-A' },
+                { label: 'Most popular', value: 'Most popular' },
+                { label: 'Least popular', value: 'Least popular' },
+            ],
+            submitTypesResult: [],
+            submitStatusesResult: [],
+            treasuryBar: 'VOTE',
+            isBallotListRowDirection: true,
+            notice: false,
+        };
+    },
+    methods: {
+        ...mapActions('trails', [
+            'fetchFees',
+            'fetchBallots',
+            'castVote',
+            'fetchTreasuries',
+            'fetchBallotsByStatus',
+        ]),
+        addToLocalStorage() {
+            localStorage.isNewUser = false;
+            this.isNewUser = false;
+        },
+        openBallotForm() {
+            this.$emit('open-ballot-form');
+        },
+        toggleMenu(isMenuOpen, group, submitResult) {
+            if (this[submitResult]) {
+                this[group] = this[submitResult];
+            }
+            this[isMenuOpen] = !this[isMenuOpen];
+        },
+        onSubmitTypes(evt) {
+            const formData = new FormData(evt.target);
+            const submitResult = [];
 
-      for (const [name, value] of formData.entries()) {
-        submitResult.push({
-          name,
-          value,
-        });
-      }
+            for (const [name, value] of formData.entries()) {
+                submitResult.push({
+                    name,
+                    value,
+                });
+            }
 
-      this.submitStatusesResult = JSON.parse(
-        JSON.stringify(submitResult)
-      ).reduce((statusesValues, item) => {
-        return [...statusesValues, item.value];
-      }, []);
-      this.$refs.statusesMenu.hide();
-    },
-    clearFilter(filter, isMenuOpen) {
-      this[filter] = [];
-      this[isMenuOpen] = false;
-    },
-    discardFilter(filter, group) {
-      this[group] = [];
-      this[filter] = [];
-    },
-    discardAllFilter() {
-      this.treasuryBar = null;
-      this.submitTypesResult = [];
-      this.submitStatusesResult = [];
-    },
-    clearGroupFilter() {
-      this.treasuryBar = null;
-      this.isGroupMenuOpen = false;
-    },
-    clearSort() {
-      this.sortMode = '';
-      this.isSortingMenuOpen = false;
-    },
-    isFiltersApplied() {
-      return (
-        this.treasuryBar !== null ||
+            this.submitTypesResult = JSON.parse(JSON.stringify(submitResult)).reduce(
+                (typeValues, item) => {
+                    return [...typeValues, item.value];
+                },
+                []
+            );
+            this.$refs.typesMenu.hide();
+        },
+        onSubmitStatuses(evt) {
+            const formData = new FormData(evt.target);
+            const submitResult = [];
+
+            for (const [name, value] of formData.entries()) {
+                submitResult.push({
+                    name,
+                    value,
+                });
+            }
+
+            this.submitStatusesResult = JSON.parse(
+                JSON.stringify(submitResult)
+            ).reduce((statusesValues, item) => {
+                return [...statusesValues, item.value];
+            }, []);
+            this.$refs.statusesMenu.hide();
+        },
+        clearFilter(filter, isMenuOpen) {
+            this[filter] = [];
+            this[isMenuOpen] = false;
+        },
+        discardFilter(filter, group) {
+            this[group] = [];
+            this[filter] = [];
+        },
+        discardAllFilter() {
+            this.treasuryBar = null;
+            this.submitTypesResult = [];
+            this.submitStatusesResult = [];
+        },
+        clearGroupFilter() {
+            this.treasuryBar = null;
+            this.isGroupMenuOpen = false;
+        },
+        clearSort() {
+            this.sortMode = '';
+            this.isSortingMenuOpen = false;
+        },
+        isFiltersApplied() {
+            return (
+                this.treasuryBar !== null ||
         this.submitTypesResult.length ||
         this.submitStatusesResult.length
-      );
-    },
-    getFilterBtnLabel(filter, submitResult, options) {
-      if (this[submitResult].length === 1) {
-        const label = this[options].find(
-          (option) => option.value === this[submitResult][0]
-        ).label;
-        return label;
-      }
+            );
+        },
+        getFilterBtnLabel(filter, submitResult, options) {
+            if (this[submitResult].length === 1) {
+                const label = this[options].find(
+                    (option) => option.value === this[submitResult][0]
+                ).label;
+                return label;
+            }
 
-      return `${filter}: ${this[submitResult].length}`;
-    },
-    handleScroll() {
-      const obj = this.$el.querySelector('.scroll-anim');
-      const filter320 = this.$el.querySelector('.bar-filter-menu-320-wrapper');
-      const { bottom } = obj.getBoundingClientRect();
-      const height = document.documentElement.clientHeight;
-      this.isFilterMenu320Open =
+            return `${filter}: ${this[submitResult].length}`;
+        },
+        handleScroll() {
+            const obj = this.$el.querySelector('.scroll-anim');
+            const filter320 = this.$el.querySelector('.bar-filter-menu-320-wrapper');
+            const { bottom } = obj.getBoundingClientRect();
+            const height = document.documentElement.clientHeight;
+            this.isFilterMenu320Open =
         bottom + height < height &&
         window.getComputedStyle(filter320).display !== 'none';
+        },
+        handleFilterBtnClick() {
+            const { getScrollTarget, setScrollPosition } = scroll;
+            const filter = this.$el.querySelector('.bar-filter-menu-320-wrapper');
+            const offset = filter.offsetTop;
+            const target = getScrollTarget(filter);
+            setScrollPosition(target, offset, 0);
+        },
+        showFilter() {
+            this.isFilterOpen = true;
+        },
+        openNotice() {
+            this.notice = true;
+        },
+        setTreasuryBar: function (treasury) {
+            console.log('ActionBar.setTreasuryBar()', treasury);
+            this.treasuryBar = treasury;
+        },
+        setFilterParams(path) {
+            if (path === 'amend-ballots') {
+                this.typeGroup = [];
+                this.submitTypesResult = [];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            } else if (path === 'worker-proposals') {
+                this.typeGroup = ['proposal'];
+                this.submitTypesResult = ['proposal'];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            } else if (path === 't-f-election') {
+                this.typeGroup = ['election'];
+                this.submitTypesResult = ['election'];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            } else if (path === 'polls') {
+                this.typeGroup = ['poll'];
+                this.submitTypesResult = ['poll'];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            }
+            this.$emit('update-cards', {
+                type: this.typeGroup,
+                status: this.statusGroup,
+                treasury: this.treasuryBar,
+            });
+        },
     },
-    handleFilterBtnClick() {
-      const { getScrollTarget, setScrollPosition } = scroll;
-      const filter = this.$el.querySelector('.bar-filter-menu-320-wrapper');
-      const offset = filter.offsetTop;
-      const target = getScrollTarget(filter);
-      setScrollPosition(target, offset, 0);
+    mounted() {
+        this.setFilterParams(this.activeFilter);
     },
-    showFilter() {
-      this.isFilterOpen = true;
+    created() {
+        window.addEventListener('scroll', this.handleScroll);
     },
-    openNotice() {
-      this.notice = true;
+    unmounted() {
+        window.removeEventListener('scroll', this.handleScroll);
     },
-    setTreasuryBar: function (treasury) {
-      console.log('ActionBar.setTreasuryBar()', treasury);
-      this.treasuryBar = treasury;
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
+        typeOptions() {
+            if (this.$route.path.indexOf('election') > 0) {
+                return this.electionsPageTypeOptions;
+            } else {
+                return this.proposalsPageTypeOptions;
+            }
+        },
     },
-    setFilterParams(path) {
-      if (path === 'amend-ballots') {
-        this.typeGroup = [];
-        this.submitTypesResult = [];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      } else if (path === 'worker-proposals') {
-        this.typeGroup = ['proposal'];
-        this.submitTypesResult = ['proposal'];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      } else if (path === 't-f-election') {
-        this.typeGroup = ['election'];
-        this.submitTypesResult = ['election'];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      } else if (path === 'polls') {
-        this.typeGroup = ['poll'];
-        this.submitTypesResult = ['poll'];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      }
-      this.$emit('update-cards', {
-        type: this.typeGroup,
-        status: this.statusGroup,
-        treasury: this.treasuryBar,
-      });
+    watch: {
+        $route(to) {
+            if (to.params.id !== undefined) {
+                this.showBallot = true;
+            } else {
+                this.showBallot = false;
+            }
+        },
+        activeFilter: function () {
+            this.setFilterParams(this.activeFilter);
+        },
+        treasuryBar: function () {
+            this.$emit('update-treasury', this.treasuryBar);
+        },
+        submitStatusesResult: function (val, old) {
+            if (val !== old) {
+                this.statusGroup = this.submitStatusesResult;
+                this.$emit('update-statuses', this.submitStatusesResult);
+            }
+        },
+        submitTypesResult: function (val, old) {
+            if (val !== old) {
+                this.typeGroup = this.submitTypesResult;
+                this.$emit('update-categories', this.submitTypesResult);
+            }
+        },
+        treasuriesOptions: {
+            immediate: true,
+            handler: async function (val) {
+                if (!val.length) {
+                    // TODO past 100 groups we need to switch to autocomplete search
+                    await this.fetchTreasuries();
+                }
+            },
+        },
+        isBallotListRowDirection: function (val, old) {
+            if (val !== old) {
+                this.$emit('change-diraction', this.isBallotListRowDirection);
+            }
+        },
+        sortMode: function () {
+            this.$emit('change-sort-option', this.sortMode);
+        },
     },
-  },
-  mounted() {
-    this.setFilterParams(this.activeFilter);
-  },
-  created() {
-    window.addEventListener('scroll', this.handleScroll);
-  },
-  unmounted() {
-    window.removeEventListener('scroll', this.handleScroll);
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-    typeOptions() {
-      if (this.$route.path.indexOf('election') > 0) {
-        return this.electionsPageTypeOptions;
-      } else {
-        return this.proposalsPageTypeOptions;
-      }
-    },
-  },
-  watch: {
-    $route(to) {
-      if (to.params.id !== undefined) {
-        this.showBallot = true;
-      } else {
-        this.showBallot = false;
-      }
-    },
-    activeFilter: function () {
-      this.setFilterParams(this.activeFilter);
-    },
-    treasuryBar: function () {
-      this.$emit('update-treasury', this.treasuryBar);
-    },
-    submitStatusesResult: function (val, old) {
-      if (val !== old) {
-        this.statusGroup = this.submitStatusesResult;
-        this.$emit('update-statuses', this.submitStatusesResult);
-      }
-    },
-    submitTypesResult: function (val, old) {
-      if (val !== old) {
-        this.typeGroup = this.submitTypesResult;
-        this.$emit('update-categories', this.submitTypesResult);
-      }
-    },
-    treasuriesOptions: {
-      immediate: true,
-      handler: async function (val) {
-        if (!val.length) {
-          // TODO past 100 groups we need to switch to autocomplete search
-          await this.fetchTreasuries();
-        }
-      },
-    },
-    isBallotListRowDirection: function (val, old) {
-      if (val !== old) {
-        this.$emit('change-diraction', this.isBallotListRowDirection);
-      }
-    },
-    sortMode: function () {
-      this.$emit('change-sort-option', this.sortMode);
-    },
-  },
 };
 </script>
 <template lang="pug">

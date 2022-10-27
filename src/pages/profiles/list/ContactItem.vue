@@ -14,46 +14,46 @@ q-card(:class="{ own: isOwn }")
 import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 import md5 from 'md5';
 export default {
-  name: 'ContactItem',
-  components: {
-    ProfileAvatar,
-  },
-  props: {
-    contact: Object,
-  },
-  computed: {
-    isOwn() {
-      if (
-        this.$store.state.profiles.myProfile &&
+    name: 'ContactItem',
+    components: {
+        ProfileAvatar,
+    },
+    props: {
+        contact: Object,
+    },
+    computed: {
+        isOwn() {
+            if (
+                this.$store.state.profiles.myProfile &&
         this.$store.state.profiles.myProfile.account_name ===
           this.contact.account_name
-      ) {
-        return true;
-      } else return false;
+            ) {
+                return true;
+            } else return false;
+        },
+        accountHash() {
+            return md5(this.contact.account_name);
+        },
     },
-    accountHash() {
-      return md5(this.contact.account_name);
+    methods: {
+        goToChat() {
+            this.$store.commit('messages/setActiveChat', {
+                activeChat: this.contact.eosAccount,
+                avatarImage: this.contact.publicData.avatarImage,
+                s3Identity: this.contact.publicData.s3Identity,
+            });
+            this.$router.push({ name: 'chat' });
+        },
+        goToProfileDetail() {
+            this.$store.commit('profiles/setSelectedProfile', this.contact);
+            if (this.isOwn) {
+                this.$router.push({ name: 'myProfile' });
+            } else this.$router.push({ name: 'profileDetail' });
+        },
+        goToEditOwnProfile() {
+            this.$router.push({ path: `/profiles/edit/${this.contact.account_name}` });
+        },
     },
-  },
-  methods: {
-    goToChat() {
-      this.$store.commit('messages/setActiveChat', {
-        activeChat: this.contact.eosAccount,
-        avatarImage: this.contact.publicData.avatarImage,
-        s3Identity: this.contact.publicData.s3Identity,
-      });
-      this.$router.push({ name: 'chat' });
-    },
-    goToProfileDetail() {
-      this.$store.commit('profiles/setSelectedProfile', this.contact);
-      if (this.isOwn) {
-        this.$router.push({ name: 'myProfile' });
-      } else this.$router.push({ name: 'profileDetail' });
-    },
-    goToEditOwnProfile() {
-      this.$router.push({ path: `/profiles/edit/${this.contact.account_name}` });
-    },
-  },
 };
 </script>
 

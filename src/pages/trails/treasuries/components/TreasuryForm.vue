@@ -3,79 +3,79 @@ import { mapActions, mapGetters } from 'vuex';
 import { validation } from '~/mixins/validation';
 
 export default {
-  name: 'TreasuryForm',
-  mixins: [validation],
-  props: {
-    show: { type: Boolean, required: true },
-  },
-  data() {
-    return {
-      form: {
-        manager: null,
-        maxSupply: null,
-        maxSupplyValue: null,
-        maxSupplyToken: null,
-        maxSupplyDecimals: null,
-        access: null,
-        title: null,
-        description: null,
-      },
-      submitting: false,
-    };
-  },
-  computed: {
-    ...mapGetters('trails', ['treasuryFees']),
-  },
-  methods: {
-    ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
-    async onAddTreasury() {
-      this.resetValidation(this.form);
-      if (!(await this.validate(this.form))) return;
-      this.submitting = true;
-      const success = await this.addTreasury(this.form);
-      this.submitting = false;
-      if (success) {
-        this.$emit('update:show', false);
-        this.resetTreasury();
-        await this.fetchTreasuries();
-      }
+    name: 'TreasuryForm',
+    mixins: [validation],
+    props: {
+        show: { type: Boolean, required: true },
     },
-    resetTreasury() {
-      this.form = {
-        manager: null,
-        maxSupply: null,
-        access: null,
-        title: null,
-        description: null,
-      };
+    data() {
+        return {
+            form: {
+                manager: null,
+                maxSupply: null,
+                maxSupplyValue: null,
+                maxSupplyToken: null,
+                maxSupplyDecimals: null,
+                access: null,
+                title: null,
+                description: null,
+            },
+            submitting: false,
+        };
     },
-    setMaxSupply() {
-      if (
-        this.form.maxSupplyDecimals &&
+    computed: {
+        ...mapGetters('trails', ['treasuryFees']),
+    },
+    methods: {
+        ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
+        async onAddTreasury() {
+            this.resetValidation(this.form);
+            if (!(await this.validate(this.form))) return;
+            this.submitting = true;
+            const success = await this.addTreasury(this.form);
+            this.submitting = false;
+            if (success) {
+                this.$emit('update:show', false);
+                this.resetTreasury();
+                await this.fetchTreasuries();
+            }
+        },
+        resetTreasury() {
+            this.form = {
+                manager: null,
+                maxSupply: null,
+                access: null,
+                title: null,
+                description: null,
+            };
+        },
+        setMaxSupply() {
+            if (
+                this.form.maxSupplyDecimals &&
         parseInt(this.form.maxSupplyDecimals) > 0
-      ) {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(
-          parseInt(this.form.maxSupplyDecimals),
-          '0'
-        )} ${this.form.maxSupplyToken}`;
-      } else {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${
-          this.form.maxSupplyToken
-        }`;
-      }
+            ) {
+                this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(
+                    parseInt(this.form.maxSupplyDecimals),
+                    '0'
+                )} ${this.form.maxSupplyToken}`;
+            } else {
+                this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${
+                    this.form.maxSupplyToken
+                }`;
+            }
+        },
     },
-  },
-  watch: {
-    'form.maxSupplyValue': function () {
-      this.setMaxSupply();
+    watch: {
+        'form.maxSupplyValue': function () {
+            this.setMaxSupply();
+        },
+        'form.maxSupplyToken': function () {
+            this.setMaxSupply();
+        },
+        'form.maxSupplyDecimals': function () {
+            this.setMaxSupply();
+        },
     },
-    'form.maxSupplyToken': function () {
-      this.setMaxSupply();
-    },
-    'form.maxSupplyDecimals': function () {
-      this.setMaxSupply();
-    },
-  },
 };
 </script>
 
