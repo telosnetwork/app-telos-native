@@ -241,13 +241,6 @@ export default {
       this.limit = 100;
       this.sortMode = option;
     },
-    ballotContentImg(ballot) {
-      try {
-        return JSON.parse(ballot.content).imageUrl;
-      } catch (error) {
-        return null;
-      }
-    },
     updateCards(params) {
       this.treasury = params.treasury;
       this.statuses = params.tatus;
@@ -310,7 +303,6 @@ q-page(v-if="!renderComponent")
           :getStartTime="getStartTime(ballot)"
           :getEndTime="getEndTime(ballot)"
           :getLoser="getLoser"
-          :ballotContentImg="ballotContentImg"
         )
       p.text-weight-bold(
         style="text-align: center"
@@ -332,7 +324,6 @@ q-page(v-if="!renderComponent")
       :getStartTime="getStartTime"
       :getEndTime="getEndTime"
       :getLoser="getLoser"
-      :ballotContentImg="ballotContentImg"
     )
       //- q-btn(v-close-popup color="secondary").float-right Close
 </template>

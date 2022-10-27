@@ -31,8 +31,8 @@ export default {
       ballotTypes: [TYPE_OF_BALLOT_0, TYPE_OF_BALLOT_1, TYPE_OF_BALLOT_2],
       isBallotListRowDirection: true,
       openForVoting: true,
+      onlyOneOption: true,
       form: {
-        onlyOneOption: true,
         newOptionLabel: '',
         newOptionValue: '',
         defaultLabels:['Yes', 'No', 'Abstain'],
@@ -317,14 +317,6 @@ export default {
     getEndTime(ballot) {
       if (!ballot) return new Date();
       return new Date();
-    },
-    ballotContentImg(ballot) {
-      // TODO: refactor needed. This function is copied from BallotsList.vue
-      try {
-        return JSON.parse(ballot.content).imageUrl;
-      } catch (error) {
-        return null;
-      }
     },
     async onAddBallot() {
       this.submitting = true;
@@ -785,7 +777,6 @@ q-dialog(
                 :getStartTime="getStartTime()"
                 :getEndTime="form.endDate"
                 :getLoser="getLoser"
-                :ballotContentImg="ballotContentImg"
               )
             .col.flex.column.preview-right
               .q-mt-sm

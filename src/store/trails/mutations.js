@@ -26,7 +26,9 @@ export const addBallots = (state, { rows, more, next_key }) => {
     // take out old versions of incoming ones
     .filter(ballot => incoming_names.indexOf(ballot.ballot_name) == -1)
     // concat new ones
-    .concat(rows);
+    .concat(rows)
+    // parse metadata from content field
+    .map(enhanceBallotMetadata);
 
   let NOW = new Date().getTime();
   state.ballots.list.rows.sort( (A, B) => {
@@ -59,8 +61,95 @@ export const setBallots = (state, { rows }) => {
   }
 };
 
+
+
+const enhanceBallotMetadata = (ballot) => {
+  if (!ballot) return '';
+  // return the ballot if is already enhanced
+  if (ballot.enhanced) return ballot;
+  let content = null;
+
+  let CIDv0url_regex = new RegExp(/https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm');
+  let CIDv0_regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm');
+  let CIDv0_results = null;
+  let iframe_candidate = null;
+  let img_candidate = null;
+
+  try {
+    // try to extract metadata from content
+    // following standard (DCMS v2) https://github.com/telosnetwork/telos-decide/blob/master/dcms-v2.md
+    content = JSON.parse(ballot.content);
+
+  } catch (e) {
+    console.warn('ballot.content is not a valid JSON. ballot_name:', ballot.ballot_name);
+  }
+
+  try {
+
+    if (content) {
+      img_candidate =
+        content.imageUrl ||
+        (content.imageUrls || [])[0];
+
+      iframe_candidate =
+        content.contentUrl ||
+        (content.contentUrls || [])[0] ||
+        content.imageUrl ||
+        (content.imageUrls || [])[0];
+    }
+
+    if (iframe_candidate) {
+      CIDv0_results = CIDv0_regex.exec(iframe_candidate);
+      if (Array.isArray(CIDv0_results)) {
+        iframe_candidate = 'https://ipfs.io/ipfs/' + CIDv0_results[0];
+      }
+    }
+  } catch (e) {
+    console.error('Error trying to extract image of link for ballot iframe-content')
+  }
+
+  // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
+  // we give support to this old solution for storing file ipfs hash
+  CIDv0_results = CIDv0_regex.exec(ballot.description);
+  if (Array.isArray(CIDv0_results)) {
+    iframe_candidate = 'https://ipfs.io/ipfs/' + CIDv0_results[0];
+  }
+
+  let options = ballot.options;
+  let optionData = {};
+  if (content && content.optionData) {
+    optionData = content.optionData;
+  }
+
+  options = options.map(x => {
+    let meta = optionData[x.key] || {};
+    let result = {
+      key: x.key,
+      value: x.value,
+      displayText: meta.displayText || x.key,
+      description: meta.description,
+      imageUrls: meta.imageUrls,
+    };
+    return result;
+  });
+
+
+  ballot = Object.assign(ballot, {
+    enhanced: true,
+    ballotContent: content,
+    iframeUrl: iframe_candidate,
+    imageUrl: img_candidate,
+    options,
+    readableDescription: ballot.description
+      .replace(CIDv0url_regex, '')
+      .replace(CIDv0_regex, '')
+  });
+
+  return ballot;
+}
+
 export const setBallot = (state, ballot) => {
-  state.ballots.view.ballot = ballot;
+  state.ballots.view.ballot = enhanceBallotMetadata(ballot);
 };
 
 export const setUserTreasuries = (state, treasuries) => {

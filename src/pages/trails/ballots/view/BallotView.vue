@@ -9,13 +9,6 @@ const FROM_BOTH = 'both';
 const FROM_LIQUID = 'liquid';
 const FROM_STAKE = 'stake';
 
-
-const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm'); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
-const regexWithUrl = new RegExp(
-  /https?\:\/\/.*Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/,
-  'm'
-); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
-
 export default {
   name: 'BallotView',
   components: { BallotStatus, BallotChip, Btn },
@@ -26,7 +19,6 @@ export default {
     getStartTime: { type: Function, required: true },
     getEndTime: { type: Function, required: true },
     getLoser: { type: Function, required: true },
-    ballotContentImg: { type: Function, required: true },
   },
   data() {
     return {
@@ -42,6 +34,7 @@ export default {
   },
   async mounted() {
     this.getLoggedUserVotes(this.$route.params.id);
+    this.fetchTreasuriesForUser(this.account);
     await this.fetchBallot(this.$route.params.id);
     window.addEventListener('scroll', this.updateScroll);
     this.loading = false;
@@ -74,24 +67,6 @@ export default {
       });
       return this.ballot.options[winner];
     },
-    ballotDescription() {
-      if (this.iframeUrl) {
-        return this.ballot.description
-          .replace(regexWithUrl, '')
-          .replace(regex, '');
-      }
-
-      const descriptionWithLinks = this.findLinks(this.ballot.description);
-
-      return descriptionWithLinks;
-    },
-    ballotContent() {
-      if (this.ballot.content.match(regex)) {
-        return this.ballot.content.replace(regexWithUrl, '').replace(regex, '');
-      }
-
-      return this.ballot.content;
-    },
     ballotContentOptionData() {
       try {
         const data = Object.values(JSON.parse(this.ballot.content).optionData);
@@ -99,38 +74,6 @@ export default {
       } catch (error) {
         return null;
       }
-    },
-    iframeUrl() {
-      let content = this.ballot.content;
-      let file_path = null;
-
-      // catch parse possible errors
-      try {
-        content = JSON.parse(this.ballot.content);
-      } catch (e) {
-        console.error(e)
-      }
-      try {
-        file_path = regex.exec(this.ballot.description);
-      } catch (e) {
-        console.error(e)
-      }
-
-      if (Array.isArray(file_path)) {
-        const r = 'https://ipfs.io/ipfs/' + file_path[0];
-        return r;
-      } else if (typeof content === 'object') {
-        // prioritize content urls over image urls
-        const r =
-          content.contentUrl ||
-          (content.contentUrls || [])[0] ||
-          content.imageUrl ||
-          (content.imageUrls || [])[0];
-        return r;
-      } else {
-        return false;
-      }
-      // https://api.ipfsbrowser.com/ipfs/get.php?hash=QmS6QwbGDde7cdyvWfUSX5PPWrFkiumqTHouBV3jYhPXme
     },
     getVariants() {
       let newArr = [];
@@ -210,6 +153,11 @@ export default {
         }
     },
   },
+  watch: {
+    account: async function (account) {
+      this.fetchTreasuriesForUser(account);
+    },
+  },
   methods: {
     ...mapActions('trails', [
       'fetchBallot',
@@ -219,7 +167,6 @@ export default {
       'fetchUserVotesForThisBallot',
       'fetchTreasuriesForUser',
       'resetUserVotes'
-
     ]),
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
@@ -390,7 +337,7 @@ export default {
                             span Go Back
                     q-card-section.body-info
                         div(v-for="option in getVariants")
-                            div.text-weight-bold.variant-name {{ option.key }}
+                            div.text-weight-bold.variant-name {{ option.displayText }}
                             div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
                                 span {{ i.voter }}
                                 span.text-weight-bold {{ getPercentOfNumber(i.value, option.value) }}
@@ -404,8 +351,8 @@ export default {
                 )
                     q-card-section.card-img-section
                         div.card-img-wrapper
-                            template(v-if="ballotContentImg(ballot)")
-                                q-img(:src="ballotContentImg(ballot)").poll-item-image-wrapper
+                            template(v-if="ballot.imageUrl")
+                                q-img(:src="ballot.imageUrl").poll-item-image-wrapper
                                     template(v-slot:error)
                                         q-icon(size="lg" name="far fa-image")
                             template(v-else)
@@ -446,7 +393,7 @@ export default {
                                             @click.native="toggleOption(option.key)"
                                             )
                                                 div.checkbox-text.row.space-between
-                                                    div {{ option.key }}
+                                                    div {{ option.displayText }}
                                                     div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
                                         q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
@@ -522,7 +469,7 @@ export default {
                     q-card-section.description-section-wrapper
                         div.description-section
                             div.description-section-title(:class="iframeUrl ? `q-pb-md` : `q-pb-xl q-mb-lg`")
-                                p(v-html="ballotDescription")
+                                p(v-html="ballot.readableDescription")
                             div(
                             v-if="ballotContentOptionData && ballotContentOptionData[0] && ballotContentOptionData[0].hasOwnProperty('imageUrl')"
                             ).q-pb-md.ballot-content-carousel
@@ -562,8 +509,8 @@ export default {
                             iframe(
                             height="100%"
                             width="100%"
-                            v-if="iframeUrl"
-                            :src="iframeUrl"
+                            v-if="ballot.iframeUrl"
+                            :src="ballot.iframeUrl"
                             ).kv-preview-data.file-preview-pdf.file-zoom-detail.shadow-1
                             div(v-else).text-center
                                 img(src="/statics/app-icons/no-pdf.svg" style="width: 60px;")
@@ -588,7 +535,7 @@ export default {
                                                 @click.native="toggleOption(option.key)"
                                                 )
                                                     div.checkbox-text.row.space-between
-                                                        div {{ option.key }}
+                                                        div {{ option.displayText }}
                                                         div(v-if="getPartOfTotal(option)") {{ getPartOfTotalPercent(option) }}%&nbsp
                                         div.linear-progress(v-if="displayWinner(ballot)")
                                             q-linear-progress(rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
@@ -613,7 +560,7 @@ export default {
                                 div.text-section.column
                                     div.statics-section-item(v-if="ballot.total_voters > 0")
                                         span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
-                                        span.opacity06  {{ getWinner.key.toUpperCase() }} {{ getLoser.key ? ` lead over ${getLoser.key.toUpperCase()}` : ` lead over others` }}
+                                        span.opacity06  {{ getWinner.displayText }} {{ getLoser.displayText ? ` lead over ${getLoser.displayText}` : ` lead over others` }}
                                     div.statics-section-item(v-else)
                                         span  {{ getWinner }}
                                     div.statics-section-item
