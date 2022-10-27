@@ -83,7 +83,6 @@ export default {
       }
     },
     openBallotForm() {
-      console.log('openBallotForm()');
       this.show = true;
     },
     closeBallot() {
