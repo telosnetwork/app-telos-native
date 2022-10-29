@@ -49,7 +49,7 @@ export default {
         maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
-        endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
+        endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
         config: 'votestake',
         file: null
       },
@@ -176,7 +176,7 @@ export default {
         }
         case 4:
           if (this.openForVoting) {
-            list = {endDate:1};
+            list = {endTime:1};
           } else {
             list = {};
           }
@@ -323,7 +323,7 @@ export default {
         maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
-        endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
+        endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
         config: 'votestake',
         file: null
       };
@@ -358,7 +358,7 @@ export default {
         maxOptions: this.form.maxOptions,
         minOptions: this.form.minOptions,
         initialOptions: this.updateOptionValues(),
-        endDate: this.openForVoting ? this.form.endDate : new Date(),
+        endTime: this.openForVoting ? this.form.endTime : new Date(),
         config: this.form.config,
         settings: this.isStakeable,
       };
@@ -406,6 +406,16 @@ export default {
   watch: {
     'form.file': function () {
       this.convertToIPFS(this.form.file);
+    },
+    'form.endTime'() {
+      if (!this.$refs.qDateProxy1 || this.$refs.qDateProxy2) return;
+      this.$refs.qDateProxy1.hide();
+      this.$refs.qDateProxy2.hide();
+    },
+    'form.imageUrl'() {
+      if (this.form.imageUrl == '') {
+        this.badImage = false;
+      }
     },
     account: async function (account) {
       this.fetchTreasuriesForUser(account);
@@ -455,7 +465,7 @@ export default {
     },
     openForVoting() {
       this.rules.setActive(this.openForVoting);
-      this.$refs.endDate.validate();
+      this.$refs.endTime.validate();
     },
     show() {
       if (this.show) {
@@ -470,11 +480,6 @@ export default {
     },
     badImage() {
       this.validateImage(this.badImage);
-    },
-    'form.imageUrl'() {
-      if (this.form.imageUrl == '') {
-        this.badImage = false;
-      }
     }
   },
   async mounted() {
@@ -731,25 +736,23 @@ q-dialog(
           p You can open this ballot for voting right away or you can create the ballot and skip this step for later.
           q-checkbox(v-model="openForVoting") Open for voting right away
           q-input(
-            ref="endDate"
-            v-model="form.endDate"
+            ref="endTime"
+            v-model="form.endTime"
             label="End date"
             :disable="!openForVoting"
             :rules="[rules.required, rules.dateFuture(Date.now())]"
           )
             template(v-slot:append)
               q-icon.cursor-pointer(name="event" color="primary")
-                q-popup-proxy(ref="qDateProxy" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
+                q-popup-proxy(ref="qDateProxy1" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
                   q-date(
-                    v-model="form.endDate"
-                    @input="() => $refs.qDateProxy.hide()"
+                    v-model="form.endTime"
                     mask="YYYY-MM-DD HH:mm"
                   )
               q-icon.cursor-pointer(name="access_time" color="primary")
-                q-popup-proxy(ref="qDateProxy" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
+                q-popup-proxy(ref="qDateProxy2" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
                   q-time(
-                    v-model="form.endDate"
-                    @input="() => $refs.qDateProxy.hide()"
+                    v-model="form.endTime"
                     mask="YYYY-MM-DD HH:mm"
                   )
         q-step(
@@ -765,7 +768,7 @@ q-dialog(
                 :isBallotOpened="false"
                 :startTimeHasPassed="false"
                 :getStartTime="getStartTime()"
-                :getEndTime="form.endDate"
+                :getEndTime="form.endTime"
                 :getLoser="false"
               )
             .col.flex.column.preview-right
@@ -796,7 +799,7 @@ q-dialog(
                     span(v-if="!onlyOneOption") Voters can choose from {{form.minOptions}} to {{form.maxOptions}} options
               .q-mt-sm
                 b open:&nbsp;
-                span(v-if="openForVoting") this ballot will be open from now until {{moment(form.endDate).format("MMMM Do YYYY")}}
+                span(v-if="openForVoting") this ballot will be open from now until {{moment(form.endTime).format("MMMM Do YYYY")}}
                 span(v-if="!openForVoting") this ballot will not open immediately and must be oppened manually in the future
         template(v-slot:navigation)
           q-stepper-navigation.flex

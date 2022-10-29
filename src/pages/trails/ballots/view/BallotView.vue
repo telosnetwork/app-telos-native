@@ -1,9 +1,10 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import BallotStatus from '../components/BallotStatus';
-import BallotChip from '../components/BallotChip';
-import Btn from '../../../../components/CustomButton';
-import { supplyToSymbol } from '~/utils/assets';
+import BallotStatus           from '~/pages/trails/ballots/components/BallotStatus';
+import BallotChip             from '~/pages/trails/ballots/components/BallotChip';
+import BallotOpenVotingDialog from '~/pages/trails/ballots/components/BallotOpenVotingDialog';
+import Btn                    from '~/components/CustomButton';
+import { supplyToSymbol }     from '~/utils/assets';
 
 const FROM_BOTH = 'both';
 const FROM_LIQUID = 'liquid';
@@ -11,7 +12,7 @@ const FROM_STAKE = 'stake';
 
 export default {
   name: 'BallotView',
-  components: { BallotStatus, BallotChip, Btn },
+  components: { BallotStatus, BallotChip, Btn, BallotOpenVotingDialog },
   props: {
     isBallotOpened: { type: Function, required: true },
     displayWinner: { type: Function, required: true },
@@ -22,6 +23,7 @@ export default {
   },
   data() {
     return {
+      openBallotDialog: false,
       userCanVote: false,
       loading: true,
       voting: false,
@@ -170,6 +172,13 @@ export default {
     ]),
     debug() {
         console.log(this.ballot);
+    },
+    onBallotOpenedForVoting() {
+        this.openBallotDialog = false;
+        this.fetchBallot(this.ballot.ballot_name);
+    },
+    async showOpenBallotDialog() {
+        this.openBallotDialog = true;
     },
     openUrl(url) {
       window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
@@ -326,6 +335,11 @@ export default {
 
 <template lang="pug">
 .row.bg-white.justify-between.popup-wrapper(@scroll="updatePopupScroll" @click="debug")
+        ballot-open-voting-dialog(
+            :show.sync="openBallotDialog"
+            :ballot="ballot"
+            @close="openBallotDialog = false"
+            @done="onBallotOpenedForVoting")
         template(v-if="!loading && ballot")
             .col-xs.col-sm-auto.popup-left-col-wrapper(style="min-width: 268px;" v-if="showDetails")
                 q-card(
@@ -419,12 +433,32 @@ export default {
                                     :label="$t('common.buttons.cancel')"
                                     @click="cancel()"
                                 )
+                            q-item(v-if="ballot.status == 'setup' && !isBallotOpened(ballot)").options-btn
+                                q-btn(
+                                    no-caps
+                                    outline
+                                    disable
+                                    color="primary"
+                                    class="col"
+                                    v-if="!isAuthenticated || ballot.publisher != account"
+                                    :label="$t('pages.trails.ballots.notOpened')"
+                                    @click="showOpenBallotDialog()"
+                                )
+                                q-btn(
+                                    no-caps
+                                    outline
+                                    color="primary"
+                                    class="col"
+                                    v-if="isAuthenticated && ballot.publisher === account"
+                                    :label="$t('pages.trails.ballots.openBallotHeader')"
+                                    @click="showOpenBallotDialog()"
+                                )
                     q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-620
                         div.text-section.column
                             div(v-if="ballot.total_voters > 0")
                                 span.statistics-title Most voted
-                        div.statistics-body(v-if="getWinner.key")
-                            span.text-weight-bold  {{ getWinner.key.toUpperCase() }}
+                        div.statistics-body(v-if="getWinner.displayText")
+                            span.text-weight-bold  {{ getWinner.displayText }}
                             span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
                         div(v-if="ballot.total_voters > 0")
                             span.statistics-title Number of accounts
