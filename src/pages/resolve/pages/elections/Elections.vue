@@ -19,7 +19,16 @@
               :key="nominee.nominee_name"
               class="nominee-item"
             >
-              {{ nominee.nominee_name }}&nbsp;
+              <telos-profile-avatar
+                :account_name="nominee.nominee_name"
+                size="24px"
+                childClass="profile-avatar"
+              ></telos-profile-avatar>
+              {{ nominee.nominee_name }}&nbsp; (<a
+                target="_blank"
+                :href="getIpfsLink(nominee)"
+                >more info</a
+              >)
               <q-icon
                 v-if="isRemoveNomineeVisible(nominee.nominee_name)"
                 @click="removeNominee()"
@@ -47,6 +56,7 @@
 import ElectionsTable from "../../components/ElectionsTable.vue";
 import ElectionSteps from "./ElectionSteps.vue";
 import IntroCard from "../../components/IntroCard.vue";
+import TelosProfileAvatar from "src/components/common/TelosProfileAvatar.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -54,6 +64,7 @@ export default {
     ElectionsTable,
     ElectionSteps,
     IntroCard,
+    TelosProfileAvatar,
   },
   data() {
     return {};
@@ -97,6 +108,9 @@ export default {
         console.log("endElection error: ", err);
       }
     },
+    getIpfsLink(nominee) {
+      return `https://api.dstor.cloud/ipfs/${nominee.credentials_link}`;
+    },
   },
 };
 </script>
@@ -111,15 +125,28 @@ export default {
   .second {
     flex: 1;
   }
-}
 
-.nominee-item {
-  .remove-icon {
-    background-color: red;
-    border-radius: 50%;
+  .first ul {
+    list-style: none;
+    padding-left: 0px;
 
-    &:hover {
-      cursor: pointer;
+    .nominee-item {
+      .profile-avatar {
+        margin-right: 12px;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .remove-icon {
+        background-color: red;
+        border-radius: 50%;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 }
