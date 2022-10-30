@@ -4,14 +4,18 @@
     <div v-for="candidate of election.candidates" v-bind:key="candidate.name">
       <div class="candidate-item">
         <div class="data">
-          <profile-avatar
-            v-bind:account_name="candidate.name"
+          <telos-profile-avatar
+            :account_name="candidate.name"
             class="avatar-wrap"
             size="24px"
-          ></profile-avatar>
+          ></telos-profile-avatar>
           <div class="info">
             <div class="text candidate-item">
-              {{ candidate.name }}&nbsp;
+              {{ candidate.name }}&nbsp; (<a
+                :href="getCandidateIpfsLink(candidate.name)"
+                target="_blank"
+                >more info</a
+              >)
               <!--<q-icon
                 v-if="isRemoveCandidateButtonVisible(candidate.name)"
                 name="remove"
@@ -35,14 +39,14 @@
 </template>
 
 <script>
-import ProfileAvatar from "src/pages/profiles/ProfileAvatar.vue";
 import { mapGetters } from "vuex";
 import { getBallot, getSymbolInfo } from "../util";
+import TelosProfileAvatar from "src/components/common/TelosProfileAvatar.vue";
 
 export default {
   props: ["election"],
   components: {
-    ProfileAvatar,
+    TelosProfileAvatar,
   },
   data() {
     return {
@@ -70,6 +74,15 @@ export default {
         if (!option) return "0.0000 VOTE";
         return option.value;
       }
+    },
+    getCandidateIpfsLink(account_name) {
+      const nominees = this.$store.state.resolve.nominees;
+      const nominee = nominees.find(
+        (item) => item.nominee_name === account_name
+      );
+      const hash = nominee?.credentials_link;
+      const url = `https://api.dstor.cloud/ipfs/${hash}`;
+      return url;
     },
     async getBallotResults() {
       // console.log(
@@ -149,6 +162,12 @@ td.text-left {
   padding: 4px;
   display: flex;
   flex: 1;
+  align-self: center;
+  margin-right: 12px;
+
+  a {
+    color: inherit;
+  }
 
   .remove-icon {
     background-color: red;
