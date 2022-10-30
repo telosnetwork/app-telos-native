@@ -189,6 +189,7 @@ export default {
       account: "accounts/account",
     }),
     isAddNomineeButtonVisible() {
+      if (!this.account) return false;
       // already nominee
       const {
         resolve: { nominees, arbitrators },
@@ -227,7 +228,6 @@ export default {
     },
     isRegisterCandidateButtonVisible() {
       const { resolve, accounts } = this.$store.state;
-      const { account } = accounts;
       const { config, elections, nominees } = resolve;
       const { candidates } = this.currentElection;
       const foundNominee = nominees.find(
