@@ -28,12 +28,7 @@ export default {
             this.error = null;
             if (!(await this.validate(this.form))) return;
             this.submitting = true;
-            // const { success, error } = await this.verifyOTP(this.form)
-            // if (success) {
             this.$router.push({ path: '/accounts/add/congratulations' });
-            // } else {
-            //  this.error = error
-            // }
             this.submitting = false;
         },
     },

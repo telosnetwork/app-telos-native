@@ -72,21 +72,7 @@ export default {
         fullName() {
             return this.Profile ? this.Profile.display_name : this.account;
         },
-        /*
-    verifySMSUrl () {
-      return `/profiles/myProfile/verify/${CommMethods.SMS.value}`
-    },
-    verifyEmailUrl () {
-      return `/profiles/myProfile/verify/${CommMethods.EMAIL.value}`
-    },
-    */
-    /*
-    tags () {
-      if (this.Profile.publicData.tags) {
-        return this.Profile.publicData.tags.join(', ')
-      } else return ''
-    }
-    */
+
     },
     async beforeMount() {
         try {
@@ -101,21 +87,11 @@ export default {
         }
         this.$store.commit('profiles/setSelectedProfile', []);
 
-    /*
-    if (!this.$store.getters['profiles/isRegistered']) {
-      this.$router.push({ name: 'userRegister' })
-    }
-    */
+
     },
 
     methods: {
         ...mapActions('profiles', ['getProfile']),
-    /*
-    goToChat () {
-      this.$store.commit('messages/setActiveChat', { activeChat: this.Profile.eosAccount, avatarImage: this.Profile.publicData.avatarImage, s3Identity: this.Profile.publicData.s3Identity })
-      this.$router.push({ name: 'chat' })
-    }
-    */
     },
 };
 </script>

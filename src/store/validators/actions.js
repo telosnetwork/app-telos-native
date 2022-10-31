@@ -1,8 +1,4 @@
 const moment = require('moment');
-/*
-export function someAction (context) {
-}
-*/
 
 export async function loadBenchmarks({ commit }, { days }) {
     // TODO: Paginate...
@@ -22,7 +18,6 @@ export async function loadBenchmarks({ commit }, { days }) {
     };
     let bpMap = {};
     while (haveMore) {
-    // params.before = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
         console.log(`Doing query with ${JSON.stringify(params)}`);
         const benchmarks = await this.$hyperion.get('v2/history/get_actions', {
             params,
@@ -44,8 +39,6 @@ export async function loadBenchmarks({ commit }, { days }) {
             const producer = action.producer;
             const cpuUs = action.cpu_usage_us;
             const timestamp = action.timestamp;
-            // const block = action.block_num
-            // const trxId = action.trx_id
             const momentTimestamp = moment(timestamp);
             const point = [momentTimestamp.valueOf(), cpuUs];
             if (!bpMap.hasOwnProperty(producer)) {

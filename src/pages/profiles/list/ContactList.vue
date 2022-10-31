@@ -67,13 +67,11 @@ export default {
             }
         },
         async onSearch() {
-            // await this.searchProfiles({ search: this.search, clean: true, lastEvaluatedKey: this.profileList.lastEvaluatedKey })
             this.clearProfilesList();
             this.isFirst = true;
             this.$refs.infiniteScroll.reset();
             this.$refs.infiniteScroll.resume();
             this.$refs.infiniteScroll.poll();
-            // v.preventDefault()
         },
     },
 };

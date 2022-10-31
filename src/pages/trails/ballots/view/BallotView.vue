@@ -10,6 +10,9 @@ const FROM_BOTH = 'both';
 const FROM_LIQUID = 'liquid';
 const FROM_STAKE = 'stake';
 
+// ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
+const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm');
+
 export default {
     name: 'BallotView',
     components: { BallotStatus, BallotChip, Btn, BallotOpenVotingDialog },
@@ -41,11 +44,7 @@ export default {
         window.addEventListener('scroll', this.updateScroll);
         this.loading = false;
     },
-    beforeUnmount() {
-    // this.$router.push(`/trails/ballots/`)
-    // This resets the route on modal close but also glitches out the scroll position for it's parent.
-    // Commenting out to prevent the bug as it doesn't really cause any problems when the route isn't reset.
-    },
+
     computed: {
         ...mapGetters('notifications', ['notifications']),
         ...mapGetters('accounts', ['isAuthenticated', 'account', 'accountData']),
@@ -75,6 +74,37 @@ export default {
                 return data;
             } catch (error) {
                 return null;
+            }
+        },
+        iframeUrl() {
+            let content = this.ballot.content;
+            let file_path = null;
+
+            // catch parse possible errors
+            try {
+                content = JSON.parse(this.ballot.content);
+            } catch (e) {
+                console.error(e);
+            }
+            try {
+                file_path = regex.exec(this.ballot.description);
+            } catch (e) {
+                console.error(e);
+            }
+
+            if (Array.isArray(file_path)) {
+                const r = 'https://ipfs.io/ipfs/' + file_path[0];
+                return r;
+            } else if (typeof content === 'object') {
+                // prioritize content urls over image urls
+                const r =
+          content.contentUrl ||
+          (content.contentUrls || [])[0] ||
+          content.imageUrl ||
+          (content.imageUrls || [])[0];
+                return r;
+            } else {
+                return false;
             }
         },
         getVariants() {
