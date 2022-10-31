@@ -48,7 +48,17 @@ export const addBallots = (state, { rows, more, next_key }) => {
   if (!more && current_count == before_count) {
     state.ballots.list.pagination.more = false;
   } else {
-    state.ballots.list.pagination.more = true;
+    if (!state.ballots.list.pagination.lastQuery) {
+      state.ballots.list.pagination.more = true;
+    } else {
+      state.ballots.list.pagination.more = false;
+    }
+  }
+
+  if (state.ballots.list.pagination.more && current_count == before_count) {
+    state.ballots.list.pagination.lastQuery = true;
+  } else {
+    state.ballots.list.pagination.lastQuery = false;
   }
 
 };

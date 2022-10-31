@@ -22,6 +22,7 @@ export default {
   },
   data() {
     return {
+      filteredBallots: [],
       renderComponent: false,
       show: false,
       showBallot: false,
@@ -63,14 +64,27 @@ export default {
       'fetchUserVotesForThisBallot',
       'resetUserVotes',
     ]),
+    resumeLoadingBallots() {
+      setTimeout(() => {
+        if (this.$refs.infiniteScroll) {
+          // this triggers a call to onLoad if necesary
+          this.$refs.infiniteScroll.resume();
+        }
+      }, 100);
+    },
+    updateBallots() {
+      this.filteredBallots = this.sortBallots(this.filterBallots(this.ballots), this.sortMode);
+      this.resumeLoadingBallots();
+    },
     async onLoad(_, done) {
       let isFirstFetch = this.ballots.length == 0;
       this.loading = true;
-      await this.fetchMoreBallots();
+      await this.fetchMoreBallots(this.statuses || []);
       this.loading = false;
       setTimeout(() => {
         this.fetchUserVotes();
-        done(isFirstFetch || !this.ballotsPagination.more);
+        let result = isFirstFetch || !this.ballotsPagination.more;
+        done(result);
       }, 1000);
     },
     async fetchUserVotes() {
@@ -141,15 +155,15 @@ export default {
     },
     updateTreasury(newTreasury) {
       this.treasury = newTreasury;
-      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
+      this.updateBallots();
     },
     updateStatuses(newStatuses) {
       this.statuses = newStatuses;
-      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
+      this.updateBallots();
     },
     updateCategories(newCategories) {
       this.categories = newCategories;
-      if (this.$refs.infiniteScroll) this.$refs.infiniteScroll.resume();
+      this.updateBallots();
     },
     filterBallots(ballots) {
       const ballotFilteredByStatuses = ballots.filter((b) => {
@@ -170,10 +184,11 @@ export default {
                 this.votingHasBegun(b) &&
                 b.status === 'voting')
             );
-          } else if (this.statuses.includes('not started')) {
+          } else if (this.statuses.includes('not_started')) {
             return (
               this.statuses.includes(b.status) ||
-              (this.isBallotNotStarted(b) && b.status === 'voting')
+              this.isBallotNotStarted(b) ||
+              b.status === 'setup'
             );
           }
           return this.statuses.includes(b.status);
@@ -197,7 +212,7 @@ export default {
         try {
           return b.treasury_symbol.split(',')[1] == this.treasury;
         } catch (e) {
-          console.log('Problematic ballot: ', b);
+          console.debug('Problematic ballot: ', b);
           console.error(e);
         }
         return false;
@@ -238,6 +253,7 @@ export default {
     changeSortOption(option) {
       this.limit = 100;
       this.sortMode = option;
+      this.updateBallots();
     },
     ballotContentImg(ballot) {
       try {
@@ -250,7 +266,7 @@ export default {
       this.treasury = params.treasury;
       this.statuses = params.tatus;
       this.categories = params.type;
-    },
+    }
   },
   computed: {
     ...mapGetters('accounts', ['isAuthenticated', 'account']),
@@ -258,7 +274,7 @@ export default {
       'ballots',
       'ballotsPagination',
       'treasuriesOptions',
-    ]),
+    ])
   },
   watch: {
     $route(to) {
@@ -267,6 +283,9 @@ export default {
     account() {
       this.fetchUserVotes();
     },
+    ballots() {
+      this.updateBallots();
+    }
   },
 };
 </script>
@@ -299,7 +318,7 @@ q-page(v-if="!renderComponent")
       div(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
         ballot-list-item(
           @click.native="openBallot(ballot)"
-          v-for="(ballot, index) in sortBallots(filterBallots(ballots),sortMode)"
+          v-for="(ballot, index) in filteredBallots"
           :key="index"
           :ballot="ballot"
           :displayWinner="displayWinner"
@@ -312,7 +331,7 @@ q-page(v-if="!renderComponent")
         )
       p.text-weight-bold(
         style="text-align: center"
-        v-if="!sortBallots(filterBallots(ballots),sortMode).length && !loading") There is no data for the corresponding request
+        v-if="!filteredBallots.length && !loading") There is no data for the corresponding request
 
       template(v-slot:loading)
         .row.justify-center.q-my-md

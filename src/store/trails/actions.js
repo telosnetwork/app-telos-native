@@ -16,8 +16,9 @@ export const fetchFees = async function ({ commit }) {
 // Fees
 
 // Ballots
-export const fetchMoreBallots = async function ({ commit, state }) {
-  const result = await this.$api.getTableRows({
+export const fetchMoreBallots = async function ({ commit, state }, filters) {
+
+  let query = {
     code: 'telos.decide',
     scope: 'telos.decide',
     table: 'ballots',
@@ -26,7 +27,16 @@ export const fetchMoreBallots = async function ({ commit, state }) {
     reverse: true,
     key_type: 'i64',
     lower_bound: state.ballots.list.pagination.next_key,
-  });
+  }
+
+  if (filters.includes('not_started')) {
+    query.index_position = 3;
+    query.lower_bound = 'setup';
+    query.reverse = false;
+  }
+
+  const result = await this.$api.getTableRows(query);
+
   let treasuries = { rows: [] };
   state.treasuries.list.data.forEach((t) => (treasuries[t.symbol] = t));
 
