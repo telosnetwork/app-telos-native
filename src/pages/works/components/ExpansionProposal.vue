@@ -72,7 +72,6 @@ export default {
             const opts = this.proposal.ballotData.options;
             const yes = parseFloat(opts[2].value.split(' ')[0]);
             const no = parseFloat(opts[1].value.split(' ')[0]);
-            // const total = parseFloat(this.proposal.ballotData.total_raw_weight.split(' ')[1])
             this.yesVotes = yes / (yes + no);
         },
         findContent() {

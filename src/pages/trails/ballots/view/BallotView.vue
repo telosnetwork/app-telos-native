@@ -46,11 +46,7 @@ export default {
         window.addEventListener('scroll', this.updateScroll);
         this.loading = false;
     },
-    beforeUnmount() {
-    // this.$router.push(`/trails/ballots/`)
-    // This resets the route on modal close but also glitches out the scroll position for it's parent.
-    // Commenting out to prevent the bug as it doesn't really cause any problems when the route isn't reset.
-    },
+
     computed: {
         ...mapGetters('notifications', ['notifications']),
         ...mapGetters('accounts', ['isAuthenticated', 'account', 'accountData']),
@@ -130,7 +126,6 @@ export default {
             } else {
                 return false;
             }
-            // https://api.ipfsbrowser.com/ipfs/get.php?hash=QmS6QwbGDde7cdyvWfUSX5PPWrFkiumqTHouBV3jYhPXme
         },
         getVariants() {
             let newArr = [];

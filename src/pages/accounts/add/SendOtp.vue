@@ -1,6 +1,5 @@
 <script>
 import { mapActions } from 'vuex';
-// import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber'
 
 import { validation } from '~/mixins/validation';
 import { countriesPhoneCode } from '~/mixins/countries-phone-code';
@@ -38,11 +37,7 @@ export default {
             this.resetValidation(this.form);
             this.error = null;
             if (!(await this.validate(this.form))) return;
-            /* const phoneUtil = PhoneNumberUtil.getInstance()
-      const number = phoneUtil.parseAndKeepRawInput(`${this.form.countryCode.dialCode}${this.form.smsNumber}`, this.form.countryCode.code)
-      this.form.internationalPhone = phoneUtil.format(number, PhoneNumberFormat.INTERNATIONAL)
-      this.submitting = true
-      const result = await this.sendOTP(this.form) */
+
             if (this.recaptcha) {
                 this.$router.push({ path: '/accounts/add/verifyOTP' });
             } else {

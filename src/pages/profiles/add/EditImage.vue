@@ -84,30 +84,11 @@ export default {
         },
         async updateUrl() {
             this.url = '';
-            if (this.imgKey && this.identity) {
-                /*
-        await PPP.profileApi().getImageUrl(this.imgKey, this.identity).then((rUrl) => {
-          this.url = rUrl
-          // this.$emit('Change', rUrl)
-          var image = new Image()
-          // Notice: it's necessary to set "crossorigin" attribute before "src" attribute.
-          image.setAttribute('crossorigin', 'anonymous')
-          image.src = rUrl
-          this.url = image
-          this.croppa.refresh()
-        })
-        */
-            }
+
         },
         onInit() {
             this.croppa.addClipPlugin(function (ctx, x, y, w, h) {
-                /*
-         * ctx: canvas context
-         * x: start point (top-left corner) x coordination
-         * y: start point (top-left corner) y coordination
-         * w: croppa width
-         * h: croppa height
-         */
+
                 ctx.beginPath();
                 ctx.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI, true);
                 ctx.closePath();

@@ -4,17 +4,11 @@ const routes = [
         component: () => import('pages/login/LoginPage.vue'),
         meta: { layout: 'guest', title: 'pages.login.title', guest: true },
     },
-    // { path: '/accounts/add', component: () =>
-    // import('pages/accounts/add/SendOtp.vue'),
-    // meta: { layout: 'guest', title: 'pages.accounts.add.title', guest: true } },
     {
         path: '/accounts/add',
         component: () => import('pages/accounts/add/CreateAccount.vue'),
         meta: { layout: 'guest', title: 'pages.accounts.add.title', guest: true },
     },
-    // { path: '/accounts/add/verifyOTP', component:
-    // () => import('pages/accounts/add/VerifyOtp.vue'),
-    // meta: { layout: 'guest', title: 'pages.accounts.add.title', guest: true } },
     {
         path: '/accounts/add/congratulations',
         component: () => import('pages/accounts/add/CongratulationsPage.vue'),
