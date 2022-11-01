@@ -151,6 +151,9 @@ export default {
         starts: 'Starts',
         delete: 'Delete',
         requestAmount: 'request amount',
+        openBallotHeader: 'Open this ballot for voting',
+        openBallot: 'Open for voting',
+        notOpened: 'not open yet',
         welcomeCard: {
           title: 'Hi, ',
           textBeginning: 'Welcome to the ',

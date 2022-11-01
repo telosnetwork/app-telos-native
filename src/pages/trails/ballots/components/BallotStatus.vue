@@ -7,7 +7,7 @@ export default {
   props: {
     ballot: { type: Object, required: true },
     isBallotOpened: { type: Boolean, required: true },
-    votingHasBegun: { type: Boolean, required: true },
+    startTimeHasPassed: { type: Boolean, required: true },
     getStartTime: { type: Number, required: true },
     getEndTime: { type: Number, required: true },
   },
@@ -25,16 +25,26 @@ div.left-tag.cursor-default
     div.status-frame-title Time left
     countdown(:endtime="getEndTime")
 
-  template(v-else-if="ballot.status === 'voting' && !votingHasBegun")
+  template(v-else-if="ballot.status === 'voting' && !startTimeHasPassed")
     div.status-frame-title Voting begins in
     countdown(:endtime="getStartTime")
 
+  template(v-else-if="ballot.status === 'setup'")
+    div.status-frame-title Status
+    div Setup
+
   template(v-else)
     div.status-frame-title Status
-    span(v-if="ballot.status === 'setup'") Setup
-    span(v-else) Proposal ended
-  div.status-frame-title.time {{Date.now() > getEndTime ? "Ended" : "Ends"}}
-  div {{moment(getEndTime).format("MMMM Do YYYY")}}
+    span Proposal ended
+
+
+  template(v-if="ballot.status === 'setup'")
+    div.status-frame-title.time draft
+    div not started yet
+
+  template(v-else)
+    div.status-frame-title.time {{Date.now() > getEndTime ? "Ended" : "Ends"}}
+    div {{moment(getEndTime).format("MMMM Do YYYY")}}
 
 </template>
 

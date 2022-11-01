@@ -11,11 +11,10 @@ export default {
     ballot: { type: Object, required: true },
     displayWinner: { type: Function, required: true },
     isBallotOpened: { type: Boolean, required: true },
-    votingHasBegun: { type: Boolean, required: true },
+    startTimeHasPassed: { type: Boolean, required: true },
     getStartTime: { type: Number, required: true },
     getEndTime: { type: Number, required: true },
-    getLoser: { type: Function, required: true },
-    ballotContentImg: { type: Function, required: true },
+    getLoser: { type: Function, required: true }
   },
   data() {
     return {
@@ -97,8 +96,8 @@ export default {
 div
   q-card(:class="ballot.status === 'voting' && isBallotOpened ? '' : 'poll-ended'").poll-item
     q-card-section().card-img-wrapper
-      template(v-if="ballotContentImg(ballot)")
-        q-img(:src="ballotContentImg(ballot)").poll-item-image-wrapper
+      template(v-if="ballot.imageUrl")
+        q-img(:src="ballot.imageUrl").poll-item-image-wrapper
           template(v-slot:error)
             q-icon(size="lg" name="far fa-image")
       template(v-else)
@@ -118,7 +117,7 @@ div
       :ballot="ballot"
       :isBallotOpened="isBallotOpened"
       :getEndTime="getEndTime"
-      :votingHasBegun="votingHasBegun"
+      :startTimeHasPassed="startTimeHasPassed"
       :getStartTime="getStartTime"
     )
 
@@ -157,7 +156,7 @@ div
           div.statics-section-wrapper
             div.statics-section-item(v-if="ballot.total_voters > 0")
               span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
-              span.opacity06  {{ getWinner.key.toUpperCase() }} {{ getLoser.key ? ` lead over ${getLoser.key.toUpperCase()}` : ` lead over others` }}
+              span.opacity06  {{ getWinner.displayText }} {{ getLoser.displayText ? ` lead over ${getLoser.displayText}` : ` lead over others` }}
             div.statics-section-item(v-else)
               span  {{ getWinner }}
             div.bar-custom-separator.text-section-separator
@@ -174,7 +173,7 @@ div
       div.text-section.column
         div.statics-section-item(v-if="ballot.total_voters > 0")
           span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
-          span.opacity06  {{ getWinner.key.toUpperCase() }} {{ getLoser.key ? ` lead over ${getLoser.key.toUpperCase()}` : ` lead over others` }}
+          span.opacity06  {{ getWinner.displayText }} {{ getLoser.displayText ? ` lead over ${getLoser.displayText}` : ` lead over others` }}
         div.statics-section-item(v-else)
           span  {{ getWinner }}
         div.statics-section-item

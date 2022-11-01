@@ -11,7 +11,7 @@ export default () => ({
       },
     },
     view: {
-      ballot: null,
+      ballot: null
     },
   },
   ballotVoters: null,

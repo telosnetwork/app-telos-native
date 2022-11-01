@@ -31,8 +31,8 @@ export default {
       ballotTypes: [TYPE_OF_BALLOT_0, TYPE_OF_BALLOT_1, TYPE_OF_BALLOT_2],
       isBallotListRowDirection: true,
       openForVoting: true,
+      onlyOneOption: true,
       form: {
-        onlyOneOption: true,
         newOptionLabel: '',
         newOptionValue: '',
         defaultLabels:['Yes', 'No', 'Abstain'],
@@ -46,10 +46,10 @@ export default {
         IPFSString: null,
         treasurySymbol: null,
         votingMethod: '1token1vote',
-        maxOptions: 3,
+        maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
-        endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
+        endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
         config: 'votestake',
         file: null
       },
@@ -72,7 +72,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees']),
+    ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees', 'ballot']),
     ...mapGetters('accounts', ['account','accountData']),
     filename() {
       if (!this.form.file) return '';
@@ -82,28 +82,6 @@ export default {
     },
     optionsAsText() {
       return this.form.optionsLabels.join() + this.form.minOptions + this.form.maxOptions;
-    },
-    ballot() {
-      let zero_supply = this.treasury.max_supply;
-      zero_supply = `${parseFloat(0).toFixed(
-        supplyToDecimals(zero_supply)
-      )} ${supplyToSymbol(zero_supply)}`
-      return {
-        treasury: this.treasury,
-        description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
-            ? `${this.form.description} ${this.form.IPFSString}`
-            : this.form.description,
-        content: this.createContentField(),
-        publisher: this.account,
-        title: this.form.title,
-        category: this.form.category,
-        status: 'voting',
-        ballot_name: this.slugify(this.form.title),
-        total_voters: 0,
-        options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
-        this.form.optionsLabels.map((key) => ({key, value:zero_supply})),
-        total_raw_weight: zero_supply
-      }
     },
     treasury() {
       if (!this.form.treasurySymbol) return null;
@@ -163,6 +141,7 @@ export default {
   },
   methods: {
     ...mapActions('trails', [
+      'setBallot',
       'addBallot',
       'fetchTreasuriesForUser',
       'fetchFees',
@@ -197,15 +176,17 @@ export default {
         }
         case 4:
           if (this.openForVoting) {
-            list = {endDate:1};
+            list = {endTime:1};
           } else {
             list = {};
           }
+          break;
       }
       this.rules.setActive(true);
       let ok = await this.validate(list);
       if (ok) {
         this.rules.setActive(false);
+        this.updateBallot();
         this.$refs.stepper.next();
       } else {
         console.error('errors:');
@@ -295,10 +276,6 @@ export default {
       this.form.optionsLabels = this.form.defaultLabels.map(t => t).filter((_,i) => i<num);
     },
     // empty functions BallotListItem, to use it as preview
-    displayWinner(ballot) {
-      if (!ballot) return false;
-      return false;
-    },
     getLoser() {
       return false;
     },
@@ -306,25 +283,8 @@ export default {
       if (!ballot) return false;
       return false;
     },
-    votingHasBegun(ballot) {
-      if (!ballot) return false;
-      return false;
-    },
-    getStartTime(ballot) {
-      if (!ballot) return new Date();
-      return new Date();
-    },
-    getEndTime(ballot) {
-      if (!ballot) return new Date();
-      return new Date();
-    },
-    ballotContentImg(ballot) {
-      // TODO: refactor needed. This function is copied from BallotsList.vue
-      try {
-        return JSON.parse(ballot.content).imageUrl;
-      } catch (error) {
-        return null;
-      }
+    getStartTime() {
+      return moment(new Date()).add(1,'minutes').toDate().getTime();
     },
     async onAddBallot() {
       this.submitting = true;
@@ -360,10 +320,10 @@ export default {
         IPFSString: null,
         treasurySymbol: null,
         votingMethod: '1token1vote',
-        maxOptions: 3,
+        maxOptions: 1,
         minOptions: 1,
         initialOptions: [],
-        endDate: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
+        endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
         config: 'votestake',
         file: null
       };
@@ -398,10 +358,33 @@ export default {
         maxOptions: this.form.maxOptions,
         minOptions: this.form.minOptions,
         initialOptions: this.updateOptionValues(),
-        endDate: this.openForVoting ? this.form.endDate : null,
+        endTime: this.openForVoting ? this.form.endTime : new Date(),
         config: this.form.config,
         settings: this.isStakeable,
       };
+    },
+    updateBallot() {
+      let zero_supply = this.treasury?.max_supply || '0.0000 VOTE';
+      zero_supply = `${parseFloat(0).toFixed(
+        supplyToDecimals(zero_supply)
+      )} ${supplyToSymbol(zero_supply)}`
+      let ballot = {
+        treasury: this.treasury,
+        description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
+            ? `${this.form.description} ${this.form.IPFSString}`
+            : this.form.description,
+        content: this.createContentField(),
+        publisher: this.account,
+        title: this.form.title,
+        category: this.form.category,
+        status: this.openForVoting ? 'voting' : 'setup',
+        ballot_name: this.slugify(this.form.title),
+        total_voters: 0,
+        options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
+        this.form.optionsLabels.map((key) => ({key, value:zero_supply})),
+        total_raw_weight: zero_supply
+      }
+      this.setBallot(ballot);
     },
     async convertToIPFS(file) {
       try {
@@ -423,6 +406,16 @@ export default {
   watch: {
     'form.file': function () {
       this.convertToIPFS(this.form.file);
+    },
+    'form.endTime'() {
+      if (!this.$refs.qDateProxy1 || this.$refs.qDateProxy2) return;
+      this.$refs.qDateProxy1.hide();
+      this.$refs.qDateProxy2.hide();
+    },
+    'form.imageUrl'() {
+      if (this.form.imageUrl == '') {
+        this.badImage = false;
+      }
     },
     account: async function (account) {
       this.fetchTreasuriesForUser(account);
@@ -472,7 +465,7 @@ export default {
     },
     openForVoting() {
       this.rules.setActive(this.openForVoting);
-      this.$refs.endDate.validate();
+      this.$refs.endTime.validate();
     },
     show() {
       if (this.show) {
@@ -487,11 +480,6 @@ export default {
     },
     badImage() {
       this.validateImage(this.badImage);
-    },
-    'form.imageUrl'() {
-      if (this.form.imageUrl == '') {
-        this.badImage = false;
-      }
     }
   },
   async mounted() {
@@ -748,25 +736,23 @@ q-dialog(
           p You can open this ballot for voting right away or you can create the ballot and skip this step for later.
           q-checkbox(v-model="openForVoting" disable) Open for voting right away
           q-input(
-            ref="endDate"
-            v-model="form.endDate"
+            ref="endTime"
+            v-model="form.endTime"
             label="End date"
             :disable="!openForVoting"
             :rules="[rules.required, rules.dateFuture(Date.now())]"
           )
             template(v-slot:append)
               q-icon.cursor-pointer(name="event" color="primary")
-                q-popup-proxy(ref="qDateProxy" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
+                q-popup-proxy(ref="qDateProxy1" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
                   q-date(
-                    v-model="form.endDate"
-                    @input="() => $refs.qDateProxy.hide()"
+                    v-model="form.endTime"
                     mask="YYYY-MM-DD HH:mm"
                   )
               q-icon.cursor-pointer(name="access_time" color="primary")
-                q-popup-proxy(ref="qDateProxy" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
+                q-popup-proxy(ref="qDateProxy2" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
                   q-time(
-                    v-model="form.endDate"
-                    @input="() => $refs.qDateProxy.hide()"
+                    v-model="form.endTime"
                     mask="YYYY-MM-DD HH:mm"
                   )
           small Note: Proposals will be eligible for voting once they are created.
@@ -779,13 +765,12 @@ q-dialog(
             .col.flex.column.preview-left(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
               ballot-list-item(
                 :ballot="ballot"
-                :displayWinner="displayWinner"
-                :isBallotOpened="true"
-                :votingHasBegun="true"
+                :displayWinner="false"
+                :isBallotOpened="false"
+                :startTimeHasPassed="false"
                 :getStartTime="getStartTime()"
-                :getEndTime="form.endDate"
-                :getLoser="getLoser"
-                :ballotContentImg="ballotContentImg"
+                :getEndTime="form.endTime"
+                :getLoser="false"
               )
             .col.flex.column.preview-right
               .q-mt-sm
@@ -815,7 +800,7 @@ q-dialog(
                     span(v-if="!onlyOneOption") Voters can choose from {{form.minOptions}} to {{form.maxOptions}} options
               .q-mt-sm
                 b open:&nbsp;
-                span(v-if="openForVoting") this ballot will be open from now until {{moment(form.endDate).format("MMMM Do YYYY")}}
+                span(v-if="openForVoting") this ballot will be open from now until {{moment(form.endTime).format("MMMM Do YYYY")}}
                 span(v-if="!openForVoting") this ballot will not open immediately and must be oppened manually in the future
         template(v-slot:navigation)
           q-stepper-navigation.flex

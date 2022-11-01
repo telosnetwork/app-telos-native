@@ -55,6 +55,7 @@ export const fetchMoreBallots = async function ({ commit, state }) {
 };
 
 export const fetchTreasuriesForUser = async function ({ commit }, account) {
+
   const res = await this.$api.getTableRows({
     code: 'telos.decide',
     scope: account,
@@ -115,6 +116,10 @@ export const fetchUserVotesForThisBallot = async function (
   commit('setBallotVotes', list);
 };
 
+export const setBallot = async function ({ commit }, ballot) {
+  commit('setBallot', ballot);
+};
+
 export const fetchBallot = async function ({ commit }, ballot) {
   const result = await this.$api.getTableRows({
     code: 'telos.decide',
@@ -162,6 +167,37 @@ const createTogglebalFor = function(ballotName, text) {
     },
   }
 }
+
+export const openBallotForVoting = async function ({ commit }, params) {
+
+  let {ballot_name, endTime} = params;
+
+  const notification = {
+    icon: 'fas fa-person-booth',
+    title: 'notifications.trails.addBallot',
+    content: 'Ballot opened for voting successfully',
+  };
+
+  try {
+    const actions = [{
+      account: 'telos.decide',
+      name: 'openvoting',
+      data: {
+        ballot_name: ballot_name,
+        end_time: new Date(endTime).toISOString().slice(0, -5),
+      },
+    }];
+
+    const transaction = await this.$api.signTransaction(actions);
+    notification.status = 'success';
+    notification.transaction = transaction;
+  } catch (e) {
+    notification.status = 'error';
+    notification.error = e;
+  }
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
+};
 
 export const addBallot = async function ({ commit, state, rootState }, ballot) {
   const ballotName = ballot.title
@@ -243,13 +279,13 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
     }
 
     // do the user want to open the ballot immediatelly ?
-    if (ballot.endDate) {
+    if (ballot.endTime > new Date() ) {
       actions.push({
         account: 'telos.decide',
         name: 'openvoting',
         data: {
           ballot_name: ballotName,
-          end_time: new Date(ballot.endDate).toISOString().slice(0, -5),
+          end_time: new Date(ballot.endTime).toISOString().slice(0, -5),
         },
       });
     }

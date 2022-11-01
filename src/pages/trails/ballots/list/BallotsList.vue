@@ -125,7 +125,7 @@ export default {
       });
       return winner;
     },
-    votingHasBegun(ballot) {
+    startTimeHasPassed(ballot) {
       let startTime = new Date(ballot.begin_time).getTime();
       let isStarted = startTime < Date.now();
       return isStarted;
@@ -167,7 +167,7 @@ export default {
             return (
               this.statuses.includes(b.status) ||
               (!this.isBallotOpened(b) &&
-                this.votingHasBegun(b) &&
+                this.startTimeHasPassed(b) &&
                 b.status === 'voting')
             );
           } else if (this.statuses.includes('not started')) {
@@ -239,13 +239,6 @@ export default {
       this.limit = 100;
       this.sortMode = option;
     },
-    ballotContentImg(ballot) {
-      try {
-        return JSON.parse(ballot.content).imageUrl;
-      } catch (error) {
-        return null;
-      }
-    },
     updateCards(params) {
       this.treasury = params.treasury;
       this.statuses = params.tatus;
@@ -304,11 +297,10 @@ q-page(v-if="!renderComponent")
           :ballot="ballot"
           :displayWinner="displayWinner"
           :isBallotOpened="isBallotOpened(ballot)"
-          :votingHasBegun="votingHasBegun(ballot)"
+          :startTimeHasPassed="startTimeHasPassed(ballot)"
           :getStartTime="getStartTime(ballot)"
           :getEndTime="getEndTime(ballot)"
           :getLoser="getLoser"
-          :ballotContentImg="ballotContentImg"
         )
       p.text-weight-bold(
         style="text-align: center"
@@ -326,11 +318,10 @@ q-page(v-if="!renderComponent")
     ballot-view(
       :isBallotOpened="isBallotOpened"
       :displayWinner="displayWinner"
-      :votingHasBegun="votingHasBegun"
+      :startTimeHasPassed="startTimeHasPassed"
       :getStartTime="getStartTime"
       :getEndTime="getEndTime"
       :getLoser="getLoser"
-      :ballotContentImg="ballotContentImg"
     )
       //- q-btn(v-close-popup color="secondary").float-right Close
 </template>
