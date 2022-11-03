@@ -153,12 +153,16 @@ export const getSymbolInfo = (balance: string): SymbolInfo => {
 };
 
 export const getAvailableArbitratorStatus = (arbitrator: Arbitrator) => {
+  console.log(1, arbitrator);
   if (!arbitrator) return null;
+  console.log(2);
   if (
     new Date(arbitrator.term_expiration + "Z") < new Date() &&
     [1, 2].includes(arbitrator.arb_status)
   ) {
+    console.log(3);
     return 4;
   }
+  console.log(4, arbitrator);
   return arbitrator.arb_status;
 };

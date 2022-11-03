@@ -26,6 +26,7 @@
 <script>
 import AssignedCases from "./AssignedCases.vue";
 import { mapGetters } from "vuex";
+import { getAvailableArbitratorStatus } from "../../util";
 
 export default {
   components: {
@@ -67,8 +68,9 @@ export default {
       selfArbitrator: "resolve/isArbitrator",
       account: "accounts/account",
     }),
-    getArbitratorStatus: () =>
-      getAvailableArbitratorStatus(this.selfArbitrator),
+    getArbitratorStatus() {
+      return getAvailableArbitratorStatus(this.selfArbitrator);
+    },
   },
   updated() {
     const selfArbitrator = this.selfArbitrator;
