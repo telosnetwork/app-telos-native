@@ -1,24 +1,72 @@
 <template>
-  <div class="wrap">
-    <h4 class="heading">Elections are open!</h4>
-    <p class="content q-pb-lg">
-      We are currently processing an election and every vote matters, especially
-      yours! Head on over to Decide Voter and select this term’s arbitrators.
-    </p>
+  <div class="wrap" v-if="isResolveStoresAvailable">
+    <h4 class="heading">{{ currentElectionContent.heading }}</h4>
+    <p class="content q-pb-lg">{{ currentElectionContent.text }}</p>
     <q-btn
       color="primary"
-      label="View Elections"
-      @click="onClickViewElections"
+      :label="currentElectionContent.buttonText"
+      @click="onClickButton(currentElectionContent.buttonRoute)"
     />
     <!--<q-btn color="primary" label="Vote" /> -->
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { ELECTION_STATUS_LIST } from "../../constants/elections";
+const electionStatus = {
+  CREATED: {
+    heading: "Elections Coming Soon!",
+    text: "There is an upcoming election, and we are currently taking nominations. Think that you would make a good arbitrator? Then consider nominating yourself!",
+    buttonText: "View Elections",
+    buttonRoute: "/resolve/elections",
+  },
+  LIVE: {
+    heading: "Election is Live!",
+    text: "An election is currently underway and every vote matters, especially yours! Head on over to Decide Voter and select this term’s arbitrators.",
+    buttonText: "View Elections",
+    buttonRoute: "/resolve/elections",
+  },
+  FINALIZING: {
+    heading: "Election Has Ended",
+    text: "An election has recently finished. See how the candidates did, and who will be one of Telos's newest arbitrators.",
+    buttonText: "View Election Results",
+    buttonRoute: "/resolve/elections",
+  },
+  ENDED: {
+    heading: "Arbitration is Currently Ongoing!",
+    text: "There are currently active arbitrators for this period. You can view the ongoing arbitration cases by heading to the cases page.",
+    buttonText: "View Cases",
+    buttonRoute: "/resolve/cases",
+  },
+};
 export default {
+  computed: {
+    ...mapGetters({
+      currentElection: "resolve/getCurrentElection",
+      isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
+    }),
+    currentElectionStatus() {
+      this.currentElection.status;
+    },
+    currentElectionContent() {
+      let statusString = ELECTION_STATUS_LIST[this.currentElection.status || 3];
+      console.log("statusString 1", statusString);
+      if (statusString === "LIVE") {
+        const endVotingUnixTimestamp = new Date(
+          `${this.currentElection.end_voting_ts}Z`
+        ).getTime();
+        const rightNow = new Date().getTime();
+        if (endVotingUnixTimestamp < rightNow) {
+          statusString = "FINALIZING";
+        }
+      }
+      return electionStatus[statusString];
+    },
+  },
   methods: {
-    onClickViewElections() {
-      this.$router.push("/resolve/elections");
+    onClickButton(path) {
+      this.$router.push(path);
     },
   },
 };
@@ -40,6 +88,7 @@ export default {
     font-weight: 600;
     font-size: 24px;
     line-height: 37px;
+    text-align: center;
   }
   p.content {
     font-style: normal;

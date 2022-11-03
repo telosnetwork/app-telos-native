@@ -9,15 +9,17 @@ export const ELECTION_STATUS = ["", "Created", "Live", "Ended"];
 export const ELECTION_STATUS_MAP = {
   CREATED: 1,
   LIVE: 2,
-  ENDED: 3
+  ENDED: 3,
 };
+
+export const ELECTION_STATUS_LIST = ["", "CREATED", "LIVE", "ENDED"];
 
 export const FETCH_ELECTIONS = async (): Promise<Election[]> => {
   const { rows } = await GET_TABLE_ROWS({
     code: NEXT_PUBLIC_ARBITRATION_CONTRACT,
     scope: NEXT_PUBLIC_ARBITRATION_CONTRACT,
     table: "elections",
-    reverse: true
+    reverse: true,
   });
   return rows;
 };
@@ -27,7 +29,7 @@ export const FETCH_NOMINEES = async (): Promise<Nominee[]> => {
     code: NEXT_PUBLIC_ARBITRATION_CONTRACT,
     scope: NEXT_PUBLIC_ARBITRATION_CONTRACT,
     table: "nominees",
-    reverse: true
+    reverse: true,
   });
   return rows;
 };
@@ -36,7 +38,7 @@ export const FETCH_ARBITRATORS = async (): Promise<Arbitrator[]> => {
   const { rows } = await GET_TABLE_ROWS({
     code: NEXT_PUBLIC_ARBITRATION_CONTRACT,
     scope: NEXT_PUBLIC_ARBITRATION_CONTRACT,
-    table: "arbitrators"
+    table: "arbitrators",
   });
   return rows;
 };
