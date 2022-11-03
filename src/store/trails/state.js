@@ -8,6 +8,7 @@ export default () => ({
         next_key: '',
         limit: 250,
         more: true,
+        lastQuery: false,
       },
     },
     view: {
