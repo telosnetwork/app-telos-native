@@ -3,7 +3,9 @@
     <div class="q-pa-md stepper-wrap">
       <q-stepper v-model="caseStatus" vertical color="primary" animated>
         <q-step :name="0" title="Case Setup" icon="settings">
-          Case Setup description
+          Case has been set up, and the claimant is able to submit additional
+          claims. Arbitrators have not yet been assigned, and the respondant is
+          not yet allowed to respond to the individual claims.
           <br /><br />
           <q-btn
             v-if="isClaimant"
@@ -55,11 +57,22 @@
         </q-step>
 
         <q-step :name="2" title="Arbitrators Assigned" icon="assignment">
-          Awaiting arbs description
+          Now that the arbitrator(s) has been assigned, case waits for the
+          arbitrator to begin the case investigation.
+          <br /><br />
+          <q-btn
+            v-if="isCaseArbitrator()"
+            @click="startCase()"
+            color="primary"
+            label="Start Case"
+          />
         </q-step>
 
         <q-step :name="3" title="Case Investigation" icon="add_comment">
-          Case Investigation description
+          Arbitrator begins to investigate the individual claims. Claimant can
+          update their claims, especially if more info is required by the
+          arbitrator. Respondant will also be able to respond to claims made by
+          the claimant.
         </q-step>
 
         <q-step :name="4" title="Decision" icon="add_comment">
@@ -166,6 +179,9 @@ export default {
     closeModal() {
       this.form = null;
     },
+    isCaseArbitrator() {
+      return this.caseFile.arbitrators.includes(this.account);
+    },
     canArbitratorSubmitOffer() {
       // is arbitrator available
       if (!this.isArbitrator) return false;
@@ -184,6 +200,23 @@ export default {
         return "update";
       }
       return "new";
+    },
+    async startCase() {
+      const startCaseActions = [
+        {
+          account: "testtelosarb",
+          name: "startcase",
+          data: {
+            case_id: this.caseFile.case_id,
+            assigned_arb: this.account,
+          },
+        },
+      ];
+      try {
+        await this.$store.$api.signTransaction(startCaseActions);
+      } catch (err) {
+        console.log("endElection error: ", err);
+      }
     },
     async validateCase(isProceed) {
       const validateCaseActions = [

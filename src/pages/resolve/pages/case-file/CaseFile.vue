@@ -6,12 +6,16 @@
           <p>
             <strong>{{ caseFile.claimant }}</strong> is the claimant, with
             <strong>{{ caseFile.respondant }}</strong> being the respondant.
-            There is
-            <strong>{{ caseFile.arbitrators?.length }}</strong> arbitrator,
-            <strong>{{
-              caseFile.arbitrators && caseFile.arbitrators[0]
-            }}</strong
-            >, assigned to the case.
+            There
+            <span v-if="caseFile.arbitrators?.length">
+              is <strong>{{ caseFile.arbitrators?.length }}</strong> arbitrator,
+              <strong>{{
+                caseFile.arbitrators && caseFile.arbitrators[0]
+              }}</strong
+              >,&nbsp;
+            </span>
+            <span v-else> are <strong>no arbitrators</strong>&nbsp; </span>
+            assigned to the case.
           </p>
           <p>
             Case is currently in <strong>{{ getCaseStatus() }}</strong> mode

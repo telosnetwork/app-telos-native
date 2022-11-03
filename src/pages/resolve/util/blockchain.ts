@@ -96,6 +96,7 @@ export const fetchOffers = async (context: any) => {
     code: "testtelosarb",
     scope: "testtelosarb",
     table: "offers",
+    limit: 1000,
   });
   return rows;
 };
