@@ -8,9 +8,19 @@
       <p>
         Are you sure that you would like to accept this offer? You will not be
         able to change your mind.
+        <!-- {{
+          {
+            balance: balance,
+            fee: fee,
+            exchangeRate: exchangeRate,
+            deficit: deficit,
+            adjustedDeficit: adjustedDeficit,
+            tlosFee: tlosFee,
+          }
+        }} -->
       </p>
     </q-card-section>
-    <q-card-section>
+    <q-card-section v-if="deficit > 0">
       <p class="error">
         <strong>
           Since your balance of {{ balance }} is not enough to cover the fee,
@@ -20,7 +30,7 @@
       </p>
     </q-card-section>
     <q-card-actions align="right" class="text-primary">
-      <q-btn flat label="Accept" @click="submit('accept')" />
+      <q-btn v-if="deficit < 0" flat label="Accept" @click="submit('accept')" />
       <q-btn flat color="red" label="Reject" @click="submit('reject')" />
       <q-btn flat label="Cancel" @click="close" />
     </q-card-actions>
