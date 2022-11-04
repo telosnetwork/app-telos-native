@@ -27,10 +27,10 @@ export default {
       moment: moment,
       step: ref(1),
       isOfficial: true,
-      typeOfBallot: TYPE_OF_BALLOT_0,
       ballotTypes: [TYPE_OF_BALLOT_0, TYPE_OF_BALLOT_1, TYPE_OF_BALLOT_2],
       isBallotListRowDirection: true,
       openForVoting: true,
+      typeOfBallot: TYPE_OF_BALLOT_0,
       onlyOneOption: true,
       form: {
         newOptionLabel: '',
@@ -74,10 +74,45 @@ export default {
   computed: {
     ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees', 'ballot']),
     ...mapGetters('accounts', ['account','accountData']),
+    tinyDevice() {
+      return this.$q.screen.width < 600;
+    },
+    smallDevice() {
+      return this.$q.screen.width < 800;
+    },
+    mediumDevice() {
+      return this.$q.screen.width < 1024;
+    },
+    sectionClass() {
+      // we need to get rid of the padding if we are in a tiny device
+      return this.tinyDevice ? 'q-pa-none' : 'q-pa-md';
+    },
+    textClass() {
+      if (this.tinyDevice) return 'text-x-small';
+      if (this.smallDevice) return 'text-small';
+      return '';
+    },
+    radioBtnVertical() {
+      return this.smallDevice || this.tinyDevice;
+    },
+    previewVertical() {
+      return this.smallDevice || this.tinyDevice;
+    },
+    stepperVertical() {
+      // stepper turn from horizontal to vertical on small devices
+      return this.mediumDevice;
+    },
+    maximized() {
+      return this.tinyDevice;
+    },
+    imageHintText() {
+      // if we don't have much space. Do not show this text.
+      return this.maximized ?
+        '' :
+        'Upload an image and paste the url here to include it in your poll.';
+    },
     filename() {
       if (!this.form.file) return '';
-      console.log('this.form.file: ', [this.form.file]);
-      console.log('this.form.file.name: ', typeof this.form.file.name , [this.form.file.name]);
       return this.form.file.name;
     },
     optionsAsText() {
@@ -147,12 +182,9 @@ export default {
       'fetchFees',
     ]),
     debug(){
-      console.log('BallotForm:', [this]);
-      console.log('BallotForm.form:', [this.form]);
     },
     // auxiliar not-implemented-yet functions
     async nextStep() {
-      console.error('nextStep()', this.step);
       if (this.step >= 5) return;
       let list = {};
       switch(this.step) {
@@ -229,8 +261,6 @@ export default {
       }
 
       let final_str = JSON.stringify(final);
-      console.log('final: ', [final]);
-      console.log('final_str: ', [final_str]);
 
       return final_str;
     },
@@ -390,9 +420,6 @@ export default {
       try {
         const ipfs = await IPFS.create();
         this.cid = await ipfs.add(file);
-
-        console.log('convertToIPFS() this.cid.path: ', this.cid.path);
-        console.log('convertToIPFS() this.form.IPFSString: ', this.form.IPFSString);
       } catch (e) {
         if (e.code == 'ERR_LOCK_EXISTS') return;
         console.error(e);
@@ -408,9 +435,12 @@ export default {
       this.convertToIPFS(this.form.file);
     },
     'form.endTime'() {
-      if (!this.$refs.qDateProxy1 || this.$refs.qDateProxy2) return;
-      this.$refs.qDateProxy1.hide();
-      this.$refs.qDateProxy2.hide();
+      try {
+        this.$refs.qDateProxy1.hide();
+        this.$refs.qDateProxy2.hide();
+      } catch(e) {
+        console.error(e);
+      }
     },
     'form.imageUrl'() {
       if (this.form.imageUrl == '') {
@@ -490,9 +520,10 @@ export default {
 <template lang="pug">
 q-dialog(
   v-model="show"
+  :maximized="maximized"
   persistent
 )
-  q-card.container-md(
+  q-card.column.no-wrap.container-md(
     flat
     bordered
   )
@@ -500,14 +531,17 @@ q-dialog(
     q-card-section.bg-primary.text-white(@click="debug")
       .text-h6 Create a poll
 
-    q-card-section
+    q-card-section.flex-grow.column.no-wrap(
+      :class="sectionClass"
+    )
 
-      q-stepper.ballot-creation(
+      q-stepper.ballot-creation.flex-grow.column.no-wrap(
         v-model="step"
         header-nav
         ref="stepper"
         color="primary"
         animated
+        :vertical="stepperVertical"
       )
         q-step(
           :name="1"
@@ -515,7 +549,7 @@ q-dialog(
           icon="info"
           :done="step > 1"
         )
-          q-card-section
+          q-card-section(:class="smallDevice ? 'q-px-none q-py-xs' : ''")
             q-input(
               ref="title"
               v-model="form.title"
@@ -535,7 +569,7 @@ q-dialog(
               v-model="form.imageUrl"
               label="Image URL"
               placeholder="https://..."
-              hint="Upload an image and paste the url here to include it in your poll."
+              :hint="imageHintText"
               :rules="[rules.required, (val) => !rules.isActive || !badImage || 'The image can not be load']"
             )
               template(v-slot:after v-if="form.imageUrl != ''")
@@ -554,7 +588,7 @@ q-dialog(
           icon="group"
           :done="step > 2"
         )
-          q-card-section
+          q-card-section(:class="smallDevice ? 'q-px-none q-py-xs' : ''")
             span
               | Select DAO
             .row.gap-sm
@@ -569,11 +603,11 @@ q-dialog(
                 :val="false"
               )
             div.q-mt-sm.column(:class="isOfficial ? '' : 'hidden'")
-              p
+              p(:class="textClass")
                 | By selecting the Telos Community as DAO you will allow all users of our beloved community to vote in this ballot.
                 | The voting power of each user will come from the TLOS staked balance plus the staked TLOS in the REX system.
             div.q-mt-sm.column(:class="isOfficial ? 'hidden' : ''")
-              p
+              p(:class="textClass")
                 | By selecting Custom DAO, you will allow only registered users of this DAO to vote in this ballot.
                 | Select the DAO from the one you are already part of or join a new ballot to create a ballot for.
               .row.items-center.gap
@@ -589,6 +623,7 @@ q-dialog(
                   color="primary"
                   label="Join new DAO"
                   to="/trails/treasuries"
+                  v-if="!form.treasurySymbol"
                 )
               span.q-mt-sm
                 | Allow users voting using
@@ -614,33 +649,51 @@ q-dialog(
           icon="list"
           :done="step > 3"
         )
-          q-card-section
+          q-card-section(:class="smallDevice ? 'q-px-none q-py-xs' : ''")
             span
               | What kind of ballot do you want?
-            .row.gap-sm
-              q-radio(
-                v-model="typeOfBallot"
-                label="Simple Yes or No"
-                :val="ballotTypes[0]"
-              )
-              q-radio(
-                v-model="typeOfBallot"
-                label="Yes/No/Abstain"
-                :val="ballotTypes[1]"
-              )
-              q-radio(
-                v-model="typeOfBallot"
-                label="Multiple option"
-                :val="ballotTypes[2]"
-              )
-            div(:class="typeOfBallot == ballotTypes[0] ? '' : 'hidden'")
-              | Simple binary ballots only have two options to vote for.
-              | By default we use the words
-              b  Yes
-              |  and
-              b  No
-              | , but you can change them if you want.
-              .q-mt-sm.raw.flex.gap
+            // :dense="radioBtnVertical"
+            dev.flex.no-wrap(:class="radioBtnVertical ? 'row' : 'column'")
+              div.q-mt-sm(:class="radioBtnVertical ? 'col-auto flex column no-wrap' : ''")
+                q-radio.q-mr-md(
+                  v-model="typeOfBallot"
+                  label="Simple Yes or No"
+                  :val="ballotTypes[0]"
+                )
+                q-radio.q-mr-md(
+                  v-model="typeOfBallot"
+                  label="Yes/No/Abstain"
+                  :val="ballotTypes[1]"
+                )
+                q-radio.q-mr-md(
+                  v-model="typeOfBallot"
+                  label="Multiple option"
+                  :val="ballotTypes[2]"
+                )
+              div.q-mt-sm.col(:class="textClass")
+                div(:class="typeOfBallot == ballotTypes[0] ? '' : 'hidden'")
+                  | Simple binary ballots only have two options to vote for.
+                  | By default we use the words
+                  b  Yes
+                  |  and
+                  b  No
+                  | , but you can change them if you want.
+                div(:class="typeOfBallot == ballotTypes[1] ? '' : 'hidden'")
+                  | This kind of ballot is the same as the binary one but has three options to vote for.
+                  | By default we use the words
+                  b  Yes
+                  |  ,
+                  b  No
+                  |  and
+                  b  Abstain
+                  | , but you can change them if you want.
+                div(:class="typeOfBallot == ballotTypes[2] ? '' : 'hidden'")
+                  | Multiple option ballots are completely configurable.
+                  | You can define a list of several options to vote for, with human readability names,
+                  | where voters may be allowed to check none or more than one option simultaneously in the same vote.
+            div.q-mt-sm(:class="typeOfBallot == ballotTypes[0] ? '' : 'hidden'")
+              // Simple yes or No
+              .q-mt-sm.flex(:class="previewVertical ? 'column' : 'raw gap'")
                 q-input.col-grow(
                   ref="op_a_1"
                   v-model="form.optionsLabels[0]"
@@ -653,50 +706,60 @@ q-dialog(
                   label="option 2"
                   :rules="[rules.required]"
                 ) 
-            div(:class="typeOfBallot == ballotTypes[1] ? '' : 'hidden'")
-              | This kind of ballot is the same as the binary one but has three options to vote for.
-              | By default we use the words
-              b  Yes
-              |  ,
-              b  No
-              |  and
-              b  Abstain
-              | , but you can change them if you want.
-              .q-mt-sm.raw.flex.gap
+            div.q-mt-sm(:class="typeOfBallot == ballotTypes[1] ? '' : 'hidden'")
+              // Yes, No or Abstain
+              .q-mt-sm.flex(:class="previewVertical ? 'column' : 'raw gap'")
                 q-input.col-grow(
+                  dense
                   ref="op_b_1"
                   v-model="form.optionsLabels[0]"
                   label="option 1"
                   :rules="[rules.required]"
                 )
                 q-input.col-grow(
+                  dense
                   ref="op_b_2"
                   v-model="form.optionsLabels[1]"
                   label="option 2"
                   :rules="[rules.required]"
                 )
                 q-input.col-grow(
+                  dense
                   ref="op_b_3"
                   v-model="form.optionsLabels[2]"
                   label="option 3"
                   :rules="[rules.required]"
                 )  
-            div(:class="typeOfBallot == ballotTypes[2] ? '' : 'hidden'")
-              | Multiple option ballots are completely configurable.
-              | You can define a list of several options to vote for, with human readability names,
-              | where voters may be allowed to check none or more than one option simultaneously in the same vote.
-              .q-mt-sm.flex.row.gap
+            div.q-mt-sm(:class="typeOfBallot == ballotTypes[2] ? '' : 'hidden'")
+              // Multiple option
+              .q-mt-sm.flex(:class="previewVertical ? 'column' : 'raw gap'")
                 .col.flex.column.options-left
                   .flex.row.items-center.gap.options-left__header
-                    q-input.col-grow(ref="newOptionInput" v-model="form.newOptionLabel" label="new option" bottom-slots :rules="[isNewOptionRequired]" @update:model-value="rules.setActive(false)")
+                    q-input.col-grow(ref="newOptionInput" v-model="form.newOptionLabel" label="new option" dense bottom-slots :rules="[isNewOptionRequired]" @update:model-value="rules.setActive(false)")
                       template(v-slot:append)
-                        q-btn(no-caps color="primary" icon="add" label="add" @click="addOption()")
-                  .flex.column.q-pa-md.options-left__options-list
+                        q-btn(
+                          no-caps
+                          color="primary"
+                          icon="add"
+                          :label="tinyDevice ? '' : 'add'"
+                          :size="tinyDevice ? 'sm' : 'md'"
+                          @click="addOption()"
+                        )
+                  .flex.column.options-left__options-list(
+                    :class="smallDevice ? 'q-px-md q-py-xs' : 'q-pa-md'"
+                  )
                     .flex.row.items-center.options-left__option(v-for="(coso,index) in form.optionsLabels")
-                      q-input.col-grow.options-left__option-label(:dense="true" bottom-slots v-model="form.optionsLabels[index]" @update:model-value="rules.setActive(false)")
+                      q-input.col-grow.options-left__option-label(
+                        dense
+                        bottom-slots
+                        hide-bottom-space
+                        :class="tinyDevice ? 'q-mt-sm' : 'q-mt-md'"
+                        v-model="form.optionsLabels[index]"
+                        @update:model-value="rules.setActive(false)"
+                      )
                         template(v-slot:append)
                           q-icon.cursor-pointer(name="close" @click="deleteOption(index)")
-                    q-select.options-labels(
+                    q-select.q-mt-md.options-labels(
                       dense
                       readonly
                       hide-dropdown-icon
@@ -708,23 +771,24 @@ q-dialog(
                     )
                       template(v-slot:prepend)
                         .text-body2.text-weight-bolder options:
-                  .flex.row.justify-end.gap-sm
+                  .flex.row.justify-end.gap-sm.no-wrap
                     q-checkbox(v-model="onlyOneOption" v-if="onlyOneOption") Voters can only choose one option
                     div.flex-grow
-                    q-btn(no-caps color="primary" icon="list" label="Default" @click="setDefaultOptions(3)")
-                    q-btn(no-caps color="primary" icon="delete_sweep" label="Clean" @click="cleanOptions()")
+                    div.no-wrap.flex.gap-sm
+                      q-btn(no-caps color="primary" icon="list" :label="smallDevice ? '': 'Default'" @click="setDefaultOptions(3)")
+                      q-btn(no-caps color="primary" icon="delete_sweep" :label="smallDevice ? '': 'Clean'" @click="cleanOptions()")
                 .col.flex.column.options-right(v-if="!onlyOneOption")
                   q-checkbox(v-model="onlyOneOption") Voters can only choose one option
-                  div.q-mt-sm
+                  div.q-mt-sm(:class="textClass")
                     | You are allowing voters to check several options (or none) in the same vote. Now you should set the maximum and minimum.
                     br
                     | For example, if you need to select two members from five options, your max and min should both equal 2.
                     | However, if you want to know what colors people like from a list, you will put the min at zero and the max high enough to select them all.
-                  .flex.row.q-mt-sm.options-right__howmany
-                    q-input.col-auto.options-right__howmany-min(ref="minimun" v-model="form.minOptions" label="minimun"
+                  .flex.row.no-wrap.q-mt-sm.options-right__howmany
+                    q-input.col.options-right__howmany-min(ref="minimun" v-model="form.minOptions" label="minimun"
                       :rules="[rules.required, rules.integer, rules.isNatural, rules.lowerOrEqualThan(form.maxOptions)]"
                     )
-                    q-input.col-auto.options-right__howmany-max(ref="maximun" v-model="form.maxOptions" label="maximun"
+                    q-input.col.options-right__howmany-max(ref="maximun" v-model="form.maxOptions" label="maximun"
                       :rules="[rules.required, rules.integer, rules.positiveInteger, rules.greaterOrEqualThan(form.minOptions), rules.lowerOrEqualThan(form.optionsLabels.length)]"
                     )
         q-step(
@@ -732,76 +796,78 @@ q-dialog(
           title="Open Voting"
           icon="how_to_vote"
           :done="step > 4"
-        )      
-          p You can open this ballot for voting right away or you can create the ballot and skip this step for later.
-          q-checkbox(v-model="openForVoting" disable) Open for voting right away
-          q-input(
-            ref="endTime"
-            v-model="form.endTime"
-            label="End date"
-            :disable="!openForVoting"
-            :rules="[rules.required, rules.dateFuture(Date.now())]"
-          )
-            template(v-slot:append)
-              q-icon.cursor-pointer(name="event" color="primary")
-                q-popup-proxy(ref="qDateProxy1" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
-                  q-date(
-                    v-model="form.endTime"
-                    mask="YYYY-MM-DD HH:mm"
-                  )
-              q-icon.cursor-pointer(name="access_time" color="primary")
-                q-popup-proxy(ref="qDateProxy2" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
-                  q-time(
-                    v-model="form.endTime"
-                    mask="YYYY-MM-DD HH:mm"
-                  )
-          small Note: Proposals will be eligible for voting once they are created.
+        )
+          q-card-section(:class="smallDevice ? 'q-px-none q-py-xs' : ''")
+            p(:class="textClass") You can open this ballot for voting right away or you can create the ballot and skip this step for later.
+            q-checkbox(v-model="openForVoting" disable) Open for voting right away
+            q-input(
+              ref="endTime"
+              v-model="form.endTime"
+              label="End date"
+              :disable="!openForVoting"
+              :rules="[rules.required, rules.dateFuture(Date.now())]"
+            )
+              template(v-slot:append)
+                q-icon.cursor-pointer(name="event" color="primary")
+                  q-popup-proxy(ref="qDateProxy1" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
+                    q-date(
+                      v-model="form.endTime"
+                      mask="YYYY-MM-DD HH:mm"
+                    )
+                q-icon.cursor-pointer(name="access_time" color="primary")
+                  q-popup-proxy(ref="qDateProxy2" anchor="bottom left" self="top right" transition-show="scale" transition-hide="scale")
+                    q-time(
+                      v-model="form.endTime"
+                      mask="YYYY-MM-DD HH:mm"
+                    )
+            small Note: Proposals will be eligible for voting once they are created.
         q-step(
           :name="5"
           title="Create Ballot"
           icon="check"
         )
-          .q-mt-sm.flex.row.gap
-            .col.flex.column.preview-left(:class="isBallotListRowDirection ? 'row-direction' : 'column-direction'")
-              ballot-list-item(
-                :ballot="ballot"
-                :displayWinner="false"
-                :isBallotOpened="false"
-                :startTimeHasPassed="false"
-                :getStartTime="getStartTime()"
-                :getEndTime="form.endTime"
-                :getLoser="false"
-              )
-            .col.flex.column.preview-right
-              .q-mt-sm
-                b title:
-                br
-                span {{form.title}}
-              .q-mt-sm
-                b description:
-                br
-                span {{form.description}}
-              .q-mt-sm
-                b PDF:&nbsp;
-                span(v-if="form.file") {{filename}}
-                span(v-if="!form.file") No pdf was attached
-              .q-mt-sm
-                b DAO:&nbsp;
-                span {{form.treasurySymbol.label}}
-              .q-mt-sm
-                .flex.row.gap
-                  .col.flex.column
-                    b options:
-                    ul.q-mt-xs
-                      li(v-for="(option,index) in form.optionsLabels") {{option}}
-                  .col.flex.column
-                    br
-                    span(v-if="onlyOneOption") Voters only can choose one option
-                    span(v-if="!onlyOneOption") Voters can choose from {{form.minOptions}} to {{form.maxOptions}} options
-              .q-mt-sm
-                b open:&nbsp;
-                span(v-if="openForVoting") this ballot will be open from now until {{moment(form.endTime).format("MMMM Do YYYY")}}
-                span(v-if="!openForVoting") this ballot will not open immediately and must be oppened manually in the future
+          q-card-section(:class="smallDevice ? 'q-px-none q-py-xs' : ''")
+            .q-mt-sm.flex.gap(:class="previewVertical ? 'column' : 'raw'")
+              .col-auto.flex.column.preview-left.row-direction(v-if="!previewVertical")
+                ballot-list-item(
+                  :ballot="ballot"
+                  :displayWinner="false"
+                  :isBallotOpened="false"
+                  :startTimeHasPassed="false"
+                  :getStartTime="getStartTime()"
+                  :getEndTime="form.endTime"
+                  :getLoser="false"
+                )
+              .col.flex.column.preview-right
+                .q-mt-sm
+                  b title:
+                  br
+                  span {{form.title}}
+                .q-mt-sm
+                  b description:
+                  br
+                  span {{form.description}}
+                .q-mt-sm
+                  b PDF:&nbsp;
+                  span(v-if="form.file") {{filename}}
+                  span(v-if="!form.file") No pdf was attached
+                .q-mt-sm
+                  b DAO:&nbsp;
+                  span {{form.treasurySymbol.label}}
+                .q-mt-sm
+                  .flex.row.gap
+                    .col.flex.column
+                      b options:
+                      ul.q-mt-xs
+                        li(v-for="(option,index) in form.optionsLabels") {{option}}
+                    .col.flex.column
+                      b method:
+                      span(v-if="onlyOneOption") Voters only can choose one option
+                      span(v-if="!onlyOneOption") Voters can choose from {{form.minOptions}} to {{form.maxOptions}} options
+                .q-mt-sm
+                  b open:&nbsp;
+                  span(v-if="openForVoting") this ballot will be open from now until {{moment(form.endTime).format("MMMM Do YYYY")}}
+                  span(v-if="!openForVoting") this ballot will not open immediately and must be oppened manually in the future
         template(v-slot:navigation)
           q-stepper-navigation.flex
             q-btn.q-ml-sm(color="primary" label="Cancel"   flat @click="onCancel()")
@@ -822,6 +888,9 @@ q-dialog(
 .q-stepper__nav
   flex-grow: 1
   align-items: end
-
+.q-stepper--vertical .q-stepper__tab
+  padding: 12px 24px 12px 12px
+.q-stepper--vertical .q-stepper__step-inner
+  padding: 0 24px 32px 48px
 </style>
 
