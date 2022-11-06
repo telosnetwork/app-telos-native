@@ -585,6 +585,40 @@ export const editTreasury = async function (
   return notification.status === 'success';
 };
 
+export const editTreasurySettings = async function (
+  { commit, dispatch},
+  { settings, treasury }
+) {
+  const notification = {
+    icon: 'fas fa-edit',
+    title: 'notifications.trails.editTreasury',
+    content: `Treasury: ${treasury.title}`,
+  };
+  try {
+    let actions = settings.filter((x,i) => treasury.settings[i].value != x.value)
+    .map(x => ({
+      account: 'telos.decide',
+      name: 'toggle',
+      data: {
+        treasury_symbol: supplyToAsset(treasury.symbol),
+        setting_name: x.key
+      },
+    }));
+
+    const transaction = await this.$api.signTransaction(actions);
+    commit('updateTreasurySettings', { settings, treasury });
+    await dispatch('fetchTreasury', supplyToSymbol(treasury.max_supply));
+
+    notification.status = 'success';
+    notification.transaction = transaction;
+  } catch (e) {
+    notification.status = 'error';
+    notification.error = e;
+  }
+  commit('notifications/addNotification', notification, { root: true });
+  return notification.status === 'success';
+};
+
 export const mint = async function (
   { commit },
   { to, quantity, memo, supply }

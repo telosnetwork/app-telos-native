@@ -3,6 +3,7 @@ import { mapGetters } from 'vuex';
 import AddVoterDialog from './AddVoterDialog';
 import MintTokenDialog from './MintTokenDialog';
 import TreasuryEditDialog from './TreasuryEditDialog';
+import TreasuryTokenEditDialog from './TreasuryTokenEditDialog';
 
 export default {
   name: 'TreasuryCard',
@@ -10,6 +11,7 @@ export default {
     AddVoterDialog,
     MintTokenDialog,
     TreasuryEditDialog,
+    TreasuryTokenEditDialog,
   },
   props: {
     treasury: { type: Object, required: true },
@@ -19,6 +21,7 @@ export default {
       show: false,
       showMint: false,
       showEdit: false,
+      showToken: false,
     };
   },
   computed: {
@@ -44,6 +47,11 @@ div
     :treasury="treasury"
     @close="showEdit = false"
   )
+  treasury-token-edit-dialog(
+    :show.sync="showToken"
+    :treasury="treasury"
+    @close="showToken = false"
+  )
   q-card
     q-card-section.bg-primary.text-white(:class="`${!treasury.isPreferred ? undefined : 'prefered'}`")
       .text-h6
@@ -62,6 +70,11 @@ div
           v-if="account === treasury.manager"
           name="fas fa-edit"
           @click="showEdit = true"
+        )
+        q-icon.q-ml-sm.cursor-pointer(
+          v-if="account === treasury.manager"
+          name="fas fa-coins"
+          @click="showToken = true"
         )
       .text-right.text-italic {{ treasury.manager }}
     q-card-section.q-mt-lg

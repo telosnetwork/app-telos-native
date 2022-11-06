@@ -209,6 +209,13 @@ export const addTreasuries = (state, { rows, more }) => {
   state.treasuries.list.loaded = !more;
 };
 
+export const updateTreasurySettings = (state, { settings, treasury }) => {
+  let obj = state.treasuries.list.data.find(
+    (t) => t.max_supply === treasury.max_supply
+  );
+  obj.settings = settings;
+};
+
 export const updateTreasury = (state, { title, description, treasury }) => {
   const obj = state.treasuries.list.data.find(
     (t) => t.max_supply === treasury.max_supply
