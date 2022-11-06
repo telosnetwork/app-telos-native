@@ -27,7 +27,7 @@
 import { mapGetters } from "vuex";
 
 export default {
-  props: ["close", "caseId", "afterReadyCase"],
+  props: ["close", "caseId"],
   data() {
     return {
       number_days_respondant: 7,
