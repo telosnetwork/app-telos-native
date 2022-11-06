@@ -2,6 +2,8 @@ export default {
   common: {
     appName: 'Telos Communities',
     buttons: {
+      reset: 'reset',
+      ok: 'OK',
       cancel: 'Cancel',
       continue: 'Continue',
       create: 'Create',

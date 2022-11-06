@@ -500,7 +500,7 @@ export const fetchTreasury = async function ({ commit }, treasury) {
 
 export const addTreasury = async function (
   { commit, state, rootState },
-  { manager, maxSupply, access, title, description }
+  { manager, maxSupply, access, title, description, settings }
 ) {
   const deposit = state.fees.find((fee) => fee.key === 'treasury').value;
   const notification = {
@@ -509,7 +509,7 @@ export const addTreasury = async function (
     content: `Treasury manager: ${manager}, supply: ${maxSupply}, deposit: ${deposit}`,
   };
   try {
-    const actions = [
+    let actions = [
       {
         account: 'eosio.token',
         name: 'transfer',
@@ -540,6 +540,18 @@ export const addTreasury = async function (
         },
       },
     ];
+
+    let toggles = settings.filter(x => x.value).map(x => ({
+      account: 'telos.decide',
+      name: 'toggle',
+      data: {
+        treasury_symbol: supplyToAsset(maxSupply),
+        setting_name: x.key
+      },
+    }));
+
+    actions = actions.concat(toggles);
+
     const transaction = await this.$api.signTransaction(actions);
     notification.status = 'success';
     notification.transaction = transaction;

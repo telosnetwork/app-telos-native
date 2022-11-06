@@ -35,7 +35,6 @@ export default {
           return result;
         });
 
-        console.log('changes: ', changes);
         if (changes.length == 1) {
           this.selected = {
             key: changes[0].key,

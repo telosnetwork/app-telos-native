@@ -1,16 +1,22 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { validation } from '~/mixins/validation';
+import TreasuryTokenSettingsEdit from './TreasuryTokenSettingsEdit';
 
 export default {
   name: 'TreasuryForm',
   mixins: [validation],
+  components: {
+    TreasuryTokenSettingsEdit
+  },
   props: {
     show: { type: Boolean, required: true },
   },
   data() {
     return {
+      showEditSettings: false,
       form: {
+        settings: [],
         manager: null,
         maxSupply: null,
         maxSupplyValue: null,
@@ -25,6 +31,9 @@ export default {
   },
   computed: {
     ...mapGetters('trails', ['treasuryFees']),
+    settingsAsText() {
+      return this.form.settings.filter(x => x.value).map(x => x.key).join(', ');
+    }
   },
   methods: {
     ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
@@ -40,14 +49,29 @@ export default {
         await this.fetchTreasuries();
       }
     },
+    resetSettings() {
+      this.form.settings = [
+          { 'key': 'burnable',     'value': false },
+          { 'key': 'maxmutable',   'value': false },
+          { 'key': 'reclaimable',  'value': false },
+          { 'key': 'stakeable',    'value': true  },
+          { 'key': 'transferable', 'value': true  },
+          { 'key': 'unstakeable',  'value': false }
+        ];
+    },
     resetTreasury() {
       this.form = {
+        settings: null,
         manager: null,
         maxSupply: null,
         access: null,
         title: null,
         description: null,
       };
+      this.resetSettings();
+    },
+    editSettings() {
+      this.showEditSettings = true;
     },
     setMaxSupply() {
       if (
@@ -66,6 +90,14 @@ export default {
     },
   },
   watch: {
+    show: {
+      handler: function() {
+        if (this.show) {
+          this.resetTreasury();
+        }
+      },
+      inmediate: true
+    },
     'form.maxSupplyValue': function () {
       this.setMaxSupply();
     },
@@ -84,10 +116,33 @@ q-dialog(
   v-model="show"
   persistent
 )
-  q-card(
+  q-dialog(
+    v-model="showEditSettings"
+  )
+    q-card.container-sm
+      q-card-section.bg-primary.text-white
+        .text-h6 Edit DAO token features
+      q-card-section
+        | Each DAO has it's own token which is used to vote. From here you can change....
+      q-card-section
+        treasury-token-settings-edit(v-model="form.settings")
+
+      q-card-actions(
+        align="right"
+      )
+        q-btn(
+          color="primary"
+          :label="$t('common.buttons.reset')"
+          @click="resetSettings()"
+        )
+        q-btn(
+          color="primary"
+          :label="$t('common.buttons.ok')"
+          @click="showEditSettings = false"
+        )
+  q-card.container-md(
     flat
     bordered
-    style="width: 400px; max-width: 80vw;"
   )
     q-card-section.bg-primary.text-white
       .text-h6 Create a DAO
@@ -128,6 +183,20 @@ q-dialog(
           :rules="[rules.required, rules.isInteger, rules.isTokenDecimals]"
           lazy-rules
         )
+      .row
+        .col
+          q-input(
+            v-model="settingsAsText"
+            label="token"
+            readonly
+          )
+            template(v-slot:append)
+              q-btn(
+                icon="edit"
+                no-caps color="primary"
+                label="edit"
+                @click="showEditSettings = true"
+              )
       q-input(
         ref="title"
         v-model="form.title"

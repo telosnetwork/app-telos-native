@@ -21,7 +21,6 @@ export default {
     show() {
       if (this.show) {
         this.settings = this.treasury.settings.map(x => ({key:x.key, value:!!x.value}));
-        console.log('Current settings: ', JSON.stringify(this.settings, null, 4));
       }
     }
   },
@@ -49,12 +48,13 @@ export default {
 q-dialog(
   v-model="show"
 )
-  q-card(style="width: 500px; max-width: 80vw;")
+  q-card.container-sm
     q-card-section.bg-primary.text-white
       .text-h6 Edit DAO token features
     q-card-section
-      | Each DAO has it's own token which is used to vote. From here you can change....
-    q-card-section
+      p Each DAO has it's own token which is used for vote. From here you can change the token features to alter the token behavior.
+      p Clicking on any feature will display a deascription of it
+    q-card-section.q-pt-none
       treasury-token-settings-edit(v-model="settings")
 
     q-card-actions(
@@ -73,4 +73,6 @@ q-dialog(
       )
 </template>
 
-<style lang="sass"></style>
+<style lang="sass">
+
+</style>
