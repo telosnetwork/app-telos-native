@@ -62,7 +62,10 @@
           <br /><br />
           <q-btn
             v-if="isCaseArbitrator()"
-            @click="startCase()"
+            @click="
+              form = true;
+              formType = 'startcase';
+            "
             color="primary"
             label="Start Case"
           />
@@ -129,6 +132,11 @@
           :caseId="caseFile.case_id"
           :close="closeModal"
         />
+        <start-case-form
+          v-if="formType === 'startcase'"
+          :caseId="caseFile.case_id"
+          :close="closeModal"
+        />
       </q-dialog>
     </div>
   </div>
@@ -140,6 +148,7 @@ import ReadyCaseForm from "../../components/ReadyCaseForm.vue";
 import MakeOfferForm from "../../components/MakeOfferForm.vue";
 import OffersTable from "../../components/OffersTable.vue";
 import DismissOfferForm from "../../components/DismissOfferForm.vue";
+import StartCaseForm from "../../components/StartCaseForm.vue";
 
 export default {
   props: ["caseFile"],
@@ -148,6 +157,7 @@ export default {
     MakeOfferForm,
     OffersTable,
     DismissOfferForm,
+    StartCaseForm,
   },
   data() {
     return {
