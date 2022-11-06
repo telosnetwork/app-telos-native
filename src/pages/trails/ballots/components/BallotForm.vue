@@ -850,7 +850,7 @@ q-dialog(
                 .q-mt-sm
                   b PDF:&nbsp;
                   span(v-if="form.file") {{filename}}
-                  span(v-if="!form.file") No pdf was attached
+                  span(v-else) No pdf was attached
                 .q-mt-sm
                   b DAO:&nbsp;
                   span {{form.treasurySymbol.label}}
@@ -863,11 +863,11 @@ q-dialog(
                     .col.flex.column
                       b method:
                       span(v-if="onlyOneOption") Voters only can choose one option
-                      span(v-if="!onlyOneOption") Voters can choose from {{form.minOptions}} to {{form.maxOptions}} options
+                      span(v-else) Voters can choose from {{form.minOptions}} to {{form.maxOptions}} options
                 .q-mt-sm
                   b open:&nbsp;
                   span(v-if="openForVoting") this ballot will be open from now until {{moment(form.endTime).format("MMMM Do YYYY")}}
-                  span(v-if="!openForVoting") this ballot will not open immediately and must be oppened manually in the future
+                  span(v-else) this ballot will not open immediately and must be oppened manually in the future
         template(v-slot:navigation)
           q-stepper-navigation.flex
             q-btn.q-ml-sm(color="primary" label="Cancel"   flat @click="onCancel()")
