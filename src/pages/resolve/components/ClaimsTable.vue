@@ -38,6 +38,20 @@
                 <q-item-label>Respond</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item
+              v-if="isClaimant() && [0, 3].includes(caseFile.case_status)"
+              clickable
+              v-close-popup
+              @click="
+                form = true;
+                formType = 'updateclaim';
+                claimId = props.row.claim_id;
+              "
+            >
+              <q-item-section>
+                <q-item-label>Update</q-item-label>
+              </q-item-section>
+            </q-item>
           </q-list>
         </q-btn-dropdown>
       </q-td>
@@ -51,6 +65,12 @@
         :claimId="claimId"
         :close="closeModal"
       />
+      <update-claim-form
+        v-if="formType === 'updateclaim'"
+        :caseId="$route.params.id"
+        :claimId="claimId"
+        :close="closeModal"
+      />
     </q-dialog>
   </div>
 </template>
@@ -60,6 +80,7 @@ import { fetchClaims } from "../util";
 import { DECISION_CLASS_LIST } from "../constants/claim";
 import IpfsLink from "./IpfsLink.vue";
 import RespondClaimForm from "./RespondClaimForm.vue";
+import UpdateClaimForm from "./UpdateClaimForm.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -67,6 +88,7 @@ export default {
   components: {
     IpfsLink,
     RespondClaimForm,
+    UpdateClaimForm,
   },
   data() {
     return {
@@ -106,6 +128,11 @@ export default {
     },
     getStatus(statusId) {
       return DECISION_CLASS_LIST[statusId];
+    },
+    closeModal() {
+      this.form = false;
+      this.formType = null;
+      this.claimId = null;
     },
   },
   computed: {

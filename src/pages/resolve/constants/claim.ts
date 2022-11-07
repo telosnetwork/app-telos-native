@@ -12,6 +12,8 @@ const NEXT_PUBLIC_ARBITRATION_CONTRACT =
 // 	DISMISSED           = 4,
 // };
 
+export const CLAIM_STATUS_LIST = ["", "Filed", "Accepted", "Dismissed"];
+
 export const DECISION_CLASS_LIST = [
   "",
   "Undecided",
@@ -28,14 +30,14 @@ export const DECISION_CLASS_LIST = [
   "Act Exec Relief",
   "Works Project Failure",
   "TBNOA Breach",
-  "Misc"
+  "Misc",
 ];
 
 export const FETCH_CLAIMS = async (case_id: string): Promise<Claim[]> => {
   const { rows } = await GET_TABLE_ROWS({
     code: NEXT_PUBLIC_ARBITRATION_CONTRACT,
     scope: case_id,
-    table: "claims"
+    table: "claims",
   });
   return rows;
 };
