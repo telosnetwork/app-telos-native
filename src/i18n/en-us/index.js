@@ -198,7 +198,7 @@ export default {
           reclaimable: 'If enabled, the token manager can take away tokens from any user without extra permission',
           stakeable: 'Enable this feature to allow users to stake their tokens',
           transferable: 'Enable this feature to allow users to transfer their tokens. Consider that this is the primary feature, do not disable this feature unless you know what you are doing',
-          unstakeable: 'If enabled, users who has staked their tokens can not unstake them any more',
+          unstakeable: 'If enabled, users who have staked their tokens can not unstake them anymore',
         },
         card: {
           maxSupply: 'Max supply',
