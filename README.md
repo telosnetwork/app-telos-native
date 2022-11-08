@@ -1,5 +1,7 @@
 # Telos App (app-telos-net)
 
+![Alt](https://repobeats.axiom.co/api/embed/fd48297dd5ff515d3c79d35bf68de2f2061d11b9.svg "Repobeats analytics image")
+
 Native App
 
 [https://app-telos-native.pages.dev/](https://app-telos-native.pages.dev/)
