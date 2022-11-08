@@ -21,9 +21,12 @@ export default {
   },
   watch: {
     'form.endTime'() {
-      if (!this.$refs.qDateProxy1 || this.$refs.qDateProxy2) return;
-      this.$refs.qDateProxy1.hide();
-      this.$refs.qDateProxy2.hide();
+      try {
+        this.$refs.qDateProxy1.hide();
+        this.$refs.qDateProxy2.hide();
+      } catch(e) {
+        console.error(e);
+      }
     },
     show() {
       if (this.show) {
