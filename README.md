@@ -1,9 +1,5 @@
 # Telos App (app-telos-net)
 
-![Alt](https://repobeats.axiom.co/api/embed/fd48297dd5ff515d3c79d35bf68de2f2061d11b9.svg "Repobeats analytics image")
-
-Native App
-
 [https://app-telos-native.pages.dev/](https://app-telos-native.pages.dev/)
 
 [Main Net](https://telos-app-native-mainnet.netlify.app/) [![Netlify Status](https://api.netlify.com/api/v1/badges/df3130e3-6286-4f92-8079-47e56acd0abc/deploy-status)](https://app.netlify.com/sites/telos-app-native-mainnet/deploys)
@@ -12,7 +8,11 @@ Native App
 
 [Staging](https://telos-app-native-staging.netlify.app/) [![Netlify Status](https://api.netlify.com/api/v1/badges/877a1f21-5a5d-42b0-9e8c-3f95cc4b0e69/deploy-status)](https://app.netlify.com/sites/telos-app-native-staging/deploys)
 
-### Note regarding Node version
+## Recent Contributions
+
+![Alt](https://repobeats.axiom.co/api/embed/fd48297dd5ff515d3c79d35bf68de2f2061d11b9.svg "Repobeats analytics image")
+
+## Note regarding Node version
 
 It is recommended to use Node version 16.10.0
 
