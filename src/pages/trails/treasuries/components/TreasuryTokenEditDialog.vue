@@ -44,35 +44,27 @@ export default {
 };
 </script>
 
-<template lang="pug">
-q-dialog(
-  v-model="show"
-)
-  q-card.container-sm
-    q-card-section.bg-primary.text-white
-      .text-h6 Edit DAO token features
-    q-card-section
-      p Each DAO has it's own token which is used for vote. From here you can change the token features to alter the token behavior.
-      p Clicking on any feature will display a deascription of it
-    q-card-section.q-pt-none
-      treasury-token-settings-edit(v-model="settings")
-
-    q-card-actions(
-      align="right"
-    )
-      q-btn(
-        flat
-        :label="$t('common.buttons.cancel')"
-        @click="$emit('close')"
-      )
-      q-btn(
-        color="primary"
-        :label="$t('common.buttons.save')"
-        @click="onSaveSettings"
-        :loading="submitting"
-      )
+<template>
+  <q-dialog :model-value="show">
+    <q-card class="container-sm">
+      <q-card-section class="bg-primary text-white">
+        <div class="text-h6">Edit DAO token features</div>
+      </q-card-section>
+      <q-card-section>
+        <p>Each DAO has it's own token which is used for vote. From here you can change the token features to alter the token behavior.</p>
+        <p>Clicking on any feature will display a deascription of it</p>
+      </q-card-section>
+      <q-card-section class="q-pt-none">
+        <treasury-token-settings-edit v-model="settings"></treasury-token-settings-edit>
+      </q-card-section>
+      <q-card-actions :align="'right'">
+        <q-btn flat="flat" :label="$t('common.buttons.cancel')" @click="$emit('close')"></q-btn>
+        <q-btn color="primary" :label="$t('common.buttons.save')" @click="onSaveSettings" :loading="submitting"></q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
-<style lang="sass">
+<style lang="scss">
 
 </style>

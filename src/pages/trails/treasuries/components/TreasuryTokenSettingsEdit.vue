@@ -12,6 +12,7 @@ export default {
   },
   data() {
     return {
+      list: [],
       preValue: {},
       selected: {
         key: '',
@@ -20,15 +21,16 @@ export default {
     };
   },
   async mounted() {
+    this.list = this.modelValue.map(x => x); // clean copy
     this.remember();
   },
   methods: {
     remember(newValue) {
-      this.preValue = (newValue || this.modelValue).map(x => ({...x}))
+      this.preValue = (newValue || this.list).map(x => ({...x}))
     }
   },
   watch: {
-    modelValue: {
+    list: {
       handler:function(newval) {
         let changes = this.preValue.filter((x,i) => {          
           let result = newval[i].value != x.value;
@@ -49,29 +51,35 @@ export default {
 };
 </script>
 
-<template lang="pug">
-.row.tt-editor
-  .col-sm-5.q-mb-md.tt-editor__checkboxes
-    q-list.tt-editor__checkbox-list
-      q-item.tt-editor__checkbox-item(
-        v-for="(coso,index) in modelValue"
-        dense
-      )
-        q-checkbox.tt-editor__checkbox(
-          v-model="modelValue[index].value"
-          :label="modelValue[index].key"
-        )
-  .col-sm-7.tt-editor__doc
-    .q-mt-sm.text-h6.tt-editor__doc-title {{ selected.key }}
-    .q-mt-md.tt-editor__doc-body {{ $t(selected.body) }}
-    
+<template>
+  <div class="row tt-editor">
+    <div class="col-sm-5 q-mb-md tt-editor__checkboxes">
+      <q-list class="tt-editor__checkbox-list">
+        <q-item class="tt-editor__checkbox-item" v-for="(coso,index) in list" dense="dense" :key="index">
+          <q-checkbox class="tt-editor__checkbox"
+            v-model="list[index].value"
+            :label="list[index].key"
+            @update:model-value="$emit('update:modelValue', list)"
+          ></q-checkbox>
+        </q-item>
+      </q-list>
+    </div>
+    <div class="col-sm-7 tt-editor__doc">
+      <div class="q-mt-sm text-h6 tt-editor__doc-title">{{ selected.key }}</div>
+      <div class="q-mt-md tt-editor__doc-body">{{ $t(selected.body) }}</div>
+    </div>
+  </div>
 </template>
 
-<style lang="sass">
 
-.tt-editor__doc
-  padding-left: 24px
-.tt-editor__doc-title
+<style lang="scss">
+
+.tt-editor__doc {
+  padding-left: 24px;
+}
+
+.tt-editor__doc-title {
   font-weight: bold
+}
 
 </style>
