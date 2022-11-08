@@ -9,7 +9,7 @@
 [Staging](https://telos-app-native-staging.netlify.app/) [![Netlify Status](https://api.netlify.com/api/v1/badges/877a1f21-5a5d-42b0-9e8c-3f95cc4b0e69/deploy-status)](https://app.netlify.com/sites/telos-app-native-staging/deploys)
 
 ## About
-View, create and vote on proposals, polls, DAO decisions and more.
+View, create, and vote on proposals, polls, DAO decisions and more.
 
 ## Recent Contributions
 
