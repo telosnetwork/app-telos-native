@@ -771,12 +771,17 @@ q-dialog(
                     )
                       template(v-slot:prepend)
                         .text-body2.text-weight-bolder options:
-                  .flex.row.justify-end.gap-sm.no-wrap
+                  .flex.row.justify-end.gap-sm.no-wrap(v-if="smallDevice")
+                    div.flex-grow
+                    div.no-wrap.flex.gap-sm.q-px-md
+                      q-btn(no-caps color="primary" icon="list" :label="'Default'" @click="setDefaultOptions(3)")
+                      q-btn(no-caps color="primary" icon="delete_sweep" :label="'Clean'" @click="cleanOptions()")
+                  .flex.row.justify-end.gap-sm.no-wrap(:class="smallDevice ? 'q-mt-md' : ''")
                     q-checkbox(v-model="onlyOneOption" v-if="onlyOneOption") Voters can only choose one option
                     div.flex-grow
-                    div.no-wrap.flex.gap-sm
-                      q-btn(no-caps color="primary" icon="list" :label="smallDevice ? '': 'Default'" @click="setDefaultOptions(3)")
-                      q-btn(no-caps color="primary" icon="delete_sweep" :label="smallDevice ? '': 'Clean'" @click="cleanOptions()")
+                    div.no-wrap.flex.gap-sm(v-if="!smallDevice")
+                      q-btn(no-caps color="primary" icon="list" :label="'Default'" @click="setDefaultOptions(3)")
+                      q-btn(no-caps color="primary" icon="delete_sweep" :label="'Clean'" @click="cleanOptions()")
                 .col.flex.column.options-right(v-if="!onlyOneOption")
                   q-checkbox(v-model="onlyOneOption") Voters can only choose one option
                   div.q-mt-sm(:class="textClass")
