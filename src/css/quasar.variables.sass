@@ -72,32 +72,32 @@ div.container-xl
   margin-left: auto
   max-width: none
 
-@media (min-width: $breakpoint-sm-min) 
-  div.container,
-  div.container-sm 
-    max-width: $breakpoint-xs - $container-padding
-
-@media (min-width: $breakpoint-md-min) 
-  div.container,
-  div.container-sm,
-  div.container-md 
-    max-width: $breakpoint-sm - $container-padding
-
-@media (min-width: $breakpoint-lg-min) 
+@media (min-width: $breakpoint-lg-min)
   div.container,
   div.container-sm,
   div.container-md,
-  div.container-lg 
+  div.container-lg
     max-width: $breakpoint-md - $container-padding
 
-@media (min-width: $breakpoint-xl-min) 
+@media (min-width: $breakpoint-xl-min)
   div.container,
   div.container-sm,
   div.container-md,
   div.container-lg,
-  div.container-xl 
+  div.container-xl
     max-width: $breakpoint-lg - $container-padding
-    
+
+@media (min-width: $breakpoint-md-min)
+  div.container,
+  div.container-sm,
+  div.container-md
+    max-width: $breakpoint-sm - $container-padding
+
+@media (min-width: $breakpoint-sm-min)
+  div.container,
+  div.container-sm
+    max-width: $breakpoint-xs - $container-padding
+
 // --------------------------------------
 
 $container-padding: 20px
