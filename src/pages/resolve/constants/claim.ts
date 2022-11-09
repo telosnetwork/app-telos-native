@@ -12,7 +12,32 @@ const NEXT_PUBLIC_ARBITRATION_CONTRACT =
 // 	DISMISSED           = 4,
 // };
 
-export const CLAIM_STATUS_LIST = ["", "Filed", "Accepted", "Dismissed"];
+export const CLAIM_STATUS_LIST = [
+  "",
+  "Filed",
+  "Responded",
+  "Accepted",
+  "Dismissed",
+];
+
+export const CLAIM_CATEGORY_LIST = [
+  "",
+  "Undecided",
+  "Lost Key Recovery",
+  "Transaction Reversal",
+  "Emergency Intervention",
+  "Contested Ownership",
+  "Unexecuted Relief",
+  "Contract Breach",
+  "Misused CR IP",
+  "A Tort",
+  "BP Penalty Reversal",
+  "Wrongful Arbitration Act",
+  "Act Exec Relief",
+  "Works Project Failure",
+  "TBNOA Breach",
+  "Misc",
+];
 
 export const DECISION_CLASS_LIST = [
   "",

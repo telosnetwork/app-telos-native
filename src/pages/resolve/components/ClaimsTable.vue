@@ -20,12 +20,22 @@
         <IpfsLink :hash="props.row.response_link"></IpfsLink>
       </q-td>
     </template>
+    <template v-slot:body-cell-claim_category="props">
+      <q-td :props="props">
+        <span>{{ getClaimCategory(props.row.decision_class) }}</span>
+      </q-td>
+    </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
         <q-btn-dropdown color="primary" label="Actions">
           <q-list>
             <q-item
-              v-if="isRespondant() && caseFile.status === 3"
+              v-if="
+                isRespondant() &&
+                caseFile.status === 3 &&
+                [1, 2].includes(props.row.status) &&
+                props.row.response_info_needed
+              "
               clickable
               v-close-popup
               @click="
@@ -52,6 +62,24 @@
                 <q-item-label>Update</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item
+              v-if="
+                isCaseArbitrator &&
+                caseFile.case_status === 3 &&
+                [1, 2].includes(props.row.status)
+              "
+              clickable
+              v-close-popup
+              @click="
+                form = true;
+                formType = 'reviewclaim';
+                claimId = props.row.claim_id;
+              "
+            >
+              <q-item-section>
+                <q-item-label>Request More Info</q-item-label>
+              </q-item-section>
+            </q-item>
           </q-list>
         </q-btn-dropdown>
       </q-td>
@@ -71,16 +99,27 @@
         :claimId="claimId"
         :close="closeModal"
       />
+      <review-claim-form
+        v-if="formType === 'reviewclaim'"
+        :caseId="$route.params.id"
+        :claimId="claimId"
+        :close="closeModal"
+      />
     </q-dialog>
   </div>
 </template>
 
 <script>
 import { fetchClaims } from "../util";
-import { DECISION_CLASS_LIST } from "../constants/claim";
+import {
+  DECISION_CLASS_LIST,
+  CLAIM_STATUS_LIST,
+  CLAIM_CATEGORY_LIST,
+} from "../constants/claim";
 import IpfsLink from "./IpfsLink.vue";
 import RespondClaimForm from "./RespondClaimForm.vue";
 import UpdateClaimForm from "./UpdateClaimForm.vue";
+import ReviewClaimForm from "./ReviewClaimForm.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -89,6 +128,7 @@ export default {
     IpfsLink,
     RespondClaimForm,
     UpdateClaimForm,
+    ReviewClaimForm,
   },
   data() {
     return {
@@ -100,6 +140,7 @@ export default {
       columns: [
         { name: "claim_id", label: "ID", field: "claim_id" },
         { name: "claim_summary", label: "Summary", field: "claim_summary" },
+        { name: "claim_category", label: "Category", field: "claim_category" },
         { name: "decision_class", label: "Class", field: "decision_class" },
         { name: "decision_link", label: "Decision", field: "decision_link" },
         { name: "response_link", label: "Response", field: "response_link" },
@@ -121,13 +162,17 @@ export default {
     async getClaims() {
       try {
         const rows = await fetchClaims(this, this.$route.params.id);
+        console.log("claim rows: ", rows);
         this.claims = rows;
       } catch (err) {
         console.log("getClaims error:", err);
       }
     },
+    getClaimCategory(id) {
+      return CLAIM_CATEGORY_LIST[id];
+    },
     getStatus(statusId) {
-      return DECISION_CLASS_LIST[statusId];
+      return CLAIM_STATUS_LIST[statusId];
     },
     closeModal() {
       this.form = false;
@@ -139,6 +184,9 @@ export default {
     ...mapGetters({
       account: "accounts/account",
     }),
+    isCaseArbitrator() {
+      return this.caseFile.arbitrators.includes(this.account);
+    },
   },
   mounted() {
     this.getClaims();
