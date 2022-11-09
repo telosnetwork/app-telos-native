@@ -408,7 +408,8 @@ div.bar-filter-wrapper
           div.flex.no-wrap(v-else)
             q-btn.bar-filter-btn.left-btn.left-btn-320(
               v-if="!election"
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               @click="toggleMenu('isTypeDialogOpen')"
               color="primary"
               no-caps
@@ -509,7 +510,8 @@ div.bar-filter-wrapper
                       )
           div.flex.no-wrap(v-else)
             q-btn.bar-filter-btn.left-btn.left-btn-320(
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
               @click="toggleMenu('isStatusDialogOpen')"
               color="primary"
               no-caps
@@ -734,7 +736,8 @@ div.bar-filter-wrapper
                 )
           div(v-else-if="!election")
             q-btn.q-mr-md.left-btn(
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               color="primary"
               no-caps
               outline
@@ -801,7 +804,8 @@ div.bar-filter-wrapper
                 )
           div(v-else)
             q-btn.q-mr-md.left-btn(
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
               color="primary"
               no-caps
               outline
@@ -907,6 +911,11 @@ div.bar-filter-wrapper
           q-btn(flat label="OK" v-close-popup)
 </template>
 <style lang="sass" scoped>
+// https://stackoverflow.com/a/74369087/2274525
+$shadow-1: 0px 20px 48px rgba(0, 9, 26, 0.08)
+$shadow-2: 0px 7px 15px rgba(0, 9, 26, 0.05)
+$shadow-3: 0px 3px 6px rgba(0, 9, 26, 0.04)
+$shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
 .scroll-anim
   margin-top: 10px !important
   margin-bottom: 10px !important
@@ -917,7 +926,7 @@ div.bar-filter-wrapper
   width: 100%
   height: 88px
   background: white
-  box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
   border-radius: 12px
 .q-btn-group
   margin-left: 24px
@@ -967,7 +976,7 @@ div.bar-filter-wrapper
 .bar-filter-menu-320
   padding: 24px 12px 20px 12px
   background: white
-  box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
   border-radius: 12px
 .menu-320-title-wrapper
   margin-bottom: 20px

@@ -351,17 +351,14 @@ export default {
         ...mapState('tokens', ['createToken', 'editingToken', 'config']),
         ...mapGetters('accounts', ['account']),
         getTermsHtml() {
-            return `Terms:
-            ${
-    !this.editingToken
-        ? `There will be a fee of <strong>${this.config.create_price}</strong> to create a new token.  `
-        : ''
-}
-          If this token is found to be misleading, scamming or attempting to
-          present itself as another existing token then it will be removed from the token registry (the token itself will remain untouched).
-          <br>
-          <br>
-          <strong>We reserve the right to delist tokens for any reason.</strong>`;
+            return `Terms: ${!this.editingToken ?
+                `There will be a fee of <strong>${this.config.create_price}</strong> to create a new token.  ` : ''}
+                If this token is found to be misleading, scamming or attempting to
+                present itself as another existing token then it will be removed from the token
+                registry (the token itself will remain untouched).
+                <br>
+                <br>
+                <strong>We reserve the right to delist tokens for any reason.</strong>`;
         },
     },
     watch: {

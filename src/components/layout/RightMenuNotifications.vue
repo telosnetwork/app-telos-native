@@ -25,7 +25,10 @@ export default {
       v-if="notifications.length"
       v-for="notification in notifications"
       :key="notification.id"
-      :class="{'new-success': !notification.read && notification.status === 'success', 'new-error': !notification.read && notification.status === 'error'}"
+      :class="{\
+          'new-success': !notification.read && notification.status === 'success',\
+          'new-error': !notification.read && notification.status === 'error'\
+        }"
     )
       q-item-section(avatar)
         q-icon(

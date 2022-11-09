@@ -43,76 +43,82 @@ export default {
 </script>
 
 <template lang="pug">
-  .flex.column.verify-otp
-    .col-9
-      q-card.q-mb-lg(flat)
-        q-card-section
-          h2 {{ $t('pages.accounts.add.verifyOTPTitle') }}
-        q-card-section
-          div(v-if="generating")
-            | {{ $t('pages.accounts.add.verifyAccountGeneratingKey') }}
-          div(v-else)
-            q-input(
-              ref="publicKey"
-              v-model="form.publicKey"
-              label="Public Key"
-              :rules="[() => copy || $t('forms.errors.copyKey')]"
-              lazy-rules
-              @click="$refs['publicKey'].select()"
-            )
-              template(v-slot:after)
-                q-btn(
-                  round
-                  color="primary"
-                  icon="fas fa-clipboard"
-                  size="sm"
-                  @click="() => { copyToClipboard(form.publicKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
-                )
-            q-input(
-              ref="privateKey"
-              v-model="form.privateKey"
-              label="Private Key"
-              :rules="[() => copy || $t('forms.errors.copyKey')]"
-              lazy-rules
-              @click="$refs['privateKey'].select()"
-            )
-              template(v-slot:after)
-                q-btn(
-                  round
-                  color="primary"
-                  icon="fas fa-clipboard"
-                  size="sm"
-                  @click="() => { copyToClipboard(form.privateKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
-                )
-        q-card-section
-          q-checkbox(
-            v-model="copy"
-            label="I have copied my keys somewhere safe"
-          )
-      //-
-        q-card-section
+.flex.column.verify-otp
+  .col-9
+    q-card.q-mb-lg(flat)
+      q-card-section
+        h2 {{ $t('pages.accounts.add.verifyOTPTitle') }}
+      q-card-section
+        div(v-if="generating")
+          | {{ $t('pages.accounts.add.verifyAccountGeneratingKey') }}
+        div(v-else)
           q-input(
-            ref="password"
-            v-model="form.password"
-            color="accent"
-            :readonly="!copy"
-            :label="$t('pages.accounts.add.forms.verificationCode')"
-            outlined
-            :rules="[rules.required]"
+            ref="publicKey"
+            v-model="form.publicKey"
+            label="Public Key"
+            :rules="[() => copy || $t('forms.errors.copyKey')]"
             lazy-rules
-            :error="!!error"
-            :error-message="error"
+            @click="$refs['publicKey'].select()"
           )
-    .col-3
-      .hint {{ $t('pages.accounts.add.verifyAccountHint') }}
-      q-btn.full-width(
-        color="primary"
-        :label="$t('pages.accounts.add.buttons.continue')"
-        size="lg"
-        unelevated
-        :loading="submitting"
-        @click="onVerifyOTP"
-      )
+            template(v-slot:after)
+              q-btn(
+                round
+                color="primary"
+                icon="fas fa-clipboard"
+                size="sm"
+                @click="() => {\
+                  copyToClipboard(form.publicKey);\
+                  setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))\
+                }"
+              )
+          q-input(
+            ref="privateKey"
+            v-model="form.privateKey"
+            label="Private Key"
+            :rules="[() => copy || $t('forms.errors.copyKey')]"
+            lazy-rules
+            @click="$refs['privateKey'].select()"
+          )
+            template(v-slot:after)
+              q-btn(
+                round
+                color="primary"
+                icon="fas fa-clipboard"
+                size="sm"
+                @click="() => {\
+                  copyToClipboard(form.privateKey);\
+                  setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))\
+                }"
+              )
+      q-card-section
+        q-checkbox(
+          v-model="copy"
+          label="I have copied my keys somewhere safe"
+        )
+    //-
+      q-card-section
+        q-input(
+          ref="password"
+          v-model="form.password"
+          color="accent"
+          :readonly="!copy"
+          :label="$t('pages.accounts.add.forms.verificationCode')"
+          outlined
+          :rules="[rules.required]"
+          lazy-rules
+          :error="!!error"
+          :error-message="error"
+        )
+  .col-3
+    .hint {{ $t('pages.accounts.add.verifyAccountHint') }}
+    q-btn.full-width(
+      color="primary"
+      :label="$t('pages.accounts.add.buttons.continue')"
+      size="lg"
+      unelevated
+      :loading="submitting"
+      @click="onVerifyOTP"
+    )
 </template>
 
 <style lang="sass" scoped>

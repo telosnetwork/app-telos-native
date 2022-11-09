@@ -2,7 +2,14 @@
 .row.justify-center.items-center
   .col-xs-11.col-md-8.q-gutter-y-md.q-pa-md
     q-dialog(v-model='showUpload')
-      q-uploader(label="Upload image to Imgur" url="https://api.imgur.com/3/image" accept=".jpg, .jpeg, .png, image/*" field-name="image" :headers="[authHeader]" @uploaded="imageUploaded")
+      q-uploader(
+        label="Upload image to Imgur"
+        url="https://api.imgur.com/3/image"
+        accept=".jpg, .jpeg, .png, image/*"
+        field-name="image"
+        :headers="[authHeader]"
+        @uploaded="imageUploaded"
+      )
     q-form.q-gutter-y-md(@submit='onSubmit', @reset='onReset')
       div.head-nav(@click="goBack")
         img.self-center.title-img(src="statics/app-icons/back.svg")
@@ -13,9 +20,25 @@
           profile-avatar(size='200px' :avatar='avatar' :account='account')
           div.text-h4.q-pl-md {{ account }}
           q-btn(:disable="!isAuthenticated" label="Upload image", color='primary' @click="showUpload = true")
-      q-input(:disable="!isAuthenticated" counter maxlength="128" filled, v-model='avatar', :label="$t('pages.signUp.form.avatar')")
-      q-input(:disable="!isAuthenticated" counter maxlength="16" filled, v-model='name', :label="$t('pages.signUp.form.name')", lazy-rules, :rules="[ val => val && val.length > 0 || $t('forms.errors.required')]")
-      q-input(:disable="!isAuthenticated" counter maxlength="16" filled, v-model='status', :label="$t('pages.signUp.form.status')", lazy-rules, :rules="[ val => val && val.length > 0 || $t('forms.errors.required')]")
+      q-input(
+        :disable="!isAuthenticated"
+        counter maxlength="128" filled,
+        v-model='avatar'
+        :label="$t('pages.signUp.form.avatar')")
+      q-input(
+        :disable="!isAuthenticated"
+        counter maxlength="16" filled,
+        v-model='name'
+        :label="$t('pages.signUp.form.name')"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || $t('forms.errors.required')]")
+      q-input(
+        :disable="!isAuthenticated"
+        counter maxlength="16" filled,
+        v-model='status'
+        :label="$t('pages.signUp.form.status')"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || $t('forms.errors.required')]")
       .small-margin
         p.text-weight-thin.small-margin {{$t('pages.signUp.form.presentation')}}
         q-editor(:disable="!isAuthenticated" v-model="bio" min-height="5rem")

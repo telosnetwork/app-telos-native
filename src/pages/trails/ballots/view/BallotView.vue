@@ -682,6 +682,12 @@ export default {
             q-spinner(size="3em")
 </template>
 <style lang="sass">
+
+$shadow-1: 0px 20px 48px rgba(0, 9, 26, 0.08)
+$shadow-2: 0px 7px 15px rgba(0, 9, 26, 0.05)
+$shadow-3: 0px 3px 6px rgba(0, 9, 26, 0.04)
+$shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+
 .body-info
    overflow: scroll
    overflow-x: hidden
@@ -762,10 +768,7 @@ embed
     max-width: 1180px !important
     max-height: 640px !important
     width: 100%
-    box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08),
-        0px 7px 15px rgba(0, 9, 26, 0.05),
-        0px 3px 6px rgba(0, 9, 26, 0.04),
-        0px 1px 2.25px rgba(0, 9, 26, 0.0383252) !important
+    box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4 !important
     border-radius: 12px !important
     overflow: hidden !important
     & .poll-item
@@ -888,9 +891,8 @@ embed
         font-size: 16px
 
 .scrolled
-    box-shadow: 0px 7px 15px rgba(0, 9, 26, 0.05),
-    0px 3px 6px rgba(0, 9, 26, 0.04),
-    0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+    box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
+
 
 .list-320,
 .statics-section-320

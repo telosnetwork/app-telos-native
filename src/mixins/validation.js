@@ -1,5 +1,7 @@
 import { mapActions } from 'vuex';
-const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm'); // ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
+
+// ipfs hash detection, detects CIDv0 46 character strings starting with 'Qm'
+const regex = new RegExp(/Qm[1-9A-HJ-NP-Za-km-z]{44}(\/.*)?/, 'm');
 
 export const validation = {
     data () {

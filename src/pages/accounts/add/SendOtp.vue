@@ -48,15 +48,6 @@ export default {
         onVerify: function (response) {
             if (response) this.recaptcha = true;
         },
-    /* isPhoneValid (val) {
-      try {
-        const phoneUtil = PhoneNumberUtil.getInstance()
-        const number = phoneUtil.parseAndKeepRawInput(`${this.form.countryCode.dialCode}${this.form.smsNumber}`, this.form.countryCode.code)
-        return phoneUtil.isValidNumber(number) || this.$t('forms.errors.phoneFormat')
-      } catch (e) {
-        return this.$t('forms.errors.phoneFormat')
-      }
-    } */
     },
     components: {
         'vue-recaptcha': VueRecaptcha,
@@ -65,40 +56,40 @@ export default {
 </script>
 
 <template lang="pug">
-  .flex.column.send-otp
-    .col-9
-      q-card.q-mb-lg(flat)
-        q-card-section
-          h2 {{ $t('pages.accounts.add.createAccountTitle') }}
-        q-card-section
-          q-input.q-mb-lg(
-            ref="account"
-            v-model="form.account"
-            color="accent"
-            :label="$t('pages.accounts.add.forms.account')"
-            :hint="$t('pages.accounts.add.forms.accountHint')"
-            outlined
-            maxlength="12"
-            :rules="[rules.required, rules.accountFormatBasic, rules.accountLength, rules.isAccountAvailable]"
-            lazy-rules
-            :debounce="200"
-            @blur="form.account = (form.account || '').toLowerCase()"
-          )
-          vue-recaptcha(
-            ref='recaptcha'
-            :sitekey="'6Lc6WLUaAAAAACiwPE9qyN-CX5KfLPGm6pY5OeUf'"
-            @verify="onVerify"
-          )
-          .text-red(v-if="error") {{ error }}
-    .col-3
-      q-btn.full-width(
-        color="primary"
-        :label="$t('pages.accounts.add.buttons.verify')"
-        size="lg"
-        unelevated
-        :loading="submitting"
-        @click="onSendOTP"
-      )
+.flex.column.send-otp
+  .col-9
+    q-card.q-mb-lg(flat)
+      q-card-section
+        h2 {{ $t('pages.accounts.add.createAccountTitle') }}
+      q-card-section
+        q-input.q-mb-lg(
+          ref="account"
+          v-model="form.account"
+          color="accent"
+          :label="$t('pages.accounts.add.forms.account')"
+          :hint="$t('pages.accounts.add.forms.accountHint')"
+          outlined
+          maxlength="12"
+          :rules="[rules.required, rules.accountFormatBasic, rules.accountLength, rules.isAccountAvailable]"
+          lazy-rules
+          :debounce="200"
+          @blur="form.account = (form.account || '').toLowerCase()"
+        )
+        vue-recaptcha(
+          ref='recaptcha'
+          :sitekey="'6Lc6WLUaAAAAACiwPE9qyN-CX5KfLPGm6pY5OeUf'"
+          @verify="onVerify"
+        )
+        .text-red(v-if="error") {{ error }}
+  .col-3
+    q-btn.full-width(
+      color="primary"
+      :label="$t('pages.accounts.add.buttons.verify')"
+      size="lg"
+      unelevated
+      :loading="submitting"
+      @click="onSendOTP"
+    )
 </template>
 
 <style lang="sass" scoped>

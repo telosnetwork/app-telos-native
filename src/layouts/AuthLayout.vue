@@ -58,7 +58,13 @@ export default {
 
 <template lang="pug">
 q-layout(view="lHh lpR lFr")
-  app-header(@open="toggleMenu" @goToHomePage="toLanding" @toggleNote="toggleNotifications" @set-active-filter="setActiveFilter" :activeFilter="activeFilter")
+  app-header(
+    @open="toggleMenu"
+    @goToHomePage="toLanding"
+    @toggleNote="toggleNotifications"
+    @set-active-filter="setActiveFilter"
+    :activeFilter="activeFilter"
+)
   q-drawer(
     v-model="right"
     side="right"

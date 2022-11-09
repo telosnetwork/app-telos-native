@@ -23,7 +23,8 @@ export default {
 
 <template lang="pug">
 q-btn.custom-btn(
-  :class="`${primary ? undefined : 'border-btn'} ${hoverBlue ? 'hover-blue' : undefined} ${hoverRed ? 'hover-red' : undefined}`"
+  :class="`${primary ? undefined : 'border-btn'}\
+    ${hoverBlue ? 'hover-blue' : undefined} ${hoverRed ? 'hover-red' : undefined}`"
   :to="to ? to : undefined"
   :style="{'width': `${btnWidth}px`, 'font-size': `${fontSize}px`}"
   @click="clickBtn"

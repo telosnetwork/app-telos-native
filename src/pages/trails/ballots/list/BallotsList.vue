@@ -180,15 +180,15 @@ export default {
                     } else if (this.statuses.includes('expired')) {
                         return (
                             this.statuses.includes(b.status) ||
-              (!this.isBallotOpened(b) &&
-                this.startTimeHasPassed(b) &&
-                b.status === 'voting')
+                                (!this.isBallotOpened(b) &&
+                                this.startTimeHasPassed(b) &&
+                                b.status === 'voting')
                         );
                     } else if (this.statuses.includes('not_started')) {
                         return (
                             this.statuses.includes(b.status) ||
-              this.isBallotNotStarted(b) ||
-              b.status === 'setup'
+                            this.isBallotNotStarted(b) ||
+                            b.status === 'setup'
                         );
                     }
                     return this.statuses.includes(b.status);

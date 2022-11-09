@@ -118,7 +118,10 @@ export default {
               color="primary"
               icon="fas fa-clipboard"
               size="sm"
-              @click="() => { copyToClipboard(form.publicKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
+              @click="() => {\
+                copyToClipboard(form.publicKey);\
+                setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'));\
+              }"
             )
           q-input(
             ref="privateKey"
@@ -137,7 +140,10 @@ export default {
                 color="primary"
                 icon="fas fa-clipboard"
                 size="sm"
-                @click="() => { copyToClipboard(form.privateKey); setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'))}"
+                @click="() => {\
+                  copyToClipboard(form.privateKey);\
+                  setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'));\
+                }"
               )
         q-card-section
           q-checkbox(

@@ -2,52 +2,52 @@
 import { validation } from '~/mixins/validation';
 
 export default {
-  name: 'TreasuryTokenSettingsEdit',
-  mixins: [validation],
-  props: {
-    modelValue: {
-        type: Array,
-        required: true
+    name: 'TreasuryTokenSettingsEdit',
+    mixins: [validation],
+    props: {
+        modelValue: {
+            type: Array,
+            required: true
+        },
     },
-  },
-  data() {
-    return {
-      list: [],
-      preValue: {},
-      selected: {
-        key: '',
-        body: ''
-      }
-    };
-  },
-  async mounted() {
-    this.list = this.modelValue.map(x => x); // clean copy
-    this.remember();
-  },
-  methods: {
-    remember(newValue) {
-      this.preValue = (newValue || this.list).map(x => ({...x}))
-    }
-  },
-  watch: {
-    list: {
-      handler:function(newval) {
-        let changes = this.preValue.filter((x,i) => {          
-          let result = newval[i].value != x.value;
-          return result;
-        });
-
-        if (changes.length == 1) {
-          this.selected = {
-            key: changes[0].key,
-            body: 'pages.trails.treasuries.settings.' + changes[0].key
-          }
-        }
+    data() {
+        return {
+            list: [],
+            preValue: {},
+            selected: {
+                key: '',
+                body: ''
+            }
+        };
+    },
+    async mounted() {
+        this.list = this.modelValue.map(x => x); // clean copy
         this.remember();
-      },
-      deep:true
+    },
+    methods: {
+        remember(newValue) {
+            this.preValue = (newValue || this.list).map(x => ({...x}));
+        }
+    },
+    watch: {
+        list: {
+            handler:function(newval) {
+                let changes = this.preValue.filter((x,i) => {
+                    let result = newval[i].value !== x.value;
+                    return result;
+                });
+
+                if (changes.length === 1) {
+                    this.selected = {
+                        key: changes[0].key,
+                        body: 'pages.trails.treasuries.settings.' + changes[0].key
+                    };
+                }
+                this.remember();
+            },
+            deep:true
+        }
     }
-  }
 };
 </script>
 
@@ -71,15 +71,11 @@ export default {
   </div>
 </template>
 
-
 <style lang="scss">
-
 .tt-editor__doc {
   padding-left: 24px;
 }
-
 .tt-editor__doc-title {
   font-weight: bold
 }
-
 </style>

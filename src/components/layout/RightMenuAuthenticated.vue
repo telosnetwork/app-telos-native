@@ -121,6 +121,11 @@ div
 </template>
 
 <style lang="sass">
+$shadow-1: 0px 20px 48px rgba(21, 0, 77, 0.08)
+$shadow-2: 0px 7px 15px rgba(21, 0, 77, 0.05)
+$shadow-3: 0px 3px 6px rgba(21, 0, 77, 0.04)
+$shadow-4: 0px 1px 2.25px rgba(21, 0, 77, 0.0383252)
+
 .menu
   min-width: 151px
   font-size: 16px !important
@@ -131,9 +136,9 @@ div
 .menu-title
   margin: 0 12px
 .menu-open
-  box-shadow: 0px 20px 48px rgba(21, 0, 77, 0.08), 0px 7px 15px rgba(21, 0, 77, 0.05), 0px 3px 6px rgba(21, 0, 77, 0.04), 0px 1px 2.25px rgba(21, 0, 77, 0.0383252)
+  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
 .q-menu
-  box-shadow: 0px 20px 48px rgba(21, 0, 77, 0.08), 0px 7px 15px rgba(21, 0, 77, 0.05), 0px 3px 6px rgba(21, 0, 77, 0.04), 0px 1px 2.25px rgba(21, 0, 77, 0.0383252)
+  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
   border-radius: 0 0 6px 6px
 .on-right
   font-size: 14px !important
@@ -170,7 +175,7 @@ div
   min-width: 320px
   padding: 24px 12px !important
   background: white
-  box-shadow: 0px 20px 48px rgba(21, 0, 77, 0.08), 0px 7px 15px rgba(21, 0, 77, 0.05), 0px 3px 6px rgba(21, 0, 77, 0.04), 0px 1px 2.25px rgba(21, 0, 77, 0.0383252) !important
+  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4 !important
   border-radius: 12px 12px 0 0 !important
 .dialog-title
   width: 100%

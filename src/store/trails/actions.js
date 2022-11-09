@@ -664,5 +664,3 @@ export const mint = async function (
     commit('notifications/addNotification', notification, { root: true });
     return notification.status === 'success';
 };
-// Treasuries
-  

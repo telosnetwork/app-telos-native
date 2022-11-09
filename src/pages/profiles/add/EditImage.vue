@@ -17,7 +17,13 @@ main
   .row.justify-center.q-mt-sm
     p.text-weight-thin Use your mouse to zoom in/out and move the image to select the desired part
   .row.justify-center
-    q-btn(:loading='loadingFile', color='orange', text-color='grey-9', @click='choseImage', icon='edit', style='width: 100px')
+    q-btn(
+        :loading='loadingFile'
+        color='orange'
+        text-color='grey-9'
+        @click='choseImage'
+        icon='edit'
+        style='width: 100px')
 </template>
 
 <script>
