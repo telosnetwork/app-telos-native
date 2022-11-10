@@ -22,7 +22,7 @@
     </template>
     <template v-slot:body-cell-claim_category="props">
       <q-td :props="props">
-        <span>{{ getClaimCategory(props.row.decision_class) }}</span>
+        <span>{{ getClaimCategory(props.row.claim_category) }}</span>
       </q-td>
     </template>
     <template v-slot:body-cell-actions="props">
@@ -163,7 +163,6 @@ export default {
         { name: "claim_id", label: "ID", field: "claim_id" },
         { name: "claim_summary", label: "Summary", field: "claim_summary" },
         { name: "claim_category", label: "Category", field: "claim_category" },
-        { name: "decision_class", label: "Class", field: "decision_class" },
         { name: "decision_link", label: "Decision", field: "decision_link" },
         { name: "response_link", label: "Response", field: "response_link" },
         { name: "status", label: "Status", field: "status" },
@@ -183,13 +182,13 @@ export default {
     isPendingInfoNeeded(claim) {
       let isPending = false;
       if (claim.claim_info_needed) {
-        const claimantDeadline = new Date("2022-11-08T10:19:09");
+        const claimantDeadline = new Date(claim.claimant_limit_time);
         if (claimantDeadline > new Date()) {
           isPending = true;
         }
       }
       if (claim.response_info_needed) {
-        const responseDeadline = new Date("2022-11-08T10:19:09");
+        const responseDeadline = new Date(claim.respondant_limit_time);
         if (responseDeadline > new Date()) {
           isPending = true;
         }
