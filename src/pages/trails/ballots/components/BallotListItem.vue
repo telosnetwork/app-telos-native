@@ -5,90 +5,90 @@ import BallotChip from './BallotChip';
 import Btn from '../../../../components/CustomButton';
 
 export default {
-  name: 'BallotListItem',
-  components: { BallotStatus, BallotChip, Btn },
-  props: {
-    ballot: { type: Object, required: true },
-    displayWinner: { type: Function, required: true },
-    isBallotOpened: { type: Boolean, required: true },
-    startTimeHasPassed: { type: Boolean, required: true },
-    getStartTime: { type: Number, required: true },
-    getEndTime: { type: Number, required: true },
-    getLoser: { type: Function, required: true }
-  },
-  data() {
-    return {
-      voting: false,
-      votes: [],
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-    ...mapGetters('trails', ['userVotes']),
-    mainButtonTextSmall() {
-      if (
-        this.isBallotOpened &&
-        this.ballot.status === 'voting' &&
-        this.isAuthenticated
-      ) {
-        if (this.userVotes[this.ballot.ballot_name]) {
-          return 'View / Update vote';
-        }
-      }
-      return this.mainButtonText;
+    name: 'BallotListItem',
+    components: { BallotStatus, BallotChip, Btn },
+    props: {
+        ballot: { type: Object, required: true },
+        displayWinner: { type: Function, required: true },
+        isBallotOpened: { type: Boolean, required: true },
+        startTimeHasPassed: { type: Boolean, required: true },
+        getStartTime: { type: Number, required: true },
+        getEndTime: { type: Number, required: true },
+        getLoser: { type: Function, required: true }
     },
-    mainButtonText() {
-      if (
-        this.isBallotOpened &&
-        this.ballot.status === 'voting' &&
-        this.isAuthenticated
-      ) {
-        if (this.userVotes[this.ballot.ballot_name]) {
-          return 'View proposal / Update vote';
-        } else {
-          return 'View proposal & vote';
-        }
-      }
-      return 'View proposal';
+    data() {
+        return {
+            voting: false,
+            votes: [],
+        };
     },
-    getWinner() {
-      if (!this.ballot.total_voters) return 'No votes';
-      let winnerValue = -1;
-      let winner;
-      this.ballot.options.forEach((option, index) => {
-        if (parseFloat(option.value) > winnerValue) {
-          winnerValue = parseFloat(option.value);
-          winner = index;
-        }
-      });
-      return this.ballot.options[winner];
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
+        ...mapGetters('trails', ['userVotes']),
+        mainButtonTextSmall() {
+            if (
+                this.isBallotOpened &&
+                this.ballot.status === 'voting' &&
+                this.isAuthenticated
+            ) {
+                if (this.userVotes[this.ballot.ballot_name]) {
+                    return 'View / Update vote';
+                }
+            }
+            return this.mainButtonText;
+        },
+        mainButtonText() {
+            if (
+                this.isBallotOpened &&
+                this.ballot.status === 'voting' &&
+                this.isAuthenticated
+            ) {
+                if (this.userVotes[this.ballot.ballot_name]) {
+                    return 'View proposal / Update vote';
+                } else {
+                    return 'View proposal & vote';
+                }
+            }
+            return 'View proposal';
+        },
+        getWinner() {
+            if (!this.ballot.total_voters) return 'No votes';
+            let winnerValue = -1;
+            let winner;
+            this.ballot.options.forEach((option, index) => {
+                if (parseFloat(option.value) > winnerValue) {
+                    winnerValue = parseFloat(option.value);
+                    winner = index;
+                }
+            });
+            return this.ballot.options[winner];
+        },
     },
-  },
-  methods: {
-    ...mapActions('trails', ['castVote']),
-    openUrl(url) {
-      window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
-    },
-    log(msg, val) {
-      console.log(msg, val);
-    },
-    getPercentofTotal(option) {
-      const total =
+    methods: {
+        ...mapActions('trails', ['castVote']),
+        openUrl(url) {
+            window.open(`${process.env.BLOCKCHAIN_EXPLORER}/account/${url}`);
+        },
+        log(msg, val) {
+            console.log(msg, val);
+        },
+        getPercentofTotal(option) {
+            const total =
         (Number(option.value.split(' ')[0]) /
           Number(this.ballot.total_raw_weight.split(' ')[0])) *
         100;
-      return this.trunc(total, 2);
+            return this.trunc(total, 2);
+        },
+        async onCastVote({ options, option, ballotName }) {
+            this.voting = true;
+            await this.castVote({
+                ballotName,
+                options: options || [option],
+            });
+            this.voting = false;
+            this.votes = [];
+        },
     },
-    async onCastVote({ options, option, ballotName }) {
-      this.voting = true;
-      await this.castVote({
-        ballotName,
-        options: options || [option],
-      });
-      this.voting = false;
-      this.votes = [];
-    },
-  },
 };
 </script>
 
@@ -109,7 +109,9 @@ div
           img(:src="`statics/app-icons/inactive-bgr-icon2.png`").bgr-icon2
     div.column.items-start.absolute-top-left
       ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened")
-      ballot-chip(:type="'voted'", :isBallotOpened="isBallotOpened", :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
+      ballot-chip(:type="'voted'",
+        :isBallotOpened="isBallotOpened",
+        :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
 
     q-separator.card-separator-vertical(vertical inset)
 
@@ -156,7 +158,9 @@ div
           div.statics-section-wrapper
             div.statics-section-item(v-if="ballot.total_voters > 0")
               span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
-              span.opacity06  {{ getWinner.displayText }} {{ getLoser.displayText ? ` lead over ${getLoser.displayText}` : ` lead over others` }}
+              span.opacity06
+                | {{ getWinner.displayText }}
+                | {{ getLoser.displayText ? ` lead over ${getLoser.displayText}` : ` lead over others` }}
             div.statics-section-item(v-else)
               span  {{ getWinner }}
             div.bar-custom-separator.text-section-separator
@@ -173,7 +177,9 @@ div
       div.text-section.column
         div.statics-section-item(v-if="ballot.total_voters > 0")
           span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
-          span.opacity06  {{ getWinner.displayText }} {{ getLoser.displayText ? ` lead over ${getLoser.displayText}` : ` lead over others` }}
+          span.opacity06
+            | {{ getWinner.displayText }}
+            | {{ getLoser.displayText ? ` lead over ${getLoser.displayText}` : ` lead over others` }}
         div.statics-section-item(v-else)
           span  {{ getWinner }}
         div.statics-section-item

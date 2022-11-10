@@ -3,34 +3,34 @@ import { mapActions, mapGetters } from 'vuex';
 import { validation } from '~/mixins/validation';
 
 export default {
-  name: 'RemoveMe',
-  mixins: [validation],
-  methods: {
-    ...mapActions('accounts', ['claimAccount', 'isAccountClaimed']),
-    async setClaimed() {
-      this.isClaimed =
+    name: 'RemoveMe',
+    mixins: [validation],
+    methods: {
+        ...mapActions('accounts', ['claimAccount', 'isAccountClaimed']),
+        async setClaimed() {
+            this.isClaimed =
         (await this.isAccountClaimed(this.account)) === 'claimed';
+        },
+        async doClaim() {
+            await this.claimAccount(this.account);
+            await this.setClaimed();
+        },
     },
-    async doClaim() {
-      await this.claimAccount(this.account);
-      await this.setClaimed();
+    data() {
+        return {
+            form: {
+                account_name: null,
+            },
+            submitting: false,
+            isClaimed: false,
+        };
     },
-  },
-  data() {
-    return {
-      form: {
-        account_name: null,
-      },
-      submitting: false,
-      isClaimed: false,
-    };
-  },
-  async mounted() {
-    await this.setClaimed();
-  },
-  computed: {
-    ...mapGetters('accounts', ['account', 'isAuthenticated']),
-  },
+    async mounted() {
+        await this.setClaimed();
+    },
+    computed: {
+        ...mapGetters('accounts', ['account', 'isAuthenticated']),
+    },
 };
 </script>
 

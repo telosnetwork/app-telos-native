@@ -1,8 +1,8 @@
 export default function () {
-  return {
-    tokens: [],
-    createToken: false,
-    editingToken: null,
-    config: {},
-  };
+    return {
+        tokens: [],
+        createToken: false,
+        editingToken: null,
+        config: {},
+    };
 }

@@ -4,110 +4,110 @@ import { validation } from '~/mixins/validation';
 import TreasuryTokenSettingsEdit from './TreasuryTokenSettingsEdit';
 
 export default {
-  name: 'TreasuryForm',
-  mixins: [validation],
-  components: {
-    TreasuryTokenSettingsEdit
-  },
-  props: {
-    show: { type: Boolean, required: true },
-  },
-  data() {
-    return {
-      showEditSettings: false,
-      form: {
-        settings: [],
-        manager: null,
-        maxSupply: null,
-        maxSupplyValue: null,
-        maxSupplyToken: null,
-        maxSupplyDecimals: null,
-        access: null,
-        title: null,
-        description: null,
-      },
-      submitting: false,
-    };
-  },
-  computed: {
-    ...mapGetters('trails', ['treasuryFees']),
-    settingsAsText() {
-      return this.form.settings.filter(x => x.value).map(x => x.key).join(', ');
-    }
-  },
-  methods: {
-    ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
-    async onAddTreasury() {
-      this.resetValidation(this.form);
-      if (!(await this.validate(this.form))) return;
-      this.submitting = true;
-      const success = await this.addTreasury(this.form);
-      this.submitting = false;
-      if (success) {
-        this.$emit('update:show', false);
-        this.resetTreasury();
-        await this.fetchTreasuries();
-      }
+    name: 'TreasuryForm',
+    mixins: [validation],
+    components: {
+        TreasuryTokenSettingsEdit
     },
-    resetSettings() {
-      this.form.settings = [
-          { 'key': 'burnable',     'value': false },
-          { 'key': 'maxmutable',   'value': false },
-          { 'key': 'reclaimable',  'value': false },
-          { 'key': 'stakeable',    'value': true  },
-          { 'key': 'transferable', 'value': true  },
-          { 'key': 'unstakeable',  'value': false }
-        ];
+    props: {
+        show: { type: Boolean, required: true },
     },
-    resetTreasury() {
-      this.form = {
-        settings: null,
-        manager: null,
-        maxSupply: null,
-        access: null,
-        title: null,
-        description: null,
-      };
-      this.resetSettings();
+    data() {
+        return {
+            showEditSettings: false,
+            form: {
+                settings: [],
+                manager: null,
+                maxSupply: null,
+                maxSupplyValue: null,
+                maxSupplyToken: null,
+                maxSupplyDecimals: null,
+                access: null,
+                title: null,
+                description: null,
+            },
+            submitting: false,
+        };
     },
-    editSettings() {
-      this.showEditSettings = true;
-    },
-    setMaxSupply() {
-      if (
-        this.form.maxSupplyDecimals &&
-        parseInt(this.form.maxSupplyDecimals) > 0
-      ) {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(
-          parseInt(this.form.maxSupplyDecimals),
-          '0'
-        )} ${this.form.maxSupplyToken}`;
-      } else {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${
-          this.form.maxSupplyToken
-        }`;
-      }
-    },
-  },
-  watch: {
-    show: {
-      handler: function() {
-        if (this.show) {
-          this.resetTreasury();
+    computed: {
+        ...mapGetters('trails', ['treasuryFees']),
+        settingsAsText() {
+            return this.form.settings.filter(x => x.value).map(x => x.key).join(', ');
         }
-      },
-      inmediate: true
     },
-    'form.maxSupplyValue': function () {
-      this.setMaxSupply();
+    methods: {
+        ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
+        async onAddTreasury() {
+            this.resetValidation(this.form);
+            if (!(await this.validate(this.form))) return;
+            this.submitting = true;
+            const success = await this.addTreasury(this.form);
+            this.submitting = false;
+            if (success) {
+                this.$emit('update:show', false);
+                this.resetTreasury();
+                await this.fetchTreasuries();
+            }
+        },
+        resetSettings() {
+            this.form.settings = [
+                { 'key': 'burnable',     'value': false },
+                { 'key': 'maxmutable',   'value': false },
+                { 'key': 'reclaimable',  'value': false },
+                { 'key': 'stakeable',    'value': true  },
+                { 'key': 'transferable', 'value': true  },
+                { 'key': 'unstakeable',  'value': false }
+            ];
+        },
+        resetTreasury() {
+            this.form = {
+                settings: null,
+                manager: null,
+                maxSupply: null,
+                access: null,
+                title: null,
+                description: null,
+            };
+            this.resetSettings();
+        },
+        editSettings() {
+            this.showEditSettings = true;
+        },
+        setMaxSupply() {
+            if (
+                this.form.maxSupplyDecimals &&
+        parseInt(this.form.maxSupplyDecimals) > 0
+            ) {
+                this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(
+                    parseInt(this.form.maxSupplyDecimals),
+                    '0'
+                )} ${this.form.maxSupplyToken}`;
+            } else {
+                this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${
+                    this.form.maxSupplyToken
+                }`;
+            }
+        },
     },
-    'form.maxSupplyToken': function () {
-      this.setMaxSupply();
+    watch: {
+        show: {
+            handler: function() {
+                if (this.show) {
+                    this.resetTreasury();
+                }
+            },
+            inmediate: true
+        },
+        'form.maxSupplyValue': function () {
+            this.setMaxSupply();
+        },
+        'form.maxSupplyToken': function () {
+            this.setMaxSupply();
+        },
+        'form.maxSupplyDecimals': function () {
+            this.setMaxSupply();
+        },
     },
-    'form.maxSupplyDecimals': function () {
-      this.setMaxSupply();
-    },
-  },
 };
 </script>
 

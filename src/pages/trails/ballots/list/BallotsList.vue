@@ -7,279 +7,279 @@ import WelcomeCard from '~/components/WelcomeCard';
 import ActionBar from '~/components/ActionBar';
 
 export default {
-  name: 'BallotsList',
-  components: {
-    BallotForm,
-    BallotListItem,
-    BallotView,
-    WelcomeCard,
-    ActionBar,
-  },
-  props: {
-    activeFilter: {
-      type: String,
+    name: 'BallotsList',
+    components: {
+        BallotForm,
+        BallotListItem,
+        BallotView,
+        WelcomeCard,
+        ActionBar,
     },
-  },
-  data() {
-    return {
-      filteredBallots: [],
-      renderComponent: false,
-      show: false,
-      showBallot: false,
-      statusChange: false,
-      timeAtMount: undefined,
-      openedBallot: {},
-      voting: false,
-      treasury: 'VOTE',
-      statuses: [],
-      categories: [],
-      isBallotListRowDirection: true,
-      sortMode: '',
-      timerAction: null,
-      loading: false,
-    };
-  },
-  async mounted() {
-    this.timeAtMount = Date.now();
-    this.statusChange = false;
-    if (this.$route.params.id) {
-      this.showBallot = true;
-    }
-    if (this.$route.query && this.$route.query.treasury) {
-      this.treasury = this.$route.query.treasury;
-      this.$refs.actionBar
-        ? this.$refs.actionBar.setTreasuryBar(this.treasury)
-        : '';
-    }
-    await this.fetchFees();
-    this.fetchUserVotes();
-  },
-  methods: {
-    ...mapActions('trails', [
-      'fetchFees',
-      'fetchMoreBallots',
-      'castVote',
-      'fetchTreasuries',
-      'fetchBallotsByStatus',
-      'fetchUserVotesForThisBallot',
-      'resetUserVotes',
-    ]),
-    resumeLoadingBallots() {
-      setTimeout(() => {
-        if (this.$refs.infiniteScroll) {
-          // this triggers a call to onLoad if necesary
-          this.$refs.infiniteScroll.resume();
+    props: {
+        activeFilter: {
+            type: String,
+        },
+    },
+    data() {
+        return {
+            filteredBallots: [],
+            renderComponent: false,
+            show: false,
+            showBallot: false,
+            statusChange: false,
+            timeAtMount: undefined,
+            openedBallot: {},
+            voting: false,
+            treasury: 'VOTE',
+            statuses: [],
+            categories: [],
+            isBallotListRowDirection: true,
+            sortMode: '',
+            timerAction: null,
+            loading: false,
+        };
+    },
+    async mounted() {
+        this.timeAtMount = Date.now();
+        this.statusChange = false;
+        if (this.$route.params.id) {
+            this.showBallot = true;
         }
-      }, 100);
-    },
-    updateBallots() {
-      this.filteredBallots = this.sortBallots(this.filterBallots(this.ballots), this.sortMode);
-      this.resumeLoadingBallots();
-    },
-    async onLoad(_, done) {
-      let isFirstFetch = this.ballots.length == 0;
-      this.loading = true;
-      await this.fetchMoreBallots(this.statuses || []);
-      this.loading = false;
-      setTimeout(() => {
+        if (this.$route.query && this.$route.query.treasury) {
+            this.treasury = this.$route.query.treasury;
+            this.$refs.actionBar
+                ? this.$refs.actionBar.setTreasuryBar(this.treasury)
+                : '';
+        }
+        await this.fetchFees();
         this.fetchUserVotes();
-        let result = isFirstFetch || !this.ballotsPagination.more;
-        done(result);
-      }, 1000);
     },
-    async fetchUserVotes() {
-      if (this.isAuthenticated) {
-        this.filterBallots(this.ballots).forEach((b) =>
-          this.fetchUserVotesForThisBallot(b.ballot_name)
-        );
-      } else {
-        this.resetUserVotes();
-      }
-    },
-    openBallotForm() {
-      this.show = true;
-    },
-    closeBallot() {
-      this.$router.go(-1);
-    },
-    openBallot(ballot) {
-      this.timeAtMount = Date.now();
-      this.$router.push(
-        `/trails/${
-          this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'
-        }/${ballot.ballot_name}/${this.timeAtMount}`
-      );
-      // the timestamp prevents scroll glitches on the infinite list
-    },
-    getLocalTime(isoDate) {
-      const msOffset = new Date().getTimezoneOffset() * 60 * 1000;
-      return new Date(isoDate).getTime() - msOffset;
-    },
-    isBallotOpened(ballot) {
-      let endTime = this.getLocalTime(ballot.end_time);
-      let notExpired = endTime > Date.now();
-      let startTime = this.getLocalTime(ballot.begin_time);
-      let isStarted = startTime < Date.now();
-      return notExpired && isStarted;
-    },
-    isBallotNotStarted(ballot) {
-      const startTime = this.getLocalTime(ballot.begin_time);
-      return startTime > Date.now();
-    },
+    methods: {
+        ...mapActions('trails', [
+            'fetchFees',
+            'fetchMoreBallots',
+            'castVote',
+            'fetchTreasuries',
+            'fetchBallotsByStatus',
+            'fetchUserVotesForThisBallot',
+            'resetUserVotes',
+        ]),
+        resumeLoadingBallots() {
+            setTimeout(() => {
+                if (this.$refs.infiniteScroll) {
+                    // this triggers a call to onLoad if necesary
+                    this.$refs.infiniteScroll.resume();
+                }
+            }, 100);
+        },
+        updateBallots() {
+            this.filteredBallots = this.sortBallots(this.filterBallots(this.ballots), this.sortMode);
+            this.resumeLoadingBallots();
+        },
+        async onLoad(_, done) {
+            let isFirstFetch = this.ballots.length === 0;
+            this.loading = true;
+            await this.fetchMoreBallots(this.statuses || []);
+            this.loading = false;
+            setTimeout(() => {
+                this.fetchUserVotes();
+                let result = isFirstFetch || !this.ballotsPagination.more;
+                done(result);
+            }, 1000);
+        },
+        async fetchUserVotes() {
+            if (this.isAuthenticated) {
+                this.filterBallots(this.ballots).forEach((b) =>
+                    this.fetchUserVotesForThisBallot(b.ballot_name)
+                );
+            } else {
+                this.resetUserVotes();
+            }
+        },
+        openBallotForm() {
+            this.show = true;
+        },
+        closeBallot() {
+            this.$router.go(-1);
+        },
+        openBallot(ballot) {
+            this.timeAtMount = Date.now();
+            this.$router.push(
+                `/trails/${
+                    this.$route.path.indexOf('election') > 0 ? 'elections' : 'ballot'
+                }/${ballot.ballot_name}/${this.timeAtMount}`
+            );
+            // the timestamp prevents scroll glitches on the infinite list
+        },
+        getLocalTime(isoDate) {
+            const msOffset = new Date().getTimezoneOffset() * 60 * 1000;
+            return new Date(isoDate).getTime() - msOffset;
+        },
+        isBallotOpened(ballot) {
+            let endTime = this.getLocalTime(ballot.end_time);
+            let notExpired = endTime > Date.now();
+            let startTime = this.getLocalTime(ballot.begin_time);
+            let isStarted = startTime < Date.now();
+            return notExpired && isStarted;
+        },
+        isBallotNotStarted(ballot) {
+            const startTime = this.getLocalTime(ballot.begin_time);
+            return startTime > Date.now();
+        },
 
-    displayWinner(ballot) {
-      if (!ballot.total_voters) return false;
-      let winnerValue = -1;
-      let winner;
-      ballot.options.forEach((option) => {
-        if (parseFloat(option.value) > winnerValue) {
-          winnerValue = parseFloat(option.value);
-          winner = option.key;
-        }
-      });
-      return winner;
-    },
-    startTimeHasPassed(ballot) {
-      let startTime = new Date(ballot.begin_time).getTime();
-      let isStarted = startTime < Date.now();
-      return isStarted;
-    },
-    getStartTime(ballot) {
-      return this.getLocalTime(ballot.begin_time);
-    },
-    getEndTime(ballot) {
-      return this.getLocalTime(ballot.end_time);
-    },
-    isNewUser() {
-      return localStorage.isNewUser;
-    },
-    updateTreasury(newTreasury) {
-      this.treasury = newTreasury;
-      this.updateBallots();
-    },
-    updateStatuses(newStatuses) {
-      this.statuses = newStatuses;
-      this.updateBallots();
-    },
-    updateCategories(newCategories) {
-      this.categories = newCategories;
-      this.updateBallots();
-    },
-    filterBallots(ballots) {
-      const ballotFilteredByStatuses = ballots.filter((b) => {
-        if (this.statuses) {
-          if (this.statuses.length === 0) {
-            return true;
-          } else if (
-            this.statuses.includes('active') &&
+        displayWinner(ballot) {
+            if (!ballot.total_voters) return false;
+            let winnerValue = -1;
+            let winner;
+            ballot.options.forEach((option) => {
+                if (parseFloat(option.value) > winnerValue) {
+                    winnerValue = parseFloat(option.value);
+                    winner = option.key;
+                }
+            });
+            return winner;
+        },
+        startTimeHasPassed(ballot) {
+            let startTime = new Date(ballot.begin_time).getTime();
+            let isStarted = startTime < Date.now();
+            return isStarted;
+        },
+        getStartTime(ballot) {
+            return this.getLocalTime(ballot.begin_time);
+        },
+        getEndTime(ballot) {
+            return this.getLocalTime(ballot.end_time);
+        },
+        isNewUser() {
+            return localStorage.isNewUser;
+        },
+        updateTreasury(newTreasury) {
+            this.treasury = newTreasury;
+            this.updateBallots();
+        },
+        updateStatuses(newStatuses) {
+            this.statuses = newStatuses;
+            this.updateBallots();
+        },
+        updateCategories(newCategories) {
+            this.categories = newCategories;
+            this.updateBallots();
+        },
+        filterBallots(ballots) {
+            const ballotFilteredByStatuses = ballots.filter((b) => {
+                if (this.statuses) {
+                    if (this.statuses.length === 0) {
+                        return true;
+                    } else if (
+                        this.statuses.includes('active') &&
             this.statuses.includes('expired')
-          ) {
-            return this.statuses.includes(b.status) || b.status === 'voting';
-          } else if (this.statuses.includes('active')) {
-            return Date.now() < Date.parse(b.end_time);
-          } else if (this.statuses.includes('expired')) {
-            return (
-              this.statuses.includes(b.status) ||
-              (!this.isBallotOpened(b) &&
-                this.startTimeHasPassed(b) &&
-                b.status === 'voting')
-            );
-          } else if (this.statuses.includes('not_started')) {
-            return (
-              this.statuses.includes(b.status) ||
-              this.isBallotNotStarted(b) ||
-              b.status === 'setup'
-            );
-          }
-          return this.statuses.includes(b.status);
-        }
-      });
-      const ballotFilteredByCategory = ballotFilteredByStatuses.filter((b) => {
-        if (this.categories.length > 0) {
-          return this.categories.includes(b.category);
-        } else {
-          if (this.$route.path.indexOf('election') > 0) {
-            return ['election', 'referendum', 'leaderboard'].includes(
-              b.category
-            );
-          } else {
-            return ['poll', 'proposal'].includes(b.category);
-          }
-        }
-      });
-      const ballotFilteredByTreasury = ballotFilteredByCategory.filter((b) => {
-        if (!this.treasury) return true;
-        try {
-          return b.treasury_symbol.split(',')[1] == this.treasury;
-        } catch (e) {
-          console.debug('Problematic ballot: ', b);
-          console.error(e);
-        }
-        return false;
-      });
-      return ballotFilteredByTreasury;
-    },
-    changeDirection(isBallotListRowDirection) {
-      this.limit = 100;
-      this.isBallotListRowDirection = isBallotListRowDirection;
-    },
-    getLoser() {
-      if (!this.ballot.total_voters || this.ballot.options.length !== 2)
-        return false;
-      return this.ballot.options.find((x) => x.key !== this.getWinner.key);
-    },
-    sortBallots(ballots, method) {
-      if (method === 'A-Z') {
-        return ballots.sort((a, b) =>
-          a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
-        );
-      } else if (method === 'Z-A') {
-        return ballots.sort((a, b) =>
-          a.title.toLowerCase() < b.title.toLowerCase() ? 1 : -1
-        );
-      } else if (method === 'Most popular') {
-        return ballots.sort((a, b) =>
-          a.total_voters < b.total_voters ? 1 : -1
-        );
-      } else if (method === 'Least popular') {
-        return ballots.sort((a, b) =>
-          a.total_voters > b.total_voters ? 1 : -1
-        );
-      } else if (method === '') {
-        return ballots;
-      }
-    },
+                    ) {
+                        return this.statuses.includes(b.status) || b.status === 'voting';
+                    } else if (this.statuses.includes('active')) {
+                        return Date.now() < Date.parse(b.end_time);
+                    } else if (this.statuses.includes('expired')) {
+                        return (
+                            this.statuses.includes(b.status) ||
+                                (!this.isBallotOpened(b) &&
+                                this.startTimeHasPassed(b) &&
+                                b.status === 'voting')
+                        );
+                    } else if (this.statuses.includes('not_started')) {
+                        return (
+                            this.statuses.includes(b.status) ||
+                            this.isBallotNotStarted(b) ||
+                            b.status === 'setup'
+                        );
+                    }
+                    return this.statuses.includes(b.status);
+                }
+            });
+            const ballotFilteredByCategory = ballotFilteredByStatuses.filter((b) => {
+                if (this.categories.length > 0) {
+                    return this.categories.includes(b.category);
+                } else {
+                    if (this.$route.path.indexOf('election') > 0) {
+                        return ['election', 'referendum', 'leaderboard'].includes(
+                            b.category
+                        );
+                    } else {
+                        return ['poll', 'proposal'].includes(b.category);
+                    }
+                }
+            });
+            const ballotFilteredByTreasury = ballotFilteredByCategory.filter((b) => {
+                if (!this.treasury) return true;
+                try {
+                    return b.treasury_symbol.split(',')[1] === this.treasury;
+                } catch (e) {
+                    console.debug('Problematic ballot: ', b);
+                    console.error(e);
+                }
+                return false;
+            });
+            return ballotFilteredByTreasury;
+        },
+        changeDirection(isBallotListRowDirection) {
+            this.limit = 100;
+            this.isBallotListRowDirection = isBallotListRowDirection;
+        },
+        getLoser() {
+            if (!this.ballot.total_voters || this.ballot.options.length !== 2)
+                return false;
+            return this.ballot.options.find((x) => x.key !== this.getWinner.key);
+        },
+        sortBallots(ballots, method) {
+            if (method === 'A-Z') {
+                return ballots.sort((a, b) =>
+                    a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+                );
+            } else if (method === 'Z-A') {
+                return ballots.sort((a, b) =>
+                    a.title.toLowerCase() < b.title.toLowerCase() ? 1 : -1
+                );
+            } else if (method === 'Most popular') {
+                return ballots.sort((a, b) =>
+                    a.total_voters < b.total_voters ? 1 : -1
+                );
+            } else if (method === 'Least popular') {
+                return ballots.sort((a, b) =>
+                    a.total_voters > b.total_voters ? 1 : -1
+                );
+            } else if (method === '') {
+                return ballots;
+            }
+        },
 
-    changeSortOption(option) {
-      this.limit = 100;
-      this.sortMode = option;
-      this.updateBallots();
+        changeSortOption(option) {
+            this.limit = 100;
+            this.sortMode = option;
+            this.updateBallots();
+        },
+        updateCards(params) {
+            this.treasury = params.treasury;
+            this.statuses = params.tatus;
+            this.categories = params.type;
+        }
     },
-    updateCards(params) {
-      this.treasury = params.treasury;
-      this.statuses = params.tatus;
-      this.categories = params.type;
-    }
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated', 'account']),
-    ...mapGetters('trails', [
-      'ballots',
-      'ballotsPagination',
-      'treasuriesOptions',
-    ])
-  },
-  watch: {
-    $route(to) {
-      this.showBallot = !!to.params.id;
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated', 'account']),
+        ...mapGetters('trails', [
+            'ballots',
+            'ballotsPagination',
+            'treasuriesOptions',
+        ])
     },
-    account() {
-      this.fetchUserVotes();
+    watch: {
+        $route(to) {
+            this.showBallot = !!to.params.id;
+        },
+        account() {
+            this.fetchUserVotes();
+        },
+        ballots() {
+            this.updateBallots();
+        }
     },
-    ballots() {
-      this.updateBallots();
-    }
-  },
 };
 </script>
 
@@ -331,7 +331,12 @@ q-page(v-if="!renderComponent")
             color="primary"
             size="40px"
           )
-  q-dialog(v-model="showBallot" :key="$route.params.id + timeAtMount" transition-show="slide-up" transition-hide="slide-down" @hide="closeBallot")
+  q-dialog(
+    v-model="showBallot"
+    :key="$route.params.id + timeAtMount"
+    transition-show="slide-up"
+    transition-hide="slide-down"
+    @hide="closeBallot")
     //- div(style="width: 80vw").bg-white
       //- p test
     ballot-view(

@@ -25,7 +25,11 @@
     :columns="producerColumns"
     row-key="__index"
   )
-    template( v-slot:top-right class='testnet-indicator') * = testnet, LPB = lifetime produced blocks, LMB = lifetime missed blocks
+    template(
+      v-slot:top-right
+      class='testnet-indicator'
+    )
+      | * = testnet, LPB = lifetime produced blocks, LMB = lifetime missed blocks
     q-tr( slot="body" slot-scope="props" :props="props")
       q-td( key="selected" v-if='account')
         q-checkbox(  v-model='currentVote' :val='props.cols[2].value' )
@@ -125,256 +129,256 @@ import * as iso from 'iso-3166-1';
 const MAX_VOTE_PRODUCERS = 30;
 
 export default {
-  name: 'ValidatorDataTable',
-  props: {
-    producerVotes: { type: Array, required: true },
-    producerData: { type: Array, required: true },
-    lastWeight: { type: String, required: true },
-    lastStaked: { type: Number, required: true },
-    stakedAmount: { type: Number, required: true },
-    lastUpdated: { type: String, required: true },
-  },
-  data() {
-    return {
-      currentVote: [],
-      pagination: {
-        rowsPerPage: 21,
-      },
-      producerColumns: [
-        {
-          name: 'selected',
-          label: '',
-          align: 'left',
-          sortable: false,
-          headerClasses: 'selected-column',
-        },
-        {
-          name: 'number',
-          label: '#',
-          field: (row) => this.producerData.indexOf(row) + 1,
-          align: 'left',
-          sortable: true,
-        },
-        {
-          name: 'owner',
-          label: 'Block Producer',
-          field: 'owner',
-          align: 'left',
-          sortable: true,
-        },
-        {
-          name: 'country',
-          label: 'Country',
-          field: (row) => this.getCountry(row.location),
-          align: 'center',
-          sortable: true,
-        },
-        {
-          name: 'social',
-          label: 'Links',
-          field: (row) => row.org,
-          align: 'center',
-        },
-        {
-          name: 'votes',
-          label: 'Total Votes',
-          field: (row) => (row.total_votes / 10000).toFixed(0),
-          align: 'right',
-          sortable: true,
-          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-        },
-        {
-          name: 'sslVerified',
-          label: 'SSL',
-          field: (row) => row.sslVerified === true,
-          align: 'left',
-          sortable: true,
-        },
-        {
-          name: 'apiVerified',
-          label: 'API',
-          field: (row) => row.apiVerified === true,
-          align: 'left',
-          sortable: true,
-        },
-        {
-          name: 'sslVerifiedTestNet',
-          label: 'SSL*',
-          field: (row) => row.sslVerifiedTestNet === true,
-          align: 'left',
-          sortable: true,
-        },
-        {
-          name: 'apiVerifiedTestNet',
-          label: 'API*',
-          field: (row) => row.apiVerifiedTestNet === true,
-          align: 'left',
-          sortable: true,
-        },
-        {
-          name: 'lifetimeProducedBlocks',
-          label: 'LPB',
-          field: 'lifetime_produced_blocks',
-          align: 'center',
-          sortable: true,
-          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-        },
-        {
-          name: 'lifetimeMissedBlocks',
-          label: 'LMB',
-          field: 'lifetime_missed_blocks',
-          align: 'center',
-          sortable: true,
-          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-        },
-        {
-          name: 'missedBlocksPer',
-          label: 'LMB(%)',
-          field: (row) =>
-            row.lifetime_produced_blocks === 0
-              ? row.lifetime_missed_blocks === 0
-                ? 'N/A'
-                : 100
-              : (
-                  parseFloat(
-                    row.lifetime_missed_blocks / row.lifetime_produced_blocks
-                  ) * 100
-                ).toFixed(3),
-          align: 'left',
-          sortable: true,
-          sort: (a, b) => parseFloat(a, 10) - parseFloat(b, 10),
-        },
-      ],
-    };
-  },
-  watch: {
-    producerVotes(val) {
-      this.$emit('vote-changed', false);
-      if (this.currentVote.length === 0) {
-        this.currentVote = [...val];
-      }
+    name: 'ValidatorDataTable',
+    props: {
+        producerVotes: { type: Array, required: true },
+        producerData: { type: Array, required: true },
+        lastWeight: { type: String, required: true },
+        lastStaked: { type: Number, required: true },
+        stakedAmount: { type: Number, required: true },
+        lastUpdated: { type: String, required: true },
     },
-    currentVote(val) {
-      if (val.length > MAX_VOTE_PRODUCERS) {
-        this.currentVote.pop();
-        alert('You can only vote for 30 validators.');
-        return;
-      }
-      if (this.areEqualArrays(val, this.producerVotes)) {
-        this.$emit('vote-changed', false);
-      } else {
-        this.$emit('vote-changed', true);
-      }
+    data() {
+        return {
+            currentVote: [],
+            pagination: {
+                rowsPerPage: 21,
+            },
+            producerColumns: [
+                {
+                    name: 'selected',
+                    label: '',
+                    align: 'left',
+                    sortable: false,
+                    headerClasses: 'selected-column',
+                },
+                {
+                    name: 'number',
+                    label: '#',
+                    field: (row) => this.producerData.indexOf(row) + 1,
+                    align: 'left',
+                    sortable: true,
+                },
+                {
+                    name: 'owner',
+                    label: 'Block Producer',
+                    field: 'owner',
+                    align: 'left',
+                    sortable: true,
+                },
+                {
+                    name: 'country',
+                    label: 'Country',
+                    field: (row) => this.getCountry(row.location),
+                    align: 'center',
+                    sortable: true,
+                },
+                {
+                    name: 'social',
+                    label: 'Links',
+                    field: (row) => row.org,
+                    align: 'center',
+                },
+                {
+                    name: 'votes',
+                    label: 'Total Votes',
+                    field: (row) => (row.total_votes / 10000).toFixed(0),
+                    align: 'right',
+                    sortable: true,
+                    sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+                },
+                {
+                    name: 'sslVerified',
+                    label: 'SSL',
+                    field: (row) => row.sslVerified === true,
+                    align: 'left',
+                    sortable: true,
+                },
+                {
+                    name: 'apiVerified',
+                    label: 'API',
+                    field: (row) => row.apiVerified === true,
+                    align: 'left',
+                    sortable: true,
+                },
+                {
+                    name: 'sslVerifiedTestNet',
+                    label: 'SSL*',
+                    field: (row) => row.sslVerifiedTestNet === true,
+                    align: 'left',
+                    sortable: true,
+                },
+                {
+                    name: 'apiVerifiedTestNet',
+                    label: 'API*',
+                    field: (row) => row.apiVerifiedTestNet === true,
+                    align: 'left',
+                    sortable: true,
+                },
+                {
+                    name: 'lifetimeProducedBlocks',
+                    label: 'LPB',
+                    field: 'lifetime_produced_blocks',
+                    align: 'center',
+                    sortable: true,
+                    sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+                },
+                {
+                    name: 'lifetimeMissedBlocks',
+                    label: 'LMB',
+                    field: 'lifetime_missed_blocks',
+                    align: 'center',
+                    sortable: true,
+                    sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+                },
+                {
+                    name: 'missedBlocksPer',
+                    label: 'LMB(%)',
+                    field: (row) =>
+                        row.lifetime_produced_blocks === 0
+                            ? row.lifetime_missed_blocks === 0
+                                ? 'N/A'
+                                : 100
+                            : (
+                                parseFloat(
+                                    row.lifetime_missed_blocks / row.lifetime_produced_blocks
+                                ) * 100
+                            ).toFixed(3),
+                    align: 'left',
+                    sortable: true,
+                    sort: (a, b) => parseFloat(a, 10) - parseFloat(b, 10),
+                },
+            ],
+        };
     },
-    account() {
-      this.checkHeader();
+    watch: {
+        producerVotes(val) {
+            this.$emit('vote-changed', false);
+            if (this.currentVote.length === 0) {
+                this.currentVote = [...val];
+            }
+        },
+        currentVote(val) {
+            if (val.length > MAX_VOTE_PRODUCERS) {
+                this.currentVote.pop();
+                alert('You can only vote for 30 validators.');
+                return;
+            }
+            if (this.areEqualArrays(val, this.producerVotes)) {
+                this.$emit('vote-changed', false);
+            } else {
+                this.$emit('vote-changed', true);
+            }
+        },
+        account() {
+            this.checkHeader();
+        },
     },
-  },
-  mounted() {
-    this.checkHeader();
-    this.resetVotes();
-  },
-  computed: {
-    ...mapGetters('accounts', ['account']),
-    tableHeader() {
-      const localTime = moment
-        .utc(this.lastUpdated)
-        .local()
-        .format('YYYY-MM-DD HH:mm');
-      return `Validators (${localTime})`;
+    mounted() {
+        this.checkHeader();
+        this.resetVotes();
     },
-    maxSelected() {
-      return this.currentVote.length === MAX_VOTE_PRODUCERS;
-    },
-    projectedVoteWeight() {
-      if (this.currentVote.length === 0) {
-        return 0;
-      }
-      const percentVoted = this.currentVote.length / MAX_VOTE_PRODUCERS;
-      const voteWeight =
+    computed: {
+        ...mapGetters('accounts', ['account']),
+        tableHeader() {
+            const localTime = moment
+                .utc(this.lastUpdated)
+                .local()
+                .format('YYYY-MM-DD HH:mm');
+            return `Validators (${localTime})`;
+        },
+        maxSelected() {
+            return this.currentVote.length === MAX_VOTE_PRODUCERS;
+        },
+        projectedVoteWeight() {
+            if (this.currentVote.length === 0) {
+                return 0;
+            }
+            const percentVoted = this.currentVote.length / MAX_VOTE_PRODUCERS;
+            const voteWeight =
         (Math.sin(Math.PI * percentVoted - Math.PI / 2.0) + 1) / 2.0;
-      return parseFloat(voteWeight * this.stakedAmount).toFixed(2);
-    },
-    weightChange() {
-      const difference = (this.projectedVoteWeight - this.lastWeight).toFixed(
-        2
-      );
-      const symbol = difference > 0 ? '+' : '';
-      const percentage =
+            return parseFloat(voteWeight * this.stakedAmount).toFixed(2);
+        },
+        weightChange() {
+            const difference = (this.projectedVoteWeight - this.lastWeight).toFixed(
+                2
+            );
+            const symbol = difference > 0 ? '+' : '';
+            const percentage =
         this.lastWeight > 0.001
-          ? ((this.projectedVoteWeight / this.lastWeight) * 100).toFixed(2)
-          : (this.projectedVoteWeight * 100).toFixed(2);
+            ? ((this.projectedVoteWeight / this.lastWeight) * 100).toFixed(2)
+            : (this.projectedVoteWeight * 100).toFixed(2);
 
-      return `${symbol}${difference} (${percentage}%)`;
+            return `${symbol}${difference} (${percentage}%)`;
+        },
     },
-  },
-  methods: {
-    removeVote(index) {
-      this.currentVote.splice(index, 1);
-    },
-    getLink(domain, username) {
-      return `https://${domain}/${username}`;
-    },
-    getCountry(numeric) {
-      const countryObj = iso.whereNumeric(numeric) ?? { alpha2: '' };
-      return countryObj.alpha2.toLowerCase();
-    },
-    getFlag(alpha2) {
-      if (alpha2) {
-        return `flag-icon-${alpha2}`;
-      }
-      return '';
-    },
-    checkHeader() {
-      const checkHeader = document.getElementsByClassName('selected-column')[0];
-      checkHeader.style.height = '48px';
-      if (!this.account) {
-        checkHeader.style.display = 'none';
-      } else {
-        checkHeader.style.display = 'block';
-      }
-    },
-    areEqualArrays(firstArray, secondArray) {
-      if (
-        !Array.isArray(firstArray) ||
+    methods: {
+        removeVote(index) {
+            this.currentVote.splice(index, 1);
+        },
+        getLink(domain, username) {
+            return `https://${domain}/${username}`;
+        },
+        getCountry(numeric) {
+            const countryObj = iso.whereNumeric(numeric) ?? { alpha2: '' };
+            return countryObj.alpha2.toLowerCase();
+        },
+        getFlag(alpha2) {
+            if (alpha2) {
+                return `flag-icon-${alpha2}`;
+            }
+            return '';
+        },
+        checkHeader() {
+            const checkHeader = document.getElementsByClassName('selected-column')[0];
+            checkHeader.style.height = '48px';
+            if (!this.account) {
+                checkHeader.style.display = 'none';
+            } else {
+                checkHeader.style.display = 'block';
+            }
+        },
+        areEqualArrays(firstArray, secondArray) {
+            if (
+                !Array.isArray(firstArray) ||
         !Array.isArray(secondArray) ||
         firstArray.length !== secondArray.length
-      ) {
-        return false;
-      }
-      var tempFirstArray = firstArray.concat().sort();
-      var tempSecondArray = secondArray.concat().sort();
-      for (var i = 0; i < tempFirstArray.length; i++) {
-        if (tempFirstArray[i] !== tempSecondArray[i]) {
-          return false;
-        }
-      }
-      return true;
-    },
-    resetVotes() {
-      this.currentVote = [...this.producerVotes];
-    },
-    async sendVoteTransaction() {
-      this.currentVote.sort();
-      const voteActions = [
-        {
-          account: 'eosio',
-          name: 'voteproducer',
-          data: {
-            voter: this.account,
-            proxy: '',
-            producers: [...this.currentVote],
-          },
+            ) {
+                return false;
+            }
+            var tempFirstArray = firstArray.concat().sort();
+            var tempSecondArray = secondArray.concat().sort();
+            for (var i = 0; i < tempFirstArray.length; i++) {
+                if (tempFirstArray[i] !== tempSecondArray[i]) {
+                    return false;
+                }
+            }
+            return true;
         },
-      ];
-      try {
-        await this.$store.$api.signTransaction(voteActions);
-        this.$emit('get-votes');
-      } catch (e) {
-        console.error(e);
-      }
+        resetVotes() {
+            this.currentVote = [...this.producerVotes];
+        },
+        async sendVoteTransaction() {
+            this.currentVote.sort();
+            const voteActions = [
+                {
+                    account: 'eosio',
+                    name: 'voteproducer',
+                    data: {
+                        voter: this.account,
+                        proxy: '',
+                        producers: [...this.currentVote],
+                    },
+                },
+            ];
+            try {
+                await this.$store.$api.signTransaction(voteActions);
+                this.$emit('get-votes');
+            } catch (e) {
+                console.error(e);
+            }
+        },
     },
-  },
 };
 </script>
 <style lang="scss" scoped>

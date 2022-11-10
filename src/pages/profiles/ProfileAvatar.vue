@@ -8,19 +8,19 @@ q-avatar(:size='size')
 import md5 from 'md5';
 import VueGravatar from 'src/components/VueGravatar.vue';
 export default {
-  name: 'ProfileAvatar',
-  components: {
-    VueGravatar,
-  },
-  props: {
-    size: String,
-    avatar: String,
-    account: String
-  },
-  computed: {
-    accountHash() {
-      return md5(this.account || '');
+    name: 'ProfileAvatar',
+    components: {
+        VueGravatar,
     },
-  }
+    props: {
+        size: String,
+        avatar: String,
+        account: String
+    },
+    computed: {
+        accountHash() {
+            return md5(this.account || '');
+        },
+    }
 };
 </script>
