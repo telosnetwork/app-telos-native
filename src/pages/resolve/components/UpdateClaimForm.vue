@@ -50,7 +50,7 @@ export default {
       const updateClaimActions = [
         {
           account: "testtelosarb",
-          name: "respond",
+          name: "updateclaim",
           data: {
             claimant: this.account,
             claim_link: this.newClaimLink,
@@ -59,6 +59,7 @@ export default {
           },
         },
       ];
+      console.log("updateClaimActions: ", updateClaimActions);
       try {
         await this.$store.$api.signTransaction(updateClaimActions);
         this.close();

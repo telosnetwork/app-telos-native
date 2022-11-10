@@ -32,7 +32,7 @@
             <q-item
               v-if="
                 isRespondant() &&
-                caseFile.status === 3 &&
+                caseFile.case_status === 3 &&
                 [1, 2].includes(props.row.status) &&
                 props.row.response_info_needed
               "
@@ -59,7 +59,7 @@
               "
             >
               <q-item-section>
-                <q-item-label>Update</q-item-label>
+                <q-item-label>Update Claim</q-item-label>
               </q-item-section>
             </q-item>
             <q-item
@@ -81,7 +81,11 @@
               </q-item-section>
             </q-item>
             <q-item
-              v-if="!isPendingInfoNeeded(props.row)"
+              v-if="
+                !isPendingInfoNeeded(props.row) &&
+                isCaseArbitrator &&
+                caseFile.case_status === 3
+              "
               clickable
               v-close-popup
               @click="
@@ -91,7 +95,7 @@
               "
             >
               <q-item-section>
-                <q-item-label>Submit Decision</q-item-label>
+                <q-item-label>Settle Claim</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>

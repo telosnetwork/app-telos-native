@@ -77,14 +77,15 @@ export default {
           account: "testtelosarb",
           name: "settleclaim",
           data: {
-            respondant: this.account,
-            decision_link: this.decisionLink,
-            claim_id: this.claimId,
             case_id: this.caseId,
             assigned_arb: this.account,
+            claim_id: this.claimId,
+            accept: this.isAccepted,
+            decision_link: this.decisionLink,
           },
         },
       ];
+      console.log("settleClaimActions: ", settleClaimActions);
       try {
         await this.$store.$api.signTransaction(settleClaimActions);
         this.close();
