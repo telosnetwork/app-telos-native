@@ -91,7 +91,7 @@
               "
             >
               <q-item-section>
-                <q-item-label>Settle Claim</q-item-label>
+                <q-item-label>Submit Decision</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -119,21 +119,24 @@
         :claimId="claimId"
         :close="closeModal"
       />
+      <settle-claim-form
+        v-if="formType === 'settleclaim'"
+        :caseId="$route.params.id"
+        :claimId="claimId"
+        :close="closeModal"
+      />
     </q-dialog>
   </div>
 </template>
 
 <script>
 import { fetchClaims } from "../util";
-import {
-  DECISION_CLASS_LIST,
-  CLAIM_STATUS_LIST,
-  CLAIM_CATEGORY_LIST,
-} from "../constants/claim";
+import { CLAIM_STATUS_LIST, CLAIM_CATEGORY_LIST } from "../constants/claim";
 import IpfsLink from "./IpfsLink.vue";
 import RespondClaimForm from "./RespondClaimForm.vue";
 import UpdateClaimForm from "./UpdateClaimForm.vue";
 import ReviewClaimForm from "./ReviewClaimForm.vue";
+import SettleClaimForm from "./SettleClaimForm.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -143,6 +146,7 @@ export default {
     RespondClaimForm,
     UpdateClaimForm,
     ReviewClaimForm,
+    SettleClaimForm,
   },
   data() {
     return {
@@ -175,13 +179,13 @@ export default {
     isPendingInfoNeeded(claim) {
       let isPending = false;
       if (claim.claim_info_needed) {
-        const claimantDeadline = new Date(claim.claimant_limit_time);
+        const claimantDeadline = new Date("2022-11-08T10:19:09");
         if (claimantDeadline > new Date()) {
           isPending = true;
         }
       }
       if (claim.response_info_needed) {
-        const responseDeadline = new Date(claim.respondant_limit_time);
+        const responseDeadline = new Date("2022-11-08T10:19:09");
         if (responseDeadline > new Date()) {
           isPending = true;
         }
