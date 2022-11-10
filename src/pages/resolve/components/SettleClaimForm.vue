@@ -1,7 +1,8 @@
 <template>
   <q-card style="min-width: 450px">
     <q-card-section>
-      <div class="text-h6">Submit Decision</div>
+      <div class="text-h6">Settle claim</div>
+      <p>Choose whether this particular claim should be accepted or rejected</p>
     </q-card-section>
 
     <q-card-section class="q-pt-none">
@@ -9,11 +10,28 @@
     </q-card-section>
 
     <q-card-section class="q-pt-none">
-      <q-checkbox v-model="isAccepted" label="Accept Claim" color="primary" />
+      <!-- <q-checkbox v-model="isAccepted" label="Accept claim" color="primary" /> -->
+      <q-option-group
+        v-model="isAccepted"
+        :options="[
+          { label: 'Accept claim', value: true },
+          { label: 'Reject claim', value: false },
+        ]"
+        color="primary"
+        :rules="[
+          (val) =>
+            console.log('val: ', val) || 'Please choose accept or reject',
+        ]"
+      />
     </q-card-section>
 
     <q-card-actions align="right" class="text-primary">
-      <q-btn flat label="Submit" @click="submit" />
+      <q-btn
+        flat
+        label="Submit"
+        @click="submit"
+        :disable="!hasSelectedOption"
+      />
       <q-btn flat label="Cancel" @click="close" />
     </q-card-actions>
   </q-card>
@@ -33,13 +51,16 @@ export default {
   data() {
     return {
       decisionLink: "",
-      isAccepted: false,
+      isAccepted: null,
     };
   },
   computed: {
     ...mapGetters({
       account: "accounts/account",
     }),
+    hasSelectedOption() {
+      return typeof this.isAccepted === "boolean";
+    },
   },
   methods: {
     validateId,
