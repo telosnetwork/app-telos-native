@@ -80,6 +80,20 @@
                 <q-item-label>Request More Info</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item
+              v-if="!isPendingInfoNeeded(props.row)"
+              clickable
+              v-close-popup
+              @click="
+                form = true;
+                formType = 'settleclaim';
+                claimId = props.row.claim_id;
+              "
+            >
+              <q-item-section>
+                <q-item-label>Settle Claim</q-item-label>
+              </q-item-section>
+            </q-item>
           </q-list>
         </q-btn-dropdown>
       </q-td>
@@ -156,8 +170,23 @@ export default {
     },
     isRespondant() {
       if (!this.caseFile) return false;
-      console.log("there is caseFile");
       return this.account === this.caseFile.respondant;
+    },
+    isPendingInfoNeeded(claim) {
+      let isPending = false;
+      if (claim.claim_info_needed) {
+        const claimantDeadline = new Date(claim.claimant_limit_time);
+        if (claimantDeadline > new Date()) {
+          isPending = true;
+        }
+      }
+      if (claim.response_info_needed) {
+        const responseDeadline = new Date(claim.respondant_limit_time);
+        if (responseDeadline > new Date()) {
+          isPending = true;
+        }
+      }
+      return isPending;
     },
     async getClaims() {
       try {
