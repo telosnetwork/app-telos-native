@@ -1,4 +1,3 @@
-
 export const signUp = async function ({}, profileData) {
     const actions = [];
     if (!this.state.profiles.myProfile) {
@@ -56,7 +55,6 @@ export const signUp = async function ({}, profileData) {
                 }
             });
         }
-
     }
 
     let transaction = null;
