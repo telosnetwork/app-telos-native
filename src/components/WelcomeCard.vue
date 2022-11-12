@@ -3,22 +3,22 @@ import { mapGetters } from 'vuex';
 import Btn from './CustomButton';
 
 export default {
-  name: 'WelcomeCard',
-  components: { Btn },
-  data() {
-    return {
-      isNewUser: true,
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['account']),
-  },
-  methods: {
-    addToLocalStorage() {
-      localStorage.isNewUser = false;
-      this.isNewUser = false;
+    name: 'WelcomeCard',
+    components: { Btn },
+    data() {
+        return {
+            isNewUser: true,
+        };
     },
-  },
+    computed: {
+        ...mapGetters('accounts', ['account']),
+    },
+    methods: {
+        addToLocalStorage() {
+            localStorage.isNewUser = false;
+            this.isNewUser = false;
+        },
+    },
 };
 </script>
 

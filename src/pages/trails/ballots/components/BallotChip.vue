@@ -1,22 +1,26 @@
 <script>
 export default {
-  name: 'BallotChip',
-  props: ['type', 'isBallotOpened'],
-  data() {
-    return {};
-  },
-  methods: {
-    ucFirst(str) {
-      if (!str) return str;
-
-      return str[0].toUpperCase() + str.slice(1);
+    name: 'BallotChip',
+    props: ['type', 'isBallotOpened'],
+    data() {
+        return {};
     },
-  },
+    methods: {
+        ucFirst(str) {
+            if (!str) return str;
+
+            return str[0].toUpperCase() + str.slice(1);
+        },
+    },
 };
 </script>
 
 <template lang="pug">
-q-chip(square text-color="white" :color="isBallotOpened ? `${type}` : 'ended'").capitalize.no-margin.text-weight-bold.ballot-type
+q-chip.capitalize.no-margin.text-weight-bold.ballot-type(
+  square
+  text-color="white"
+  :color="isBallotOpened ? `${type}` : 'ended'"
+)
   q-avatar
     template(v-if="isBallotOpened")
       img(:src="`statics/app-icons/${type.toLowerCase()}-icon.svg`").poll-icon

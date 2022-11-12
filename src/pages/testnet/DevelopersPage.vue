@@ -3,67 +3,67 @@ import { mapActions } from 'vuex';
 import { Notify } from 'quasar';
 
 export default {
-  name: 'DevelopersPage',
-  data() {
-    return {
-      form: {
-        send_to: null,
-        account_name: null,
-        owner_key: null,
-        active_key: null,
-      },
-      transactionId: null,
-      submitting: false,
-    };
-  },
-  methods: {
-    ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
-    async onFaucet() {
-      this.submitting = true;
-      const result = await this.faucet(this.form.send_to);
-      if (result) {
-        Notify.create({
-          message: result,
-          position: 'top',
-          color: 'primary',
-          textColor: 'white',
-          actions: [{ label: 'Dismiss', color: 'white' }],
-        });
-        this.transactionId = result.transactionId;
-      }
-      this.submitting = false;
+    name: 'DevelopersPage',
+    data() {
+        return {
+            form: {
+                send_to: null,
+                account_name: null,
+                owner_key: null,
+                active_key: null,
+            },
+            transactionId: null,
+            submitting: false,
+        };
     },
-    async onEvmFaucet() {
-      this.submitting = true;
-      const result = await this.evmFaucet(this.form.send_to_evm);
-      if (result) {
-        Notify.create({
-          message: result,
-          position: 'top',
-          color: 'primary',
-          textColor: 'white',
-          actions: [{ label: 'Dismiss', color: 'white' }],
-        });
-        this.transactionId = result.transactionId;
-      }
-      this.submitting = false;
+    methods: {
+        ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
+        async onFaucet() {
+            this.submitting = true;
+            const result = await this.faucet(this.form.send_to);
+            if (result) {
+                Notify.create({
+                    message: result,
+                    position: 'top',
+                    color: 'primary',
+                    textColor: 'white',
+                    actions: [{ label: 'Dismiss', color: 'white' }],
+                });
+                this.transactionId = result.transactionId;
+            }
+            this.submitting = false;
+        },
+        async onEvmFaucet() {
+            this.submitting = true;
+            const result = await this.evmFaucet(this.form.send_to_evm);
+            if (result) {
+                Notify.create({
+                    message: result,
+                    position: 'top',
+                    color: 'primary',
+                    textColor: 'white',
+                    actions: [{ label: 'Dismiss', color: 'white' }],
+                });
+                this.transactionId = result.transactionId;
+            }
+            this.submitting = false;
+        },
+        async onAccount() {
+            this.submitting = true;
+            const result = await this.account(this.form);
+            if (result) {
+                Notify.create({
+                    message: result,
+                    position: 'top',
+                    color: 'primary',
+                    textColor: 'white',
+                    actions: [{ label: 'Dismiss', color: 'white' }],
+                });
+                this.transactionId = result.transactionId;
+            }
+            this.submitting = false;
+        },
     },
-    async onAccount() {
-      this.submitting = true;
-      const result = await this.account(this.form);
-      if (result) {
-        Notify.create({
-          message: result,
-          position: 'top',
-          color: 'primary',
-          textColor: 'white',
-          actions: [{ label: 'Dismiss', color: 'white' }],
-        });
-        this.transactionId = result.transactionId;
-      }
-      this.submitting = false;
-    },
-  },
 };
 </script>
 

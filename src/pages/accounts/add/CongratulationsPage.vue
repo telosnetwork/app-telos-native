@@ -2,10 +2,10 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'CongratulationsPage',
-  computed: {
-    ...mapGetters('accounts', ['signUpAccount']),
-  },
+    name: 'CongratulationsPage',
+    computed: {
+        ...mapGetters('accounts', ['signUpAccount']),
+    },
 };
 </script>
 

@@ -4,279 +4,279 @@ import { mapActions, mapGetters } from 'vuex';
 import { scroll } from 'quasar';
 
 export default {
-  name: 'ActionBar',
-  components: { Btn },
-  props: {
-    treasuriesOptions: {},
-    activeFilter: {
-      type: String,
-    },
-    election: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      model: 'one',
-      isTypeMenuOpen: false,
-      isStatusMenuOpen: false,
-      isGroupMenuOpen: false,
-      isSortingMenuOpen: false,
-      isTypeDialogOpen: false,
-      isStatusDialogOpen: false,
-      isGroupDialogOpen: false,
-      isSortingDialogOpen: false,
-      isConfirmBtn: false,
-      isFilterMenu320Open: false,
-      typeGroup: [],
-      electionsPageTypeOptions: [
-        { label: 'Election', value: 'election' },
-        { label: 'Referendum', value: 'referendum' },
-        { label: 'Leaderboard', value: 'leaderboard' },
-      ],
-      proposalsPageTypeOptions: [
-        { label: 'Poll', value: 'poll' },
-        { label: 'Proposal', value: 'proposal' },
-      ],
-      statusGroup: [],
-      statusOptions: [
-        { label: 'Active', value: 'active' },
-        { value: 'not_started', label: 'Not started' },
-        { label: 'Expired', value: 'expired' },
-        { label: 'Closed', value: 'closed' },
-        { label: 'Cancelled', value: 'cancelled' },
-        { label: 'Archived', value: 'archived' },
-        { label: 'Setup', value: 'setup' },
-      ],
-      sortMode: '',
-      sortOptions: [
-        { label: 'A-Z', value: 'A-Z' },
-        { label: 'Z-A', value: 'Z-A' },
-        { label: 'Most popular', value: 'Most popular' },
-        { label: 'Least popular', value: 'Least popular' },
-      ],
-      submitTypesResult: [],
-      submitStatusesResult: [],
-      treasuryBar: 'VOTE',
-      isBallotListRowDirection: true,
-      notice: false,
-    };
-  },
-  methods: {
-    ...mapActions('trails', [
-      'fetchFees',
-      'fetchBallots',
-      'castVote',
-      'fetchTreasuries',
-      'fetchBallotsByStatus',
-    ]),
-    addToLocalStorage() {
-      localStorage.isNewUser = false;
-      this.isNewUser = false;
-    },
-    openBallotForm() {
-      this.$emit('open-ballot-form');
-    },
-    toggleMenu(isMenuOpen, group, submitResult) {
-      if (this[submitResult]) {
-        this[group] = this[submitResult];
-      }
-      this[isMenuOpen] = !this[isMenuOpen];
-    },
-    onSubmitTypes(evt) {
-      const formData = new FormData(evt.target);
-      const submitResult = [];
-
-      for (const [name, value] of formData.entries()) {
-        submitResult.push({
-          name,
-          value,
-        });
-      }
-
-      this.submitTypesResult = JSON.parse(JSON.stringify(submitResult)).reduce(
-        (typeValues, item) => {
-          return [...typeValues, item.value];
+    name: 'ActionBar',
+    components: { Btn },
+    props: {
+        treasuriesOptions: {},
+        activeFilter: {
+            type: String,
         },
-        []
-      );
-      this.$refs.typesMenu.hide();
+        election: {
+            type: Boolean,
+            default: false,
+        },
     },
-    onSubmitStatuses(evt) {
-      const formData = new FormData(evt.target);
-      const submitResult = [];
+    data() {
+        return {
+            model: 'one',
+            isTypeMenuOpen: false,
+            isStatusMenuOpen: false,
+            isGroupMenuOpen: false,
+            isSortingMenuOpen: false,
+            isTypeDialogOpen: false,
+            isStatusDialogOpen: false,
+            isGroupDialogOpen: false,
+            isSortingDialogOpen: false,
+            isConfirmBtn: false,
+            isFilterMenu320Open: false,
+            typeGroup: [],
+            electionsPageTypeOptions: [
+                { label: 'Election', value: 'election' },
+                { label: 'Referendum', value: 'referendum' },
+                { label: 'Leaderboard', value: 'leaderboard' },
+            ],
+            proposalsPageTypeOptions: [
+                { label: 'Poll', value: 'poll' },
+                { label: 'Proposal', value: 'proposal' },
+            ],
+            statusGroup: [],
+            statusOptions: [
+                { label: 'Active', value: 'active' },
+                { value: 'not_started', label: 'Not started' },
+                { label: 'Expired', value: 'expired' },
+                { label: 'Closed', value: 'closed' },
+                { label: 'Cancelled', value: 'cancelled' },
+                { label: 'Archived', value: 'archived' },
+                { label: 'Setup', value: 'setup' },
+            ],
+            sortMode: '',
+            sortOptions: [
+                { label: 'A-Z', value: 'A-Z' },
+                { label: 'Z-A', value: 'Z-A' },
+                { label: 'Most popular', value: 'Most popular' },
+                { label: 'Least popular', value: 'Least popular' },
+            ],
+            submitTypesResult: [],
+            submitStatusesResult: [],
+            treasuryBar: 'VOTE',
+            isBallotListRowDirection: true,
+            notice: false,
+        };
+    },
+    methods: {
+        ...mapActions('trails', [
+            'fetchFees',
+            'fetchBallots',
+            'castVote',
+            'fetchTreasuries',
+            'fetchBallotsByStatus',
+        ]),
+        addToLocalStorage() {
+            localStorage.isNewUser = false;
+            this.isNewUser = false;
+        },
+        openBallotForm() {
+            this.$emit('open-ballot-form');
+        },
+        toggleMenu(isMenuOpen, group, submitResult) {
+            if (this[submitResult]) {
+                this[group] = this[submitResult];
+            }
+            this[isMenuOpen] = !this[isMenuOpen];
+        },
+        onSubmitTypes(evt) {
+            const formData = new FormData(evt.target);
+            const submitResult = [];
 
-      for (const [name, value] of formData.entries()) {
-        submitResult.push({
-          name,
-          value,
-        });
-      }
+            for (const [name, value] of formData.entries()) {
+                submitResult.push({
+                    name,
+                    value,
+                });
+            }
 
-      this.submitStatusesResult = JSON.parse(
-        JSON.stringify(submitResult)
-      ).reduce((statusesValues, item) => {
-        return [...statusesValues, item.value];
-      }, []);
-      this.$refs.statusesMenu.hide();
-    },
-    clearFilter(filter, isMenuOpen) {
-      this[filter] = [];
-      this[isMenuOpen] = false;
-    },
-    discardFilter(filter, group) {
-      this[group] = [];
-      this[filter] = [];
-    },
-    discardAllFilter() {
-      this.treasuryBar = null;
-      this.submitTypesResult = [];
-      this.submitStatusesResult = [];
-    },
-    clearGroupFilter() {
-      this.treasuryBar = null;
-      this.isGroupMenuOpen = false;
-    },
-    clearSort() {
-      this.sortMode = '';
-      this.isSortingMenuOpen = false;
-    },
-    isFiltersApplied() {
-      return (
-        this.treasuryBar !== null ||
+            this.submitTypesResult = JSON.parse(JSON.stringify(submitResult)).reduce(
+                (typeValues, item) => {
+                    return [...typeValues, item.value];
+                },
+                []
+            );
+            this.$refs.typesMenu.hide();
+        },
+        onSubmitStatuses(evt) {
+            const formData = new FormData(evt.target);
+            const submitResult = [];
+
+            for (const [name, value] of formData.entries()) {
+                submitResult.push({
+                    name,
+                    value,
+                });
+            }
+
+            this.submitStatusesResult = JSON.parse(
+                JSON.stringify(submitResult)
+            ).reduce((statusesValues, item) => {
+                return [...statusesValues, item.value];
+            }, []);
+            this.$refs.statusesMenu.hide();
+        },
+        clearFilter(filter, isMenuOpen) {
+            this[filter] = [];
+            this[isMenuOpen] = false;
+        },
+        discardFilter(filter, group) {
+            this[group] = [];
+            this[filter] = [];
+        },
+        discardAllFilter() {
+            this.treasuryBar = null;
+            this.submitTypesResult = [];
+            this.submitStatusesResult = [];
+        },
+        clearGroupFilter() {
+            this.treasuryBar = null;
+            this.isGroupMenuOpen = false;
+        },
+        clearSort() {
+            this.sortMode = '';
+            this.isSortingMenuOpen = false;
+        },
+        isFiltersApplied() {
+            return (
+                this.treasuryBar !== null ||
         this.submitTypesResult.length ||
         this.submitStatusesResult.length
-      );
-    },
-    getFilterBtnLabel(filter, submitResult, options) {
-      if (this[submitResult].length === 1) {
-        const label = this[options].find(
-          (option) => option.value === this[submitResult][0]
-        ).label;
-        return label;
-      }
+            );
+        },
+        getFilterBtnLabel(filter, submitResult, options) {
+            if (this[submitResult].length === 1) {
+                const label = this[options].find(
+                    (option) => option.value === this[submitResult][0]
+                ).label;
+                return label;
+            }
 
-      return `${filter}: ${this[submitResult].length}`;
-    },
-    handleScroll() {
-      const obj = this.$el.querySelector('.scroll-anim');
-      const filter320 = this.$el.querySelector('.bar-filter-menu-320-wrapper');
-      const { bottom } = obj.getBoundingClientRect();
-      const height = document.documentElement.clientHeight;
-      this.isFilterMenu320Open =
+            return `${filter}: ${this[submitResult].length}`;
+        },
+        handleScroll() {
+            const obj = this.$el.querySelector('.scroll-anim');
+            const filter320 = this.$el.querySelector('.bar-filter-menu-320-wrapper');
+            const { bottom } = obj.getBoundingClientRect();
+            const height = document.documentElement.clientHeight;
+            this.isFilterMenu320Open =
         bottom + height < height &&
         window.getComputedStyle(filter320).display !== 'none';
+        },
+        handleFilterBtnClick() {
+            const { getScrollTarget, setScrollPosition } = scroll;
+            const filter = this.$el.querySelector('.bar-filter-menu-320-wrapper');
+            const offset = filter.offsetTop;
+            const target = getScrollTarget(filter);
+            setScrollPosition(target, offset, 0);
+        },
+        showFilter() {
+            this.isFilterOpen = true;
+        },
+        openNotice() {
+            this.notice = true;
+        },
+        setTreasuryBar: function (treasury) {
+            console.log('ActionBar.setTreasuryBar()', treasury);
+            this.treasuryBar = treasury;
+        },
+        setFilterParams(path) {
+            if (path === 'amend-ballots') {
+                this.typeGroup = [];
+                this.submitTypesResult = [];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            } else if (path === 'worker-proposals') {
+                this.typeGroup = ['proposal'];
+                this.submitTypesResult = ['proposal'];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            } else if (path === 't-f-election') {
+                this.typeGroup = ['election'];
+                this.submitTypesResult = ['election'];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            } else if (path === 'polls') {
+                this.typeGroup = ['poll'];
+                this.submitTypesResult = ['poll'];
+                this.statusGroup = ['active'];
+                this.submitStatusesResult = ['active'];
+            }
+            this.$emit('update-cards', {
+                type: this.typeGroup,
+                status: this.statusGroup,
+                treasury: this.treasuryBar,
+            });
+        },
     },
-    handleFilterBtnClick() {
-      const { getScrollTarget, setScrollPosition } = scroll;
-      const filter = this.$el.querySelector('.bar-filter-menu-320-wrapper');
-      const offset = filter.offsetTop;
-      const target = getScrollTarget(filter);
-      setScrollPosition(target, offset, 0);
+    mounted() {
+        this.setFilterParams(this.activeFilter);
     },
-    showFilter() {
-      this.isFilterOpen = true;
+    created() {
+        window.addEventListener('scroll', this.handleScroll);
     },
-    openNotice() {
-      this.notice = true;
+    unmounted() {
+        window.removeEventListener('scroll', this.handleScroll);
     },
-    setTreasuryBar: function (treasury) {
-      console.log('ActionBar.setTreasuryBar()', treasury);
-      this.treasuryBar = treasury;
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
+        typeOptions() {
+            if (this.$route.path.indexOf('election') > 0) {
+                return this.electionsPageTypeOptions;
+            } else {
+                return this.proposalsPageTypeOptions;
+            }
+        },
     },
-    setFilterParams(path) {
-      if (path === 'amend-ballots') {
-        this.typeGroup = [];
-        this.submitTypesResult = [];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      } else if (path === 'worker-proposals') {
-        this.typeGroup = ['proposal'];
-        this.submitTypesResult = ['proposal'];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      } else if (path === 't-f-election') {
-        this.typeGroup = ['election'];
-        this.submitTypesResult = ['election'];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      } else if (path === 'polls') {
-        this.typeGroup = ['poll'];
-        this.submitTypesResult = ['poll'];
-        this.statusGroup = ['active'];
-        this.submitStatusesResult = ['active'];
-      }
-      this.$emit('update-cards', {
-        type: this.typeGroup,
-        status: this.statusGroup,
-        treasury: this.treasuryBar,
-      });
+    watch: {
+        $route(to) {
+            if (to.params.id !== undefined) {
+                this.showBallot = true;
+            } else {
+                this.showBallot = false;
+            }
+        },
+        activeFilter: function () {
+            this.setFilterParams(this.activeFilter);
+        },
+        treasuryBar: function () {
+            this.$emit('update-treasury', this.treasuryBar);
+        },
+        submitStatusesResult: function (val, old) {
+            if (val !== old) {
+                this.statusGroup = this.submitStatusesResult;
+                this.$emit('update-statuses', this.submitStatusesResult);
+            }
+        },
+        submitTypesResult: function (val, old) {
+            if (val !== old) {
+                this.typeGroup = this.submitTypesResult;
+                this.$emit('update-categories', this.submitTypesResult);
+            }
+        },
+        treasuriesOptions: {
+            immediate: true,
+            handler: async function (val) {
+                if (!val.length) {
+                    // TODO past 100 groups we need to switch to autocomplete search
+                    await this.fetchTreasuries();
+                }
+            },
+        },
+        isBallotListRowDirection: function (val, old) {
+            if (val !== old) {
+                this.$emit('change-diraction', this.isBallotListRowDirection);
+            }
+        },
+        sortMode: function () {
+            this.$emit('change-sort-option', this.sortMode);
+        },
     },
-  },
-  mounted() {
-    this.setFilterParams(this.activeFilter);
-  },
-  created() {
-    window.addEventListener('scroll', this.handleScroll);
-  },
-  unmounted() {
-    window.removeEventListener('scroll', this.handleScroll);
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-    typeOptions() {
-      if (this.$route.path.indexOf('election') > 0) {
-        return this.electionsPageTypeOptions;
-      } else {
-        return this.proposalsPageTypeOptions;
-      }
-    },
-  },
-  watch: {
-    $route(to) {
-      if (to.params.id !== undefined) {
-        this.showBallot = true;
-      } else {
-        this.showBallot = false;
-      }
-    },
-    activeFilter: function () {
-      this.setFilterParams(this.activeFilter);
-    },
-    treasuryBar: function () {
-      this.$emit('update-treasury', this.treasuryBar);
-    },
-    submitStatusesResult: function (val, old) {
-      if (val !== old) {
-        this.statusGroup = this.submitStatusesResult;
-        this.$emit('update-statuses', this.submitStatusesResult);
-      }
-    },
-    submitTypesResult: function (val, old) {
-      if (val !== old) {
-        this.typeGroup = this.submitTypesResult;
-        this.$emit('update-categories', this.submitTypesResult);
-      }
-    },
-    treasuriesOptions: {
-      immediate: true,
-      handler: async function (val) {
-        if (!val.length) {
-          // TODO past 100 groups we need to switch to autocomplete search
-          await this.fetchTreasuries();
-        }
-      },
-    },
-    isBallotListRowDirection: function (val, old) {
-      if (val !== old) {
-        this.$emit('change-diraction', this.isBallotListRowDirection);
-      }
-    },
-    sortMode: function () {
-      this.$emit('change-sort-option', this.sortMode);
-    },
-  },
 };
 </script>
 <template lang="pug">
@@ -408,7 +408,8 @@ div.bar-filter-wrapper
           div.flex.no-wrap(v-else)
             q-btn.bar-filter-btn.left-btn.left-btn-320(
               v-if="!election"
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               @click="toggleMenu('isTypeDialogOpen')"
               color="primary"
               no-caps
@@ -509,7 +510,8 @@ div.bar-filter-wrapper
                       )
           div.flex.no-wrap(v-else)
             q-btn.bar-filter-btn.left-btn.left-btn-320(
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
               @click="toggleMenu('isStatusDialogOpen')"
               color="primary"
               no-caps
@@ -654,7 +656,7 @@ div.bar-filter-wrapper
           q-icon.bar-btn-toggle(name="fas fa-bars")
       div.bar-custom-separator
       div.bar-filters
-        div.row.bar-filter-btns-wrapper
+        div.row
           //- 'Sort by' button
           q-btn.q-mr-md(
             v-if="!sortMode"
@@ -734,7 +736,8 @@ div.bar-filter-wrapper
                 )
           div(v-else-if="!election")
             q-btn.q-mr-md.left-btn(
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.typeFilter'), 'submitTypesResult', 'typeOptions')"
               color="primary"
               no-caps
               outline
@@ -801,7 +804,8 @@ div.bar-filter-wrapper
                 )
           div(v-else)
             q-btn.q-mr-md.left-btn(
-              :label="getFilterBtnLabel($t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
+              :label="getFilterBtnLabel(\
+                $t('pages.trails.ballots.actionBar.statusFilter'), 'submitStatusesResult', 'statusOptions')"
               color="primary"
               no-caps
               outline
@@ -879,7 +883,7 @@ div.bar-filter-wrapper
               color="primary"
               outline
             )
-      q-btn.bar-filter-btn-320(
+      q-btn.bar-filter-btn-320.q-mx-md(
         :label="$t('pages.trails.ballots.actionBar.filterTitle')"
         icon-right="filter_list"
         @click="handleFilterBtnClick()"
@@ -888,16 +892,15 @@ div.bar-filter-wrapper
         outline
       )
       div.separator-320
-      div.right-bar-section.col-grow.row.items-center.justify-end.hidden
-        q-separator.bar-separator-vertical(vertical inset)
-        btn.create-poll-btn(
-          :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
-          iconRight
-          padding='0'
-          primary
-          btnWidth='155'
-          fontSize='16'
-          @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
+      div.right-bar-section.col-grow.row.items-center.justify-end
+        q-separator.bar-separator-vertical.q-mr-md(vertical inset)
+        q-btn.q-mx-md(
+          :label="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
+          icon-right="add"
+          color="primary"
+          no-caps
+          outline
+          @click="isAuthenticated ? openBallotForm() : openNotice()"
         )
     q-dialog(v-model="notice")
       q-card.notice
@@ -907,15 +910,15 @@ div.bar-filter-wrapper
         q-card-actions(align="right" class="bg-white")
           q-btn(flat label="OK" v-close-popup)
 </template>
-<style lang="sass">
+<style lang="sass" scoped>
+// https://stackoverflow.com/a/74369087/2274525
+$shadow-1: 0px 20px 48px rgba(0, 9, 26, 0.08)
+$shadow-2: 0px 7px 15px rgba(0, 9, 26, 0.05)
+$shadow-3: 0px 3px 6px rgba(0, 9, 26, 0.04)
+$shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
 .scroll-anim
-  height: 0px !important
   margin-top: 10px !important
   margin-bottom: 10px !important
-  pointer-events: none
-  opacity: 0
-main.q-page
-  padding-top: 40px
 .bar-filter-wrapper
   margin: 0 0 8px 0
 .bar-wrapper
@@ -923,7 +926,7 @@ main.q-page
   width: 100%
   height: 88px
   background: white
-  box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
   border-radius: 12px
 .q-btn-group
   margin-left: 24px
@@ -939,9 +942,7 @@ main.q-page
   border-radius: 2px
   margin: 0 26px
 .bar-separator-vertical
-  margin: 2px 0 2px 20px
-  height: 84px
-  margin-right: 32px
+  height: 68px
 .separator-320
   margin: 2px 20px
   display: none
@@ -970,13 +971,12 @@ main.q-page
     border: none
 .bar-filter-btn-320
   display: none
-  margin-left: 12px
 .q-btn__wrapper
   padding: 4px 12px
 .bar-filter-menu-320
   padding: 24px 12px 20px 12px
   background: white
-  box-shadow: 0px 20px 48px rgba(0, 9, 26, 0.08), 0px 7px 15px rgba(0, 9, 26, 0.05), 0px 3px 6px rgba(0, 9, 26, 0.04), 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
   border-radius: 12px
 .menu-320-title-wrapper
   margin-bottom: 20px
@@ -1042,8 +1042,6 @@ main.q-page
   .bar-btns-toggle,
   .bar-custom-separator
     display: none !important
-  .bar-filter-btns-wrapper
-    margin-left: 16px
 @media (max-width: 1130px)
   .bar-linear-gradient-left,
   .bar-linear-gradient-right
@@ -1051,9 +1049,7 @@ main.q-page
   .bar-wrapper
     height: 72px
   .bar-separator-vertical
-    height: 60px
-  .bar-filter-btns-wrapper
-    min-width: 690px
+    height: 56px
   .bar-filters
     max-width: 73%
     overflow-x: scroll
