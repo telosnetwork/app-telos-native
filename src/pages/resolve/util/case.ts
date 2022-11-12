@@ -6,7 +6,7 @@ export const FETCH_DELTAS = async (context: any, params: any) => {
     "https://testnet.telos.caleos.io/v2/history/get_deltas",
     {
       params: {
-        limit: 40,
+        limit: 200,
         skip: params.skip,
         code: "testtelosarb",
         // track: '',
@@ -27,7 +27,7 @@ export const FETCH_ACTIONS = async (context: any, params: any) => {
     "https://testnet.telos.caleos.io/v2/history/get_actions",
     {
       params: {
-        limit: 40,
+        limit: 100,
         skip: params.skip,
         account: "testtelosarb",
         code: "testtelosarb",
@@ -46,8 +46,11 @@ export const FETCH_ACTIONS = async (context: any, params: any) => {
 
 export const FETCH_CASE_ACTIONS_HISTORY = async (
   context: any,
-  case_id: number
+  case_id: number,
+  setProgress?: (progress: number) => void
 ) => {
+  setProgress && setProgress(5);
+  let deltaIterator = 1;
   try {
     let skipDeltas = 0;
     let skipActions = 0;
@@ -65,9 +68,14 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
         }
       });
       if (deltas.length === 0) break;
-      skipDeltas += 40;
+      skipDeltas += 200;
+      const newProgress = 5 + (45 * deltaIterator) / (deltaIterator + 1);
+      setProgress && setProgress(newProgress);
+      deltaIterator++;
     }
+    setProgress && setProgress(50);
 
+    let actionIterator = 1;
     while (true) {
       const { actions } = await FETCH_ACTIONS(context, {
         skip: skipActions,
@@ -81,8 +89,13 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
       });
       totalActions.push(...actions);
       if (actions.block_num < earliestBlock || !actions.length) break;
-      skipActions += 40;
+      skipActions += 100;
+      const newProgress = 50 + (45 * actionIterator) / (actionIterator + 1);
+      console.log("newProgress: ", newProgress);
+      setProgress && setProgress(newProgress);
+      actionIterator++;
     }
+    setProgress && setProgress(100);
     console.log("totalActions: ", totalActions);
     const caseActionsHistory = FILTER_CASE_FILE_ACTIONS(totalActions, case_id);
     return caseActionsHistory;

@@ -8,6 +8,15 @@
     <template v-slot:body-cell-claim_summary="props">
       <q-td :props="props">
         <IpfsLink :hash="props.row.claim_summary"></IpfsLink>
+        <q-badge
+          v-if="props.row.claim_info_needed"
+          rounded
+          color="red"
+          label="!"
+          align="top"
+        >
+          <q-tooltip>More info needed from claimant</q-tooltip>
+        </q-badge>
       </q-td>
     </template>
     <template v-slot:body-cell-decision_link="props">
@@ -18,6 +27,15 @@
     <template v-slot:body-cell-response_link="props">
       <q-td :props="props">
         <IpfsLink :hash="props.row.response_link"></IpfsLink>
+        <q-badge
+          v-if="props.row.response_info_needed"
+          rounded
+          color="red"
+          label="!"
+          align="top"
+        >
+          <q-tooltip>More info needed from respondant</q-tooltip>
+        </q-badge>
       </q-td>
     </template>
     <template v-slot:body-cell-claim_category="props">

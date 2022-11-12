@@ -57,6 +57,16 @@
       <claims-table :caseFile="caseFile" />
     </div>
     <div class="q-pa-md">
+      <h2 v-if="isLoadingHistory">
+        Loading case history...<q-circular-progress
+          :value="historyProgress"
+          size="3.75rem"
+          color="primary"
+          class="q-ma-md"
+          show-value
+        />
+      </h2>
+      <h2 v-else>Case History</h2>
       <case-file-actions :actions="caseActionsHistory" />
     </div>
     <div class="case-file-modal-wrap">
@@ -102,6 +112,8 @@ export default {
   },
   data() {
     return {
+      isLoadingHistory: false,
+      historyProgress: 0,
       caseFile: null,
       columns: [
         { name: "case_id", label: "ID", field: "case_id" },
@@ -123,6 +135,9 @@ export default {
     };
   },
   methods: {
+    setProgress(progress) {
+      this.historyProgress = progress;
+    },
     closeModal() {
       this.form = null;
     },
@@ -190,11 +205,16 @@ export default {
   },
   async mounted() {
     this.fetchCaseFile();
+    this.isLoadingHistory = true;
+    console.log("this.isLoadingHistory: ", this.isLoadingHistory);
     const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
       this,
       // @ts-ignore
-      this.$route.params.id
+      this.$route.params.id,
+      this.setProgress
     );
+    setTimeout(() => (this.isLoadingHistory = false), 2000);
+    console.log("this.isLoadingHistory: ", this.isLoadingHistory);
     console.log("actionsHistory: ", actionsHistory);
     // @ts-ignore
     this.caseActionsHistory = actionsHistory;
