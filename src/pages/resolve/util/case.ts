@@ -69,7 +69,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
       });
       if (deltas.length === 0) break;
       skipDeltas += 200;
-      const newProgress = 5 + (45 * deltaIterator) / (deltaIterator + 1);
+      const newProgress = 5 + (25 * deltaIterator) / (deltaIterator + 1);
       setProgress && setProgress(newProgress);
       deltaIterator++;
     }
@@ -90,7 +90,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
       totalActions.push(...actions);
       if (actions.block_num < earliestBlock || !actions.length) break;
       skipActions += 100;
-      const newProgress = 50 + (45 * actionIterator) / (actionIterator + 1);
+      const newProgress = 30 + (70 * actionIterator) / (actionIterator + 1);
       console.log("newProgress: ", newProgress);
       setProgress && setProgress(newProgress);
       actionIterator++;

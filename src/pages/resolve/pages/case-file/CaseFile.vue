@@ -64,6 +64,7 @@
           color="primary"
           class="q-ma-md"
           show-value
+          animation-speed="2000"
         />
       </h2>
       <h2 v-else>Case History</h2>
@@ -136,7 +137,7 @@ export default {
   },
   methods: {
     setProgress(progress) {
-      this.historyProgress = progress;
+      this.historyProgress = progress.toFixed(0);
     },
     closeModal() {
       this.form = null;
