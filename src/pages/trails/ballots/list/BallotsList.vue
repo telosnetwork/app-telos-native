@@ -111,22 +111,6 @@ export default {
             );
             // the timestamp prevents scroll glitches on the infinite list
         },
-        getLocalTime(isoDate) {
-            const msOffset = new Date().getTimezoneOffset() * 60 * 1000;
-            return new Date(isoDate).getTime() - msOffset;
-        },
-        isBallotOpened(ballot) {
-            let endTime = this.getLocalTime(ballot.end_time);
-            let notExpired = endTime > Date.now();
-            let startTime = this.getLocalTime(ballot.begin_time);
-            let isStarted = startTime < Date.now();
-            return notExpired && isStarted;
-        },
-        isBallotNotStarted(ballot) {
-            const startTime = this.getLocalTime(ballot.begin_time);
-            return startTime > Date.now();
-        },
-
         displayWinner(ballot) {
             if (!ballot.total_voters) return false;
             let winnerValue = -1;
@@ -139,16 +123,33 @@ export default {
             });
             return winner;
         },
-        startTimeHasPassed(ballot) {
-            let startTime = new Date(ballot.begin_time).getTime();
+        getLocalTime(isoDate) {
+            const msOffset = new Date().getTimezoneOffset() * 60 * 1000;
+            return new Date(isoDate).getTime() - msOffset;
+        },
+        isBallotOpened(ballot) {
+            if (ballot.status !== 'voting') return false;
+            let endTime = this.getEndTime(ballot);
+            let notExpired = endTime > Date.now();
+            let startTime = this.getStartTime(ballot);
             let isStarted = startTime < Date.now();
-            return isStarted;
+            return notExpired && isStarted;
         },
         getStartTime(ballot) {
             return this.getLocalTime(ballot.begin_time);
         },
         getEndTime(ballot) {
             return this.getLocalTime(ballot.end_time);
+        },
+        startTimeHasPassed(ballot) {
+            let startTime = this.getStartTime(ballot);
+            let isStarted = startTime < Date.now();
+            return isStarted;
+        },
+        hasExpired(ballot) {
+            let endTime = this.getEndTime(ballot);
+            let expired = endTime < Date.now();
+            return expired;
         },
         isNewUser() {
             return localStorage.isNewUser;
@@ -166,34 +167,34 @@ export default {
             this.updateBallots();
         },
         filterBallots(ballots) {
+
             const ballotFilteredByStatuses = ballots.filter((b) => {
+
                 if (this.statuses) {
-                    if (this.statuses.length === 0) {
-                        return true;
-                    } else if (
-                        this.statuses.includes('active') &&
-            this.statuses.includes('expired')
-                    ) {
-                        return this.statuses.includes(b.status) || b.status === 'voting';
-                    } else if (this.statuses.includes('active')) {
-                        return Date.now() < Date.parse(b.end_time);
-                    } else if (this.statuses.includes('expired')) {
-                        return (
-                            this.statuses.includes(b.status) ||
-                                (!this.isBallotOpened(b) &&
-                                this.startTimeHasPassed(b) &&
-                                b.status === 'voting')
-                        );
-                    } else if (this.statuses.includes('not_started')) {
-                        return (
-                            this.statuses.includes(b.status) ||
-                            this.isBallotNotStarted(b) ||
-                            b.status === 'setup'
-                        );
+
+                    if (this.statuses.includes('active')) {
+                        if (this.isBallotOpened(b)) {
+                            return true;
+                        }
                     }
+
+                    if (this.statuses.includes('not_started')) {
+                        if (!this.startTimeHasPassed(b) || b.status === 'setup') {
+                            return true;
+                        }
+                    }
+
+                    if (this.statuses.includes('expired')) {
+                        if (this.hasExpired(b)) {
+                            return true;
+                        }
+                    }
+
                     return this.statuses.includes(b.status);
                 }
+
             });
+
             const ballotFilteredByCategory = ballotFilteredByStatuses.filter((b) => {
                 if (this.categories.length > 0) {
                     return this.categories.includes(b.category);
@@ -207,6 +208,7 @@ export default {
                     }
                 }
             });
+
             const ballotFilteredByTreasury = ballotFilteredByCategory.filter((b) => {
                 if (!this.treasury) return true;
                 try {
@@ -217,6 +219,7 @@ export default {
                 }
                 return false;
             });
+
             return ballotFilteredByTreasury;
         },
         changeDirection(isBallotListRowDirection) {
@@ -249,7 +252,6 @@ export default {
                 return ballots;
             }
         },
-
         changeSortOption(option) {
             this.limit = 100;
             this.sortMode = option;
