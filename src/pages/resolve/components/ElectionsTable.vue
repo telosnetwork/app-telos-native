@@ -27,7 +27,14 @@
                 <div class="ballot-name">
                   {{ props.row.ballot_name || `${props.row.election_id}` }}
                 </div>
-                <div class="ballot-subtitle">This is some description</div>
+                <div class="ballot-subtitle">
+                  <a
+                    v-if="props.row.info_url"
+                    :href="`https://api.dstor.cloud/ipfs/${props.row.info_url}`"
+                    target="_blank"
+                    >View Info</a
+                  >
+                </div>
               </div>
             </q-td>
             <q-td key="available_seats" class="default">
