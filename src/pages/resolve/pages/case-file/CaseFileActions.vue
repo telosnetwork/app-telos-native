@@ -4,6 +4,7 @@
       v-for="(action, index) in actions"
       :key="index"
       :action="action"
+      :claims="claims"
     />
   </div>
 </template>
@@ -13,7 +14,7 @@ import CaseFileAction from "./CaseFileAction.vue";
 
 export default {
   components: { CaseFileAction },
-  props: ["actions"],
+  props: ["actions", "claims", "offers"],
   mounted() {
     // @ts-ignore
     console.log("this.actions", this.actions);

@@ -50,11 +50,11 @@
         </intro-card>
       </div>
       <div class="part">
-        <case-steps :caseFile="caseFile" />
+        <case-steps :caseFile="caseFile" :claims="claims" />
       </div>
     </div>
     <div class="q-pa-md">
-      <claims-table :caseFile="caseFile" />
+      <claims-table :caseFile="caseFile" :claims="claims" />
     </div>
     <div class="q-pa-md">
       <h2 v-if="isLoadingHistory">
@@ -68,7 +68,7 @@
         />
       </h2>
       <h2 v-else>Case History</h2>
-      <case-file-actions :actions="caseActionsHistory" />
+      <case-file-actions :actions="caseActionsHistory" :claims="claims" />
     </div>
     <div class="case-file-modal-wrap">
       <q-dialog id="case-file-modal" v-model="form">
@@ -100,6 +100,7 @@ import ShredCaseForm from "../../components/ShredCaseForm.vue";
 import { mapGetters } from "vuex";
 import moment from "moment";
 import OffersTable from "../../components/OffersTable.vue";
+import { fetchClaims } from "../../util";
 
 export default {
   components: {
@@ -116,6 +117,7 @@ export default {
       isLoadingHistory: false,
       historyProgress: 0,
       caseFile: null,
+      claims: [],
       columns: [
         { name: "case_id", label: "ID", field: "case_id" },
         { name: "claimant", label: "Claimant", field: "claimant" },
@@ -173,6 +175,14 @@ export default {
         console.log("fetchCaseFile error:", err);
       }
     },
+    async getClaims() {
+      try {
+        const rows = await fetchClaims(this, this.$route.params.id);
+        this.claims = rows;
+      } catch (err) {
+        console.log("getClaims error:", err);
+      }
+    },
     isAddClaimButtonVisible() {
       if (!this.isClaimant) return false;
       if (this.caseFile.case_status !== 0) return false;
@@ -206,6 +216,7 @@ export default {
   },
   async mounted() {
     this.fetchCaseFile();
+    this.getClaims();
     this.isLoadingHistory = true;
     console.log("this.isLoadingHistory: ", this.isLoadingHistory);
     const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
@@ -219,7 +230,10 @@ export default {
     console.log("actionsHistory: ", actionsHistory);
     // @ts-ignore
     this.caseActionsHistory = actionsHistory;
-    this.fetchCaseInterval = setInterval(this.fetchCaseFile, 10000);
+    this.fetchCaseInterval = setInterval(() => {
+      this.fetchCaseFile();
+      this.getClaims();
+    }, 10000);
   },
   beforeUnmount() {
     clearInterval(this.fetchCaseInterval);

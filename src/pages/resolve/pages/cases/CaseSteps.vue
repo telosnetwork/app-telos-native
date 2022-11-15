@@ -169,10 +169,9 @@ import OffersTable from "../../components/OffersTable.vue";
 import DismissOfferForm from "../../components/DismissOfferForm.vue";
 import StartCaseForm from "../../components/StartCaseForm.vue";
 import SetRulingForm from "../../components/SetRulingForm.vue";
-import { fetchClaims } from "../../util";
 
 export default {
-  props: ["caseFile"],
+  props: ["caseFile", "claims"],
   components: {
     ReadyCaseForm,
     MakeOfferForm,
@@ -185,7 +184,6 @@ export default {
     return {
       form: null,
       formType: null,
-      claims: [],
     };
   },
   computed: {
@@ -212,14 +210,6 @@ export default {
     },
   },
   methods: {
-    async getClaims() {
-      try {
-        const rows = await fetchClaims(this, this.$route.params.id);
-        this.claims = rows;
-      } catch (err) {
-        console.log("getClaims error:", err);
-      }
-    },
     closeModal() {
       this.form = null;
     },
@@ -298,16 +288,6 @@ export default {
   },
   updated() {
     console.log("CaseSteps this.caseFile: ", this.caseFile);
-  },
-  mounted() {
-    this.getClaims();
-    this.interval = setInterval(
-      () => this.getClaims(this, this.$route.params.id),
-      10000
-    );
-  },
-  unmounted() {
-    clearInterval(this.interval);
   },
 };
 </script>

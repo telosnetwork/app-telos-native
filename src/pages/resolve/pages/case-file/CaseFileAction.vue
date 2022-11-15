@@ -13,8 +13,8 @@
     </div>
     <div v-if="act.name === 'respond'">
       <strong>{{ authorization[0].actor }}</strong> responded to claim
-      <strong>{{ actionData.claim_id }}</strong> with document
-      <ipfs-link-2 :hash="actionData.response_link" />
+      <strong>{{ actionData.claim_id }}</strong> with
+      <a :href="createIpfsLink(actionData.response_link)">document</a>
       ({{ action.timestamp }})
     </div>
     <div v-if="act.name === 'acceptclaim'">
@@ -47,20 +47,26 @@
     </div>
     <div v-if="act.name === 'respondoffer'">
       <strong>{{ authorization[0].actor }}</strong
-      >&nbsp;
-      <strong>{{ actionData.accept ? "accepted" : "rejected" }}</strong> offer
-      ({{ action.timestamp }})
+      >&nbsp; {{ actionData.accept ? "accepted" : "rejected" }}
+      <span class="underline"
+        >offer<q-tooltip>
+          {{ getOfferSyntax(parseInt(actionData.offer_id)) }}
+        </q-tooltip></span
+      >
+      from {{ getOffer(parseInt(actionData.offer_id)).arbitrator }} ({{
+        action.timestamp
+      }})
     </div>
     <div v-if="act.name === 'startcase'">
       <strong>{{ authorization[0].actor }}</strong>
-      <strong>started case</strong>, giving respondant
+      started case, giving respondant
       <strong>{{ actionData.number_days_respondant }}</strong> days to respond
       to claims ({{ action.timestamp }})
     </div>
     <div v-if="act.name === 'settleclaim'">
       <strong>{{ authorization[0].actor }}</strong> settled claim
       <strong>{{ actionData.claim_id }}</strong> with
-      <a href="createIpfsLink(actionData.decision_link)">decision</a> ({{
+      <a :href="createIpfsLink(actionData.decision_link)">decision</a> ({{
         action.timestamp
       }})
     </div>
@@ -85,7 +91,7 @@
     </div>
     <div v-if="act.name === 'setruling'">
       <strong>{{ authorization[0].actor }}</strong> (admin)
-      <a href="createIpfsLink(actionData.case_ruling)">ruled</a> on case ({{
+      <a :href="createIpfsLink(actionData.case_ruling)">ruled</a> on case ({{
         action.timestamp
       }})
     </div>
@@ -95,8 +101,8 @@
       ({{ action.timestamp }})
     </div>
     <div v-if="act.name === 'closecase'">
-      <strong>{{ authorization[0].actor }}</strong>
-      <strong>closed case</strong> ({{ action.timestamp }})
+      <strong>{{ authorization[0].actor }}</strong
+      >&nbsp;<strong>closed case</strong> ({{ action.timestamp }})
     </div>
     <!-- {{ action.timestamp }}
     {{ action.timestamp }}
@@ -114,8 +120,12 @@ import { HyperionAct, Authorization } from "../../types";
 
 export default {
   components: { IpfsLink, IpfsLink2 },
-  props: ["action", "index"],
+  props: ["action", "index", "claims"],
   computed: {
+    offers(): any {
+      // @ts-ignore
+      return this.$store.state.resolve.offers;
+    },
     act(): HyperionAct {
       // @ts-ignore
       return this.action.act;
@@ -136,15 +146,33 @@ export default {
     createIpfsLink(hash: string) {
       return `https://api.dstor.cloud/ipfs/${hash}`;
     },
-  },
-  mounted() {
     // @ts-ignore
-    console.log(this.action);
+    getOffer(id: number): any {
+      // @ts-ignore
+      if (!this.offers) return null;
+      // @ts-ignore
+      const offer = this.offers.find((offer: any) => offer.offer_id === id);
+      return offer;
+    },
+    getOfferSyntax(id: number): any {
+      const offer = this.getOffer(id);
+      if (!offer) return null;
+      return `${offer.arbitrator} estimated ${offer.estimated_hours} hours at ${offer.hourly_rate} per hour`;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .padding {
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.q-tooltip .offer-tooltip {
+  font-size: 2rem;
+  line-height: 2.2rem;
 }
 </style>

@@ -162,7 +162,7 @@ import SettleClaimForm from "./SettleClaimForm.vue";
 import { mapGetters } from "vuex";
 
 export default {
-  props: ["caseId", "caseFile"],
+  props: ["caseId", "caseFile", "claims"],
   components: {
     IpfsLink,
     RespondClaimForm,
@@ -176,7 +176,6 @@ export default {
       form: false,
       claimId: null,
       formType: null,
-      claims: [],
       columns: [
         { name: "claim_id", label: "ID", field: "claim_id" },
         { name: "claim_summary", label: "Summary", field: "claim_summary" },
@@ -213,15 +212,6 @@ export default {
       }
       return isPending;
     },
-    async getClaims() {
-      try {
-        const rows = await fetchClaims(this, this.$route.params.id);
-        console.log("claim rows: ", rows);
-        this.claims = rows;
-      } catch (err) {
-        console.log("getClaims error:", err);
-      }
-    },
     getClaimCategory(id) {
       return CLAIM_CATEGORY_LIST[id];
     },
@@ -241,16 +231,6 @@ export default {
     isCaseArbitrator() {
       return this.caseFile.arbitrators.includes(this.account);
     },
-  },
-  mounted() {
-    this.getClaims();
-    this.interval = setInterval(
-      () => this.getClaims(this, this.$route.params.id),
-      10000
-    );
-  },
-  unmounted() {
-    clearInterval(this.interval);
   },
 };
 </script>
