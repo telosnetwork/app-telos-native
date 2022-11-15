@@ -7,7 +7,12 @@
     </template>
     <template v-slot:body-cell-claim_summary="props">
       <q-td :props="props">
-        <IpfsLink :hash="props.row.claim_summary"></IpfsLink>
+        <a
+          v-if="props.row.claim_summary"
+          :href="`https://api.dstor.cloud/ipfs/${props.row.claim_summary}`"
+          target="_blank"
+          >View</a
+        >
         <q-badge
           v-if="props.row.claim_info_needed"
           rounded
@@ -19,14 +24,33 @@
         </q-badge>
       </q-td>
     </template>
+    <template v-slot:body-cell-claimant_limit_time="props">
+      <q-td :props="props">
+        {{
+          props.row.claim_info_needed
+            ? new Date(props.row.claimant_limit_time + "Z").toISOString()
+            : "n/a"
+        }}
+      </q-td>
+    </template>
     <template v-slot:body-cell-decision_link="props">
       <q-td :props="props">
-        <IpfsLink :hash="props.row.decision_link"></IpfsLink>
+        <a
+          v-if="props.row.decision_link"
+          :href="`https://api.dstor.cloud/ipfs/${props.row.decision_link}`"
+          target="_blank"
+          >View</a
+        >
       </q-td>
     </template>
     <template v-slot:body-cell-response_link="props">
       <q-td :props="props">
-        <IpfsLink :hash="props.row.response_link"></IpfsLink>
+        <a
+          v-if="props.row.response_link"
+          :href="`https://api.dstor.cloud/ipfs/${props.row.response_link}`"
+          target="_blank"
+          >View</a
+        >
         <q-badge
           v-if="props.row.response_info_needed"
           rounded
@@ -36,6 +60,15 @@
         >
           <q-tooltip>More info needed from respondant</q-tooltip>
         </q-badge>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-respondant_limit_time="props">
+      <q-td :props="props">
+        {{
+          props.row.response_info_needed
+            ? new Date(props.row.respondant_limit_time + "Z").toISOString()
+            : "n/a"
+        }}
       </q-td>
     </template>
     <template v-slot:body-cell-claim_category="props">
@@ -178,10 +211,20 @@ export default {
       formType: null,
       columns: [
         { name: "claim_id", label: "ID", field: "claim_id" },
-        { name: "claim_summary", label: "Summary", field: "claim_summary" },
+        { name: "claim_summary", label: "Claim", field: "claim_summary" },
+        {
+          name: "claimant_limit_time",
+          label: "Claimant Deadline",
+          field: "claimant_limit_time",
+        },
         { name: "claim_category", label: "Category", field: "claim_category" },
         { name: "decision_link", label: "Decision", field: "decision_link" },
         { name: "response_link", label: "Response", field: "response_link" },
+        {
+          name: "respondant_limit_time",
+          label: "Respondant Deadline",
+          field: "respondant_limit_time",
+        },
         { name: "status", label: "Status", field: "status" },
         { name: "actions", label: "Actions", field: "actions" },
       ],
