@@ -53,19 +53,18 @@ export default {
       formData.append("file", file);
       let accessToken;
       try {
+        const headers = {
+          "api-key":
+            "OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg",
+          "x-expiration": new Date().getTime() / 1000 + 3600 * 24,
+        };
         const {
           data: { access_token },
         } = await axios({
           url: "https://api.dstor.cloud/v1/dev/temp-token",
-          headers: {
-            // todo: remove later
-            "x-api-key":
-              "OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg",
-            "x-expiration": new Date().getTime() / 1000 + 3600 * 24,
-          },
+          headers,
         });
         this.progress = 10;
-        console.log("access_token: ", access_token);
         accessToken = access_token;
       } catch (err) {
         console.log("access_token error: ", err);
@@ -93,10 +92,8 @@ export default {
       }
 
       const updateProgress = (event) => {
-        console.log("progress: ", event);
         this.progress =
           Math.round((event.loaded * 100) / event.total) * 0.4 + 30;
-        console.log(this.progress);
       };
 
       try {
@@ -112,7 +109,6 @@ export default {
           },
           onUploadProgress: updateProgress,
         };
-        console.log("uploading");
         const { data } = await axios.post(
           "https://api.dstor.cloud/v1/upload/",
           formData,
@@ -157,7 +153,11 @@ export default {
               return;
           }
         } catch (err) {
-          console.log("status error: ", err);
+          this.progress = 0;
+          this.$q.notify({
+            message: "Upload failed",
+            color: "negative",
+          });
         }
       };
       checkStatus();
