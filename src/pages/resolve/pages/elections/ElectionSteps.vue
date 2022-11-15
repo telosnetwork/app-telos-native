@@ -83,7 +83,11 @@
           the winning candidates. Users will also be able to start nominating
           themselves for the next election, whenever that may happen to be.
           <br /><br />
-          <q-btn @click="endElection" color="primary" label="View Cases" />
+          <q-btn
+            @click="$router.push('/resolve/cases')"
+            color="primary"
+            label="View Cases"
+          />
         </q-step>
       </q-stepper>
     </div>
