@@ -286,9 +286,6 @@ export default {
       }
     },
   },
-  updated() {
-    console.log("CaseSteps this.caseFile: ", this.caseFile);
-  },
 };
 </script>
 

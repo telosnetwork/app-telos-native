@@ -58,7 +58,6 @@ export default {
       this.claimLink = link;
     },
     isLinkValid() {
-      console.log("isLinkValid: ", this.claimLink);
       const isValid = validateIpfsHash(this.claimLink);
       return isValid;
     },

@@ -61,11 +61,9 @@ export default {
         const { amount } = getSymbolInfo(current.value);
         return previous + parseFloat(amount);
       }, 0);
-      // console.log("sum: ", sum);
       return sum;
     },
     getCandidateVotes(account_name) {
-      // console.log("getCandidateVotes, account_name: ", account_name);
       if (this.election.status < 2) return "0.0000 VOTE";
       else {
         const option = this.results.find(
@@ -85,24 +83,11 @@ export default {
       return url;
     },
     async getBallotResults() {
-      // console.log(
-      //   "getBallotResults this.election: ",
-      //   this.election.ballot_name,
-      //   this.election.status
-      // );
-
       if (this.election.status < 2) return;
       try {
         const ballot = await getBallot(this, this.election.ballot_name);
-        // console.log("ballot: ", ballot);
         if (!ballot) return;
         this.results = ballot.options;
-        // console.log(
-        //   "ballot.options: ",
-        //   this.election.ballot_name,
-        //   ballot.options
-        // );
-        // console.log("this.results: ", this.results);
       } catch (err) {
         console.log("getBallotResults error: ", err);
       }
@@ -125,9 +110,7 @@ export default {
       const { amount } = getSymbolInfo(value);
       const voteAmount = parseFloat(amount);
       const totalVotes = this.totalVotes();
-      // console.log("vote: ", voteAmount, totalVotes);
       const percentage = voteAmount / totalVotes;
-      // console.log("percentage: ", percentage, typeof percentage);
       return percentage;
     },
   },
@@ -139,7 +122,6 @@ export default {
     }),
   },
   mounted() {
-    console.log("CandidatesCell mounted");
     this.getBallotResults();
     this.interval = setInterval(this.getBallotResults, 10000);
   },

@@ -12,7 +12,6 @@ export const secondsToHms = (seconds: number): string => {
 };
 
 export const timeAgo = (date: Date): string => {
-  console.log("timeAgo date: ", date);
   // must add '+00:00' to tell Javascript to use GMT time zone
   const dateTime = new Date(`${date}+00:00`);
   const dateTimestamp = dateTime.getTime() / 1000;

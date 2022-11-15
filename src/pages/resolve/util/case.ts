@@ -91,12 +91,10 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
       if (actions.block_num < earliestBlock || !actions.length) break;
       skipActions += 100;
       const newProgress = 30 + (70 * actionIterator) / (actionIterator + 1);
-      console.log("newProgress: ", newProgress);
       setProgress && setProgress(newProgress);
       actionIterator++;
     }
     setProgress && setProgress(100);
-    console.log("totalActions: ", totalActions);
     const caseActionsHistory = FILTER_CASE_FILE_ACTIONS(totalActions, case_id);
     return caseActionsHistory;
   } catch (err) {
@@ -109,7 +107,6 @@ export const FILTER_CASE_FILE_ACTIONS = (
   actions: any[],
   case_id: number
 ): HyperionAction[] => {
-  console.log("actions.length: ", actions.length);
   const filteredActions = actions.filter((action: HyperionAction) => {
     if (action.act && action.act.data && action.act.data.case_id === case_id) {
       return true;

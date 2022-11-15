@@ -85,7 +85,6 @@ export default {
       this.claimLink = link;
     },
     isLinkValid() {
-      console.log("isLinkValid: ", this.claimLink);
       const isValid = validateIpfsHash(this.claimLink);
       return isValid;
     },
@@ -111,12 +110,6 @@ export default {
         console.log("submit error: ", err);
       }
     },
-  },
-  updated() {
-    console.log("updated, this: ", this);
-  },
-  beforeUpdate() {
-    console.log("beforeUpdate, this: ", this);
   },
 };
 </script>

@@ -42,7 +42,6 @@ export default {
       this.newClaimLink = link;
     },
     isLinkValid() {
-      console.log("isLinkValid: ", this.newClaimLink);
       const isValid = validateIpfsHash(this.newClaimLink);
       return isValid;
     },
@@ -59,7 +58,6 @@ export default {
           },
         },
       ];
-      console.log("updateClaimActions: ", updateClaimActions);
       try {
         await this.$store.$api.signTransaction(updateClaimActions);
         this.close();

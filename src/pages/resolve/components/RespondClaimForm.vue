@@ -42,7 +42,6 @@ export default {
       this.responseLink = link;
     },
     isLinkValid() {
-      console.log("isLinkValid: ", this.responseLink);
       const isValid = validateIpfsHash(this.responseLink);
       return isValid;
     },

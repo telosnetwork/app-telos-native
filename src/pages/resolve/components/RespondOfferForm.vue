@@ -110,7 +110,6 @@ export default {
           scope: this.account,
           table: "accounts",
         });
-        console.log("rows: ", rows);
         if (rows[0]) {
           balance = rows[0].balance;
         }
@@ -127,7 +126,6 @@ export default {
           scope: "tlosusd",
           table: "datapoints",
         });
-        console.log("exchangeRates: ", exchangeRates);
         this.exchangeRate =
           exchangeRates.reduce((acc, curr) => acc + curr.value, 0) /
           exchangeRates.length /
@@ -140,7 +138,6 @@ export default {
   mounted() {
     this.getAccountBalance();
     this.getExchangeRate();
-    console.log("this.offer: ", JSON.parse(JSON.stringify(this.offer)));
   },
 };
 </script>

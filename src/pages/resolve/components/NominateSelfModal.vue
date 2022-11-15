@@ -58,7 +58,6 @@ export default {
         },
       ];
       try {
-        console.log("this.$store: ", this.$store);
         await this.$store.$api.signTransaction(nominateSelfActions);
         this.close();
         setTimeout(this.onSubmit, 5000);
@@ -66,12 +65,6 @@ export default {
         console.log("nominateSelf error: ", err);
       }
     },
-  },
-  mounted: function () {
-    console.log(
-      "nominateSelfModal mounted, this.$store.state",
-      this.$store.state
-    );
   },
 };
 </script>

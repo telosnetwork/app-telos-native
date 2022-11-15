@@ -15,10 +15,6 @@ import CaseFileAction from "./CaseFileAction.vue";
 export default {
   components: { CaseFileAction },
   props: ["actions", "claims", "offers"],
-  mounted() {
-    // @ts-ignore
-    console.log("this.actions", this.actions);
-  },
 };
 </script>
 

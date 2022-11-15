@@ -218,7 +218,6 @@ export default {
     this.fetchCaseFile();
     this.getClaims();
     this.isLoadingHistory = true;
-    console.log("this.isLoadingHistory: ", this.isLoadingHistory);
     const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
       this,
       // @ts-ignore
@@ -226,8 +225,6 @@ export default {
       this.setProgress
     );
     setTimeout(() => (this.isLoadingHistory = false), 2000);
-    console.log("this.isLoadingHistory: ", this.isLoadingHistory);
-    console.log("actionsHistory: ", actionsHistory);
     // @ts-ignore
     this.caseActionsHistory = actionsHistory;
     this.fetchCaseInterval = setInterval(() => {

@@ -85,7 +85,6 @@ export default {
           },
         },
       ];
-      console.log("settleClaimActions: ", settleClaimActions);
       try {
         await this.$store.$api.signTransaction(settleClaimActions);
         this.close();
