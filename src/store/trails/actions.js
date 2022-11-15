@@ -129,16 +129,45 @@ export const fetchUserVotesForThisBallot = async function (
 export const setBallot = async function ({ commit }, ballot) {
     commit('setBallot', ballot);
 };
+
+const insistOnThisFetch = async function($api, fetch, try_for_N_millisecs = 0) {
+    let _then = new Date().getTime();
+
+    const result = await $api.getTableRows(fetch);
+
+    if (result.rows.length > 0) {
+        return result;
+    } else {
+        if (try_for_N_millisecs <= 0) {
+            // expired, no more tries...
+            return {rows:[],more:false};
+        } else {
+            let _now = new Date().getTime();
+            let elapsed = _now - _then;
+            let remaining = try_for_N_millisecs - elapsed;
+            if (remaining < 0) {
+                // also expired
+                return {rows:[],more:false};
+            } else {
+                return insistOnThisFetch($api, fetch, remaining);
+            }
+        }
+    }
+};
   
 export const fetchBallot = async function ({ commit }, ballot) {
-    const result = await this.$api.getTableRows({
+    const result = await insistOnThisFetch(this.$api, {
         code: 'telos.decide',
         scope: 'telos.decide',
         table: 'ballots',
         limit: 1,
         lower_bound: ballot,
         upper_bound: ballot,
-    });
+    }, 3000);
+
+    if (result.rows.length === 0) {
+        return false;
+    }
   
     const treasury = await this.$api.getTableRows({
         code: 'telos.decide',
@@ -165,6 +194,8 @@ export const fetchBallot = async function ({ commit }, ballot) {
     result.rows[0].treasury = treasury.rows[0];
     commit('addBallots', result);
     commit('setBallot', result.rows[0]);
+
+    return true;
 };
   
 const createTogglebalFor = function(ballotName, text) {
@@ -289,7 +320,7 @@ export const addBallot = async function ({ commit, state, rootState }, ballot) {
         }
   
         // do the user want to open the ballot immediatelly ?
-        if (ballot.endTime > new Date() ) {
+        if ( new Date(ballot.endTime) > new Date() ) {
             actions.push({
                 account: 'telos.decide',
                 name: 'openvoting',

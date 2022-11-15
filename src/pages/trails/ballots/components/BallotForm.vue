@@ -436,8 +436,8 @@ export default {
         },
         'form.endTime'() {
             try {
-                this.$refs.qDateProxy1.hide();
-                this.$refs.qDateProxy2.hide();
+                if (this.$refs.qDateProxy1) this.$refs.qDateProxy1.hide();
+                if (this.$refs.qDateProxy2) this.$refs.qDateProxy2.hide();
             } catch(e) {
                 console.error(e);
             }

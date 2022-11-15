@@ -84,6 +84,7 @@ export default {
             transfer: 'Transfer tokens',
         },
         trails: {
+            noBallot: 'Ballot not found',
             addBallot: 'Create a ballot',
             addTreasury: 'Create a DAO',
             castVote: 'Cast a vote',
