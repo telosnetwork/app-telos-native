@@ -117,6 +117,11 @@ export default {
 
 <style lang="scss">
 @import url("../../css/app.sass");
+
+.q-tooltip {
+  font-size: 1rem;
+  line-height: 1rem;
+}
 </style>
 
 <style scoped lang="scss">
