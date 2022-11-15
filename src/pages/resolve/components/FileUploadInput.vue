@@ -123,6 +123,7 @@ export default {
       }
 
       let interval = 2000;
+      let timeout;
       const checkStatus = async () => {
         try {
           const { data: statusData } = await axios(
@@ -135,8 +136,7 @@ export default {
             }
           );
           interval = interval + 250;
-          console.log("setting interval: ", interval);
-          setTimeout(checkStatus, interval);
+          timeout = setTimeout(checkStatus, interval);
           switch (statusData.status) {
             case "ADDING_TO_IPFS":
               this.progress = 80;
@@ -145,7 +145,7 @@ export default {
               this.progress = 90;
               break;
             case "DONE":
-              clearInterval(statusInterval);
+              clearTimeout(timeout);
               this.progress = 100;
               setTimeout(() => {
                 const newHash = statusData.data[0].Hash;
@@ -154,6 +154,7 @@ export default {
                 this.isUploading = false;
                 this.progress = 0;
               }, 1000);
+              return;
           }
         } catch (err) {
           console.log("status error: ", err);
