@@ -40,7 +40,16 @@ export default {
     async mounted() {
         this.getLoggedUserVotes(this.$route.params.id);
         this.fetchTreasuriesForUser(this.account);
-        await this.fetchBallot(this.$route.params.id);
+        let ballot_ok = await this.fetchBallot(this.$route.params.id);
+        if (!ballot_ok) {
+            this.showAlert(this.$t('notifications.trails.noBallot'));
+            if (this.$route.fullPath.includes('/trails/ballot')) {
+                this.$router.push({ path: '/trails/ballots' });
+            } else {
+                this.$router.push({ path: '/trails/elections' });
+            }
+            return;
+        }
         window.addEventListener('scroll', this.updateScroll);
         this.loading = false;
     },
