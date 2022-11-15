@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     setProgress(progress) {
-      this.historyProgress = progress.toFixed(0);
+      this.historyProgress = parseInt(progress);
     },
     closeModal() {
       this.form = null;
