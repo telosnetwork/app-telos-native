@@ -545,7 +545,7 @@ q-dialog(
       )
         q-step(
           :name="1"
-          title="Ballot main info"
+          title="Proposal Details"
           icon="info"
           :done="step > 1"
         )
@@ -628,11 +628,11 @@ q-dialog(
                   v-if="!form.treasurySymbol"
                 )
               span.q-mt-sm
-                | Allow users voting using
+                | Allow users to vote with:
               .row.gap-sm
                 q-radio(
                   v-model="form.config"
-                  label="Only stakeble tokens"
+                  label="Only staked tokens"
                   val="votestake"
                 )
                 q-radio(
@@ -669,7 +669,7 @@ q-dialog(
                 )
                 q-radio.q-mr-md(
                   v-model="typeOfBallot"
-                  label="Multiple option"
+                  label="Multiple option(s)"
                   :val="ballotTypes[2]"
                 )
               div.q-mt-sm.col(:class="textClass")
@@ -690,9 +690,9 @@ q-dialog(
                   b  Abstain
                   | , but you can change them if you want.
                 div(:class="typeOfBallot === ballotTypes[2] ? '' : 'hidden'")
-                  | Multiple option ballots are completely configurable.
-                  | You can define a list of several options to vote for, with human readability names,
-                  | where voters may be allowed to check none or more than one option simultaneously in the same vote.
+                  | Multiple option ballots are entirely configurable.
+                  | You can define several options, and voters may select one
+                  | or multiple choices depending on the configuration.
             div.q-mt-sm(:class="typeOfBallot === ballotTypes[0] ? '' : 'hidden'")
               // Simple yes or No
               .q-mt-sm.flex(:class="previewVertical ? 'column' : 'raw gap'")
@@ -817,9 +817,9 @@ q-dialog(
         )
           q-card-section(:class="smallDevice ? 'q-px-none q-py-xs' : ''")
             p(:class="textClass")
-              | You can open this ballot for voting right away or you
-              | can create the ballot and skip this step for later.
-            q-checkbox(v-model="openForVoting") Open for voting right away
+              | You can open this proposal for voting now or activate it later.
+              | (Smart Contract interaction needed)
+            q-checkbox(v-model="openForVoting") Open for voting now
             q-input(
               ref="endTime"
               v-model="form.endTime"
@@ -854,7 +854,7 @@ q-dialog(
                     )
         q-step(
           :name="5"
-          title="Create Ballot"
+          title="Create Proposal"
           icon="check"
         )
           q-card-section(:class="smallDevice ? 'q-px-none q-py-xs' : ''")

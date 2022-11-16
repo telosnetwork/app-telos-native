@@ -636,7 +636,7 @@ div.bar-filter-wrapper
       div.btn-320-wrapper.row.items-center.scroll-anim
         btn.create-poll-btn.btn-320(
           iconRight
-          :labelText="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
+          :labelText="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
           primary
           btnWidth='155'
           fontSize='16'
@@ -895,7 +895,7 @@ div.bar-filter-wrapper
       div.right-bar-section.col-grow.row.items-center.justify-end
         q-separator.bar-separator-vertical.q-mr-md(vertical inset)
         q-btn.q-mx-md(
-          :label="$t('pages.trails.ballots.actionBar.btnCreatePoll')"
+          :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
           icon-right="add"
           color="primary"
           no-caps

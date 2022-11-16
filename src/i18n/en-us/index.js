@@ -190,6 +190,7 @@ export default {
                     btnDiscardAll: 'Discard all filters',
                     btnConfirm: 'Confirm',
                     btnCreatePoll: 'Create a poll',
+                    btnCreateProposal: 'Create a Proposal',
                 },
             },
             treasuries: {
