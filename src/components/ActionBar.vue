@@ -638,9 +638,6 @@ div.bar-filter-wrapper
           iconRight
           :labelText="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
           primary
-          btnWidth='155'
-          fontSize='16'
-          padding='0'
           @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
         )
     div.bar-wrapper.row.items-center(:class="{'menu-visible': isFilterMenu320Open}")
@@ -1075,7 +1072,7 @@ $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
     max-width: 100%
 .show-under-mid
   display: none
-@media (max-width: 780px)
+@media (max-width: 820px)
   .hide-under-mid
     display: none
   .show-under-mid
