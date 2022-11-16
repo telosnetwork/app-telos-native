@@ -40,18 +40,18 @@ q-btn.custom-btn(
 </template>
 
 <style lang="sass">
-.q-btn
+.q-btn.custom-btn
   border-radius: 6px
-.border-btn .q-btn__content
+.custom-btn > .border-btn .q-btn__content
   color: $dark
 .custom-btn > .q-btn__wrapper
   padding: 0
-.hover-blue
+.custom-btn > .hover-blue
   & > .q-btn__wrapper:hover
     background: var(--q-color-primary)
   & > .q-btn__wrapper:hover > .q-btn__content
     color: #fff
-.hover-red
+.custom-btn > .hover-red
   & > .q-btn__wrapper:hover
     background: var(--q-color-negative)
   & > .q-btn__wrapper:hover > .q-btn__content
