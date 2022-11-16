@@ -275,6 +275,7 @@ export default {
     watch: {
         $route(to) {
             this.showBallot = !!to.params.id;
+            this.updateBallots();
         },
         account() {
             this.fetchUserVotes();
