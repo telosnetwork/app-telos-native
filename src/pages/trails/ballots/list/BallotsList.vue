@@ -169,8 +169,7 @@ export default {
         filterBallots(ballots) {
 
             const ballotFilteredByStatuses = ballots.filter((b) => {
-
-                if (this.statuses) {
+                if (Object.keys(this.statuses).length > 0) {
 
                     if (this.statuses.includes('active')) {
                         if (this.isBallotOpened(b)) {
@@ -191,8 +190,10 @@ export default {
                     }
 
                     return this.statuses.includes(b.status);
+                } else {
+                    // If the list is empty, we show all ballots
+                    return true;
                 }
-
             });
 
             const ballotFilteredByCategory = ballotFilteredByStatuses.filter((b) => {
