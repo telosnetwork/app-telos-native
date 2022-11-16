@@ -891,8 +891,8 @@ div.bar-filter-wrapper
         no-caps
         outline
       )
-      div.separator-320
-      div.right-bar-section.col-grow.row.items-center.justify-end
+      div.separator-320.hide-under-mid
+      div.right-bar-section.col-grow.row.items-center.justify-end.hide-under-mid
         q-separator.bar-separator-vertical.q-mr-md(vertical inset)
         q-btn.q-mx-md(
           :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
@@ -909,6 +909,11 @@ div.bar-filter-wrapper
             q-btn(flat size="14px" color="primary" label="here" to="/accounts/add" no-caps).register-link
         q-card-actions(align="right" class="bg-white")
           q-btn(flat label="OK" v-close-popup)
+    q-page-sticky.create-ballot-fabbtn-holder.show-under-mid(position="top-right" :offset="[18, 145]")
+      q-btn(fab no-caps rounded color="primary"
+      icon="add"
+      :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')" )
+
 </template>
 <style lang="sass" scoped>
 // https://stackoverflow.com/a/74369087/2274525
@@ -916,6 +921,8 @@ $shadow-1: 0px 20px 48px rgba(0, 9, 26, 0.08)
 $shadow-2: 0px 7px 15px rgba(0, 9, 26, 0.05)
 $shadow-3: 0px 3px 6px rgba(0, 9, 26, 0.04)
 $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+.create-ballot-fabbtn-holder
+  z-index: 10
 .scroll-anim
   margin-top: 10px !important
   margin-bottom: 10px !important
@@ -1066,7 +1073,16 @@ $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
 @media (max-width: 940px)
   .bar-filters
     max-width: 100%
+.show-under-mid
+  display: none
+@media (max-width: 780px)
+  .hide-under-mid
+    display: none
+  .show-under-mid
+    display: block
 @media (max-width: 600px)
+  .show-under-mid
+    display: none
   .bar-filter-menu-320-wrapper
     display: flex
   .bar-wrapper
