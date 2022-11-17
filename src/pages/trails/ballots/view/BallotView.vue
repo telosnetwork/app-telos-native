@@ -774,9 +774,10 @@ embed
     padding: 0
 
 .popup-wrapper
-    max-width: 1180px !important
-    max-height: 640px !important
-    width: 100%
+    max-height: unset !important
+    max-width: unset !important
+    width: calc(100vw - 100px)
+    height: calc(100vh - 100px)
     box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4 !important
     border-radius: 12px !important
     overflow: hidden !important
@@ -801,6 +802,7 @@ embed
 
 .popup-right-col-wrapper
     border-left: 1px solid #F2F3F4
+    display: flex
 
 .popup-left-col
     width: 268px
@@ -811,7 +813,9 @@ embed
         width: 244px
 
 .description-section-wrapper
-    height: 500px
+    flex-grow: 1
+    display: flex
+    flex-direction: column
     overflow: auto
     scrollbar-color: #caccce #EFEFF0
     scrollbar-width: thin
@@ -823,11 +827,15 @@ embed
         border-radius: 5px
 
 .description-section
-    width: 100%
-    height: 100%
+    flex-grow: 1
+    display: flex
+    flex-direction: column
 
 .popup-right-col
-    max-width: 912px
+    flex-grow: 1
+    max-width: unset
+    display: flex
+    flex-direction: column
 
 .popup-separator
     background: #F2F3F4
@@ -994,13 +1002,11 @@ embed
         bottom: 0
         left: 0
         height: 100vh
-        max-height: none !important
+        width: 100vw
         border-radius: 0
     .close-popup-btn,
     .popup-separator
         display: none
-    .description-section-wrapper
-        height: max-content
     @media (max-width: 620px)
         .popup-wrapper
             & > .popup-left-col-wrapper,
@@ -1010,8 +1016,6 @@ embed
                 justify-content: center
             & > .popup-right-col-wrapper
                 flex: auto !important
-        .popup-right-col
-            width: 100%
         .description-section-wrapper
             padding: 0
         .ballot-content-carousel
