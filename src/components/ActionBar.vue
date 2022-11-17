@@ -633,7 +633,7 @@ div.bar-filter-wrapper
           @clickBtn="discardAllFilter()"
           fontSize='15'
         )
-      div.btn-320-wrapper.row.items-center.scroll-anim
+      div.btn-320-wrapper.row.items-center.scroll-anim(v-if="isAuthenticated")
         btn.create-poll-btn.btn-320(
           iconRight
           :labelText="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
@@ -888,8 +888,8 @@ div.bar-filter-wrapper
         no-caps
         outline
       )
-      div.separator-320.hide-under-mid
-      div.right-bar-section.col-grow.row.items-center.justify-end.hide-under-mid
+      div.separator-320.hide-under-mid(v-if="isAuthenticated")
+      div.right-bar-section.col-grow.row.items-center.justify-end.hide-under-mid(v-if="isAuthenticated")
         q-separator.bar-separator-vertical.q-mr-md(vertical inset)
         q-btn.q-mx-md(
           :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
@@ -900,7 +900,7 @@ div.bar-filter-wrapper
           @click="isAuthenticated ? openBallotForm() : openNotice()"
         )
 
-    div.btn-320-wrapper.row.items-center.scroll-anim.show-under-mid
+    div.btn-320-wrapper.row.items-center.scroll-anim.show-under-mid(v-if="isAuthenticated")
       q-btn.create-poll-btn.btn-320(
         :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
         icon="add"
