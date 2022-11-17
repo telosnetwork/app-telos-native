@@ -633,14 +633,11 @@ div.bar-filter-wrapper
           @clickBtn="discardAllFilter()"
           fontSize='15'
         )
-      div.btn-320-wrapper.row.items-center.scroll-anim
+      div.btn-320-wrapper.row.items-center.scroll-anim(v-if="isAuthenticated")
         btn.create-poll-btn.btn-320(
           iconRight
           :labelText="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
           primary
-          btnWidth='155'
-          fontSize='16'
-          padding='0'
           @clickBtn="isAuthenticated ? openBallotForm() : openNotice()"
         )
     div.bar-wrapper.row.items-center(:class="{'menu-visible': isFilterMenu320Open}")
@@ -891,17 +888,27 @@ div.bar-filter-wrapper
         no-caps
         outline
       )
-      div.separator-320
-      div.right-bar-section.col-grow.row.items-center.justify-end
+      div.separator-320.hide-under-mid(v-if="isAuthenticated")
+      div.right-bar-section.col-grow.row.items-center.justify-end.hide-under-mid(v-if="isAuthenticated")
         q-separator.bar-separator-vertical.q-mr-md(vertical inset)
         q-btn.q-mx-md(
           :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
-          icon-right="add"
+          icon="add"
           color="primary"
           no-caps
           outline
           @click="isAuthenticated ? openBallotForm() : openNotice()"
         )
+
+    div.btn-320-wrapper.row.items-center.scroll-anim.show-under-mid(v-if="isAuthenticated")
+      q-btn.create-poll-btn.btn-320(
+        :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
+        icon="add"
+        color="primary"
+        no-caps
+        outline
+        @click="isAuthenticated ? openBallotForm() : openNotice()"
+      )
     q-dialog(v-model="notice")
       q-card.notice
         q-card-section.row.no-wrap
@@ -909,6 +916,7 @@ div.bar-filter-wrapper
             q-btn(flat size="14px" color="primary" label="here" to="/accounts/add" no-caps).register-link
         q-card-actions(align="right" class="bg-white")
           q-btn(flat label="OK" v-close-popup)
+
 </template>
 <style lang="sass" scoped>
 // https://stackoverflow.com/a/74369087/2274525
@@ -916,6 +924,8 @@ $shadow-1: 0px 20px 48px rgba(0, 9, 26, 0.08)
 $shadow-2: 0px 7px 15px rgba(0, 9, 26, 0.05)
 $shadow-3: 0px 3px 6px rgba(0, 9, 26, 0.04)
 $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+.create-ballot-fabbtn-holder
+  z-index: 10
 .scroll-anim
   margin-top: 10px !important
   margin-bottom: 10px !important
@@ -958,14 +968,14 @@ $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
 .left-btn
   height: 40px
   margin-right: 1px
-  border-radius: 6px 0 0 6px
+  border-radius: 3px 0 0 3px
   & .q-btn__wrapper::before
     border: none
 .right-btn
   height: 40px
   width: 40px
   padding: 0
-  border-radius: 0 6px 6px 0
+  border-radius: 0 3px 3px 0
   font-size: 12px
   & .q-btn__wrapper::before
     border: none
@@ -1066,7 +1076,16 @@ $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
 @media (max-width: 940px)
   .bar-filters
     max-width: 100%
+.show-under-mid
+  display: none
+@media (max-width: 930px)
+  .hide-under-mid
+    display: none
+  .show-under-mid
+    display: flex
 @media (max-width: 600px)
+  .show-under-mid
+    display: none
   .bar-filter-menu-320-wrapper
     display: flex
   .bar-wrapper
