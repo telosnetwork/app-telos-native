@@ -22,60 +22,58 @@ main
 import ContactItem from '~/pages/profiles/list/ContactItem.vue';
 import { mapActions } from 'vuex';
 export default {
-  name: 'ContactList',
-  components: { ContactItem },
-  data() {
-    return {
-      search: '',
-      limit: 10,
-      isLoading: true,
-      isFirst: true,
-    };
-  },
-  computed: {
-    profileList() {
-      return this.$store.state.profiles.profilesList;
+    name: 'ContactList',
+    components: { ContactItem },
+    data() {
+        return {
+            search: '',
+            limit: 10,
+            isLoading: true,
+            isFirst: true,
+        };
     },
-  },
-  watch: {
-    search() {
-      this.isFirst = true;
+    computed: {
+        profileList() {
+            return this.$store.state.profiles.profilesList;
+        },
     },
-  },
-  beforeUnmount: function () {
-    this.clearProfilesList();
-  },
-  methods: {
-    ...mapActions('profiles', ['searchProfiles', 'clearProfilesList']),
-    async onLoad(index, done) {
-      if (
-        this.isFirst ||
+    watch: {
+        search() {
+            this.isFirst = true;
+        },
+    },
+    beforeUnmount: function () {
+        this.clearProfilesList();
+    },
+    methods: {
+        ...mapActions('profiles', ['searchProfiles', 'clearProfilesList']),
+        async onLoad(index, done) {
+            if (
+                this.isFirst ||
         (this.profileList.lastEvaluatedKey !== undefined &&
           this.profileList.count === this.limit)
-      ) {
-        this.isFirst = false;
-        this.isLoading = true;
-        await this.searchProfiles({
-          search: this.search,
-          limit: this.limit,
-          lastEvaluatedKey: this.profileList.lastEvaluatedKey,
-        });
-        this.isLoading = false;
-        done();
-      } else {
-        this.$refs.infiniteScroll.stop();
-      }
+            ) {
+                this.isFirst = false;
+                this.isLoading = true;
+                await this.searchProfiles({
+                    search: this.search,
+                    limit: this.limit,
+                    lastEvaluatedKey: this.profileList.lastEvaluatedKey,
+                });
+                this.isLoading = false;
+                done();
+            } else {
+                this.$refs.infiniteScroll.stop();
+            }
+        },
+        async onSearch() {
+            this.clearProfilesList();
+            this.isFirst = true;
+            this.$refs.infiniteScroll.reset();
+            this.$refs.infiniteScroll.resume();
+            this.$refs.infiniteScroll.poll();
+        },
     },
-    async onSearch() {
-      // await this.searchProfiles({ search: this.search, clean: true, lastEvaluatedKey: this.profileList.lastEvaluatedKey })
-      this.clearProfilesList();
-      this.isFirst = true;
-      this.$refs.infiniteScroll.reset();
-      this.$refs.infiniteScroll.resume();
-      this.$refs.infiniteScroll.poll();
-      // v.preventDefault()
-    },
-  },
 };
 </script>
 

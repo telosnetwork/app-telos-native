@@ -77,19 +77,19 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-  name: 'TokenDetail',
-  props: {
-    name: String,
-    symbol: String,
-    owner: String,
-    contract: String,
-    decimals: Number,
-    supply: Number,
-    logo_sm: String,
-    logo_lg: String,
-  },
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated', 'account']),
-  },
+    name: 'TokenDetail',
+    props: {
+        name: String,
+        symbol: String,
+        owner: String,
+        contract: String,
+        decimals: Number,
+        supply: Number,
+        logo_sm: String,
+        logo_lg: String,
+    },
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated', 'account']),
+    },
 };
 </script>

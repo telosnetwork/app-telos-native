@@ -10,7 +10,7 @@ module.exports = {
     es6: true
   },
   // https://eslint.vuejs.org/user-guide/#how-to-use-custom-parser
-  // Must use parserOptions instead of "parser" to allow vue-eslint-parser to keep working
+  // Must use parserOptions instead of 'parser' to allow vue-eslint-parser to keep working
   // `parser: 'vue-eslint-parser'` is already included with any 'plugin:vue/**' config and should be omitted
   parserOptions: {
     // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser#configuration
@@ -73,8 +73,16 @@ module.exports = {
     quotes: ['warn', 'single', { avoidEscape: true }],
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-
-    // allow debugger during development only
+    indent: ['error', 4],
+    'max-len': ['warn', { 'code': 120, 'tabWidth': 2 }],
+    'no-trailing-spaces' : ['error', { 'skipBlankLines': true }],
+    eqeqeq: ['error', 'always'],
+    semi: ['error', 'always'],
+    'eol-last': ['error', 'never'],
+    'vue/component-tags-order': ['error', {
+      'order': [ [ 'script', 'template' ], 'style' ]
+    }],
+// allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

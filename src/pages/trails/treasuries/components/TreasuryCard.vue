@@ -3,27 +3,30 @@ import { mapGetters } from 'vuex';
 import AddVoterDialog from './AddVoterDialog';
 import MintTokenDialog from './MintTokenDialog';
 import TreasuryEditDialog from './TreasuryEditDialog';
+import TreasuryTokenEditDialog from './TreasuryTokenEditDialog';
 
 export default {
-  name: 'TreasuryCard',
-  components: {
-    AddVoterDialog,
-    MintTokenDialog,
-    TreasuryEditDialog,
-  },
-  props: {
-    treasury: { type: Object, required: true },
-  },
-  data() {
-    return {
-      show: false,
-      showMint: false,
-      showEdit: false,
-    };
-  },
-  computed: {
-    ...mapGetters('accounts', ['account', 'isAuthenticated']),
-  },
+    name: 'TreasuryCard',
+    components: {
+        AddVoterDialog,
+        MintTokenDialog,
+        TreasuryEditDialog,
+        TreasuryTokenEditDialog,
+    },
+    props: {
+        treasury: { type: Object, required: true },
+    },
+    data() {
+        return {
+            show: false,
+            showMint: false,
+            showEdit: false,
+            showToken: false,
+        };
+    },
+    computed: {
+        ...mapGetters('accounts', ['account', 'isAuthenticated']),
+    },
 };
 </script>
 
@@ -44,6 +47,11 @@ div
     :treasury="treasury"
     @close="showEdit = false"
   )
+  treasury-token-edit-dialog(
+    :show.sync="showToken"
+    :treasury="treasury"
+    @close="showToken = false"
+  )
   q-card
     q-card-section.bg-primary.text-white(:class="`${!treasury.isPreferred ? undefined : 'prefered'}`")
       .text-h6
@@ -62,6 +70,11 @@ div
           v-if="account === treasury.manager"
           name="fas fa-edit"
           @click="showEdit = true"
+        )
+        q-icon.q-ml-sm.cursor-pointer(
+          v-if="account === treasury.manager"
+          name="fas fa-coins"
+          @click="showToken = true"
         )
       .text-right.text-italic {{ treasury.manager }}
     q-card-section.q-mt-lg

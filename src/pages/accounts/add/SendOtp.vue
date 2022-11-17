@@ -1,109 +1,95 @@
 <script>
 import { mapActions } from 'vuex';
-// import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber'
 
 import { validation } from '~/mixins/validation';
 import { countriesPhoneCode } from '~/mixins/countries-phone-code';
 import VueRecaptcha from 'vue-recaptcha';
 
 export default {
-  name: 'SendOtp',
-  mixins: [validation, countriesPhoneCode],
-  data() {
-    return {
-      form: {
-        account: null,
-        smsNumber: null,
-        countryCode: null,
-        internationalPhone: null,
-      },
-      recaptcha: false,
-      phoneOptions: [],
-      error: null,
-      submitting: false,
-    };
-  },
-  mounted() {
-    this.phoneOptions = this.countriesPhoneCode;
-    let recaptchaScript = document.createElement('script');
-    recaptchaScript.setAttribute(
-      'src',
-      'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
-    );
-    document.head.appendChild(recaptchaScript);
-  },
-  methods: {
-    ...mapActions('accounts', ['sendOTP']),
-    async onSendOTP() {
-      this.resetValidation(this.form);
-      this.error = null;
-      if (!(await this.validate(this.form))) return;
-      /* const phoneUtil = PhoneNumberUtil.getInstance()
-      const number = phoneUtil.parseAndKeepRawInput(`${this.form.countryCode.dialCode}${this.form.smsNumber}`, this.form.countryCode.code)
-      this.form.internationalPhone = phoneUtil.format(number, PhoneNumberFormat.INTERNATIONAL)
-      this.submitting = true
-      const result = await this.sendOTP(this.form) */
-      if (this.recaptcha) {
-        this.$router.push({ path: '/accounts/add/verifyOTP' });
-      } else {
-        this.error = 'Please complete reCaptcha';
-      }
-      this.submitting = false;
+    name: 'SendOtp',
+    mixins: [validation, countriesPhoneCode],
+    data() {
+        return {
+            form: {
+                account: null,
+                smsNumber: null,
+                countryCode: null,
+                internationalPhone: null,
+            },
+            recaptcha: false,
+            phoneOptions: [],
+            error: null,
+            submitting: false,
+        };
     },
-    onVerify: function (response) {
-      if (response) this.recaptcha = true;
+    mounted() {
+        this.phoneOptions = this.countriesPhoneCode;
+        let recaptchaScript = document.createElement('script');
+        recaptchaScript.setAttribute(
+            'src',
+            'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
+        );
+        document.head.appendChild(recaptchaScript);
     },
-    /* isPhoneValid (val) {
-      try {
-        const phoneUtil = PhoneNumberUtil.getInstance()
-        const number = phoneUtil.parseAndKeepRawInput(`${this.form.countryCode.dialCode}${this.form.smsNumber}`, this.form.countryCode.code)
-        return phoneUtil.isValidNumber(number) || this.$t('forms.errors.phoneFormat')
-      } catch (e) {
-        return this.$t('forms.errors.phoneFormat')
-      }
-    } */
-  },
-  components: {
-    'vue-recaptcha': VueRecaptcha,
-  },
+    methods: {
+        ...mapActions('accounts', ['sendOTP']),
+        async onSendOTP() {
+            this.resetValidation(this.form);
+            this.error = null;
+            if (!(await this.validate(this.form))) return;
+
+            if (this.recaptcha) {
+                this.$router.push({ path: '/accounts/add/verifyOTP' });
+            } else {
+                this.error = 'Please complete reCaptcha';
+            }
+            this.submitting = false;
+        },
+        onVerify: function (response) {
+            if (response) this.recaptcha = true;
+        },
+    },
+    components: {
+        'vue-recaptcha': VueRecaptcha,
+    },
 };
 </script>
 
 <template lang="pug">
-  .flex.column.send-otp
-    .col-9
-      q-card.q-mb-lg(flat)
-        q-card-section
-          h2 {{ $t('pages.accounts.add.createAccountTitle') }}
-        q-card-section
-          q-input.q-mb-lg(
-            ref="account"
-            v-model="form.account"
-            color="accent"
-            :label="$t('pages.accounts.add.forms.account')"
-            :hint="$t('pages.accounts.add.forms.accountHint')"
-            outlined
-            maxlength="12"
-            :rules="[rules.required, rules.accountFormatBasic, rules.accountLength, rules.isAccountAvailable]"
-            lazy-rules
-            :debounce="200"
-            @blur="form.account = (form.account || '').toLowerCase()"
-          )
-          vue-recaptcha(
-            ref='recaptcha'
-            :sitekey="'6Lc6WLUaAAAAACiwPE9qyN-CX5KfLPGm6pY5OeUf'"
-            @verify="onVerify"
-          )
-          .text-red(v-if="error") {{ error }}
-    .col-3
-      q-btn.full-width(
-        color="primary"
-        :label="$t('pages.accounts.add.buttons.verify')"
-        size="lg"
-        unelevated
-        :loading="submitting"
-        @click="onSendOTP"
-      )
+.flex.column.send-otp
+  .col-9
+    q-card.q-mb-lg(flat)
+      q-card-section
+        h2 {{ $t('pages.accounts.add.createAccountTitle') }}
+      q-card-section
+        q-input.q-mb-lg(
+          ref="account"
+          v-model="form.account"
+          color="accent"
+          :label="$t('pages.accounts.add.forms.account')"
+          :hint="$t('pages.accounts.add.forms.accountHint')"
+          outlined
+          maxlength="12"
+          :rules="[rules.required, rules.accountFormatBasic, rules.accountLength, rules.isAccountAvailable]"
+          lazy-rules
+          :debounce="200"
+          @blur="form.account = (form.account || '').toLowerCase()"
+        )
+        vue-recaptcha(
+          ref='recaptcha'
+          :sitekey="'6Lc6WLUaAAAAACiwPE9qyN-CX5KfLPGm6pY5OeUf'"
+          @verify="onVerify"
+        )
+        .text-red(v-if="error") {{ error }}
+  .col-3
+    q-btn.full-width(
+      color="primary"
+      :label="$t('pages.accounts.add.buttons.verify')"
+      size="lg"
+      unelevated
+      :loading="submitting"
+      @click="onSendOTP"
+    )
 </template>
 
 <style lang="sass" scoped>

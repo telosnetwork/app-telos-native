@@ -1,81 +1,113 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { validation } from '~/mixins/validation';
+import TreasuryTokenSettingsEdit from './TreasuryTokenSettingsEdit';
 
 export default {
-  name: 'TreasuryForm',
-  mixins: [validation],
-  props: {
-    show: { type: Boolean, required: true },
-  },
-  data() {
-    return {
-      form: {
-        manager: null,
-        maxSupply: null,
-        maxSupplyValue: null,
-        maxSupplyToken: null,
-        maxSupplyDecimals: null,
-        access: null,
-        title: null,
-        description: null,
-      },
-      submitting: false,
-    };
-  },
-  computed: {
-    ...mapGetters('trails', ['treasuryFees']),
-  },
-  methods: {
-    ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
-    async onAddTreasury() {
-      this.resetValidation(this.form);
-      if (!(await this.validate(this.form))) return;
-      this.submitting = true;
-      const success = await this.addTreasury(this.form);
-      this.submitting = false;
-      if (success) {
-        this.$emit('update:show', false);
-        this.resetTreasury();
-        await this.fetchTreasuries();
-      }
+    name: 'TreasuryForm',
+    mixins: [validation],
+    components: {
+        TreasuryTokenSettingsEdit
     },
-    resetTreasury() {
-      this.form = {
-        manager: null,
-        maxSupply: null,
-        access: null,
-        title: null,
-        description: null,
-      };
+    props: {
+        show: { type: Boolean, required: true },
     },
-    setMaxSupply() {
-      if (
-        this.form.maxSupplyDecimals &&
+    data() {
+        return {
+            showEditSettings: false,
+            form: {
+                settings: [],
+                manager: null,
+                maxSupply: null,
+                maxSupplyValue: null,
+                maxSupplyToken: null,
+                maxSupplyDecimals: null,
+                access: null,
+                title: null,
+                description: null,
+            },
+            submitting: false,
+        };
+    },
+    computed: {
+        ...mapGetters('trails', ['treasuryFees']),
+        settingsAsText() {
+            return this.form.settings.filter(x => x.value).map(x => x.key).join(', ');
+        }
+    },
+    methods: {
+        ...mapActions('trails', ['addTreasury', 'fetchTreasuries']),
+        async onAddTreasury() {
+            this.resetValidation(this.form);
+            if (!(await this.validate(this.form))) return;
+            this.submitting = true;
+            const success = await this.addTreasury(this.form);
+            this.submitting = false;
+            if (success) {
+                this.$emit('update:show', false);
+                this.resetTreasury();
+                await this.fetchTreasuries();
+            }
+        },
+        resetSettings() {
+            this.form.settings = [
+                { 'key': 'burnable',     'value': false },
+                { 'key': 'maxmutable',   'value': false },
+                { 'key': 'reclaimable',  'value': false },
+                { 'key': 'stakeable',    'value': true  },
+                { 'key': 'transferable', 'value': true  },
+                { 'key': 'unstakeable',  'value': false }
+            ];
+        },
+        resetTreasury() {
+            this.form = {
+                settings: null,
+                manager: null,
+                maxSupply: null,
+                access: null,
+                title: null,
+                description: null,
+            };
+            this.resetSettings();
+        },
+        editSettings() {
+            this.showEditSettings = true;
+        },
+        setMaxSupply() {
+            if (
+                this.form.maxSupplyDecimals &&
         parseInt(this.form.maxSupplyDecimals) > 0
-      ) {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(
-          parseInt(this.form.maxSupplyDecimals),
-          '0'
-        )} ${this.form.maxSupplyToken}`;
-      } else {
-        this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${
-          this.form.maxSupplyToken
-        }`;
-      }
+            ) {
+                this.form.maxSupply = `${this.form.maxSupplyValue || 0}.${''.padStart(
+                    parseInt(this.form.maxSupplyDecimals),
+                    '0'
+                )} ${this.form.maxSupplyToken}`;
+            } else {
+                this.form.maxSupply = `${this.form.maxSupplyValue || 0} ${
+                    this.form.maxSupplyToken
+                }`;
+            }
+        },
     },
-  },
-  watch: {
-    'form.maxSupplyValue': function () {
-      this.setMaxSupply();
+    watch: {
+        show: {
+            handler: function() {
+                if (this.show) {
+                    this.resetTreasury();
+                }
+            },
+            inmediate: true
+        },
+        'form.maxSupplyValue': function () {
+            this.setMaxSupply();
+        },
+        'form.maxSupplyToken': function () {
+            this.setMaxSupply();
+        },
+        'form.maxSupplyDecimals': function () {
+            this.setMaxSupply();
+        },
     },
-    'form.maxSupplyToken': function () {
-      this.setMaxSupply();
-    },
-    'form.maxSupplyDecimals': function () {
-      this.setMaxSupply();
-    },
-  },
 };
 </script>
 
@@ -84,10 +116,33 @@ q-dialog(
   v-model="show"
   persistent
 )
-  q-card(
+  q-dialog(
+    v-model="showEditSettings"
+  )
+    q-card.container-sm
+      q-card-section.bg-primary.text-white
+        .text-h6 Edit DAO token features
+      q-card-section
+        | Each DAO has it's own token which is used to vote. From here you can change....
+      q-card-section
+        treasury-token-settings-edit(v-model="form.settings")
+
+      q-card-actions(
+        align="right"
+      )
+        q-btn(
+          color="primary"
+          :label="$t('common.buttons.reset')"
+          @click="resetSettings()"
+        )
+        q-btn(
+          color="primary"
+          :label="$t('common.buttons.ok')"
+          @click="showEditSettings = false"
+        )
+  q-card.container-md(
     flat
     bordered
-    style="width: 400px; max-width: 80vw;"
   )
     q-card-section.bg-primary.text-white
       .text-h6 Create a DAO
@@ -128,6 +183,20 @@ q-dialog(
           :rules="[rules.required, rules.isInteger, rules.isTokenDecimals]"
           lazy-rules
         )
+      .row
+        .col
+          q-input(
+            v-model="settingsAsText"
+            label="token"
+            readonly
+          )
+            template(v-slot:append)
+              q-btn(
+                icon="edit"
+                no-caps color="primary"
+                label="edit"
+                @click="showEditSettings = true"
+              )
       q-input(
         ref="title"
         v-model="form.title"
