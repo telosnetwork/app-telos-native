@@ -169,7 +169,7 @@ export default {
         filterBallots(ballots) {
 
             const ballotFilteredByStatuses = ballots.filter((b) => {
-                if (Object.keys(this.statuses).length > 0) {
+                if (Object.keys(this.statuses || []).length > 0) {
 
                     if (this.statuses.includes('active')) {
                         if (this.isBallotOpened(b)) {
