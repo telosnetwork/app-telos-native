@@ -893,12 +893,22 @@ div.bar-filter-wrapper
         q-separator.bar-separator-vertical.q-mr-md(vertical inset)
         q-btn.q-mx-md(
           :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
-          icon-right="add"
+          icon="add"
           color="primary"
           no-caps
           outline
           @click="isAuthenticated ? openBallotForm() : openNotice()"
         )
+
+    div.btn-320-wrapper.row.items-center.scroll-anim.show-under-mid
+      q-btn.create-poll-btn.btn-320(
+        :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')"
+        icon="add"
+        color="primary"
+        no-caps
+        outline
+        @click="isAuthenticated ? openBallotForm() : openNotice()"
+      )
     q-dialog(v-model="notice")
       q-card.notice
         q-card-section.row.no-wrap
@@ -906,10 +916,6 @@ div.bar-filter-wrapper
             q-btn(flat size="14px" color="primary" label="here" to="/accounts/add" no-caps).register-link
         q-card-actions(align="right" class="bg-white")
           q-btn(flat label="OK" v-close-popup)
-    q-page-sticky.create-ballot-fabbtn-holder.show-under-mid(position="top-right" :offset="[18, 145]")
-      q-btn(fab no-caps rounded color="primary"
-      icon="add"
-      :label="$t('pages.trails.ballots.actionBar.btnCreateProposal')" )
 
 </template>
 <style lang="sass" scoped>
@@ -962,14 +968,14 @@ $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
 .left-btn
   height: 40px
   margin-right: 1px
-  border-radius: 6px 0 0 6px
+  border-radius: 3px 0 0 3px
   & .q-btn__wrapper::before
     border: none
 .right-btn
   height: 40px
   width: 40px
   padding: 0
-  border-radius: 0 6px 6px 0
+  border-radius: 0 3px 3px 0
   font-size: 12px
   & .q-btn__wrapper::before
     border: none
@@ -1072,11 +1078,11 @@ $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
     max-width: 100%
 .show-under-mid
   display: none
-@media (max-width: 820px)
+@media (max-width: 930px)
   .hide-under-mid
     display: none
   .show-under-mid
-    display: block
+    display: flex
 @media (max-width: 600px)
   .show-under-mid
     display: none
