@@ -191,6 +191,7 @@ export default {
                     btnConfirm: 'Confirm',
                     btnCreatePoll: 'Create a poll',
                     btnCreateProposal: 'Create a Proposal',
+                    btnCreateaDAO: 'Create a DAO',
                 },
             },
             treasuries: {

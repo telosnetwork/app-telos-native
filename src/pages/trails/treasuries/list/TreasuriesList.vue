@@ -65,6 +65,17 @@ export default {
 
 <template lang="pug">
 q-page.q-pa-lg
+
+  div.row.justify-end.q-mb-md.scroll-anim(v-if="isAuthenticated")
+    q-btn.create-poll-btn.btn-320(
+    :label="$t('pages.trails.ballots.actionBar.btnCreateaDAO')"
+    icon="add"
+    color="primary"
+    no-caps
+    outline
+    @click="show = true"
+  )
+
   treasury-form(:show.sync="show" @close="show = false")
   .treasuries(ref="treasuriesRef")
     q-infinite-scroll(
@@ -76,15 +87,4 @@ q-page.q-pa-lg
       .row.q-col-gutter-md
         .col-xs-12.col-sm-6(v-for="treasury in treasuries")
           treasury-card(:treasury="treasury")
-  q-page-sticky(
-    v-if="isAuthenticated"
-    position="bottom-right"
-    :offset="[18, 18]"
-  )
-    q-btn(
-      fab
-      icon="fas fa-plus"
-      color="accent"
-      @click="show = true"
-    )
 </template>
