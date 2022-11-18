@@ -918,223 +918,226 @@ div.bar-filter-wrapper
           q-btn(flat label="OK" v-close-popup)
 
 </template>
-<style lang="sass" scoped>
-// https://stackoverflow.com/a/74369087/2274525
-$shadow-1: 0px 20px 48px rgba(0, 9, 26, 0.08)
-$shadow-2: 0px 7px 15px rgba(0, 9, 26, 0.05)
-$shadow-3: 0px 3px 6px rgba(0, 9, 26, 0.04)
-$shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
-.create-ballot-fabbtn-holder
-  z-index: 10
-.scroll-anim
-  margin-top: 10px !important
-  margin-bottom: 10px !important
+<style lang="sass">
+
 .bar-filter-wrapper
   margin: 0 0 8px 0
-.bar-wrapper
-  position: relative
-  width: 100%
-  height: 88px
-  background: white
-  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
-  border-radius: 12px
-.q-btn-group
-  margin-left: 24px
-  gap: 4px
-.q-btn-group > .q-btn-item
-  width: 40px
-  height: 40px
-  border-radius: 6px !important
-.bar-custom-separator
-  width: 4px
-  height: 4px
-  background: rgba(0, 0, 0, 0.12)
-  border-radius: 2px
-  margin: 0 26px
-.bar-separator-vertical
-  height: 68px
-.separator-320
-  margin: 2px 20px
-  display: none
-  width: 4px
-  height: 4px
-  background: rgba(0, 9, 26, 0.1)
-  border-radius: 2px
-.create-poll-btn
-  height: 40px
-  margin-right: 27px
-.bar-filter-menu-form
-  padding: 12px
-.left-btn
-  height: 40px
-  margin-right: 1px
-  border-radius: 3px 0 0 3px
-  & .q-btn__wrapper::before
-    border: none
-.right-btn
-  height: 40px
-  width: 40px
-  padding: 0
-  border-radius: 0 3px 3px 0
-  font-size: 12px
-  & .q-btn__wrapper::before
-    border: none
-.bar-filter-btn-320
-  display: none
-.q-btn__wrapper
-  padding: 4px 12px
-.bar-filter-menu-320
-  padding: 24px 12px 20px 12px
-  background: white
-  box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
-  border-radius: 12px
-.menu-320-title-wrapper
-  margin-bottom: 20px
-.menu-320-title
-  font-size: 22px
-  font-weight: 600
-  line-height: 150%
-.filter-icon
-  margin: 8px
-  font-size: 22px
-  color: var(--q-color-primary)
-.dialog-btn-wrapper
-  margin-bottom: 24px
-.btn-320
-  margin: 0 !important
-.filter-type-btn-320 > .q-btn__wrapper > .q-btn__content
-  text-align: left
-  font-size: 16px
-.filter-type-btn-320 > .q-btn__wrapper > .q-btn__content > .block
-  width: 58px
-.btn-320-wrapper
-  margin: 24px 0
-  width: 100%
-  height: 64px
-  justify-content: center
-.menu-visible
-  display: flex !important
-  position: fixed !important
-  left: 0
-  right: 0
-.bar-filter-menu-320-wrapper
-  display: none
-.bar-filter-menu-options
-  box-shadow: none !important
-  margin: 0 0 20px 0
-.options-320 > div
-  border: 1px solid #F2F3F4
-  border-radius: 6px !important
-  margin: 0
-  border-radius: 0 !important
-  &:first-child
-    border-radius: 6px 6px 0 0 !important
-    border-bottom: 1px solid #F2F3F4
-  &:last-child
-    border-radius: 0 0 6px 6px !important
-.q-scrollarea
-  height: 60vh
-.left-btn-320
-  height: 40px
-  width: -webkit-fill-available
-  border-radius: none
-.right-btn-320
-  height: 40px
-  width: 40px
-  font-size: 12px
-  border-radius: none
-.dialog-form
-  padding: 0
-.q-menu
-  min-width: 170px !important
-@media (max-width: 1280px)
-  .bar-btn-toggle,
-  .bar-btns-toggle,
-  .bar-custom-separator
-    display: none !important
-@media (max-width: 1130px)
-  .bar-linear-gradient-left,
-  .bar-linear-gradient-right
-    display: block
-  .bar-wrapper
-    height: 72px
-  .bar-separator-vertical
-    height: 56px
-  .bar-filters
-    max-width: 73%
-    overflow-x: scroll
-  .bar-filters::-webkit-scrollbar
-    width: 0
-    display: none
-  .bar-linear-gradient-right
-    left: 70%
-@media (max-width: 1070px)
-  .bar-filters
-    max-width: 100%
-  .bar-linear-gradient-right
-    display: none
-@media (max-width: 940px)
-  .bar-filters
-    max-width: 100%
-.show-under-mid
-  display: none
-@media (max-width: 930px)
-  .hide-under-mid
-    display: none
-  .show-under-mid
-    display: flex
-@media (max-width: 600px)
-  .show-under-mid
-    display: none
-  .bar-filter-menu-320-wrapper
-    display: flex
-  .bar-wrapper
-    display: none
-    justify-content: space-between
-    margin-bottom: 0
-    bottom: 12px
+
+  // https://stackoverflow.com/a/74369087/2274525
+  $shadow-1: 0px 20px 48px rgba(0, 9, 26, 0.08)
+  $shadow-2: 0px 7px 15px rgba(0, 9, 26, 0.05)
+  $shadow-3: 0px 3px 6px rgba(0, 9, 26, 0.04)
+  $shadow-4: 0px 1px 2.25px rgba(0, 9, 26, 0.0383252)
+  .create-ballot-fabbtn-holder
     z-index: 10
+  .scroll-anim
+    margin-top: 10px !important
+    margin-bottom: 10px !important
 
+  .bar-wrapper
+    position: relative
+    width: 100%
+    height: 88px
+    background: white
+    box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
+    border-radius: 12px
+  .q-btn-group
+    margin-left: 24px
+    gap: 4px
+  .q-btn-group > .q-btn-item
+    width: 40px
+    height: 40px
+    border-radius: 6px !important
+  .bar-custom-separator
+    width: 4px
+    height: 4px
+    background: rgba(0, 0, 0, 0.12)
+    border-radius: 2px
+    margin: 0 26px
+  .bar-separator-vertical
+    height: 68px
+  .separator-320
+    margin: 2px 20px
+    display: none
+    width: 4px
+    height: 4px
+    background: rgba(0, 9, 26, 0.1)
+    border-radius: 2px
+  .create-poll-btn
+    height: 40px
+    margin-right: 27px
+  .bar-filter-menu-form
+    padding: 12px
+  .left-btn
+    height: 40px
+    margin-right: 1px
+    border-radius: 3px 0 0 3px
+    & .q-btn__wrapper::before
+      border: none
+  .right-btn
+    height: 40px
+    width: 40px
+    padding: 0
+    border-radius: 0 3px 3px 0
+    font-size: 12px
+    & .q-btn__wrapper::before
+      border: none
+  .bar-filter-btn-320
+    display: none
+  .q-btn__wrapper
+    padding: 4px 12px
+  .bar-filter-menu-320
+    padding: 24px 12px 20px 12px
+    background: white
+    box-shadow: $shadow-1, $shadow-2, $shadow-3, $shadow-4
+    border-radius: 12px
+  .menu-320-title-wrapper
+    margin-bottom: 20px
+  .menu-320-title
+    font-size: 22px
+    font-weight: 600
+    line-height: 150%
+  .filter-icon
+    margin: 8px
+    font-size: 22px
+    color: var(--q-color-primary)
   .dialog-btn-wrapper
-    border: none
-
-  .dialog-btn-wrapper button
+    margin-bottom: 24px
+  .btn-320
+    margin: 0 !important
+  .filter-type-btn-320 > .q-btn__wrapper > .q-btn__content
+    text-align: left
+    font-size: 16px
+  .filter-type-btn-320 > .q-btn__wrapper > .q-btn__content > .block
+    width: 58px
+  .btn-320-wrapper
+    margin: 24px 0
+    width: 100%
+    height: 64px
+    justify-content: center
+  .menu-visible
+    display: flex !important
+    position: fixed !important
+    left: 0
+    right: 0
+  .bar-filter-menu-320-wrapper
+    display: none
+  .bar-filter-menu-options
+    box-shadow: none !important
+    margin: 0 0 20px 0
+  .options-320 > div
     border: 1px solid #F2F3F4
     border-radius: 6px !important
-    margin-bottom: 10px
-
-  .dialog-btn-wrapper button.left-btn-320
-    border-right: none
-    border-top-right-radius: 0 !important
-    border-bottom-right-radius: 0 !important
-
-  .dialog-btn-wrapper button.right-btn-320
-    border-left: none
-    border-top-left-radius: 0 !important
-    border-bottom-left-radius: 0 !important
-
-  .bar-linear-gradient-left,
-  .bar-linear-gradient-right,
-  .bar-filters,
-  .bar-separator-vertical
+    margin: 0
+    border-radius: 0 !important
+    &:first-child
+      border-radius: 6px 6px 0 0 !important
+      border-bottom: 1px solid #F2F3F4
+    &:last-child
+      border-radius: 0 0 6px 6px !important
+  .q-scrollarea
+    height: 60vh
+  .left-btn-320
+    height: 40px
+    width: -webkit-fill-available
+    border-radius: none
+  .right-btn-320
+    height: 40px
+    width: 40px
+    font-size: 12px
+    border-radius: none
+  .dialog-form
+    padding: 0
+  .q-menu
+    min-width: 170px !important
+  @media (max-width: 1280px)
+    .bar-btn-toggle,
+    .bar-btns-toggle,
+    .bar-custom-separator
+      display: none !important
+  @media (max-width: 1130px)
+    .bar-linear-gradient-left,
+    .bar-linear-gradient-right
+      display: block
+    .bar-wrapper
+      height: 72px
+    .bar-separator-vertical
+      height: 56px
+    .bar-filters
+      max-width: 73%
+      overflow-x: scroll
+    .bar-filters::-webkit-scrollbar
+      width: 0
+      display: none
+    .bar-linear-gradient-right
+      left: 70%
+  @media (max-width: 1070px)
+    .bar-filters
+      max-width: 100%
+    .bar-linear-gradient-right
+      display: none
+  @media (max-width: 940px)
+    .bar-filters
+      max-width: 100%
+  .show-under-mid
     display: none
-  .separator-320,
-  .bar-filter-btn-320
-    display: block
-  .right-bar-section
-    flex: none
-  .create-poll-btn
-    margin-right: 12px
-@media (max-width: 400px)
-  .bar-wrapper
-    width: auto
-    margin: 0 12px
-  .bar-filter-menu-320
-    margin-top: 24px
-    border-radius: 0
-  .btn-320-wrapper
-    background: white
-    box-shadow: 0px 7px 15px rgba(21, 0, 77, 0.05), 0px 3px 6px rgba(21, 0, 77, 0.04)
-  .btn-320
-    width: 296px !important
+  @media (max-width: 930px)
+    .hide-under-mid
+      display: none
+    .show-under-mid
+      display: flex
+  @media (max-width: 600px)
+    .show-under-mid
+      display: none
+    .bar-filter-menu-320-wrapper
+      display: flex
+    .bar-wrapper
+      display: none
+      justify-content: space-between
+      margin-bottom: 0
+      bottom: 12px
+      z-index: 10
+
+    .dialog-btn-wrapper
+      border: none
+
+    .dialog-btn-wrapper button
+      border: 1px solid #F2F3F4
+      border-radius: 6px !important
+      margin-bottom: 10px
+
+    .dialog-btn-wrapper button.left-btn-320
+      border-right: none
+      border-top-right-radius: 0 !important
+      border-bottom-right-radius: 0 !important
+
+    .dialog-btn-wrapper button.right-btn-320
+      border-left: none
+      border-top-left-radius: 0 !important
+      border-bottom-left-radius: 0 !important
+
+    .bar-linear-gradient-left,
+    .bar-linear-gradient-right,
+    .bar-filters,
+    .bar-separator-vertical
+      display: none
+    .separator-320,
+    .bar-filter-btn-320
+      display: block
+    .right-bar-section
+      flex: none
+    .create-poll-btn
+      margin-right: 12px
+  @media (max-width: 400px)
+    .bar-wrapper
+      width: auto
+      margin: 0 12px
+    .bar-filter-menu-320
+      margin-top: 24px
+      border-radius: 0
+    .btn-320-wrapper
+      background: white
+      box-shadow: 0px 7px 15px rgba(21, 0, 77, 0.05), 0px 3px 6px rgba(21, 0, 77, 0.04)
+    .btn-320
+      width: 296px !important
 </style>
