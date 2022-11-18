@@ -221,11 +221,6 @@ export default {
                 this.rules.setActive(false);
                 this.updateBallot();
                 this.$refs.stepper.next();
-            // } else {
-            //     console.error('errors:');
-            //     Object.keys(list).forEach(t => {
-            //         console.error('-', t, this.$refs[t].hasError);
-            //     });
             }
         },
         validateImage(active) {
