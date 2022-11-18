@@ -20,10 +20,10 @@ q-page.flex.align-center.column.q-pa-lg.congratulations
   .col-3
     q-btn.full-width(
       color="primary"
-      :label="$t('pages.accounts.add.buttons.goToProfile')"
+      :label="$t('pages.accounts.add.buttons.signIn')"
       size="lg"
       unelevated
-      to="/"
+      to="/login/?returnUrl=/"
     )
 </template>
 
