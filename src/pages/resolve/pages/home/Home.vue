@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
-    <div class="primary">
+  <div class="container row">
+    <div class="primary col-sm-12 col-md-6">
       <intro />
     </div>
-    <div class="secondary">
+    <div class="secondary col-sm-12 col-md-6">
       <elections-status />
     </div>
   </div>
@@ -26,10 +26,8 @@ export default {
   display: flex;
   flex-direction: row;
 }
-.primary {
-  flex: 1;
-}
+.primary,
 .secondary {
-  flex: 1;
+  margin-bottom: 48px;
 }
 </style>

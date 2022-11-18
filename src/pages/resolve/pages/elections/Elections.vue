@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="intro-row">
-      <div class="first">
+    <div class="intro-row row">
+      <div class="first col-xs-12 col-sm-6">
         <intro-card heading="Elect Telos's Next Arbitrators">
           <p>
             As a leader in blockchain governance, Telos allows any user with a
@@ -41,7 +41,7 @@
           </ul>
         </intro-card>
       </div>
-      <div class="second">
+      <div class="second col-xs-12 col-sm-6">
         <election-steps
           v-if="isResolveStoresAvailable"
           remove-nominee="removeNominee"
@@ -123,7 +123,6 @@ export default {
 
   .first,
   .second {
-    flex: 1;
   }
 
   .first ul {

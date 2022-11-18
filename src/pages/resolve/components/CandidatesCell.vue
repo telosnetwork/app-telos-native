@@ -169,7 +169,7 @@ td.text-left {
       margin-right: 8px;
     }
     .info {
-      width: 230px;
+      width: 330px;
       height: 24px;
       display: flex;
       justify-content: space-between;

@@ -113,6 +113,5 @@ export const FILTER_CASE_FILE_ACTIONS = (
     }
     return false;
   });
-  console.log("filteredActions: ", filteredActions, case_id);
   return filteredActions;
 };

@@ -16,13 +16,13 @@
         color="primary"
         label="View Cases"
         @click="$router.push('/resolve/cases')"
-      />&nbsp;
+      />
       <q-btn
         v-if="isResolveAdmin"
         color="primary"
         label="Admin Dashboard"
         @click="navigateToAdmin"
-      />&nbsp;
+      />
       <q-btn
         v-if="isArbitrator"
         color="primary"
@@ -83,5 +83,9 @@ export default {
     color: #333333;
     margin-bottom: 36px;
   }
+}
+
+.q-btn {
+  margin: 8px;
 }
 </style>

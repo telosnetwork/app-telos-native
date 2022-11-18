@@ -1,7 +1,8 @@
 <template>
   <div class="cases-page">
-    <div class="top-row">
+    <div class="top-row row">
       <intro-card
+        class="col-xs-12 col-sm-6"
         heading="Create a new case"
         text="Do you have an asset related issue that you’d like the network’s arbitration system to resolve? We believe that a transparent process benefits everyone."
       >
@@ -14,7 +15,10 @@
           >
         </template>
       </intro-card>
-      <meet-arbitrators v-if="isResolveStoresAvailable" />
+      <meet-arbitrators
+        class="col-xs-12 col-sm-6"
+        v-if="isResolveStoresAvailable"
+      />
     </div>
     <div class="form-wrapper">
       <q-dialog v-model="isModalVisible">
