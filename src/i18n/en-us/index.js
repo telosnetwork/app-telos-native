@@ -11,6 +11,7 @@ export default {
             mint: 'Mint',
             register: 'Register',
             save: 'Save',
+            discard: 'Discard',
             confirm: 'Confirm',
             editProfile: 'Edit profile',
         },
