@@ -114,6 +114,7 @@ export default {
                 buttons: {
                     continue: 'Continue',
                     goToProfile: 'Take me to my profile',
+                    signIn: 'Sign in',
                     verify: 'Verify Phone Number',
                     genKeys: 'Generate Keys',
                 },
