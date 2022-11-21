@@ -24,15 +24,16 @@ export default {
     emits: ['close'],
     data() {
         return {
+            showSaveDialog: false,
             moment: moment,
             step: ref(1),
-            isOfficial: true,
             ballotTypes: [TYPE_OF_BALLOT_0, TYPE_OF_BALLOT_1, TYPE_OF_BALLOT_2],
             isBallotListRowDirection: true,
-            openForVoting: true,
-            typeOfBallot: TYPE_OF_BALLOT_0,
-            onlyOneOption: true,
             form: {
+                isOfficial: true,
+                openForVoting: true,
+                onlyOneOption: true,
+                typeOfBallot: TYPE_OF_BALLOT_0,
                 newOptionLabel: '',
                 newOptionValue: '',
                 defaultLabels:['Yes', 'No', 'Abstain'],
@@ -197,17 +198,17 @@ export default {
                 break;
             }
             case 3: {
-                if (this.typeOfBallot === this.ballotTypes[0]) {
+                if (this.form.typeOfBallot === this.ballotTypes[0]) {
                     list = {op_a_1:1,op_a_2:1};
-                } else if (this.typeOfBallot === this.ballotTypes[1]) {
+                } else if (this.form.typeOfBallot === this.ballotTypes[1]) {
                     list = {op_b_1:1,op_b_2:1,op_b_3:1};
-                } else if (this.typeOfBallot === this.ballotTypes[2]) {
+                } else if (this.form.typeOfBallot === this.ballotTypes[2]) {
                     list = {optionsLabels:1, minimun:1, maximun:1};
                 }
                 break;
             }
             case 4:
-                if (this.openForVoting) {
+                if (this.form.openForVoting) {
                     list = {endTime:1};
                 } else {
                     list = {};
@@ -220,11 +221,6 @@ export default {
                 this.rules.setActive(false);
                 this.updateBallot();
                 this.$refs.stepper.next();
-            } else {
-                console.error('errors:');
-                Object.keys(list).forEach(t => {
-                    console.error('-', t, this.$refs[t].hasError);
-                });
             }
         },
         validateImage(active) {
@@ -359,16 +355,43 @@ export default {
             };
             this.rules.setActive(false);
             this.step = 1;
-            this.typeOfBallot = this.ballotTypes[0];
-            this.isOfficial = true;
-            this.onlyOneOption = true;
-            this.openForVoting = true;
+            this.form.typeOfBallot = this.ballotTypes[0];
+            this.form.isOfficial = true;
+            this.form.onlyOneOption = true;
+            this.form.openForVoting = true;
             this.badImage = false;
             this.cid = null;
             this.setOfficialDAO();
-     
         },
         onCancel() {
+            localStorage.removeItem('ballot_creation');
+            this.$emit('close');
+        },
+        save() {
+            localStorage.setItem('ballot_creation', JSON.stringify(this.form));
+        },
+        load() {
+            try {
+                let str = localStorage.getItem('ballot_creation');
+                if (str) {
+                    let object = JSON.parse(str);
+                    this.form = object;
+                    setTimeout(() => {
+                        object = JSON.parse(str);
+                        this.form = object;
+                    }, 1000);
+                }
+                return true;
+            } catch (e) {
+                console.error('ERROR: ', e);
+            }
+            return false;
+        },
+        onWannaLeave() {
+            this.showSaveDialog = true;
+        },
+        async onSave() {
+            await this.save();
             this.$emit('close');
         },
         addBallotOption(val, done) {
@@ -379,16 +402,16 @@ export default {
                 title: this.form.title,
                 category: this.form.category,
                 description:
-          this.form.IPFSString && this.form.IPFSString.trim() !== ''
-              ? `${this.form.description} ${this.form.IPFSString}`
-              : this.form.description,
+                    this.form.IPFSString && this.form.IPFSString.trim() !== ''
+                        ? `${this.form.description} ${this.form.IPFSString}`
+                        : this.form.description,
                 content: this.createContentField(),
                 treasurySymbol: this.form.treasurySymbol,
                 votingMethod: this.form.votingMethod,
                 maxOptions: this.form.maxOptions,
                 minOptions: this.form.minOptions,
                 initialOptions: this.updateOptionValues(),
-                endTime: this.openForVoting ? this.form.endTime : new Date(),
+                endTime: this.form.openForVoting ? this.form.endTime : new Date(),
                 config: this.form.config,
                 settings: this.isStakeable,
             };
@@ -407,7 +430,7 @@ export default {
                 publisher: this.account,
                 title: this.form.title,
                 category: this.form.category,
-                status: this.openForVoting ? 'voting' : 'setup',
+                status: this.form.openForVoting ? 'voting' : 'setup',
                 ballot_name: this.slugify(this.form.title),
                 total_voters: 0,
                 options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
@@ -458,8 +481,8 @@ export default {
                 this.form.IPFSString = null;
             }
         },
-        typeOfBallot() {
-            switch(this.typeOfBallot) {
+        'form.typeOfBallot'() {
+            switch(this.form.typeOfBallot) {
             case (TYPE_OF_BALLOT_0):
                 this.setDefaultOptions(2);
                 break;
@@ -469,12 +492,12 @@ export default {
             case (TYPE_OF_BALLOT_2):
                 break;
             default: // ??
-                console.error('ERORR: check consistency! ', [this.typeOfBallot, this.ballotTypes]);
+                console.error('ERORR: check consistency! ', [this.form.typeOfBallot, this.ballotTypes]);
                 break;
             }
         },
-        isOfficial() {
-            if (this.isOfficial) {
+        'form.isOfficial'() {
+            if (this.form.isOfficial) {
                 this.setOfficialDAO();
             } else {
                 this.form.treasurySymbol = null;
@@ -484,8 +507,8 @@ export default {
             this.rules.setActive(true);
             this.validate({optionsLabels:1, minimun:1, maximun:1});
         },
-        onlyOneOption() {
-            if (!this.onlyOneOption) {
+        'form.onlyOneOption'() {
+            if (!this.form.onlyOneOption) {
                 this.form.minOptions = 1;
                 this.form.maxOptions = this.form.optionsLabels.length;
             } else {
@@ -493,17 +516,20 @@ export default {
                 this.form.maxOptions = 1;
             }
         },
-        openForVoting() {
-            this.rules.setActive(this.openForVoting);
-            this.$refs.endTime.validate();
+        'form.openForVoting'() {
+            this.rules.setActive(this.form.openForVoting);
+            if (this.$refs.endTime) this.$refs.endTime.validate();
         },
         show() {
             if (this.show) {
-                this.setOfficialDAO();
                 this.rules.setActive(false);
                 this.fetchFees();
                 this.updateUserBalance();
                 this.fetchTreasuriesForUser(this.account);
+                this.showSaveDialog = false;
+                if (!this.load()) {
+                    this.setOfficialDAO();
+                }
             } else {
                 this.resetBallot();
             }
@@ -511,9 +537,7 @@ export default {
         badImage() {
             this.validateImage(this.badImage);
         }
-    },
-    async mounted() {
-    },
+    }
 };
 </script>
 
@@ -523,6 +547,21 @@ q-dialog(
   :maximized="maximized"
   persistent
 )
+  q-dialog(
+    v-model="showSaveDialog"
+  )
+    q-card(
+      flat
+      bordered
+    )
+      q-card-section.bg-primary.text-white
+        | Save or Discard
+      q-card-section
+        | Do you want to discard the changes or save them to continue later?
+      q-card-actions(align="right")
+        q-btn(flat="flat" :label="$t('common.buttons.discard')" @click="onCancel()")
+        q-btn(color="primary" :label="$t('common.buttons.save')" @click="onSave()")
+
   q-card.column.no-wrap.container-md(
     flat
     bordered
@@ -593,22 +632,22 @@ q-dialog(
               | Select DAO
             .row.gap-sm
               q-radio(
-                v-model="isOfficial"
+                v-model="form.isOfficial"
                 label="Telos community"
                 :val="true"
               )
               q-radio(
-                v-model="isOfficial"
+                v-model="form.isOfficial"
                 label="Custom DAO"
                 :val="false"
               )
-            div.q-mt-sm.column(:class="isOfficial ? '' : 'hidden'")
+            div.q-mt-sm.column(:class="form.isOfficial ? '' : 'hidden'")
               p(:class="textClass")
                 | By selecting the Telos Community as DAO you will allow all
                 | users of our beloved community to vote in this ballot.
                 | The voting power of each user will come from the TLOS staked
                 | balance plus the staked TLOS in the REX system.
-            div.q-mt-sm.column(:class="isOfficial ? 'hidden' : ''")
+            div.q-mt-sm.column(:class="form.isOfficial ? 'hidden' : ''")
               p(:class="textClass")
                 | By selecting Custom DAO, you will allow only registered users of this DAO to vote in this ballot.
                 | Select the DAO from the one you are already part of or join a new ballot to create a ballot for.
@@ -625,6 +664,7 @@ q-dialog(
                   color="primary"
                   label="Join new DAO"
                   to="/trails/treasuries"
+                  @click="save()"
                   v-if="!form.treasurySymbol"
                 )
               span.q-mt-sm
@@ -658,29 +698,29 @@ q-dialog(
             dev.flex.no-wrap(:class="radioBtnVertical ? 'row' : 'column'")
               div.q-mt-sm(:class="radioBtnVertical ? 'col-auto flex column no-wrap' : ''")
                 q-radio.q-mr-md(
-                  v-model="typeOfBallot"
+                  v-model="form.typeOfBallot"
                   label="Simple Yes or No"
                   :val="ballotTypes[0]"
                 )
                 q-radio.q-mr-md(
-                  v-model="typeOfBallot"
+                  v-model="form.typeOfBallot"
                   label="Yes/No/Abstain"
                   :val="ballotTypes[1]"
                 )
                 q-radio.q-mr-md(
-                  v-model="typeOfBallot"
+                  v-model="form.typeOfBallot"
                   label="Multiple option(s)"
                   :val="ballotTypes[2]"
                 )
               div.q-mt-sm.col(:class="textClass")
-                div(:class="typeOfBallot === ballotTypes[0] ? '' : 'hidden'")
+                div(:class="form.typeOfBallot === ballotTypes[0] ? '' : 'hidden'")
                   | Simple binary ballots only have two options to vote for.
                   | By default we use the words
                   b  Yes
                   |  and
                   b  No
                   | , but you can change them if you want.
-                div(:class="typeOfBallot === ballotTypes[1] ? '' : 'hidden'")
+                div(:class="form.typeOfBallot === ballotTypes[1] ? '' : 'hidden'")
                   | This kind of ballot is the same as the binary one but has three options to vote for.
                   | By default we use the words
                   b  Yes
@@ -689,11 +729,11 @@ q-dialog(
                   |  and
                   b  Abstain
                   | , but you can change them if you want.
-                div(:class="typeOfBallot === ballotTypes[2] ? '' : 'hidden'")
+                div(:class="form.typeOfBallot === ballotTypes[2] ? '' : 'hidden'")
                   | Multiple option ballots are entirely configurable.
                   | You can define several options, and voters may select one
                   | or multiple choices depending on the configuration.
-            div.q-mt-sm(:class="typeOfBallot === ballotTypes[0] ? '' : 'hidden'")
+            div.q-mt-sm(:class="form.typeOfBallot === ballotTypes[0] ? '' : 'hidden'")
               // Simple yes or No
               .q-mt-sm.flex(:class="previewVertical ? 'column' : 'raw gap'")
                 q-input.col-grow(
@@ -708,7 +748,7 @@ q-dialog(
                   label="option 2"
                   :rules="[rules.required]"
                 )
-            div.q-mt-sm(:class="typeOfBallot === ballotTypes[1] ? '' : 'hidden'")
+            div.q-mt-sm(:class="form.typeOfBallot === ballotTypes[1] ? '' : 'hidden'")
               // Yes, No or Abstain
               .q-mt-sm.flex(:class="previewVertical ? 'column' : 'raw gap'")
                 q-input.col-grow(
@@ -732,7 +772,7 @@ q-dialog(
                   label="option 3"
                   :rules="[rules.required]"
                 )
-            div.q-mt-sm(:class="typeOfBallot === ballotTypes[2] ? '' : 'hidden'")
+            div.q-mt-sm(:class="form.typeOfBallot === ballotTypes[2] ? '' : 'hidden'")
               // Multiple option
               .q-mt-sm.flex(:class="previewVertical ? 'column' : 'raw gap'")
                 .col.flex.column.options-left
@@ -786,13 +826,13 @@ q-dialog(
                       q-btn(no-caps color="primary" icon="list" :label="'Default'" @click="setDefaultOptions(3)")
                       q-btn(no-caps color="primary" icon="delete_sweep" :label="'Clean'" @click="cleanOptions()")
                   .flex.row.justify-end.gap-sm.no-wrap(:class="smallDevice ? 'q-mt-md' : ''")
-                    q-checkbox(v-model="onlyOneOption" v-if="onlyOneOption") Voters can only choose one option
+                    q-checkbox(v-model="form.onlyOneOption" v-if="form.onlyOneOption") Voters can only choose one option
                     div.flex-grow
                     div.no-wrap.flex.gap-sm(v-if="!smallDevice")
                       q-btn(no-caps color="primary" icon="list" :label="'Default'" @click="setDefaultOptions(3)")
                       q-btn(no-caps color="primary" icon="delete_sweep" :label="'Clean'" @click="cleanOptions()")
-                .col.flex.column.options-right(v-if="!onlyOneOption")
-                  q-checkbox(v-model="onlyOneOption") Voters can only choose one option
+                .col.flex.column.options-right(v-if="!form.onlyOneOption")
+                  q-checkbox(v-model="form.onlyOneOption") Voters can only choose one option
                   div.q-mt-sm(:class="textClass")
                     | You are allowing voters to check several options (or none) in the
                     | same vote. Now you should set the maximum and minimum.
@@ -803,9 +843,11 @@ q-dialog(
                     | you will put the min at one and the max high enough to select them all.
                   .flex.row.no-wrap.q-mt-sm.options-right__howmany
                     q-input.col.options-right__howmany-min(ref="minimun" v-model="form.minOptions" label="minimun"
+                      type="number"
                       :rules="[rules.required, rules.integer, rules.isNatural, rules.lowerOrEqualThan(form.maxOptions)]"
                     )
                     q-input.col.options-right__howmany-max(ref="maximun" v-model="form.maxOptions" label="maximun"
+                      type="number"
                       :rules="[rules.required, rules.integer, rules.positiveInteger,\
                         rules.greaterOrEqualThan(form.minOptions), rules.lowerOrEqualThan(form.optionsLabels.length)]"
                     )
@@ -819,12 +861,12 @@ q-dialog(
             p(:class="textClass")
               | You can open this proposal for voting now or activate it later.
               | (Smart Contract interaction needed)
-            q-checkbox(v-model="openForVoting") Open for voting now
+            q-checkbox(v-model="form.openForVoting") Open for voting now
             q-input(
               ref="endTime"
               v-model="form.endTime"
               label="End date"
-              :disable="!openForVoting"
+              :disable="!form.openForVoting"
               :rules="[rules.required, rules.dateFuture(Date.now())]"
             )
               template(v-slot:append)
@@ -893,16 +935,16 @@ q-dialog(
                         li(v-for="(option,index) in form.optionsLabels") {{option}}
                     .col.flex.column
                       b method:
-                      span(v-if="onlyOneOption") Voters only can choose one option
+                      span(v-if="form.onlyOneOption") Voters only can choose one option
                       span(v-else) Voters can choose from {{form.minOptions}} to {{form.maxOptions}} options
                 .q-mt-sm
                   b open:&nbsp;
-                  span(v-if="openForVoting")
+                  span(v-if="form.openForVoting")
                     | this ballot will be open from now until {{moment(form.endTime).format("MMMM Do YYYY")}}
                   span(v-else) this ballot will not open immediately and must be oppened manually in the future
         template(v-slot:navigation)
           q-stepper-navigation.flex
-            q-btn.q-ml-sm(color="primary" label="Cancel"   flat @click="onCancel()")
+            q-btn.q-ml-sm(color="primary" label="Cancel"   flat @click="onWannaLeave()")
             .col-grow
             q-btn.q-ml-sm(color="primary" label="Back"     flat v-if="step > 1" @click="$refs.stepper.previous()")
             q-btn.q-ml-sm(color="primary" label="Continue" v-if="step !== 5" @click="nextStep()")
@@ -911,17 +953,17 @@ q-dialog(
 </template>
 <style lang="sass">
 .q-field--standout.q-field--highlighted .q-field__control
-  background: #{$negative} !important
+    background: #{$negative} !important
 .q-stepper.ballot-creation
-  min-height:80vh
+   min-height:80vh
 .q-stepper--horizontal
-  display: flex
-  flex-direction: column
+    display: flex
+    flex-direction: column
 .q-stepper__nav
-  flex-grow: 1
-  align-items: end
+    flex-grow: 1
+    align-items: end
 .q-stepper--vertical .q-stepper__tab
-  padding: 12px 24px 12px 12px
+    padding: 12px 24px 12px 12px
 .q-stepper--vertical .q-stepper__step-inner
-  padding: 0 24px 32px 48px
+    padding: 0 24px 32px 48px
 </style>
