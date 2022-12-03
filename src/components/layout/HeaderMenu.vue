@@ -1,10 +1,10 @@
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
-  name: "HeaderMenu",
+  name: 'HeaderMenu',
   computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters('accounts', ['isAuthenticated']),
   },
   props: {
     activeFilter: {},
@@ -13,28 +13,28 @@ export default {
     return {
       menuItems: [
         {
-          label: this.$t("menu.daos"),
-          route: "/trails/treasuries",
+          label: this.$t('menu.daos'),
+          route: '/trails/treasuries',
         },
         {
-          label: this.$t("menu.elections"),
-          route: "/trails/elections",
+          label: this.$t('menu.elections'),
+          route: '/trails/elections',
         },
         {
-          label: this.$t("menu.proposals"),
-          route: "/trails/ballots",
+          label: this.$t('menu.proposals'),
+          route: '/trails/ballots',
         },
         {
-          label: this.$t("menu.resolve"),
-          route: "/resolve",
+          label: this.$t('menu.resolve'),
+          route: '/resolve',
           children: [
-            { label: this.$t("menu.welcome"), route: "/resolve" },
-            { label: this.$t("menu.elections"), route: "/resolve/elections" },
+            { label: this.$t('menu.welcome'), route: '/resolve' },
+            { label: this.$t('menu.elections'), route: '/resolve/elections' },
             {
-              label: this.$t("menu.arbitrator"),
-              route: "/resolve/arbitrator",
+              label: this.$t('menu.arbitrator'),
+              route: '/resolve/arbitrator',
             },
-            { label: this.$t("menu.cases"), route: "/resolve/cases" },
+            { label: this.$t('menu.cases'), route: '/resolve/cases' },
           ],
         },
       ],
@@ -46,8 +46,8 @@ export default {
       this.localFileter = this.activeFilter;
     },
     $route(to) {
-      if (!to.path.includes("/trails/ballots")) {
-        this.localFileter = "";
+      if (!to.path.includes('/trails/ballots')) {
+        this.localFileter = '';
       }
     },
   },
