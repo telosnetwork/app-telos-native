@@ -2,55 +2,55 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'HeaderMenu',
-  computed: {
-    ...mapGetters('accounts', ['isAuthenticated']),
-  },
-  props: {
-    activeFilter: {},
-  },
-  data() {
-    return {
-      menuItems: [
-        {
-          label: this.$t('menu.daos'),
-          route: '/trails/treasuries',
-        },
-        {
-          label: this.$t('menu.elections'),
-          route: '/trails/elections',
-        },
-        {
-          label: this.$t('menu.proposals'),
-          route: '/trails/ballots',
-        },
-        {
-          label: this.$t('menu.resolve'),
-          route: '/resolve',
-          children: [
-            { label: this.$t('menu.welcome'), route: '/resolve' },
-            { label: this.$t('menu.elections'), route: '/resolve/elections' },
-            {
-              label: this.$t('menu.arbitrator'),
-              route: '/resolve/arbitrator',
-            },
-            { label: this.$t('menu.cases'), route: '/resolve/cases' },
-          ],
-        },
-      ],
-      localFileter: this.activeFilter,
-    };
-  },
-  watch: {
-    activeFilter: function () {
-      this.localFileter = this.activeFilter;
+    name: 'HeaderMenu',
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
     },
-    $route(to) {
-      if (!to.path.includes('/trails/ballots')) {
-        this.localFileter = '';
-      }
+    props: {
+        activeFilter: {},
     },
-  },
+    data() {
+        return {
+            menuItems: [
+                {
+                    label: this.$t('menu.daos'),
+                    route: '/trails/treasuries',
+                },
+                {
+                    label: this.$t('menu.elections'),
+                    route: '/trails/elections',
+                },
+                {
+                    label: this.$t('menu.proposals'),
+                    route: '/trails/ballots',
+                },
+                {
+                    label: this.$t('menu.resolve'),
+                    route: '/resolve',
+                    children: [
+                        { label: this.$t('menu.welcome'), route: '/resolve' },
+                        { label: this.$t('menu.elections'), route: '/resolve/elections' },
+                        {
+                            label: this.$t('menu.arbitrator'),
+                            route: '/resolve/arbitrator',
+                        },
+                        { label: this.$t('menu.cases'), route: '/resolve/cases' },
+                    ],
+                },
+            ],
+            localFileter: this.activeFilter,
+        };
+    },
+    watch: {
+        activeFilter: function () {
+            this.localFileter = this.activeFilter;
+        },
+        $route(to) {
+            if (!to.path.includes('/trails/ballots')) {
+                this.localFileter = '';
+            }
+        },
+    },
 };
 </script>
 
