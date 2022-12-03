@@ -1,5 +1,5 @@
 <template>
-  <div class="container row">
+  <div class="container1 row">
     <div class="primary col-sm-12 col-md-6">
       <intro />
     </div>
@@ -10,19 +10,19 @@
 </template>
 
 <script>
-import Intro from "./Intro.vue";
-import ElectionsStatus from "./ElectionsStatus.vue";
+import Intro from './Intro.vue';
+import ElectionsStatus from './ElectionsStatus.vue';
 
 export default {
-  components: {
-    Intro,
-    ElectionsStatus,
-  },
+    components: {
+        Intro,
+        ElectionsStatus,
+    },
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
+.container1 {
   display: flex;
   flex-direction: row;
 }
