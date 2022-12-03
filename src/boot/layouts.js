@@ -7,8 +7,8 @@ import Gravatar from 'vue-gravatar';
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(({ app }) => {
-  app.component('LayoutMain', AuthLayout);
-  app.component('LayoutEmpty', EmptyLayout);
-  app.component('LayoutGuest', GuestLayout);
-  app.component('v-gravatar', Gravatar);
+    app.component('LayoutMain', AuthLayout);
+    app.component('LayoutEmpty', EmptyLayout);
+    app.component('LayoutGuest', GuestLayout);
+    app.component('v-gravatar', Gravatar);
 });
