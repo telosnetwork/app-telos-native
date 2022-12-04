@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isResolveStoresAvailable" class="container">
+  <div v-if="isResolveStoresAvailable">
     <div class="q-pb-xl stepper-wrap">
       <q-btn-toggle
         :disable="[3, 4].includes(getArbitratorStatus)"
@@ -24,73 +24,68 @@
 </template>
 
 <script>
-import AssignedCases from "./AssignedCases.vue";
-import { mapGetters } from "vuex";
-import { getAvailableArbitratorStatus } from "../../util";
+import AssignedCases from './AssignedCases.vue';
+import { mapGetters } from 'vuex';
+import { getAvailableArbitratorStatus } from '../../util';
 
 export default {
-  components: {
-    AssignedCases,
-  },
-  data() {
-    return {
-      form: null,
-      formType: null,
-      status: null,
-    };
-  },
-  methods: {
-    closeModal() {
-      this.form = null;
+    components: {
+        AssignedCases,
     },
-    async changeArbStatus(new_status) {
-      const newArbStatusActions = [
-        {
-          account: "testtelosarb",
-          name: "newarbstatus",
-          data: {
-            arbitrator: this.account,
-            new_status,
-          },
+    data() {
+        return {
+            form: null,
+            formType: null,
+            status: null,
+        };
+    },
+    methods: {
+        closeModal() {
+            this.form = null;
         },
-      ];
-      try {
-        await this.$store.$api.signTransaction(newArbStatusActions);
-      } catch (err) {
-        console.log("changeArbStatus error: ", err);
-      }
+        async changeArbStatus(new_status) {
+            const newArbStatusActions = [
+                {
+                    account: 'testtelosarb',
+                    name: 'newarbstatus',
+                    data: {
+                        arbitrator: this.account,
+                        new_status,
+                    },
+                },
+            ];
+            try {
+                await this.$store.$api.signTransaction(newArbStatusActions);
+            } catch (err) {
+                console.log('changeArbStatus error: ', err);
+            }
+        },
     },
-  },
-  computed: {
-    ...mapGetters({
-      arbSeatsAvailable: "resolve/arbSeatsAvailable",
-      isResolveStoresAvailable: "resolve/isResolveStoresAvailable",
-      selfArbitrator: "resolve/isArbitrator",
-      account: "accounts/account",
-    }),
-    getArbitratorStatus() {
-      return getAvailableArbitratorStatus(this.selfArbitrator);
+    computed: {
+        ...mapGetters({
+            arbSeatsAvailable: 'resolve/arbSeatsAvailable',
+            isResolveStoresAvailable: 'resolve/isResolveStoresAvailable',
+            selfArbitrator: 'resolve/isArbitrator',
+            account: 'accounts/account',
+        }),
+        getArbitratorStatus() {
+            return getAvailableArbitratorStatus(this.selfArbitrator);
+        },
     },
-  },
-  updated() {
-    const selfArbitrator = this.selfArbitrator;
-    if (!selfArbitrator) this.status = null;
-    const { arb_status } = selfArbitrator;
-    this.status = arb_status;
-  },
+    updated() {
+        const selfArbitrator = this.selfArbitrator;
+        if (!selfArbitrator) this.status = null;
+        const { arb_status } = selfArbitrator;
+        this.status = arb_status;
+    },
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-
-  .stepper-wrap {
-    flex: 1;
-  }
-  .form-wrapper {
-    flex: 1;
-  }
+.stepper-wrap {
+  flex: 1;
+}
+.form-wrapper {
+  flex: 1;
 }
 </style>
