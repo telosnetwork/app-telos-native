@@ -1,5 +1,6 @@
 <script>
 import { mapGetters } from 'vuex';
+import ResolveMenu from './ResolveMenu.vue';
 
 export default {
     name: 'HeaderMenu',
@@ -8,6 +9,9 @@ export default {
     },
     props: {
         activeFilter: {},
+    },
+    components: {
+        ResolveMenu,
     },
     data() {
         return {
@@ -23,20 +27,7 @@ export default {
                 {
                     label: this.$t('menu.proposals'),
                     route: '/trails/ballots',
-                },
-                {
-                    label: this.$t('menu.resolve'),
-                    route: '/resolve',
-                    children: [
-                        { label: this.$t('menu.welcome'), route: '/resolve' },
-                        { label: this.$t('menu.elections'), route: '/resolve/elections' },
-                        {
-                            label: this.$t('menu.arbitrator'),
-                            route: '/resolve/arbitrator',
-                        },
-                        { label: this.$t('menu.cases'), route: '/resolve/cases' },
-                    ],
-                },
+                }
             ],
             localFileter: this.activeFilter,
         };
@@ -69,27 +60,16 @@ q-tabs(
       :name="item.label"
       :label="item.label"
       :to="item.route"
-      v-if="item.route && !item.filter && !item.children"
+      v-if="item.route && !item.filter"
     )
     q-route-tab.q-mx-sm.header-menu-tab(
       :key="index"
       :name="item.label"
       :label="item.label"
       :to="item.route"
-      v-if="item.route && item.filter && !item.children"
+      v-if="item.route && item.filter"
       @click="item.filter ? $emit('set-active-filter', item.filter) : ''"
     )
-    q-btn-dropdown.header-submenu-tab(auto-close stretch flat :label="item.label" v-if="item.children")
-      q-list
-        q-item(
-          v-for="(child, index) in item.children"
-          :key="index"
-          clickable
-          @click="$router.push(child.route)"
-          :class="{ hideMenuItem: child.label === 'Arbitrator' && !isArbitrator}"
-        )
-          q-item-section
-            q-item-label {{ child.label }}
     q-btn-dropdown.header-submenu-tab(auto-close stretch flat label="Decide" v-if="item.length > 0")
       q-list
         q-route-tab.q-mx-sm.header-submenu-item(
@@ -102,6 +82,7 @@ q-tabs(
           :class="[el.filter === localFileter ? 'active-tab': '']"
         )
     div.custom-separator
+  ResolveMenu
 </template>
 
 <style lang="sass">
