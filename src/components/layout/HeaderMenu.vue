@@ -6,6 +6,10 @@ export default {
     name: 'HeaderMenu',
     computed: {
         ...mapGetters('accounts', ['isAuthenticated']),
+        isTestnet () {
+            console.log('process.env.NETWORK: ', process.env.NETWORK);
+            return process.env.NETWORK === 'testnet';
+        }
     },
     props: {
         activeFilter: {},
@@ -82,7 +86,9 @@ q-tabs(
           :class="[el.filter === localFileter ? 'active-tab': '']"
         )
     div.custom-separator
-  ResolveMenu
+  ResolveMenu(
+    v-if="isTestnet"
+  )
 </template>
 
 <style lang="sass">
