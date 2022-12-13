@@ -1,6 +1,10 @@
 <script>
+import ResolveSidebarItem from './ResolveSidebarItem.vue';
 export default {
     name: 'LeftMenu',
+    components: {
+        ResolveSidebarItem,
+    },
     data() {
         return {
             menuItems: [
@@ -68,6 +72,7 @@ q-scroll-area.left-menu(style="height: 100%; border-right: 1px solid #ddd")
       :to="item.route"
       ripple
     )
+    ResolveSidebarItem()
 </template>
 
 <style lang="sass">
