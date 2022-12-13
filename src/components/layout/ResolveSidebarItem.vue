@@ -2,6 +2,7 @@
 	<q-expansion-item
 		label="Resolve"
 		id="resolve-sidebar-menu"
+		:model-value="isResolveRoute"
 	>
 	<template v-slot:header>
 		<q-route-tab class="aline-left left-menu-tab header">
@@ -17,7 +18,11 @@
 
 <script>
 export default {
-
+    data () {
+        return {
+            isResolveRoute: this.$route.path.includes('/resolve')
+        };
+    },
 };
 </script>
 
