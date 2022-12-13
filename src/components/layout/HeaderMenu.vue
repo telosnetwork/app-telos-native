@@ -2,13 +2,14 @@
 import { mapGetters } from 'vuex';
 import ResolveMenu from './ResolveMenu.vue';
 
+const NETWORK_ENV = process.env.NETWORK_ENV;
+
 export default {
     name: 'HeaderMenu',
     computed: {
         ...mapGetters('accounts', ['isAuthenticated']),
         isTestnet () {
-            console.log('process.env.NETWORK: ', process.env.NETWORK);
-            return process.env.NETWORK === 'testnet';
+            return NETWORK_ENV === 'testnet';
         }
     },
     props: {
