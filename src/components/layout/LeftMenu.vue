@@ -1,5 +1,8 @@
 <script>
 import ResolveSidebarItem from './ResolveSidebarItem.vue';
+
+const NETWORK_ENV = process.env.NETWORK_ENV;
+
 export default {
     name: 'LeftMenu',
     components: {
@@ -39,6 +42,11 @@ export default {
             this.clientWidth = window.innerWidth;
         },
     },
+    computed : {
+        isTestnet () {
+            return NETWORK_ENV === 'testnet';
+        }
+    }
 };
 </script>
 
@@ -72,7 +80,9 @@ q-scroll-area.left-menu(style="height: 100%; border-right: 1px solid #ddd")
       :to="item.route"
       ripple
     )
-    ResolveSidebarItem()
+    ResolveSidebarItem(
+      v-if="isTestnet"
+    )
 </template>
 
 <style lang="sass">

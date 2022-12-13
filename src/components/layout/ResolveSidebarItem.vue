@@ -12,17 +12,24 @@
 		<q-route-tab label="Welcome" to="/resolve" class="aline-left q-my-lg left-menu-tab resolve-route" />
 		<q-route-tab label="Elections" to="/resolve/elections" class="aline-left q-my-lg left-menu-tab resolve-route" />
 		<q-route-tab label="Cases" to="/resolve/cases" class="aline-left q-my-lg left-menu-tab resolve-route" />
-		<q-route-tab label="Arbitrators" to="/resolve/arbitrator" class="aline-left q-my-lg left-menu-tab resolve-route" />
+		<q-route-tab v-if="selfArbitrator" label="Arbitrator" to="/resolve/arbitrator" class="aline-left q-my-lg left-menu-tab resolve-route" />
 	</q-expansion-item>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     data () {
         return {
             isResolveRoute: this.$route.path.includes('/resolve')
         };
     },
+    computed: {
+        ...mapGetters ({
+            selfArbitrator: 'resolve/isArbitrator',
+        }),
+    }
 };
 </script>
 
