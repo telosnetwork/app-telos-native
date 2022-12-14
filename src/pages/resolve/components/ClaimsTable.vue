@@ -278,4 +278,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.q-tooltip {
+  font-size: 1rem;
+  line-height: 1rem;
+}
+</style>

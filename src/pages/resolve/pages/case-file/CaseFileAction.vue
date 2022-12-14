@@ -175,4 +175,9 @@ export default {
   font-size: 2rem;
   line-height: 2.2rem;
 }
+
+.q-tooltip {
+  font-size: 1rem;
+  line-height: 1rem;
+}
 </style>

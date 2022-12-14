@@ -3,21 +3,6 @@
     <section class="heading">
       <h3>{{ getCurrentRouteName }}</h3>
     </section>
-    <!-- <div class="nav-tabs">
-      <div class="q-pa-md">
-        <div class="q-gutter-y-md" style="max-width: 600px">
-          <q-tabs v-model="tab" class="text-teal">
-            <router-link to="/resolve/">
-              <q-tab name="home" icon="home" label="Home" />
-            </router-link>
-            <router-link to="/resolve/elections">
-              <q-tab name="mails" icon="mail" label="Elections" />
-            </router-link>
-            <q-tab name="movies" icon="movie" label="Movies" />
-          </q-tabs>
-        </div>
-      </div>
-    </div> -->
     <router-view></router-view>
   </div>
 </template>
@@ -114,15 +99,6 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import url("../../css/app.sass");
-
-.q-tooltip {
-  font-size: 1rem;
-  line-height: 1rem;
-}
-</style>
 
 <style scoped lang="scss">
 .heading {
