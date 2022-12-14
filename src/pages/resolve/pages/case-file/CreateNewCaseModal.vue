@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="create-new-case-modal">
         <q-card-section>
             <div class="text-h6">Create New Case</div>
         </q-card-section>
@@ -114,4 +114,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.create-new-case-modal {
+    min-width: 450px;
+}
+</style>

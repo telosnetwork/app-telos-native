@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isResolveStoresAvailable && caseFile">
+    <div v-if="isResolveStoresAvailable && caseFile" id="#resolve-case-file-page">
         <div class="row">
             <div class="part">
                 <intro-card heading="Case Summary">
@@ -105,7 +105,6 @@ import AddClaimForm from './AddClaimForm.vue';
 import ShredCaseForm from '../../components/ShredCaseForm.vue';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
-import OffersTable from '../../components/OffersTable.vue';
 import { fetchClaims } from '../../util';
 
 export default {
@@ -115,8 +114,7 @@ export default {
         CaseSteps,
         CaseFileActions,
         AddClaimForm,
-        ShredCaseForm,
-        OffersTable
+        ShredCaseForm
     },
     data() {
         return {
@@ -264,7 +262,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .row {
     flex-direction: row;
 

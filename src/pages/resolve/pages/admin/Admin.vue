@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isResolveStoresAvailable" class="container">
+    <div v-if="isResolveStoresAvailable" id="resolve-admin-page">
         <div class="q-pa-md stepper-wrap">
             <q-stepper
                 v-model="electionStatus"
@@ -185,8 +185,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.container {
+<style lang="scss">
+#resolve-admin-page {
     display: flex;
     flex-direction: row;
 
