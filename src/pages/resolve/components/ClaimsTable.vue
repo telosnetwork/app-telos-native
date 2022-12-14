@@ -198,9 +198,7 @@
 </template>
 
 <script>
-import { fetchClaims } from '../util';
 import { CLAIM_STATUS_LIST, CLAIM_CATEGORY_LIST } from '../constants/claim';
-import IpfsLink from './IpfsLink.vue';
 import RespondClaimForm from './RespondClaimForm.vue';
 import UpdateClaimForm from './UpdateClaimForm.vue';
 import ReviewClaimForm from './ReviewClaimForm.vue';
@@ -210,7 +208,6 @@ import { mapGetters } from 'vuex';
 export default {
     props: ['caseId', 'caseFile', 'claims'],
     components: {
-        IpfsLink,
         RespondClaimForm,
         UpdateClaimForm,
         ReviewClaimForm,

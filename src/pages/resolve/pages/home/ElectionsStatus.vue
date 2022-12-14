@@ -51,7 +51,7 @@ export default {
             isResolveStoresAvailable: 'resolve/isResolveStoresAvailable'
         }),
         currentElectionStatus() {
-            this.currentElection.status;
+            return this.currentElection.status;
         },
         currentElectionContent() {
             let statusString =

@@ -2,7 +2,7 @@
     <div id="case-files-table" class="q-pt-xl">
         <q-table
             :title="finalTitle"
-            :rows="caseFiles"
+            :rows="useableCaseFiles"
             :columns="columns"
             row-key="name"
             class="resolve-table"
@@ -112,7 +112,7 @@ export default {
         };
     },
     computed: {
-        caseFiles() {
+        useableCaseFiles() {
             return this.caseFiles || this.$store.state.resolve.case_files || [];
         },
         finalTitle() {

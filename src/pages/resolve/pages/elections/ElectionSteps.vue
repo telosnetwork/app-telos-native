@@ -241,8 +241,8 @@ export default {
             return false;
         },
         isRegisterCandidateButtonVisible() {
-            const { resolve, accounts } = this.$store.state;
-            const { config, elections, nominees } = resolve;
+            const { resolve } = this.$store.state;
+            const { nominees } = resolve;
             const { candidates } = this.currentElection;
             const foundNominee = nominees.find(
                 nominee => nominee.nominee_name === this.account

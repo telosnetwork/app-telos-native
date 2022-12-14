@@ -110,7 +110,7 @@ export default {
                     },
                     onUploadProgress: updateProgress
                 };
-                const { data } = await axios.post(
+                await axios.post(
                     'https://api.dstor.cloud/v1/upload/',
                     formData,
                     config
@@ -178,7 +178,7 @@ export default {
         fileElem.addEventListener('change', this.onFileSelect);
         fileSelect.addEventListener(
             'click',
-            e => {
+            () => {
                 if (fileElem) {
                     fileElem.click();
                 }

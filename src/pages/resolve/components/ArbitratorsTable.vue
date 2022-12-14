@@ -100,7 +100,7 @@ export default {
         getArbStatus(statusCode) {
             return ARBITRATOR_STATUS_LIST[statusCode];
         },
-        isArbExpired(props) {
+        isArbExpired() {
             return false;
         }
     }
