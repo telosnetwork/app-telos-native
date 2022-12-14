@@ -5,14 +5,15 @@
 1. Administrator initializes configuration: `setconfig`
 
 Before any elections are initiated or nominees submitted, the contract administrator should set the config with the following values
-- `max_elected_arbs`: the maximum number of arbitrators that can be elected. This should represent the maximum number of arbitrators that will serve during any given term
-- `election_duration`: the amount of time (in seconds) that an election, not including runoff, should consist of. This does *not* include the nomination period (precedes "add candidate" period).
-- `runoff_duration`: same as `election_duration` except would only occur after an election that results in a tie
-- `election_add_candidates_duration`: the amount of time during which nominees can be added as a candidate for the election.
-- `arbitrator_term_length`: the amount of time, in seconds, that a winning election candidate will have arbitrator authority. After this period the contract administrator will have to initiate the next "add candidate" period.
-- `max_claims_per_case`: maximum number of claims that a claimant can submit for a case
-- `fee_usd`: todo
-- `claimant_accepting_offers_duration`: todo
+
+-   `max_elected_arbs`: the maximum number of arbitrators that can be elected. This should represent the maximum number of arbitrators that will serve during any given term
+-   `election_duration`: the amount of time (in seconds) that an election, not including runoff, should consist of. This does _not_ include the nomination period (precedes "add candidate" period).
+-   `runoff_duration`: same as `election_duration` except would only occur after an election that results in a tie
+-   `election_add_candidates_duration`: the amount of time during which nominees can be added as a candidate for the election.
+-   `arbitrator_term_length`: the amount of time, in seconds, that a winning election candidate will have arbitrator authority. After this period the contract administrator will have to initiate the next "add candidate" period.
+-   `max_claims_per_case`: maximum number of claims that a claimant can submit for a case
+-   `fee_usd`: todo
+-   `claimant_accepting_offers_duration`: todo
 
 2. Users start nominating themselves
 
@@ -36,4 +37,4 @@ If no tie then skip next step
 
 ## Arbitration
 
-7. 
+7.
