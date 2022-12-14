@@ -1,5 +1,8 @@
 <template>
-    <div v-if="isResolveStoresAvailable && caseFile" id="#resolve-case-file-page">
+    <div
+        v-if="isResolveStoresAvailable && caseFile"
+        id="#resolve-case-file-page"
+    >
         <div class="row">
             <div class="part">
                 <intro-card heading="Case Summary">
