@@ -1,5 +1,5 @@
 <template>
-    <a :href="hashLink" class="hash-link" target="_blank">{{
+    <a :href="hashLink" class="resolve-hash-link" target="_blank">{{
         hash.substring(0, this.length || 8)
     }}</a>
 </template>
@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style scoped>
-.hash-link {
+.resolve-hash-link {
     text-decoration: underline;
     font-weight: bold;
     color: inherit;

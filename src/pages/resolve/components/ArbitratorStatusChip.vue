@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="arbitrator-status-chip">
         <q-chip
             v-if="getArbitratorStatus(arbitrator) === 1"
             text-color="white"
@@ -43,8 +43,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.container {
+<style lang="scss">
+.arbitrator-status-chip {
     display: inline;
 }
 </style>

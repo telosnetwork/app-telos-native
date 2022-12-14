@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="respond-claim-form">
         <q-card-section>
             <div class="text-h6">Respond to Claim</div>
         </q-card-section>
@@ -70,4 +70,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.respond-claim-form {
+    min-width: 450px;
+}
+</style>

@@ -93,9 +93,6 @@ export default {
         getOfferStatus(index) {
             return OFFER_STATUS_LIST[index];
         },
-        getStatus(statusId) {
-            return DECISION_CLASS_LIST[statusId];
-        },
         canAccountAcceptOffer(status) {
             if (this.account !== this.caseFile.claimant) return false;
             if (status !== 1) return false;
@@ -117,4 +114,6 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="scss">
+
+</style>

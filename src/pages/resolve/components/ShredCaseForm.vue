@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="shred-case-form">
         <q-card-section>
             <div class="text-h6">Delete Case</div>
         </q-card-section>
@@ -49,4 +49,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.shred-case-form {
+    min-width: 450px;
+}
+</style>

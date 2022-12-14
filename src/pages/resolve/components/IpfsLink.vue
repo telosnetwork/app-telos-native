@@ -1,5 +1,5 @@
 <template>
-    <a :href="hashLink" class="hash-link" target="_blank">{{ hash }}</a>
+    <a :href="hashLink" class="resolve-hash-link" target="_blank">{{ hash }}</a>
 </template>
 
 <script>
@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style scoped>
-.hash-link {
+.resolve-hash-link {
     text-decoration: none;
     color: inherit;
     overflow: hidden;

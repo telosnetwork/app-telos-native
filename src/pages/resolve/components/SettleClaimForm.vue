@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="settle-claim-form">
         <q-card-section>
             <div class="text-h6">Settle claim</div>
             <p>
@@ -101,4 +101,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.settle-claim-form {
+    min-width: 450px;
+}
+</style>

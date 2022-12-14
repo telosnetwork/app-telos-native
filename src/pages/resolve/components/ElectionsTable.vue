@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div id="elections-table">
         <div class="q-py-lg">
             <q-table
                 title="Elections"
@@ -163,68 +163,71 @@ export default {
 </script>
 
 <style lang="scss">
-.resolve-table {
-    .q-table__top {
-        background-color: #571aff;
-    }
+#elections-table {
+    .resolve-table {
+        .q-table__top {
+            background-color: #571aff;
+        }
 
-    .q-table__title {
-        color: #ffffff;
-    }
+        .q-table__title {
+            color: #ffffff;
+        }
 
-    .expanded-row {
+        .expanded-row {
+            td {
+            }
+        }
+
         td {
-        }
-    }
+            &.default {
+                text-align: left;
 
-    td {
-        &.default {
-            text-align: left;
-
-            span:nth-child(1) {
-                font-family: 'Roboto';
-                font-style: normal;
-                font-weight: 700;
-                font-size: 11px;
-                line-height: 37px;
-                text-transform: uppercase;
-                color: #071a5f;
-                opacity: 0.5;
-            }
-
-            &:nth-child(2) {
-                font-family: 'Roboto';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 14px;
-                line-height: 37px;
-                color: #333333;
-            }
-        }
-
-        &.ballot_name {
-            flex-direction: column;
-            text-align: left;
-
-            .info {
-                flex-direction: column;
-
-                .ballot-name {
-                    font-weight: 400;
-                    font-size: 18px;
+                span:nth-child(1) {
+                    font-family: 'Roboto';
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 11px;
                     line-height: 37px;
-                    color: #571aff;
+                    text-transform: uppercase;
+                    color: #071a5f;
+                    opacity: 0.5;
                 }
 
-                .ballot-subtitle {
+                &:nth-child(2) {
+                    font-family: 'Roboto';
+                    font-style: normal;
                     font-weight: 400;
                     font-size: 14px;
-                    line-height: 18px;
+                    line-height: 37px;
                     color: #333333;
-                    opacity: 0.5;
+                }
+            }
+
+            &.ballot_name {
+                flex-direction: column;
+                text-align: left;
+
+                .info {
+                    flex-direction: column;
+
+                    .ballot-name {
+                        font-weight: 400;
+                        font-size: 18px;
+                        line-height: 37px;
+                        color: #571aff;
+                    }
+
+                    .ballot-subtitle {
+                        font-weight: 400;
+                        font-size: 14px;
+                        line-height: 18px;
+                        color: #333333;
+                        opacity: 0.5;
+                    }
                 }
             }
         }
     }
 }
+
 </style>

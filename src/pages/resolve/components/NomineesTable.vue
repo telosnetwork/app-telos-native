@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-md" v-if="nomineeData">
+    <div class="q-pa-md" v-if="nomineeData" id="resolve-nominees-table">
         <!-- <q-banner inline-actions class="text-white bg-red" v-if="isPastAddCandidates">
       Candidacy nomination period for current election has already passed
     </q-banner> -->
@@ -7,7 +7,6 @@
             title="Nominees"
             :rows="nomineeData"
             :columns="columns"
-            :rows="nomineeData"
             row-key="name"
         >
             <template v-slot:top>
@@ -256,18 +255,20 @@ export default {
 };
 </script>
 
-<style scoped>
-.header-wrap {
-    display: flex;
-    flex: 1;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.header-buttons {
-}
+<style lang="scss">
+#resolve-nominees-table {
+    .header-wrap {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .header-buttons {
+    }
 
-.profile-avatar {
-    display: inline;
-    margin-right: 8px;
+    .profile-avatar {
+        display: inline;
+        margin-right: 8px;
+    }
 }
 </style>

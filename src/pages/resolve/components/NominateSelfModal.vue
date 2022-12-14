@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="nominate-self-form">
         <q-card-section>
             <div class="text-h6">Nominate Self ({{ account_name }})</div>
         </q-card-section>
@@ -69,4 +69,8 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="scss">
+.nominate-self-form {
+    min-width: 450px;
+}
+</style>

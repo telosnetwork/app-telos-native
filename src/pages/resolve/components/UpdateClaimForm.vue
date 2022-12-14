@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="update-claim-form">
         <q-card-section>
             <div class="text-h6">Update Claim</div>
         </q-card-section>
@@ -70,4 +70,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.update-claim-form {
+    min-width: 450px;
+}
+</style>

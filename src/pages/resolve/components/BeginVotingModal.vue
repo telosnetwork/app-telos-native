@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="begin-voting-form">
         <q-card-section>
             <div class="text-h6">Start Voting Period</div>
         </q-card-section>
@@ -80,4 +80,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.begin-voting-form {
+    min-width: 450px;
+}
+</style>

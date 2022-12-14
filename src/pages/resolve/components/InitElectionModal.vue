@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card id="init-election-form">
         <q-card-section>
             <div class="text-h6">Start Election Preparation</div>
         </q-card-section>
@@ -81,4 +81,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+#init-election-form {
+    min-width: 450px;
+}
+</style>

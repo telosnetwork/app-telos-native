@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="respond-offer-form">
         <q-card-section>
             <div class="text-h6">Respond</div>
         </q-card-section>
@@ -93,7 +93,7 @@ export default {
             }
             respondOfferActions.push({
                 account: 'testtelosarb',
-                name: `respondoffer`,
+                name: 'respondoffer',
                 data: {
                     case_id: this.caseId,
                     offer_id: this.offer.offer_id,
@@ -148,13 +148,15 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.error {
-    color: red;
-}
-.total {
-    text-align: center;
-    font-size: 1.3rem;
-    margin-top: 0;
+<style lang="scss">
+.respond-offer-form {
+    .error {
+        color: red;
+    }
+    .total {
+        text-align: center;
+        font-size: 1.3rem;
+        margin-top: 0;
+    }
 }
 </style>

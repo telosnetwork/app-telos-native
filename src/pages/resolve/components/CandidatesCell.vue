@@ -1,5 +1,5 @@
 <template>
-    <q-td key="candidates">
+    <q-td key="candidates" class="candidates-cell">
         <p class="header">Candidates</p>
         <div
             v-for="candidate of election.candidates"
@@ -138,59 +138,61 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.header {
-    font-family: Roboto;
-}
-
-td.text-left {
-    text-align: left;
-}
-
-.candidate-item {
-    padding: 4px;
-    display: flex;
-    flex: 1;
-    align-self: center;
-    margin-right: 12px;
-
-    a {
-        color: inherit;
+<style lang="scss">
+.candidates-cell {
+    .header {
+        font-family: Roboto;
     }
 
-    .remove-icon {
-        background-color: red;
-        border-radius: 50%;
-
-        &:hover {
-            cursor: pointer;
-        }
+    td.text-left {
+        text-align: left;
     }
 
-    .data {
+    .candidate-item {
+        padding: 4px;
         display: flex;
-        flex-direction: row;
-        margin-right: 24px;
+        flex: 1;
+        align-self: center;
+        margin-right: 12px;
 
-        .avatar-wrap {
-            margin-right: 8px;
+        a {
+            color: inherit;
         }
-        .info {
-            width: 330px;
-            height: 24px;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row;
 
-            .text {
-                line-height: 24px;
+        .remove-icon {
+            background-color: red;
+            border-radius: 50%;
+
+            &:hover {
+                cursor: pointer;
             }
         }
-    }
 
-    .bar-wrap {
-        flex: 1;
-        height: 24px;
+        .data {
+            display: flex;
+            flex-direction: row;
+            margin-right: 24px;
+
+            .avatar-wrap {
+                margin-right: 8px;
+            }
+            .info {
+                width: 330px;
+                height: 24px;
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+
+                .text {
+                    line-height: 24px;
+                }
+            }
+        }
+
+        .bar-wrap {
+            flex: 1;
+            height: 24px;
+        }
     }
 }
 </style>

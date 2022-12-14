@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="set-ruling-form">
         <q-card-section>
             <div class="text-h6">Finalize Case</div>
         </q-card-section>
@@ -80,4 +80,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.set-ruling-form {
+    min-width: 450px;
+}
+</style>

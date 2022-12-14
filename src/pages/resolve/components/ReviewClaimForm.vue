@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="review-claim-form">
         <q-card-section>
             <div class="text-h6">Request More Info</div>
             <p>
@@ -109,10 +109,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.total {
-    text-align: center;
-    font-size: 1.3rem;
-    margin-top: 0;
+<style lang="scss">
+.respond-claim-form {
+    .total {
+        text-align: center;
+        font-size: 1.3rem;
+        margin-top: 0;
+    }
 }
 </style>

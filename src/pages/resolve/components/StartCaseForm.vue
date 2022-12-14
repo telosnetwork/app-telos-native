@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="start-case-form">
         <q-card-section>
             <div class="text-h6">Submit Offer</div>
         </q-card-section>
@@ -64,10 +64,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.total {
-    text-align: center;
-    font-size: 1.3rem;
-    margin-top: 0;
+<style lang="scss">
+.start-case-form {
+    .total {
+        text-align: center;
+        font-size: 1.3rem;
+        margin-top: 0;
+    }
 }
 </style>

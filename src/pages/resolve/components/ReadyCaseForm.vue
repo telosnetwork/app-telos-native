@@ -1,5 +1,5 @@
 <template>
-    <q-card style="min-width: 450px">
+    <q-card class="ready-case-form">
         <q-card-section>
             <div class="text-h6">Ready Case</div>
         </q-card-section>
@@ -135,8 +135,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.error {
-    color: red;
+<style lang="scss">
+.ready-case-form {
+    min-width: 450px;
+    .error {
+        color: red;
+    }
 }
 </style>

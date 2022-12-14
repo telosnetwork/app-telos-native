@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pt-xl">
+    <div id="case-files-table" class="q-pt-xl">
         <q-table
             :title="finalTitle"
             :rows="caseFiles"
@@ -133,19 +133,21 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.arbitrator-cell {
-    padding: 10px 0;
-}
-.profile-item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+<style lang="scss">
+#case-files-table {
+    .arbitrator-cell {
+        padding: 10px 0;
+    }
+    .profile-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
 
-    span {
-        display: inline-block;
-        line-height: 24px;
+        span {
+            display: inline-block;
+            line-height: 24px;
+        }
     }
 }
 </style>

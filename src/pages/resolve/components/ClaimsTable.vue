@@ -1,5 +1,5 @@
 <template>
-    <q-table title="Claims" :rows="claims" :columns="columns" row-key="name">
+    <q-table id="claims-table" title="Claims" :rows="claims" :columns="columns" row-key="name">
         <template v-slot:body-cell-status="props">
             <q-td :props="props">
                 <span>&nbsp;{{ getStatus(props.row.status) }}</span>
@@ -308,8 +308,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.q-tooltip {
-    font-size: 1rem;
-    line-height: 1rem;
+#claims-table {
+    .q-tooltip {
+        font-size: 1rem;
+        line-height: 1rem;
+    }
 }
 </style>
