@@ -1,5 +1,5 @@
 <template>
-    <div class="container1 row">
+    <div id="resolve-home-page" class="row">
         <div class="primary col-sm-12 col-md-6">
             <intro />
         </div>
@@ -21,13 +21,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.container1 {
+<style lang="scss">
+#resolve-home-page {
     display: flex;
     flex-direction: row;
-}
-.primary,
-.secondary {
-    margin-bottom: 48px;
+
+    .primary,
+    .secondary {
+        margin-bottom: 48px;
+    }
 }
 </style>

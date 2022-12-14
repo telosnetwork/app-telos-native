@@ -1,5 +1,5 @@
 <template>
-    <div class="intro">
+    <div id="resolve-intro">
         <div class="info">
             <p class="first">
                 When valuable assets are in question, there can arise disputes
@@ -59,8 +59,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.info {
+<style lang="scss">
+#resolve-intro {
     margin-right: 80px;
     p.first {
         font-style: normal;

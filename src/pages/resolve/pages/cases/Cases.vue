@@ -1,5 +1,5 @@
 <template>
-    <div class="cases-page">
+    <div id="resolve-cases-page">
         <div class="top-row row">
             <intro-card
                 class="col-xs-12 col-sm-6"
@@ -63,8 +63,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.cases-page {
+<style lang="scss">
+#resolve-cases-page {
     .top-row {
         display: flex;
         flex-direction: row;

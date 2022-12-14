@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="resolve-meet-arbitrators">
         <q-card class="meet-arbitrators-card">
             <h3>Meet Your Arbitrators</h3>
             <p>
@@ -52,28 +52,30 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.meet-arbitrators-card {
-    padding: 2rem;
+<style lang="scss">
+#resolve-meet-arbitrators {
+    .meet-arbitrators-card {
+        padding: 2rem;
 
-    .avatar-wrap {
-        display: inline;
-    }
+        .avatar-wrap {
+            display: inline;
+        }
 
-    h3 {
-        font-style: normal;
-        font-weight: 600;
-        font-size: 24px;
-        line-height: 37px;
-        color: rgba(51, 51, 51, 0.5);
-    }
+        h3 {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 37px;
+            color: rgba(51, 51, 51, 0.5);
+        }
 
-    ul {
-        list-style-type: none;
+        ul {
+            list-style-type: none;
 
-        a {
-            text-decoration: none;
-            color: inherit;
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
         }
     }
 }

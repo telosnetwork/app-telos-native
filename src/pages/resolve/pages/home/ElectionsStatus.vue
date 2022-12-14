@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap" v-if="isResolveStoresAvailable">
+    <div id="resolve-election-status" v-if="isResolveStoresAvailable">
         <h4 class="heading">{{ currentElectionContent.heading }}</h4>
         <p class="content q-pb-lg">{{ currentElectionContent.text }}</p>
         <q-btn
@@ -76,8 +76,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.wrap {
+<style lang="scss">
+#resolve-election-status {
     display: flex;
     flex-direction: column;
     justify-content: center;

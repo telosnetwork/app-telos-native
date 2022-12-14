@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div id="#resolve-case-steps">
         <div class="q-pa-md stepper-wrap">
             <q-stepper v-model="caseStatus" vertical color="primary" animated>
                 <q-step :name="0" title="Case Setup" icon="settings">
@@ -305,8 +305,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.container {
+<style lang="scss">
+#resolve-case-steps {
     display: flex;
     flex-direction: row;
 

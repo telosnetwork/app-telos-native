@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div id="resolve-election-steps">
         <div class="q-py-md stepper-wrap">
             <q-stepper
                 v-model="electionStatus"
@@ -291,8 +291,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.container {
+<style lang="scss">
+#resolve-election-steps {
     display: flex;
     flex-direction: row;
 

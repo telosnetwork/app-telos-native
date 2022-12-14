@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="resolve-elections-page">
         <div class="intro-row row">
             <div class="first col-xs-12 col-sm-6">
                 <intro-card heading="Elect Telos's Next Arbitrators">
@@ -118,35 +118,37 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.intro-row {
-    display: flex;
-    flex: 1;
-    flex-direction: row;
+<style lang="scss">
+#resolve-elections-page {
+    .intro-row {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
 
-    .first,
-    .second {
-    }
+        .first,
+        .second {
+        }
 
-    .first ul {
-        list-style: none;
-        padding-left: 0px;
+        .first ul {
+            list-style: none;
+            padding-left: 0px;
 
-        .nominee-item {
-            .profile-avatar {
-                margin-right: 12px;
-            }
+            .nominee-item {
+                .profile-avatar {
+                    margin-right: 12px;
+                }
 
-            a {
-                color: inherit;
-            }
+                a {
+                    color: inherit;
+                }
 
-            .remove-icon {
-                background-color: red;
-                border-radius: 50%;
+                .remove-icon {
+                    background-color: red;
+                    border-radius: 50%;
 
-                &:hover {
-                    cursor: pointer;
+                    &:hover {
+                        cursor: pointer;
+                    }
                 }
             }
         }
