@@ -348,7 +348,20 @@ export default {
         resolve: {
             admin_step_case_setup: 'Setup & Nominee Registration',
             admin_step_case_content_1: 'Admin is able to set the configuration parameters for the smart contract, including election duration, arbitration term length, and number of arbitration seats to be filled.',
-            admin_step_case_content_2: 'Therea are currently {seats} arbitration seats available'
+            admin_step_case_content_2: 'Therea are currently {seats} arbitration seats available',
+            admin_step_cand_reg: 'Candidate Registration',
+            admin_step_cand_reg_content: 'Nominees are able to add and remove themselves as an official candidate to the upcoming election.',
+            admin_step_election_ready: 'Election Ready to Start',
+            admin_step_election_ready_content: 'Election is ready to start pending administration launch',
+            admin_step_election_ready_cta: 'Start Election',
+            admin_step_voting: 'Voting',
+            admin_step_voting_content: 'Users are able to vote for the candidate(s) of choice.',
+            admin_step_election_finalization: 'Election Finalization',
+            admin_step_election_finalization_content: 'Voting has completed and admin needs to execute {endelection} action to process the vote results and begin the arbitration term for the winning candidates. Users will also be able to start nominating themselves for the next election, whenever that may happen to be.',
+            admin_step_election_finalization_cta: 'Finalize Election'
+
+
+
         }
     },
 };

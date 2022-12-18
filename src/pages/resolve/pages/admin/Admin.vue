@@ -31,19 +31,18 @@
 
                 <q-step
                     :name="'candidate-registration'"
-                    title="Candidate Registration"
+                    :title="$t('pages.resolve.admin_step_cand_reg')"
                     icon="assignment"
                 >
-                    Nominees are able to add and remove themselves as an
-                    official candidate to the upcoming election.
+                    {{$t('pages.resolve.admin_step_cand_reg_content')}}
                 </q-step>
 
                 <q-step
                     :name="'election-ready'"
-                    title="Election Ready to Start"
+                    :title="$t('pages.resolve.admin_step_election_ready')"
                     icon="assignment"
                 >
-                    Election is ready to start pending administration launch
+                    {{$t('pages.resolve.admin_step_election_ready_content')}}
                     <br /><br />
                     <q-btn
                         @click="
@@ -51,30 +50,29 @@
                             formType = 'beginvoting';
                         "
                         color="primary"
-                        label="Start Election"
+                        :label="$t('pages.resolve.admin_step_election_ready_cta')"
                     />
                 </q-step>
 
-                <q-step :name="'voting'" title="Voting" icon="add_comment">
-                    Users are able to vote for the candidate(s) of choice.
+                <q-step :name="'voting'" :title="$t('pages.resolve.admin_step_voting')" icon="add_comment">
+                    {{$t('admin_step_voting_content')}}
                 </q-step>
 
                 <q-step
                     :name="'election-finalization'"
-                    title="Election Finalization"
+                    :title="$t('pages.resolve.admin_step_election_finalization')"
                     icon="add_comment"
                 >
-                    Voting has completed and admin needs to execute
-                    <strong>endelection</strong>
-                    action to process the vote results and begin the arbitration
-                    term for the winning candidates. Users will also be able to
-                    start nominating themselves for the next election, whenever
-                    that may happen to be.
+                    <i18n-t keypath="pages.resolve.admin_step_election_finalization_content">
+                        <template v-slot:endelection>
+                            <strong>endelection</strong>
+                        </template>
+                    </i18n-t>
                     <br /><br />
                     <q-btn
                         @click="endElection"
                         color="primary"
-                        label="Finalize Election"
+                        :label="$t('pages.resolve.admin_step_election_finalization_cta')"
                     />
                 </q-step>
             </q-stepper>
