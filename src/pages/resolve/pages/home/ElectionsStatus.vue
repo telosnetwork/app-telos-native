@@ -1,10 +1,10 @@
 <template>
     <div id="resolve-election-status" v-if="isResolveStoresAvailable">
-        <h4 class="heading">{{ currentElectionContent.heading }}</h4>
-        <p class="content q-pb-lg">{{ currentElectionContent.text }}</p>
+        <h4 class="heading">{{ $t(currentElectionContent.heading) }}</h4>
+        <p class="content q-pb-lg">{{ $t(currentElectionContent.text) }}</p>
         <q-btn
             color="primary"
-            :label="currentElectionContent.buttonText"
+            :label="$t(currentElectionContent.buttonText)"
             @click="onClickButton(currentElectionContent.buttonRoute)"
         />
         <!--<q-btn color="primary" label="Vote" /> -->
@@ -16,31 +16,31 @@ import { mapGetters } from 'vuex';
 import { ELECTION_STATUS_LIST } from '../../constants/elections';
 const electionStatus = {
     CREATED: {
-        heading: 'Elections Coming Soon!',
+        heading: 'pages.resolve.election_status_created_heading',
         text:
-            'There is an upcoming election, and we are currently taking nominations. Think that you would make a good arbitrator? Then consider nominating yourself!',
-        buttonText: 'View Elections',
+            'pages.resolve.election_status_created_text',
+        buttonText: 'pages.resolve.election_status_created_cta',
         buttonRoute: '/resolve/elections'
     },
     LIVE: {
-        heading: 'Election is Live!',
+        heading: 'pages.resolve.election_status_live_heading',
         text:
-            'An election is currently underway and every vote matters, especially yours! Head on over to Decide Voter and select this term’s arbitrators.',
-        buttonText: 'View Elections',
+            'pages.resolve.election_status_live_text',
+        buttonText: 'pages.resolve.election_status_live_cta',
         buttonRoute: '/resolve/elections'
     },
     FINALIZING: {
-        heading: 'Election Has Ended',
+        heading: 'pages.resolve.election_status_finalizing_heading',
         text:
-            "An election has recently finished. See how the candidates did, and who will be one of Telos's newest arbitrators.",
-        buttonText: 'View Election Results',
+            'pages.resolve.election_status_finalizing_text',
+        buttonText: 'pages.resolve.election_status_finalizing_cta',
         buttonRoute: '/resolve/elections'
     },
     ENDED: {
-        heading: 'Arbitration is Currently Ongoing!',
+        heading: 'pages.resolve.election_status_ended_heading',
         text:
-            'There are currently active arbitrators for this period. You can view the ongoing arbitration cases by heading to the cases page.',
-        buttonText: 'View Cases',
+            'pages.resolve.election_status_ended_text',
+        buttonText: 'pages.resolve.election_status_ended_cta',
         buttonRoute: '/resolve/cases'
     }
 };

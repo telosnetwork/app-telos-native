@@ -459,6 +459,26 @@ export default {
             election_steps_arbitration_title: 'Arbitration',
             election_steps_arbitration_content: 'Voting has completed and admin needs to execute {endElection} action to process the vote results and begin the arbitration term for the winning candidates. Users will also be able to start nominating themselves for the next election, whenever that may happen to be.',
             election_steps_view_cases_cta: 'View Cases',
+
+            election_status_created_heading: 'Elections Coming Soon!',
+            election_status_created_text: 'There is an upcoming election, and we are currently taking nominations. Think that you would make a good arbitrator? Then consider nominating yourself!',
+            election_status_created_cta: 'View Elections',
+            election_status_live_heading: 'Election is Live!',
+            election_status_live_text: 'An election is currently underway and every vote matters, especially yours! Head on over to Decide Voter and select this term’s arbitrators.',
+            election_status_live_cta: 'View Elections',
+            election_status_finalizing_heading: 'Election Has Ended',
+            election_status_finalizing_text: 'An election has recently finished. See how the candidates did, and who will be one of Telos\'s newest arbitrators.',
+            election_status_finalizing_cta: 'View Election Results',
+            election_status_ended_heading: 'Arbitration is Currently Ongoing!',
+            election_status_ended_text: 'There are currently active arbitrators for this period. You can view the ongoing arbitration cases by heading to the cases page.',
+            election_status_ended_cta: 'View Cases',
+            election_intro_first: 'When valuable assets are in question, there can arise disputes over fairness, oversight, and ownership. Resolve is how Telos finds equitable solutions to these kinds of issues on our community led network.',
+            election_intro_second: 'Do you have an asset related issue that you’d like the network’s arbitration system to resolve? We believe that a transparent process benefits everyone.',
+            election_intro_subheading: 'Create a new case',
+            election_intro_view_cases: 'View Cases',
+            election_intro_admin_cta: 'Admin Dashboard',
+            election_intro_arb_cta: 'Arbitrator Dashboard',
+
         }
     },
 };

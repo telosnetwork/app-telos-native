@@ -2,32 +2,27 @@
     <div id="resolve-intro">
         <div class="info">
             <p class="first">
-                When valuable assets are in question, there can arise disputes
-                over fairness, oversight, and ownership. Resolve is how Telos
-                finds equitable solutions to these kinds of issues on our
-                community led network.
+                {{$t('pages.resolve.election_intro_first')}}
             </p>
-            <h3>Create a new case</h3>
+            <h3>{{$t('pages.resolve.election_intro_subheading')}}</h3>
             <p class="second">
-                Do you have an asset related issue that you’d like the network’s
-                arbitration system to resolve? We believe that a transparent
-                process benefits everyone.
+                {{$t('pages.resolve.election_intro_second')}}
             </p>
             <q-btn
                 color="primary"
-                label="View Cases"
+                :label="$t('pages.resolve.election_intro_view_cases')"
                 @click="$router.push('/resolve/cases')"
             />
             <q-btn
                 v-if="isResolveAdmin"
                 color="primary"
-                label="Admin Dashboard"
+                :label="$t('pages.resolve.election_intro_admin_cta')"
                 @click="navigateToAdmin"
             />
             <q-btn
                 v-if="isArbitrator"
                 color="primary"
-                label="Arbitrator Dashboard"
+                :label="$t('pages.resolve.election_intro_arb_cta')"
                 @click="navigateToArbitrator"
             />
         </div>

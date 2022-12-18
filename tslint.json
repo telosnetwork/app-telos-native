@@ -1,6 +1,6 @@
 {
   "extends": "tslint:recommended",
-  "rulesDirectory": ["path/to/custom/rules/directory/", "another/path/"],
+  "rulesDirectory": [],
   "defaultSeverity": "warn",
   "rules": {},
   "jsRules": {}
