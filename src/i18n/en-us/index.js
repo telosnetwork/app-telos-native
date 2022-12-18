@@ -591,7 +591,7 @@ export default {
             case_files_approvals: 'Approvals',
             case_files_status: 'Status',
             case_files_updated: 'Last Updated',
-            case_files_acitons: 'Actions',
+            case_files_actions: 'Actions',
 
             claim_table_title: 'Claims',
             claims_table_view: 'View',

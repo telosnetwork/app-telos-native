@@ -14,10 +14,10 @@ const NEXT_PUBLIC_ARBITRATION_CONTRACT =
 
 export const CLAIM_STATUS_LIST = [
     '',
-    'claim_filed',
-    'claim_responded',
-    'claim_accepted',
-    'claim_dismissed'
+    'pages.resolve.claim_filed',
+    'pages.resolve.claim_responded',
+    'pages.resolve.claim_accepted',
+    'pages.resolve.claim_dismissed'
 ];
 
 export const CLAIM_CATEGORY_LIST = [

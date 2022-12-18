@@ -54,10 +54,6 @@
                             <span>{{$t('pages.resolve.elections_table_end_add')}}</span><br />
                             <span>{{ props.row.end_add_candidates_ts }}</span>
                         </q-td>
-                        <!-- <q-td key="begin_voting_ts" class="default">
-              <span>Start Voting</span><br />
-              <span>{{ props.row.begin_voting_ts }}</span>
-            </q-td> -->
                         <q-td key="end_voting_ts" class="default">
                             <span>
                                 {{$t('pages.resolve.elections_table_end_voting')}}
@@ -71,7 +67,7 @@
               </ipfs-link>
             </q-td> -->
                         <q-td key="status">
-                            {{ ELECTION_STATUS[props.row.status] }}
+                            {{ $t(ELECTION_STATUS[props.row.status]) }}
                         </q-td>
                     </q-tr>
                     <q-tr
@@ -137,7 +133,7 @@ export default {
                     label: this.$t('pages.resolve.elections_table_end_voting'),
                     field: 'end_voting_ts'
                 },
-                { name: 'status', label: 'Status', field: 'status' }
+                { name: 'status', label: this.$t('pages.resolve.elections_table_status'), field: 'status' }
             ],
             expandedRows: [],
             ELECTION_STATUS
