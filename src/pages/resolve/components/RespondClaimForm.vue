@@ -1,7 +1,7 @@
 <template>
     <q-card class="respond-claim-form">
         <q-card-section>
-            <div class="text-h6">Respond to Claim</div>
+            <div class="text-h6">{{$t('pages.resolve.respond_claim_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -9,8 +9,8 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Submit" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.respond_claim_submit')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.respond_claim_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

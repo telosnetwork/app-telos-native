@@ -1,35 +1,29 @@
 <template>
     <q-card class="ready-case-form">
         <q-card-section>
-            <div class="text-h6">Ready Case</div>
+            <div class="text-h6">{{$t('pages.resolve.ready_case_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
             <p>
-                Are you sure that you would like set the case to "Ready" mode?
-                This will open up the case to offers from arbitrators, who will
-                make bids for the case work.
+                {{$t('pages.resolve.ready_case_text')}}
             </p>
             <p>
-                <strong
-                    >A fee of {{ tlosFee.toFixed(4) }} TLOS will be deducted
-                    from your balance ({{ balance }}).
+                <strong>
+                    {{$t('pages.resolve.ready_case_deduction', { tlosFee: tlosFee.toFixed(4), balance})}}
                 </strong>
             </p>
             <p v-if="deficit > 0" class="error">
                 <strong>
-                    Since your balance of {{ balance }} is not enough to cover
-                    the fee, this transaction will also include a transfer of
-                    {{ this.adjustedDeficit }} TLOS from your account to the
-                    contract.
+                    {{$t('pages.resolve.ready_case_deficit', { balance, adjustedDeficit: this.adjustedDeficit})}}
                 </strong>
             </p>
         </q-card-section>
         <!-- balance: {{ balance }} fee: {{ fee }} exchangeRate:
     {{ exchangeRate }} tlosFee: {{ tlosFee }} deficit: {{ deficit }} -->
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Ready" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.ready_case_ready')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.ready_case_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

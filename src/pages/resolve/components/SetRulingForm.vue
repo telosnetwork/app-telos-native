@@ -1,12 +1,12 @@
 <template>
     <q-card class="set-ruling-form">
         <q-card-section>
-            <div class="text-h6">Finalize Case</div>
+            <div class="text-h6">{{$t('pages.resolve.finalize_case_title')}}</div>
         </q-card-section>
 
         <q-card-section>
             <p>
-                Upload a document specifying your ruling on this particular case
+                {{$t('pages.resolve.finalize_case_instructions')}}
             </p>
         </q-card-section>
 
@@ -17,11 +17,11 @@
         <q-card-actions align="right" class="text-primary">
             <q-btn
                 flat
-                label="Submit"
+                :label="$t('pages.resolve.finalize_case_submit')"
                 @click="submit"
                 :disable="!decisionLink"
             />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.finalize_case_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

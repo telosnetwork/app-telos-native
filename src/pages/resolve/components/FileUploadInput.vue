@@ -2,10 +2,10 @@
     <q-input
         filled
         v-model="hash"
-        label="Info Link"
+        :label="$t('pages.resolve.file_upload_label')"
         bottom-slots
-        hint="46 or 49 character IPFS hash"
-        error-message="Must be valid IPFS hash (eg 'Qmdn7bZ8z25b...')"
+        :hint="$t('pages.resolve.file_upload_hint')"
+        :error-message="$t('pages.resolve.file_upload_error')"
         dense
         autofocus
         :loading="isUploading"
@@ -156,7 +156,7 @@ export default {
                 } catch (err) {
                     this.progress = 0;
                     this.$q.notify({
-                        message: 'Upload failed',
+                        message: this.$t('pages.resolve.file_upload_failed'),
                         color: 'negative'
                     });
                 }

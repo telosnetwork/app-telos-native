@@ -1,16 +1,16 @@
 <template>
     <q-card class="shred-case-form">
         <q-card-section>
-            <div class="text-h6">Delete Case</div>
+            <div class="text-h6">{{$t('pages.resolve.shred_case_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-            <p>Are you sure that you would like to delete the case?</p>
+            <p>{{$t('pages.resolve.shred_case_instructions')}}</p>
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Delete" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.shred_case_delete')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.shred_case_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

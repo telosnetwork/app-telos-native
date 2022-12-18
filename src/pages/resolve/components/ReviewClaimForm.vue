@@ -1,28 +1,27 @@
 <template>
     <q-card class="review-claim-form">
         <q-card-section>
-            <div class="text-h6">Request More Info</div>
+            <div class="text-h6">{{$t('pages.resolve.review_claim_title')}}</div>
             <p>
-                You may ask either the claimant, respondant, or both for more
-                information regarding this claim
+                {{$t('pages.resolve.review_claim_instructions')}}
             </p>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
             <q-checkbox
                 v-model="claim_info_needed"
-                label="More claim info needed"
+                :label="$t('pages.resolve.review_claim_more_info')"
                 color="primary"
             />
             <q-input
                 v-model.number="number_days_claimant"
                 type="number"
                 filled
-                label="Number days for claimant to respond"
+                :label="$t('pages.resolve.review_claim_claimant_days')"
                 bottom-slots
                 autofocus
                 :rules="[
-                    val => val > 0 || 'Please enter a number greater than 0'
+                    val => val > 0 || $t('pages.resolve.review_claim_claimant_error')
                 ]"
                 :disable="!claim_info_needed"
             />
@@ -31,26 +30,26 @@
         <q-card-section class="q-pt-none">
             <q-checkbox
                 v-model="response_info_needed"
-                label="More response info needed"
+                :label="$t('pages.resolve.review_claim_more_response')"
                 color="primary"
             />
             <q-input
                 v-model.number="number_days_respondant"
                 type="number"
                 filled
-                label="Number days for respondant to respond"
+                :label="$t('pages.resolve.review_claim_respondant_days')"
                 bottom-slots
                 autofocus
                 :rules="[
-                    val => val > 0 || 'Please enter a number greater than 0'
+                    val => val > 0 || $t('pages.resolve.review_claim_respondant_error')
                 ]"
                 :disable="!response_info_needed"
             />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Submit" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.review_claim_submit')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.review_claim_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

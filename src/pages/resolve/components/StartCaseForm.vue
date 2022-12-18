@@ -1,7 +1,7 @@
 <template>
     <q-card class="start-case-form">
         <q-card-section>
-            <div class="text-h6">Submit Offer</div>
+            <div class="text-h6">{{$t('pages.resolve.start_case_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -9,18 +9,18 @@
                 v-model.number="number_days_respondant"
                 type="number"
                 filled
-                label="Number days for respondant to respond"
+                :label="$t('pages.reoslve.start_case_label')"
                 bottom-slots
                 autofocus
                 :rules="[
-                    val => val > 0 || 'Please enter a number greater than 0'
+                    val => val > 0 || $t('pages.resolve.start_case_error')
                 ]"
             />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Start Case" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.start_case_start')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.start_case_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

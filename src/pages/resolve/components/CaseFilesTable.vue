@@ -61,7 +61,7 @@
                                     @click="goToCaseFile(props.row.case_id)"
                                 >
                                     <q-item-section>
-                                        <q-item-label>View</q-item-label>
+                                        <q-item-label>{{$t('pages.resolve.case_files_view')}}</q-item-label>
                                     </q-item-section>
                                 </q-item>
                             </q-list>
@@ -85,26 +85,26 @@ export default {
     data() {
         return {
             columns: [
-                { name: 'case_id', label: 'ID', field: 'case_id' },
-                { name: 'claimant', label: 'Claimant', field: 'claimant' },
+                { name: 'case_id', label: this.$t('pages.resolve.case_files_id'), field: 'case_id' },
+                { name: 'claimant', label: this.$t('pages.resolve.case_files_claimant'), field: 'claimant' },
                 {
                     name: 'respondant',
-                    label: 'Respondant',
+                    label: this.$t('pages.resolve.case_files_respondant'),
                     field: 'respondant'
                 },
                 {
                     name: 'arbitrators',
-                    label: 'Arbitrators',
+                    label: this.$t('pages.resolve.case_files_arbitrators'),
                     field: 'arbitrators'
                 },
-                { name: 'approvals', label: 'Approvals', field: 'approvals' },
-                { name: 'case_status', label: 'Status', field: 'case_status' },
+                { name: 'approvals', label: this.$t('pages.resolve.case_files_approvals'), field: 'approvals' },
+                { name: 'case_status', label: this.$t('pages.resolve.case_files_status'), field: 'case_status' },
                 {
                     name: 'update_ts',
-                    label: 'Last Updated',
+                    label: this.$t('pages.resolve.case_files_updated'),
                     field: 'update_ts'
                 },
-                { name: 'actions', label: 'Actions', field: 'actions' }
+                { name: 'actions', label: this.$t('pages.resolve.case_files_actions'), field: 'actions' }
             ],
             pagination: {
                 rowsPerPage: 20
@@ -116,7 +116,7 @@ export default {
             return this.caseFiles || this.$store.state.resolve.case_files || [];
         },
         finalTitle() {
-            return this.title || 'Case Files';
+            return this.title || this.$t('pages.resolve.case_files_title');
         }
     },
     methods: {

@@ -1,7 +1,7 @@
 <template>
     <q-card class="nominate-self-form">
         <q-card-section>
-            <div class="text-h6">Nominate Self ({{ account_name }})</div>
+            <div class="text-h6">{{$t('pages.resolve.nominate_self_heading')}} ({{ account_name }})</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none input-row">
@@ -11,11 +11,11 @@
         <q-card-actions align="right" class="text-primary">
             <q-btn
                 flat
-                label="Submit"
+                :label="$t('pages.resolve.nominate_self_submit')"
                 @click="nominateSelf"
                 :disable="!isCredentialsLinkValid"
             />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.nominate_self_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

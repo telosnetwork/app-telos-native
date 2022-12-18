@@ -1,6 +1,6 @@
 <template>
     <q-td key="candidates" class="candidates-cell">
-        <p class="header">Candidates</p>
+        <p class="header">{{$t('pages.resolve.candidates_title')}}</p>
         <div
             v-for="candidate of election.candidates"
             v-bind:key="candidate.name"
@@ -17,7 +17,7 @@
                             {{ candidate.name }}&nbsp; (<a
                                 :href="getCandidateIpfsLink(candidate.name)"
                                 target="_blank"
-                                >more info</a
+                                >{{$t('pages.resolve.candidateS_more_info')}}</a
                             >)
                             <!--<q-icon
                 v-if="isRemoveCandidateButtonVisible(candidate.name)"

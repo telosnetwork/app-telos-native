@@ -10,8 +10,8 @@
                 v-model="ballot_name"
                 label="Ballot ID"
                 bottom-slots
-                hint="12 characters a-z and 1-5"
-                error-message="Must be 12 characters, a-z and / or 1-5"
+                :hint="$t('pages.resolve.begin_voting_ballot_hint')"
+                :error-message="$t('pages.resolve.begin_voting_ballot_error')"
                 dense
                 autofocus
                 :error="!isBallotNameValid"
@@ -29,11 +29,11 @@
         <q-card-actions align="right" class="text-primary">
             <q-btn
                 flat
-                label="Submit"
+                :label="$t('pages.resolve.begin_voting_submit_cta')"
                 @click="beginVoting"
                 :disable="!isBallotNameValid"
             />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.begin_voting_cancel_cta')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

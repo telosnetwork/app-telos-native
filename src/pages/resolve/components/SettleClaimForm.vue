@@ -1,10 +1,9 @@
 <template>
     <q-card class="settle-claim-form">
         <q-card-section>
-            <div class="text-h6">Settle claim</div>
+            <div class="text-h6">{{$t('pages.resolve.settle_claim_title')}}</div>
             <p>
-                Choose whether this particular claim should be accepted or
-                rejected
+                {{$t('pages.resolve.settle_claim_instructions')}}
             </p>
         </q-card-section>
 
@@ -17,14 +16,14 @@
             <q-option-group
                 v-model="isAccepted"
                 :options="[
-                    { label: 'Accept claim', value: true },
-                    { label: 'Reject claim', value: false }
+                    { label: $t('pages.resolve.settle_claim_accept'), value: true },
+                    { label: $t('pages.resolve.settle_claim_reject'), value: false }
                 ]"
                 color="primary"
                 :rules="[
                     val =>
                         console.log('val: ', val) ||
-                        'Please choose accept or reject'
+                        $t('pages.resolve.settle_claim_error')
                 ]"
             />
         </q-card-section>
@@ -32,11 +31,11 @@
         <q-card-actions align="right" class="text-primary">
             <q-btn
                 flat
-                label="Submit"
+                :label="$t('pages.resolve.settle_claim_submit')"
                 @click="submit"
                 :disable="!hasSelectedOption"
             />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.settle_claim_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

@@ -1,7 +1,7 @@
 <template>
     <q-card id="init-election-form">
         <q-card-section>
-            <div class="text-h6">Start Election Preparation</div>
+            <div class="text-h6">{{$t('pages.resolve.init_election_heading')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none input-row">
@@ -11,11 +11,11 @@
         <q-card-actions align="right" class="text-primary">
             <q-btn
                 flat
-                label="Submit"
+                :label="$t('pages.resolve.init_election_submit')"
                 @click="initElection"
                 :disable="!isCredentialsLinkValid(credentialsLink)"
             />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.init_election_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

@@ -28,7 +28,7 @@
                     label="!"
                     align="top"
                 >
-                    <q-tooltip>More info needed from claimant</q-tooltip>
+                    <q-tooltip>{{$t('pages.resolve.claims_table_more_info_claimant')}}</q-tooltip>
                 </q-badge>
             </q-td>
         </template>
@@ -51,7 +51,7 @@
                         `https://api.dstor.cloud/ipfs/${props.row.decision_link}`
                     "
                     target="_blank"
-                    >View</a
+                    >{{$t('pages.resolve.claims_table_view')}}</a
                 >
             </q-td>
         </template>
@@ -63,7 +63,7 @@
                         `https://api.dstor.cloud/ipfs/${props.row.response_link}`
                     "
                     target="_blank"
-                    >View</a
+                    >{{$t('pages.resolve.claims_table_view')}}</a
                 >
                 <q-badge
                     v-if="props.row.response_info_needed"
@@ -72,7 +72,7 @@
                     label="!"
                     align="top"
                 >
-                    <q-tooltip>More info needed from respondant</q-tooltip>
+                    <q-tooltip>{{$t('pages.resolve.claims_table_more_info_respondant')}}</q-tooltip>
                 </q-badge>
             </q-td>
         </template>
@@ -94,7 +94,7 @@
         </template>
         <template v-slot:body-cell-actions="props">
             <q-td :props="props">
-                <q-btn-dropdown color="primary" label="Actions">
+                <q-btn-dropdown color="primary" :label="$t('pages.resolve.claims_table_actions')">
                     <q-list>
                         <q-item
                             v-if="
@@ -112,7 +112,7 @@
                             "
                         >
                             <q-item-section>
-                                <q-item-label>Respond</q-item-label>
+                                <q-item-label>{{$t('pages.resolve.claims_table_respond_cta')}}</q-item-label>
                             </q-item-section>
                         </q-item>
                         <q-item
@@ -129,7 +129,9 @@
                             "
                         >
                             <q-item-section>
-                                <q-item-label>Update Claim</q-item-label>
+                                <q-item-label>
+                                    {{$t('pages.resolve.claims_table_update')}}
+                                </q-item-label>
                             </q-item-section>
                         </q-item>
                         <q-item
@@ -147,7 +149,7 @@
                             "
                         >
                             <q-item-section>
-                                <q-item-label>Request More Info</q-item-label>
+                                <q-item-label>{{$t('pages.resolve.claims_table_request_more')}}</q-item-label>
                             </q-item-section>
                         </q-item>
                         <q-item
@@ -165,7 +167,7 @@
                             "
                         >
                             <q-item-section>
-                                <q-item-label>Settle Claim</q-item-label>
+                                <q-item-label>{{$t('pages.resolve.claims_table_settle_cta')}}</q-item-label>
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -226,39 +228,41 @@ export default {
             claimId: null,
             formType: null,
             columns: [
-                { name: 'claim_id', label: 'ID', field: 'claim_id' },
+                { name: 'claim_id',
+                    label: this.$t('pages.resolve.claims_table_id'),
+                    field: 'claim_id' },
                 {
                     name: 'claim_summary',
-                    label: 'Claim',
+                    label: this.$t('pages.resolve.claims_table_summary'),
                     field: 'claim_summary'
                 },
                 {
                     name: 'claimant_limit_time',
-                    label: 'Claimant Deadline',
+                    label: this.$t('pages.resolve.claims_table_claimant_deadline'),
                     field: 'claimant_limit_time'
                 },
                 {
                     name: 'claim_category',
-                    label: 'Category',
+                    label: this.$t('pages.resolve.claims_table_category'),
                     field: 'claim_category'
                 },
                 {
                     name: 'decision_link',
-                    label: 'Decision',
+                    label: this.$t('pages.resolve.claims_table_decision'),
                     field: 'decision_link'
                 },
                 {
                     name: 'response_link',
-                    label: 'Response',
+                    label: this.$t('pages.resolve.claims_table_response'),
                     field: 'response_link'
                 },
                 {
                     name: 'respondant_limit_time',
-                    label: 'Respondant Deadline',
+                    label: this.$t('pages.resolve.claims_table_respoondant_deadline'),
                     field: 'respondant_limit_time'
                 },
-                { name: 'status', label: 'Status', field: 'status' },
-                { name: 'actions', label: 'Actions', field: 'actions' }
+                { name: 'status', label: this.$t('pages.resolve.claims_table_status'), field: 'status' },
+                { name: 'actions', label: this.$t('pages.resolve.claims_table_actions_column'), field: 'actions' }
             ]
         };
     },

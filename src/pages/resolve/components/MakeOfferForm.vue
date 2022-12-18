@@ -1,14 +1,12 @@
 <template>
     <q-card class="make-offer-form">
         <q-card-section>
-            <div class="text-h6">Submit Offer</div>
+            <div class="text-h6">{{$t('pages.resolve.make_offer_heading')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
             <p>
-                Please give an estimate for the total amount of work that you
-                believe is necessary to evaluate and reach a decision on the
-                case.
+                {{$t('pages.resolve.make_offer_text')}}
             </p>
         </q-card-section>
 
@@ -17,11 +15,11 @@
                 v-model.number="estimated_hours"
                 type="number"
                 filled
-                label="Estimated Hours"
+                :label="$t('pages.resolve.make_offer_hours')"
                 bottom-slots
                 autofocus
                 :rules="[
-                    val => val > 0 || 'Please enter a number greater than 0'
+                    val => val > 0 || $t('pages.resolve.make_offer_hours_hint')
                 ]"
             />
         </q-card-section>
@@ -31,19 +29,19 @@
                 v-model.number="hourly_rate"
                 type="number"
                 filled
-                label="$ / hour"
+                :label="$t('pages.resolve.make_offer_rate_label')"
                 bottom-slots
                 :rules="[
-                    val => val > 0 || 'Please enter a number greater than 0'
+                    val => val > 0 || $t('pages.resolve.make_offer_rate_hint')
                 ]"
             />
         </q-card-section>
 
-        <p class="total">Estimate total: ${{ total }}</p>
+        <p class="total">{{$t('pages.resolve.make_offer_estimate_total', { total })}}</p>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Submit" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.make_offer_submit')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.make_offer_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

@@ -2,7 +2,7 @@
     <div id="elections-table">
         <div class="q-py-lg">
             <q-table
-                title="Elections"
+                :title="$t('pages.resolve.elections_table_title')"
                 :rows="electionData || []"
                 :columns="columns"
                 row-key="name"
@@ -41,17 +41,17 @@
                                             `https://api.dstor.cloud/ipfs/${props.row.info_url}`
                                         "
                                         target="_blank"
-                                        >View Info</a
+                                        >{{$t('pages.resolve.elections_table_view_info')}}</a
                                     >
                                 </div>
                             </div>
                         </q-td>
                         <q-td key="available_seats" class="default">
-                            <span>Seats</span><br />
+                            <span>{{$t('pages.resolve.elections_table_seats')}}</span><br />
                             <span>{{ props.row.available_seats }}</span>
                         </q-td>
                         <q-td key="end_add_candidates_ts" class="default">
-                            <span>End Add Candidates</span><br />
+                            <span>{{$t('pages.resolve.elections_table_end_add')}}</span><br />
                             <span>{{ props.row.end_add_candidates_ts }}</span>
                         </q-td>
                         <!-- <q-td key="begin_voting_ts" class="default">
@@ -59,7 +59,9 @@
               <span>{{ props.row.begin_voting_ts }}</span>
             </q-td> -->
                         <q-td key="end_voting_ts" class="default">
-                            <span>End Voting</span><br />
+                            <span>
+                                {{$t('pages.resolve.elections_table_end_voting')}}
+                            </span><br />
                             <span>{{ props.row.end_voting_ts }}</span>
                         </q-td>
 
@@ -104,35 +106,35 @@ export default {
     data() {
         return {
             columns: [
-                { name: 'election_id', label: 'ID', field: 'election_id' },
+                { name: 'election_id', label: this.$t('pages.resolve.elections_table_id'), field: 'election_id' },
                 {
                     name: 'ballot_name',
-                    label: 'Ballot Name',
+                    label: this.$t('pages.resolve.elections_table_ballot_name'),
                     field: 'ballot_name'
                 },
                 {
                     name: 'candidates',
-                    label: 'Candidates',
+                    label: this.$t('pages.resolve.elections_table_candidates'),
                     field: 'candidates'
                 },
                 {
                     name: 'available_seats',
-                    label: 'Seats',
+                    label: this.$t('pages.resolve.elections_table_seats'),
                     field: 'available_seats'
                 },
                 {
                     name: 'end_add_candidates_ts',
-                    label: 'End Add Candidates',
+                    label: this.$t('pages.resolve.elections_table_end_add'),
                     field: 'end_add_candidates_ts'
                 },
                 {
                     name: 'begin_voting_ts',
-                    label: 'Start Voting',
+                    label: this.$t('pages.resolve.elections_table_start_voting'),
                     field: 'begin_voting_ts'
                 },
                 {
                     name: 'end_voting_ts',
-                    label: 'End Voting',
+                    label: this.$t('pages.resolve.elections_table_end_voting'),
                     field: 'end_voting_ts'
                 },
                 { name: 'status', label: 'Status', field: 'status' }

@@ -1,13 +1,12 @@
 <template>
     <q-card class="respond-offer-form">
         <q-card-section>
-            <div class="text-h6">Respond</div>
+            <div class="text-h6">{{$t('pages.resolve.respond_offer_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
             <p>
-                Are you sure that you would like to accept this offer? You will
-                not be able to change your mind.
+                {{$t('pages.resolve.respond_offer_text')}}
                 <!-- {{
           {
             balance: balance,
@@ -23,10 +22,7 @@
         <q-card-section v-if="deficit > 0">
             <p class="error">
                 <strong>
-                    Since your balance of {{ balance }} is not enough to cover
-                    the fee, this transaction will also include a transfer of
-                    {{ adjustedDeficit }} TLOS from your account to the
-                    contract.
+                    {{$t('pages.resolve.respond_offer_error', { balance, adjustedDeficit })}}
                 </strong>
             </p>
         </q-card-section>
@@ -34,11 +30,11 @@
             <q-btn
                 v-if="deficit < 0"
                 flat
-                label="Accept"
+                :label="$t('pages.resolve.respond_offer_accept')"
                 @click="submit('accept')"
             />
-            <q-btn flat color="red" label="Reject" @click="submit('reject')" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat color="red" :label="$t('pages.resolve.respond_offer_reject')" @click="submit('reject')" />
+            <q-btn flat :label="$t('pages.resolve.respond_offer_cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

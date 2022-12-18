@@ -1,20 +1,18 @@
 <template>
     <q-card class="dismiss-offer-form">
         <q-card-section>
-            <div class="text-h6">Dismiss Offer</div>
+            <div class="text-h6">{{$t('pages.resolve.dismiss_offer_heading')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
             <p>
-                Are you sure that you would like to remove your offer to
-                arbitrate this case? You will not be able to make a new offer
-                for this case.
+                {{$t('pages.resolve.dismiss_offer_text')}}
             </p>
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Dismiss" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.dismiss_offer_dismiss_cta')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.dismiss_offer_cancel_cta')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

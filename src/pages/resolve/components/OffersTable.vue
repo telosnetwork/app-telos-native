@@ -1,6 +1,6 @@
 <template>
     <q-table
-        title="Offers"
+        :title="$t('pages.resolve.offers_table_title')"
         :rows="offers"
         :columns="columns"
         row-key="name"
@@ -36,7 +36,7 @@
                         form = true;
                     "
                 >
-                    Respond</q-btn
+                    {{$t('pages.resolve.offers_table_respond')}}</q-btn
                 >
             </q-td>
         </template>
@@ -68,20 +68,20 @@ export default {
             form: false,
             formType: null,
             columns: [
-                { name: 'status', label: 'Status', field: 'status' },
+                { name: 'status', label: this.$t('pages.resolve.offers_table_status'), field: 'status' },
                 {
                     name: 'estimated_hours',
-                    label: 'Hours',
+                    label: this.$t('pages.resolve.offers_table_hours'),
                     field: 'estimated_hours'
                 },
                 {
                     name: 'arbitrator',
-                    label: 'Arbitrator',
+                    label: this.$t('pages.resolve.offers_table_arb'),
                     field: 'arbitrator'
                 },
-                { name: 'hourly_rate', label: 'Rate', field: 'hourly_rate' },
-                { name: 'total', label: 'Total', field: 'total' },
-                { name: 'actions', label: 'Actions', field: 'actions' }
+                { name: 'hourly_rate', label: this.$t('pages.resolve.offers_table_rate'), field: 'hourly_rate' },
+                { name: 'total', label: this.$t('pages.resolve.offers_table_total'), field: 'total' },
+                { name: 'actions', label: this.$t('pages.resolve.offers_table_actions'), field: 'actions' }
             ]
         };
     },

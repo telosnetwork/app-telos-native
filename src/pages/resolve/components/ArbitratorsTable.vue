@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-md" v-if="arbitratorsData">
         <q-table
-            title="Arbitrators"
+            :title="$t('pages.resolve.arb_table_title')"
             :rows="arbitratorsData"
             :columns="columns"
             row-key="name"
@@ -65,34 +65,34 @@ export default {
         return {
             arbitratorsData: this.$store.state.resolve.arbitrators,
             columns: [
-                { name: 'arb', field: 'arb', label: 'Arbitrator' },
-                { name: 'arb_status', field: 'arb_status', label: 'Status' },
+                { name: 'arb', field: 'arb', label: this.$t('pages.resolve.arb_table_arb') },
+                { name: 'arb_status', field: 'arb_status', label: this.$t('pages.resolve.arb_table_status') },
                 {
                     name: 'open_case_ids',
                     field: 'open_case_ids',
-                    label: 'Open Cases'
+                    label: this.$t('pages.resolve.arb_table_open_cases')
                 },
                 {
                     name: 'closed_case_ids',
                     field: 'closed_case_ids',
-                    label: 'Closed Cases'
+                    label: this.$t('pages.resolve.arb_table_closed_cases')
                 },
                 {
                     name: 'credentials_link',
                     field: 'credentials_link',
-                    label: 'Credentials'
+                    label: this.$t('pages.resolve.arb_table_credentials')
                 },
                 {
                     name: 'elected_time',
                     field: 'elected_time',
-                    label: 'Elected'
+                    label: this.$t('pages.resolve.arb_table_elected')
                 },
                 {
                     name: 'term_expiration',
                     field: 'term_expiration',
-                    label: 'Term Ends'
+                    label: this.$t('pages.resolve.arb_table_term_end')
                 },
-                { name: 'languages', field: 'languages', label: 'Languages' }
+                { name: 'languages', field: 'languages', label: this.$t('pages.resolve.arb_table_languages') }
             ]
         };
     },
