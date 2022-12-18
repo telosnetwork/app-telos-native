@@ -3,7 +3,7 @@
         <div class="top-row row">
             <intro-card
                 class="col-xs-12 col-sm-6"
-                heading="Create a new case"
+                :heading="$t('pages.resolve.create_case_heading')"
                 text="Do you have an asset related issue that you’d like the network’s arbitration system to resolve? We believe that a transparent process benefits everyone."
             >
                 <template v-slot:buttons>
@@ -11,7 +11,7 @@
                         color="primary"
                         @click="isModalVisible = !isModalVisible"
                         v-if="isAuthenticated"
-                        >Create a New Case</q-btn
+                        >{{$t('pages.resolve.create_case_heading')}}</q-btn
                     >
                 </template>
             </intro-card>

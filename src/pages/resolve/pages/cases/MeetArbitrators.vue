@@ -1,10 +1,9 @@
 <template>
     <div id="resolve-meet-arbitrators">
         <q-card class="meet-arbitrators-card">
-            <h3>Meet Your Arbitrators</h3>
+            <h3>{{$t('pages.resolve.meet_arbitrators_title')}}</h3>
             <p>
-                Arbitrators are elected by the Telos community and bear the
-                responsibility of ruling on cases as they are submitted.
+                {{$t('pages.resolve.meet_arbitrators_info')}}
             </p>
             <ul>
                 <li

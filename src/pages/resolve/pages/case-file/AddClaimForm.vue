@@ -1,7 +1,7 @@
 <template>
     <q-card style="min-width: 450px">
         <q-card-section>
-            <div class="text-h6">Add Claim</div>
+            <div class="text-h6">{{$t('pages.resolve.add_claim_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -13,13 +13,13 @@
                 filled
                 v-model="category"
                 :options="categories"
-                label="Category"
+                :label="$t('pages.resolve.category')"
             />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Submit" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$('pages.resolve.submit')" @click="submit" />
+            <q-btn flat :label="$('pages.resolve.cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

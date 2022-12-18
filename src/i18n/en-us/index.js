@@ -346,6 +346,17 @@ export default {
             failed: 'Unable to login to the profile service',
         },
         resolve: {
+            closed_case: 'closed case',
+            accepted: 'accepted',
+            rejected: 'rejected',
+            ruled: 'ruled',
+            claimant: 'Claimant',
+            respondant: 'Respondant',
+            submit: 'Submit',
+            close: 'Close',
+            cancel: 'Cancel',
+            category: 'Category',
+
             admin_step_case_setup: 'Setup & Nominee Registration',
             admin_step_case_content_1: 'Admin is able to set the configuration parameters for the smart contract, including election duration, arbitration term length, and number of arbitration seats to be filled.',
             admin_step_case_content_2: 'Therea are currently {seats} arbitration seats available',
@@ -394,19 +405,15 @@ export default {
             case_action_set_ruling: '{actor} (admin) {link} on case',
             case_action_validate: '{actor} (admin) {ruling} case',
             case_action_close: '{actor} {close}',
-            closed_case: 'closed case',
-            accepted: 'accepted',
-            rejected: 'rejected',
-            ruled: 'ruled',
             create_case_title: 'Create New Case',
-            claimant: 'Claimant',
-            respondant: 'Respondant',
             create_case_account_name: 'Telos account name',
             create_case_account_error: 'Must be valid Telos account name',
-            submit: 'Submit',
-            close: 'Close',
-            cancel: 'Cancel',
-            category: 'Category',
+            add_claim_title: 'Add Claim',
+
+            create_case_heading: 'Create a new case',
+
+            meet_arbitrators_title: 'Meet Your Arbitrators',
+            meet_arbitrators_info: 'Arbitrators are elected by the Telos community and bear the responsibility of ruling on cases as they are submitted.',
         }
     },
 };
