@@ -1,7 +1,7 @@
 <template>
     <q-card class="create-new-case-modal">
         <q-card-section>
-            <div class="text-h6">Create New Case</div>
+            <div class="text-h6">{{$('pages.resolve.create_case_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -9,10 +9,10 @@
                 v-model="account"
                 disable
                 filled
-                label="Claimant"
+                :label="$t(pages.resolve.claimant)"
                 bottom-slots
-                hint="Telos account name"
-                error-message="Must be valid Telos account name"
+                :hint="$t('pages.resolve.create_case_account_name')"
+                :error-message="$t('pages.resolve.create_case_account_error')"
             />
         </q-card-section>
 
@@ -21,11 +21,11 @@
                 v-model="respondant"
                 autofocus
                 filled
-                label="Respondant"
+                :label="$t(pages.resolve.respondant)"
                 bottom-slots
-                hint="Telos account name"
+                :hint="$t('pages.resolve.create_case_account_name')"
                 :rules="[
-                    val => validateId(val) || 'Must be valid Telos account name'
+                    val => validateId(val) || $t('pages.resolve.create_case_account_error')
                 ]"
             />
         </q-card-section>
@@ -39,13 +39,13 @@
                 filled
                 v-model="category"
                 :options="categories"
-                label="Category"
+                :label="$t('pages.resolve.category')"
             />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Submit" @click="submit" />
-            <q-btn flat label="Cancel" @click="close" />
+            <q-btn flat :label="$('pages.resolve.submit')" @click="submit" />
+            <q-btn flat :label="$('pages.resolve.cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

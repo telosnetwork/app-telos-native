@@ -1,5 +1,5 @@
 <template>
-    <case-files-table :caseFiles="assignedCaseFiles" title="Assigned Cases" />
+    <case-files-table :caseFiles="assignedCaseFiles" :title="$t('pages.resolve.assigned_cases_title')" />
 </template>
 
 <script lang="ts">

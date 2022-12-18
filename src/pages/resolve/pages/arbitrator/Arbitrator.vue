@@ -9,10 +9,10 @@
                 color="white"
                 text-color="black"
                 :options="[
-                    { label: 'Available', value: 1 },
-                    { label: 'Unavailable', value: 2 },
-                    { label: 'Removed', value: 3 },
-                    { label: 'Expired', value: 4 }
+                    { label: $t('pages.resolve.arb_available'), value: 1 },
+                    { label: $t('pages.resolve.arb_unavailable'), value: 2 },
+                    { label: $t('pages.resolve.arb_removed'), value: 3 },
+                    { label: $t('pages.resolve.arb_expired'), value: 4 }
                 ]"
                 @update:model-value="changeArbStatus"
             />

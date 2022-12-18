@@ -5,41 +5,49 @@
     >
         <div class="row">
             <div class="part">
-                <intro-card heading="Case Summary">
+                <intro-card :heading="$t('pages.resolve.case_summary')">
+                    <i18n-t keypath="pages.resolve.case_summary_intro_content" tag="p">
+                        <template #claimant>
+                            <strong>{{ caseFile.claimant }}</strong>
+                        </template>
+                        <template #respondant>
+                            <strong>{{ caseFile.respondant }}</strong>
+                        </template>
+                        <template #arbs>
+                            <span v-if="caseFile.arbitrators?.length">
+                                is
+                                <strong>{{ caseFile.arbitrators?.length }}</strong>
+                                arbitrator,
+                                <strong>{{
+                                    caseFile.arbitrators && caseFile.arbitrators[0]
+                                }}</strong
+                                >,&nbsp;
+                            </span>
+                            <span v-else>
+                                are <strong>no arbitrators</strong>&nbsp;
+                            </span>
+                        </template>
+                    </i18n-t>
                     <p>
-                        <strong>{{ caseFile.claimant }}</strong> is the
-                        claimant, with
-                        <strong>{{ caseFile.respondant }}</strong> being the
-                        respondant. There
-                        <span v-if="caseFile.arbitrators?.length">
-                            is
-                            <strong>{{ caseFile.arbitrators?.length }}</strong>
-                            arbitrator,
-                            <strong>{{
-                                caseFile.arbitrators && caseFile.arbitrators[0]
-                            }}</strong
-                            >,&nbsp;
-                        </span>
-                        <span v-else>
-                            are <strong>no arbitrators</strong>&nbsp;
-                        </span>
-                        assigned to the case.
-                    </p>
-                    <p>
-                        Case is currently in
-                        <strong>{{ getCaseStatus() }}</strong> mode
+                        <i18n-t keypath="pages.resolve.case_summary_status">
+                            <template #status>
+                                <strong>{{ getCaseStatus() }}</strong>
+                            </template>
+                        </i18n-t>
                     </p>
                     <p v-if="caseFile.case_status === 1">
-                        Arbitrators have until
-                        <strong>{{ formatContractDate() }}</strong>
-                        to submit their offers
+                        <i18n-t keypath="pages.resolve.case_summary_deadline">
+                            <template #deadline>
+                                <strong>{{ formatContractDate() }}</strong>
+                            </template>
+                        </i18n-t>
                     </p>
                     <template v-slot:buttons>
                         <div class="intro-buttons-wrap">
                             <q-btn
                                 v-if="isAddClaimButtonVisible()"
                                 color="primary"
-                                label="Add claim to case"
+                                :label="$t('pages.resolve.case_summary_add_claim')"
                                 @click="
                                     form = true;
                                     formType = 'addclaim';
@@ -48,7 +56,7 @@
                             <q-btn
                                 v-if="isShredCaseButtonVisible()"
                                 color="red"
-                                label="Delete Case"
+                                :label="$t('pages.resolve.case_summary_delete')"
                                 @click="
                                     form = true;
                                     formType = 'shredcase';
@@ -67,7 +75,7 @@
         </div>
         <div class="q-pa-md">
             <h2 v-if="isLoadingHistory">
-                Loading case history...<q-circular-progress
+                {{$t('pages.resolve.case_summary_history_loading')}}<q-circular-progress
                     :value="historyProgress"
                     size="3.75rem"
                     color="primary"
@@ -76,7 +84,7 @@
                     animation-speed="2000"
                 />
             </h2>
-            <h2 v-else>Case History</h2>
+            <h2 v-else>{{$t('pages.resolve.case_summary_history_title')}}</h2>
             <case-file-actions :actions="caseActionsHistory" :claims="claims" />
         </div>
         <div class="case-file-modal-wrap">
@@ -125,39 +133,6 @@ export default {
             historyProgress: 0,
             caseFile: null,
             claims: [],
-            columns: [
-                { name: 'case_id', label: 'ID', field: 'case_id' },
-                { name: 'claimant', label: 'Claimant', field: 'claimant' },
-                {
-                    name: 'respondant',
-                    label: 'Respondant',
-                    field: 'respondant'
-                },
-                {
-                    name: 'arbitrators',
-                    label: 'Arbitrators',
-                    field: 'arbitrators'
-                },
-                {
-                    name: 'number_claims',
-                    label: '# Claims',
-                    field: 'number_claims'
-                },
-                { name: 'approvals', label: 'Approvals', field: 'approvals' },
-                {
-                    name: 'required_langs',
-                    label: 'Lang',
-                    field: 'required_langs'
-                },
-                { name: 'case_status', label: 'Status', field: 'case_status' },
-                { name: 'case_ruling', label: 'Ruling', field: 'case_ruling' },
-                {
-                    name: 'update_ts',
-                    label: 'Last Updated',
-                    field: 'update_ts'
-                },
-                { name: 'actions', label: 'Actions', field: 'actions' }
-            ],
             caseActionsHistory: [],
             form: null,
             formType: null,
