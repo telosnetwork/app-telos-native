@@ -7,10 +7,8 @@
                 color="primary"
                 animated
             >
-                <q-step :name="3" title="Nominee Registration" icon="settings">
-                    Admin is able to set the configuration parameters for the
-                    smart contract, including election duration, arbitration
-                    term length, and number of arbitration seats to be filled.
+                <q-step :name="3" :title="$t('pages.resolve.election_steps_register_title')" icon="settings">
+                    {{$t('pages.resolve.election_steps_register_content')}}
                     <br /><br />
                     <q-btn
                         v-if="isAddNomineeButtonVisible"
@@ -19,35 +17,34 @@
                             formType = 'nominate-self';
                         "
                         color="primary"
-                        label="Nominate Self"
+                        :label="$t('pages.resolve.election_steps_nominate_self')"
                     />
                     <q-btn
                         v-if="isRemoveNomineeButtonVisible"
                         color="primary"
-                        label="Remove Nomination"
+                        :label="$t('pages.resolve.election_steps_remove_nomination')"
                         @click="removeSelfNomination"
                     />
                 </q-step>
 
                 <q-step
                     :name="'candidate-registration'"
-                    title="Candidate Registration"
+                    :title="$t('pages.resolve.election_steps_candidate_registration')"
                     icon="assignment"
                 >
-                    Nominees are able to add and remove themselves as an
-                    official candidate to the upcoming election.
+                    {{$t('pages.resolve.election_steps_candidate_registration_content')}}
                     <br /><br />
                     <q-btn
                         v-if="isRegisterCandidateButtonVisible"
                         @click="registerSelfCandidate"
                         color="primary"
-                        label="Register as Candidate"
+                        :label="$t('pages.resolve.election_steps_register_candidate_cta')"
                     />&nbsp;
                     <q-btn
                         v-if="isRemoveCandidacyButtonVisible"
                         @click="removeSelfCandidacy"
                         color="primary"
-                        label="Remove Candidacy"
+                        :label="$t('pages.resolve.election_steps_remove_candidacy')"
                     />&nbsp;
                     <q-btn
                         v-if="isAddNomineeButtonVisible"
@@ -56,43 +53,42 @@
                             formType = 'nominate-self';
                         "
                         color="primary"
-                        label="Nominate Self"
+                        :label="$t('pages.resolve.election_steps_nominate_self')"
                     />&nbsp;
                     <q-btn
                         v-if="isRemoveNomineeButtonVisible"
                         @click="removeSelfNomination"
                         color="primary"
-                        label="Remove Nomination"
+                        :label="$t('pages.resolve.election_steps_remove_nomination')"
                     />
                 </q-step>
 
                 <q-step
                     :name="'election-ready'"
-                    title="Election Ready to Start"
+                    :title="$t('pages.resolve.election_steps_ready')"
                     icon="assignment"
                 >
-                    Election is ready to start pending administration launch
+                    {{$t('pages.resolve.election_steps_pending')}}
                 </q-step>
 
-                <q-step :name="'voting'" title="Voting" icon="add_comment">
-                    Users are able to vote for the candidate(s) of choice.
+                <q-step :name="'voting'" :title="$t('pages.resolve.election_steps_voting_title')" icon="add_comment">
+                    {{$t('pages.resolve.election_steps_voting_content')}}
                 </q-step>
                 <q-step
                     :name="'election-finalization'"
-                    title="Arbitration"
+                    :title="$t('pages.resolve.election_steps_arbitration_title')"
                     icon="add_comment"
                 >
-                    Voting has completed and admin needs to execute
-                    <strong>endelection</strong>
-                    action to process the vote results and begin the arbitration
-                    term for the winning candidates. Users will also be able to
-                    start nominating themselves for the next election, whenever
-                    that may happen to be.
+                    <i18n-t keypath="pages.resolve.election_steps_arbitration_content">
+                        <template #endElection>
+                            <strong>endelection</strong>
+                        </template>
+                    </i18n-t>
                     <br /><br />
                     <q-btn
                         @click="$router.push('/resolve/cases')"
                         color="primary"
-                        label="View Cases"
+                        :label="$t('pages.resolve.election_steps_view_cases_cta')"
                     />
                 </q-step>
             </q-stepper>

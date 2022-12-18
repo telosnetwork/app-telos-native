@@ -2,18 +2,11 @@
     <div id="resolve-elections-page">
         <div class="intro-row row">
             <div class="first col-xs-12 col-sm-6">
-                <intro-card heading="Elect Telos's Next Arbitrators">
+                <intro-card :heading="$t('pages.resolve.elections_heading')">
                     <p>
-                        As a leader in blockchain governance, Telos allows any
-                        user with a Telos account to nominate themselves as a
-                        candidate for the position of arbitrator. Do you have a
-                        background in arbitration? Consider nominating yourself.
-                        Know someone else who you think would make a good
-                        arbitrator? Ask them to nominate themselves. If they win
-                        the election they may find themselves ruling on some of
-                        the community's most important cases.
+                        {{$t('pages.resolve.elections_intro')}}
                     </p>
-                    <strong>Current nominees:</strong>
+                    <strong>{{$t('pages.resolve.elections_nominees')}}</strong>
                     <ul>
                         <li
                             v-for="nominee in nominees"
@@ -28,7 +21,7 @@
                             {{ nominee.nominee_name }}&nbsp; (<a
                                 target="_blank"
                                 :href="getIpfsLink(nominee)"
-                                >more info</a
+                                >{{$t('pages.resolve.elections_more_info')}}</a
                             >)
                             <q-icon
                                 v-if="

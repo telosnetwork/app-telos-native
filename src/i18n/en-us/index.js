@@ -438,6 +438,27 @@ export default {
             case_steps_enforce_content: 'In this stage, the network validators will apply the ruling that has been set by the arbitrator. Once the actions have been executed, the admin can close the case.',
             case_steps_close_cta: 'Close Case',
             case_steps_case_closed: 'Case Closed',
+
+            elections_heading: 'Elect Telos\'s Next Arbitrators',
+            elections_intro: 'As a leader in blockchain governance, Telos allows any user with a Telos account to nominate themselves as a candidate for the position of arbitrator. Do you have a background in arbitration? Consider nominating yourself. Know someone else who you think would make a good arbitrator? Ask them to nominate themselves. If they win the election they may find themselves ruling on some of the community\'s most important cases.',
+            elections_nominees: 'Current nominees:',
+            elections_more_info: 'More info',
+
+            election_steps_register_title: 'Nominee Registration',
+            election_steps_register_content: 'Admin is able to set the configuration parameters for the smart contract, including election duration, arbitration term length, and number of arbitration seats to be filled.',
+            election_steps_nominate_self: 'Nominate Self',
+            election_steps_remove_nomination: 'Remove Nomination',
+            election_steps_candidate_registration: 'Candidate Registration',
+            election_steps_candidate_registration_content: 'Nominees are able to add and remove themselves as an official candidate to the upcoming election.',
+            election_steps_register_candidate_cta: 'Register as Candidate',
+            election_steps_remove_candidacy: 'Remove Candidacy',
+            election_steps_ready: 'Election Ready to Start',
+            election_steps_pending: 'Election is ready to start pending administration launch',
+            election_steps_voting_title: 'Voting',
+            election_steps_voting_content: 'Users are able to vote for the candidate(s) of choice.',
+            election_steps_arbitration_title: 'Arbitration',
+            election_steps_arbitration_content: 'Voting has completed and admin needs to execute {endElection} action to process the vote results and begin the arbitration term for the winning candidates. Users will also be able to start nominating themselves for the next election, whenever that may happen to be.',
+            election_steps_view_cases_cta: 'View Cases',
         }
     },
 };
