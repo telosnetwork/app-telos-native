@@ -2,11 +2,8 @@
     <div id="#resolve-case-steps">
         <div class="q-pa-md stepper-wrap">
             <q-stepper v-model="caseStatus" vertical color="primary" animated>
-                <q-step :name="0" title="Case Setup" icon="settings">
-                    Case has been set up, and the claimant is able to submit
-                    additional claims. Arbitrators have not yet been assigned,
-                    and the respondant is not yet allowed to respond to the
-                    individual claims.
+                <q-step :name="0" :title="$t('pages.resolve.case_steps_setup_title')" icon="settings">
+                    {{$t('pages.resolve.case_steps_setup_content')}}
                     <br /><br />
                     <q-btn
                         v-if="isClaimant"
@@ -15,23 +12,16 @@
                             formType = 'readycase';
                         "
                         color="primary"
-                        label="Ready Case"
+                        :label="$t('pages.resolve.case_steps_ready')"
                     />&nbsp;
                 </q-step>
 
                 <q-step
                     :name="1"
-                    title="Awaiting Arbitrators"
+                    :title="$t('pages.resolve.case_steps_awaiting_title')"
                     icon="assignment"
                 >
-                    After a case file has been built and is ready for review,
-                    the case enters the "Awaiting Arbitrators" stage where any
-                    arbitrator can send an offer to the claimant with their
-                    hourly rate and the estimated number of hours to judge the
-                    case. To accept an offer the claimant will need to pay the
-                    whole cost upfront. However, the funds will not be
-                    transferred to the arbitrator until the case is resolved,
-                    and can be returned in case of mistrial.
+                    {{$t('pages.resolve.case_steps_awaiting_content')}}
                     <br /><br />
                     <q-btn
                         v-if="
@@ -46,8 +36,8 @@
                         color="primary"
                         :label="
                             canArbitratorSubmitOffer() === 'new'
-                                ? 'Submit Offer'
-                                : 'Update Offer'
+                                ? $t('pages.resolve.case_steps_submit_offer')
+                                : $t('pages.resolve.case_steps_update_offer')
                         "
                     />&nbsp;
                     <q-btn
@@ -57,7 +47,7 @@
                             formType = 'dismissoffer';
                         "
                         color="red"
-                        label="Dismiss Offer"
+                        :label="$t('pages.resolve.case_steps_dismiss_offer')"
                     />
                     <br /><br />
                     <offers-table
@@ -68,11 +58,10 @@
 
                 <q-step
                     :name="2"
-                    title="Arbitrators Assigned"
+                    :title="$t('pages.resolve.case_steps_assigned_title')"
                     icon="assignment"
                 >
-                    Now that the arbitrator(s) has been assigned, case waits for
-                    the arbitrator to begin the case investigation.
+                    {{$t('pages.resolve.case_steps_assigned_content')}}
                     <br /><br />
                     <q-btn
                         v-if="isCaseArbitrator()"
@@ -81,15 +70,12 @@
                             formType = 'startcase';
                         "
                         color="primary"
-                        label="Start Case"
+                        :label="$t('pages.resolve.case_steps_start')"
                     />
                 </q-step>
 
-                <q-step :name="3" title="Case Investigation" icon="add_comment">
-                    Arbitrator begins to investigate the individual claims.
-                    Claimant can update their claims, especially if more info is
-                    required by the arbitrator. Respondant will also be able to
-                    respond to claims made by the claimant.
+                <q-step :name="3" :title="$t('pages.resolve.case_steps_investigation_title')" icon="add_comment">
+                    {{$t('pages.resolve.case_steps_investigation_content')}}
                     <br /><br />
                     <q-btn
                         v-if="
@@ -102,46 +88,41 @@
                             formType = 'setruling';
                         "
                         color="primary"
-                        label="Finalize Case"
+                        :label="$t('pages.resolve.case_steps_finalize_title')"
                     />
                 </q-step>
 
-                <q-step :name="4" title="Decision" icon="add_comment">
-                    Admin will validate the case, which is meant to ensure that
-                    the arbitrator performed their job appropiately. If the case
-                    is considered valid, the case fee will be added to the smart
-                    contract funds and the arbitrator will be paid for their
-                    service. On the other hand, if the case is invalidated both
-                    the fee and the arbitrator rate cost will be returned to the
-                    claimant and the case will be considered
-                    <strong>dismissed</strong> <br /><br />
+                <q-step :name="4" :title="$t('pages.resolve.case_steps_decision_title')" icon="add_comment">
+                    <i18n-t keypath="pages.resolve.case_steps_decision_content">
+                        <template #dismissed>
+                            <strong>{{$t('pages.resolve.case_steps_dismissed')}}</strong>
+                        </template>
+                    </i18n-t><br /><br />
                     <q-btn
                         v-if="isResolveAdmin"
                         @click="validateCase(true)"
                         color="primary"
-                        label="Approve"
+                        :label="$t('pages.resolve.case_steps_approve')"
                     />&nbsp;
                     <q-btn
                         v-if="isResolveAdmin"
                         @click="validateCase(false)"
                         color="red"
-                        label="Reject"
+                        :label="$t('pages.resolve.case_steps_reject')"
                     />
                 </q-step>
 
-                <q-step :name="5" title="Enforcement" icon="add_comment">
-                    In this stage, the network validators will apply the ruling
-                    that has been set by the arbitrator. Once the actions have
-                    been executed, the admin can close the case.<br /><br />
+                <q-step :name="5" :title="$t('pages.resolve.case_steps_enforce_title')" icon="add_comment">
+                    {{$t('pages.resolve.case_steps_enforce_content')}}<br /><br />
                     <q-btn
                         v-if="isResolveAdmin"
                         @click="closeCase"
                         color="primary"
-                        label="Close Case"
+                        :label="$t('pages.resolve.case_steps_close_cta')"
                     />
                 </q-step>
 
-                <q-step :name="6" title="Case Closed" icon="add_comment">
+                <q-step :name="6" :title="$t('pages.resolve.case_steps_case_closed')" icon="add_comment">
                 </q-step>
             </q-stepper>
         </div>
