@@ -381,6 +381,9 @@ export default {
             admin_step_election_finalization_content:
                 'Voting has completed and admin needs to execute {endelection} action to process the vote results and begin the arbitration term for the winning candidates. Users will also be able to start nominating themselves for the next election, whenever that may happen to be.',
             admin_step_election_finalization_cta: 'Finalize Election',
+            admin_status_nominee_reg: 'Nominee Registration',
+            admin_status_election_prep: 'Election Preparaation',
+            admin_status_election_finalization: 'Election Finalization',
 
             arb_available: 'Available',
             arb_unavailable: 'Unavailable',
@@ -388,6 +391,46 @@ export default {
             arb_expired: 'Expired',
 
             assigned_cases_title: 'Assigned Cases',
+
+            case_status_setup: 'Case Setup',
+            case_status_awaiting: 'Awaiting Arbs',
+            case_status_arbs_assigned: 'Arbs Assigned',
+            case_status_investigation: 'Case Investigation',
+            case_status_decision: 'Decision',
+            case_status_enforcement: 'Enforcement',
+            case_status_resolved: 'Resolved',
+            case_status_dismissed: 'Dismissed',
+            case_status_cancelled: 'Cancelled',
+            case_status_mistrial: 'Mistrial',
+            offer_status_pending: 'Pending',
+            offer_status_accepted: 'Accepted',
+            offer_status_rejected: 'Rejected',
+            offer_status_dismissed: 'Dismissed',
+
+            claim_filed: 'Filed',
+            claim_responded: 'Responded',
+            claim_accepted: 'Accepted',
+            claim_dismissed: 'Dismissed',
+
+            claim_category_undecided: 'Undecided',
+            claim_category_lost: 'Lost Key Recovery',
+            claim_category_reversal: 'Transaction Reversal',
+            claim_category_emergency: 'Emergency Intervention',
+            claim_category_contested: 'Contested Ownership',
+            claim_category_relief: 'Unexecuted Relief',
+            claim_category_breach: 'Contract Breach',
+            claim_category_ip: 'Misused CR IP',
+            claim_category_tort: 'A Tort',
+            claim_category_bp: 'BP Penalty Reversal',
+            claim_category_arb: 'Wrongful Arbitration Act',
+            claim_category_exec: 'Act Exec Relief',
+            claim_category_works: 'Works Project Failure',
+            claim_category_tbnoa: 'TBNOA Breach',
+            claim_category_misc: 'Misc',
+
+            election_status_created: 'Created',
+            election_stauts_live: 'Live',
+            election_status_ended: 'Ended',
 
             case_summary: 'Case Summary',
             case_summary_intro_content:

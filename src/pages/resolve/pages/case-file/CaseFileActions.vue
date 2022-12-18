@@ -9,7 +9,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import CaseFileAction from './CaseFileAction.vue';
 
 export default {

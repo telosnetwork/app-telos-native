@@ -27,7 +27,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import ArbitratorStatusChip from '../../components/ArbitratorStatusChip.vue';
 import TelosProfileAvatar from 'src/components/common/TelosProfileAvatar.vue';
 import { getDstorLink } from '../../util';
@@ -37,12 +37,12 @@ export default {
         TelosProfileAvatar
     },
     methods: {
-        getDstorLink(hash: string) {
+        getDstorLink(hash) {
             return getDstorLink(hash);
         }
     },
     computed: {
-        arbitrators(): any[] {
+        arbitrators() {
             // @ts-ignore
             const arbitrators = [...this.$store.state.resolve.arbitrators];
             return arbitrators || [];

@@ -154,7 +154,7 @@ export default {
         },
         getCaseStatus() {
             const index = this.caseFile.case_status;
-            return CASE_STATUS_LIST[index];
+            return this.$t(CASE_STATUS_LIST[index]);
         },
         async fetchCaseFile() {
             const id = this.$route.params.id;

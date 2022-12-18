@@ -38,7 +38,7 @@ export default {
     },
     data() {
         const options = DECISION_CLASS_LIST.map((item, index) => ({
-            label: item,
+            label: this.$t(item),
             value: index
         }));
         return {

@@ -14,48 +14,48 @@ const NEXT_PUBLIC_ARBITRATION_CONTRACT =
 
 export const CLAIM_STATUS_LIST = [
     '',
-    'Filed',
-    'Responded',
-    'Accepted',
-    'Dismissed'
+    'claim_filed',
+    'claim_responded',
+    'claim_accepted',
+    'claim_dismissed'
 ];
 
 export const CLAIM_CATEGORY_LIST = [
     '',
-    'Undecided',
-    'Lost Key Recovery',
-    'Transaction Reversal',
-    'Emergency Intervention',
-    'Contested Ownership',
-    'Unexecuted Relief',
-    'Contract Breach',
-    'Misused CR IP',
-    'A Tort',
-    'BP Penalty Reversal',
-    'Wrongful Arbitration Act',
-    'Act Exec Relief',
-    'Works Project Failure',
-    'TBNOA Breach',
-    'Misc'
+    'pages.resolve.claim_category_undecided',
+    'pages.resolve.claim_category_lost',
+    'pages.resolve.claim_category_reversal',
+    'pages.resolve.claim_category_emergency',
+    'pages.resolve.claim_category_contested',
+    'pages.resolve.claim_category_relief',
+    'pages.resolve.claim_category_breach',
+    'pages.resolve.claim_category_ip',
+    'pages.resolve.claim_category_tort',
+    'pages.resolve.claim_category_bp',
+    'pages.resolve.claim_category_arb',
+    'pages.resolve.claim_category_exec',
+    'pages.resolve.claim_category_works',
+    'pages.resolve.claim_category_tbnoa',
+    'pages.resolve.claim_category_misc'
 ];
 
 export const DECISION_CLASS_LIST = [
-    '',
-    'Undecided',
-    'Lost Key Recovery',
-    'Transaction Reversal',
-    'Emergency Intervention',
-    'Contested Ownership',
-    'Unexecuted Relief',
-    'Contract Breach',
-    'Misused CR IP',
-    'A Tort',
-    'BP Penalty Reversal',
-    'Wrongful Arbitration Act',
-    'Act Exec Relief',
-    'Works Project Failure',
-    'TBNOA Breach',
-    'Misc'
+    'pages.resolve.',
+    'pages.resolve.claim_category_undecided',
+    'pages.resolve.claim_category_lost',
+    'pages.resolve.claim_category_reversal',
+    'pages.resolve.claim_category_emergency',
+    'pages.resolve.claim_category_contested',
+    'pages.resolve.claim_category_relief',
+    'pages.resolve.claim_category_breach',
+    'pages.resolve.claim_category_ip',
+    'pages.resolve.claim_category_tort',
+    'pages.resolve.claim_category_bp',
+    'pages.resolve.claim_category_arb',
+    'pages.resolve.claim_category_exec',
+    'pages.resolve.claim_category_works',
+    'pages.resolve.claim_category_tbnoa',
+    'pages.resolve.claim_category_misc'
 ];
 
 export const FETCH_CLAIMS = async (case_id: string): Promise<Claim[]> => {

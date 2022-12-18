@@ -91,7 +91,7 @@ export default {
             this.formType = null;
         },
         getOfferStatus(index) {
-            return OFFER_STATUS_LIST[index];
+            return this.$t(OFFER_STATUS_LIST[index]);
         },
         canAccountAcceptOffer(status) {
             if (this.account !== this.caseFile.claimant) return false;

@@ -292,10 +292,10 @@ export default {
             return isPending;
         },
         getClaimCategory(id) {
-            return CLAIM_CATEGORY_LIST[id];
+            return this.$t(CLAIM_CATEGORY_LIST[id]);
         },
         getStatus(statusId) {
-            return CLAIM_STATUS_LIST[statusId];
+            return this.$t(CLAIM_STATUS_LIST[statusId]);
         },
         closeModal() {
             this.form = false;

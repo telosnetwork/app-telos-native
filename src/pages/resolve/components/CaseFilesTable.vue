@@ -127,7 +127,7 @@ export default {
             });
         },
         getCaseFileStatusSyntax(index) {
-            return CASE_STATUS_LIST[index];
+            return this.$t(CASE_STATUS_LIST[index]);
         }
     }
 };

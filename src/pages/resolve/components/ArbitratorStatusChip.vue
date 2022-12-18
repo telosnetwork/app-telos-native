@@ -27,7 +27,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import { ARBITRATOR_STATUS_LIST } from '../constants';
 import { getAvailableArbitratorStatus } from '../util';
 
@@ -35,8 +35,9 @@ export default {
     props: ['arbitrator'],
     computed: {},
     methods: {
-        getStatusText(status: number) {
-            return ARBITRATOR_STATUS_LIST[status];
+        getStatusText(status) {
+            // @ts-ignore
+            return this.$t(ARBITRATOR_STATUS_LIST[status]);
         },
         getArbitratorStatus: getAvailableArbitratorStatus
     }

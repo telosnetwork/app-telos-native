@@ -153,50 +153,42 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import IpfsLink2 from '../../components/IpfsLink2.vue';
 import { DECISION_CLASS_LIST } from '../../constants';
-import { HyperionAct, Authorization } from '../../types';
 
 export default {
     components: { IpfsLink2 },
     props: ['action', 'index', 'claims'],
     computed: {
-        offers(): any {
-            // @ts-ignore
+        offers() {
             return this.$store.state.resolve.offers;
         },
-        act(): HyperionAct {
-            // @ts-ignore
+        act() {
             return this.action.act;
         },
-        authorization(): Authorization {
-            // @ts-ignore
+        authorization() {
             return this.action.act.authorization;
         },
-        actionData(): any {
-            // @ts-ignore
+        actionData() {
             return this.action.act.data;
         }
     },
     methods: {
-        decisionClass(type: number) {
-            return DECISION_CLASS_LIST[type];
+        decisionClass(type) {
+            return this.$t(DECISION_CLASS_LIST[type]);
         },
-        createIpfsLink(hash: string) {
+        createIpfsLink(hash) {
             return `https://api.dstor.cloud/ipfs/${hash}`;
         },
-        // @ts-ignore
-        getOffer(id: number): any {
-            // @ts-ignore
+        getOffer(id) {
             if (!this.offers) return null;
-            // @ts-ignore
             const offer = this.offers.find(
-                (offer: any) => offer.offer_id === id
+                (offer) => offer.offer_id === id
             );
             return offer;
         },
-        getOfferSyntax(id: number): any {
+        getOfferSyntax(id) {
             const offer = this.getOffer(id);
             if (!offer) return null;
             return `${offer.arbitrator} estimated ${offer.estimated_hours} hours at ${offer.hourly_rate} per hour`;
