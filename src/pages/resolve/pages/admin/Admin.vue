@@ -9,21 +9,15 @@
             >
                 <q-step
                     :name="3"
-                    title="Setup &amp; Nominee Registration"
+                    :title="$t('pages.resolve.admin_step_case_setup')"
                     icon="settings"
                 >
-                    <p>
-                        Admin is able to set the configuration parameters for
-                        the smart contract, including election duration,
-                        arbitration term length, and number of arbitration seats
-                        to be filled.
-                    </p>
-
-                    <p>
-                        There are currently
-                        <strong>{{ arbSeatsAvailable }}</strong>
-                        arbitration seats available
-                    </p>
+                    <p>{{$t('pages.resolve.admin_step_case_content_1')}}</p>
+                    <i18n-t keypath="pages.resolve.admin_step_case_content_2" tag="p">
+                        <template v-slot:seats>
+                            <strong>{{ arbSeatsAvailable }}</strong>
+                        </template>
+                    </i18n-t>
                     <q-btn
                         v-if="arbSeatsAvailable"
                         @click="

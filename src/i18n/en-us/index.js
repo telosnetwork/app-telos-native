@@ -345,5 +345,10 @@ export default {
         profileLogin: {
             failed: 'Unable to login to the profile service',
         },
+        resolve: {
+            admin_step_case_setup: 'Setup & Nominee Registration',
+            admin_step_case_content_1: 'Admin is able to set the configuration parameters for the smart contract, including election duration, arbitration term length, and number of arbitration seats to be filled.',
+            admin_step_case_content_2: 'Therea are currently {seats} arbitration seats available'
+        }
     },
 };
