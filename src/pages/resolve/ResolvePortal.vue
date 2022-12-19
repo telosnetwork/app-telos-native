@@ -100,7 +100,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .heading {
     h3 {
         margin-top: 20px;

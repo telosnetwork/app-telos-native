@@ -314,7 +314,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 #claims-table {
     .q-tooltip {
         font-size: 1rem;

@@ -718,6 +718,8 @@ export default {
             update_claim_title: 'Update Claim',
             update_claim_update_cta: 'Update',
             update_claim_cancel_cta: 'Cancel',
+
+            account_heading: 'Manage your account',
         },
     },
 };

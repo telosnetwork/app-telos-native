@@ -13,7 +13,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .resolve-hash-link {
     text-decoration: none;
     color: inherit;

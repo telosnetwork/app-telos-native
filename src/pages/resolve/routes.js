@@ -4,6 +4,7 @@ import Arbitrator from './pages/arbitrator/Arbitrator.vue';
 import Elections from './pages/elections/Elections.vue';
 import Cases from './pages/cases/Cases.vue';
 import CaseFile from './pages/case-file/CaseFile.vue';
+import Account from './pages/account/Account.vue';
 
 export const resolveRoutes = [
     { path: 'admin', component: Admin, name: 'Admin' },
@@ -18,5 +19,10 @@ export const resolveRoutes = [
         name: 'Case',
         params: { dynamicName: true },
         props: true
+    },
+    {
+        path: 'account',
+        component: Account,
+        name: 'Account',
     }
 ];

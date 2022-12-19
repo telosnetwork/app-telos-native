@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .resolve-hash-link {
     text-decoration: underline;
     font-weight: bold;
