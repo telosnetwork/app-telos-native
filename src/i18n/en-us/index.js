@@ -362,6 +362,12 @@ export default {
             cancel: 'Cancel',
             category: 'Category',
 
+            menu_welcome: 'Welcome',
+            menu_elections: 'Elections',
+            menu_arbitrator: 'Arbitrator',
+            menu_cases: 'Cases',
+            menu_account: 'Account',
+
             admin_step_case_setup: 'Setup & Nominee Registration',
             admin_step_case_content_1:
                 'Admin is able to set the configuration parameters for the smart contract, including election duration, arbitration term length, and number of arbitration seats to be filled.',
@@ -476,6 +482,7 @@ export default {
             add_claim_title: 'Add Claim',
 
             create_case_heading: 'Create a new case',
+            create_cass_text: 'Do you have an asset related issue that you’d like the network’s arbitration system to resolve? We believe that a transparent process benefits everyone.',
 
             meet_arbitrators_title: 'Meet Your Arbitrators',
             meet_arbitrators_info:

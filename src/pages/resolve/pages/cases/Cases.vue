@@ -4,7 +4,7 @@
             <intro-card
                 class="col-xs-12 col-sm-6"
                 :heading="$t('pages.resolve.create_case_heading')"
-                text="Do you have an asset related issue that you’d like the network’s arbitration system to resolve? We believe that a transparent process benefits everyone."
+                :text="$t('pages.resolve.create_cass_text')"
             >
                 <template v-slot:buttons>
                     <q-btn

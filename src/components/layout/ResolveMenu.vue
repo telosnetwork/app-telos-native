@@ -7,7 +7,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						Welcome
+						{{$t('pages.resolve.menu_welcome')}}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -17,7 +17,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						Elections
+						{{$t('pages.resolve.menu_elections')}}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -28,7 +28,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						Arbitrator
+						{{$t('pages.resolve.menu_arbitrator')}}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -38,7 +38,18 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						Cases
+						{{$t('pages.resolve.menu_cases')}}
+					</q-item-label>
+				</q-item-section>
+			</q-item>
+			<q-item
+				v-if="isAuthenticated"
+				clickable
+				@click="$router.push('/resolve/account')"
+			>
+				<q-item-section>
+					<q-item-label>
+						{{$t('pages.resolve.menu_account')}}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
