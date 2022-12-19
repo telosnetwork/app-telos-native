@@ -720,6 +720,9 @@ export default {
             update_claim_cancel_cta: 'Cancel',
 
             account_heading: 'Manage your account',
+            account_instructions: 'Track your Resolve balance, deposit TLOS to interact with the arbitration contract, and withdraw your TLOS balance',
+            account_balance: 'Balance:',
+            account_balance_withdraw: 'Withdraw'
         },
     },
 };
