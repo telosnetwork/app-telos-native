@@ -79,9 +79,9 @@ export default {
         color: #333333;
         margin-bottom: 36px;
     }
+    .q-btn {
+        margin: 8px;
+    }
 }
 
-.q-btn {
-    margin: 8px;
-}
 </style>
