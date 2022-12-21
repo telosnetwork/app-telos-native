@@ -1,13 +1,22 @@
 <script>
 import { mapGetters } from 'vuex';
+import ResolveMenu from './ResolveMenu.vue';
+
+const NETWORK_ENV = process.env.NETWORK_ENV;
 
 export default {
     name: 'HeaderMenu',
     computed: {
         ...mapGetters('accounts', ['isAuthenticated']),
+        isTestnet () {
+            return NETWORK_ENV === 'testnet';
+        }
     },
     props: {
         activeFilter: {},
+    },
+    components: {
+        ResolveMenu,
     },
     data() {
         return {
@@ -23,7 +32,7 @@ export default {
                 {
                     label: this.$t('menu.proposals'),
                     route: '/trails/ballots',
-                },
+                }
             ],
             localFileter: this.activeFilter,
         };
@@ -78,6 +87,9 @@ q-tabs(
           :class="[el.filter === localFileter ? 'active-tab': '']"
         )
     div.custom-separator
+  ResolveMenu(
+    v-if="isTestnet"
+  )
 </template>
 
 <style lang="sass">

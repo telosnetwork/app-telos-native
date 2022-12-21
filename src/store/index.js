@@ -11,6 +11,7 @@ import validators from './validators';
 import testnet from './testnet';
 import poc from './poc';
 import general from './general';
+import resolve from './resolve';
 import { store } from 'quasar/wrappers';
 
 /*
@@ -32,6 +33,7 @@ export default store(function (/* { ssrContext } */) {
             transfers,
             validators,
             general,
+            resolve,
         },
 
         // enable strict mode (adds overhead!)
