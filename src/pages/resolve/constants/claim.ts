@@ -40,7 +40,6 @@ export const CLAIM_CATEGORY_LIST = [
 ];
 
 export const DECISION_CLASS_LIST = [
-    'pages.resolve.',
     'pages.resolve.claim_category_undecided',
     'pages.resolve.claim_category_lost',
     'pages.resolve.claim_category_reversal',

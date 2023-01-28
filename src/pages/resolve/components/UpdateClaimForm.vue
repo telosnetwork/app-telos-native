@@ -9,7 +9,7 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat :label="$t('pages.resolve.update_claim_update_cta')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.update_claim_update_cta')" @click="submit" :disable="!isLinkValid" />
             <q-btn flat :label="$t('pages.resolve.update_claim_cancel_cta')" @click="close" />
         </q-card-actions>
     </q-card>
@@ -34,17 +34,18 @@ export default {
     computed: {
         ...mapGetters({
             account: 'accounts/account'
-        })
+        }),
+        isLinkValid() {
+            const isValid = validateIpfsHash(this.newClaimLink);
+            return isValid;
+        }
     },
     methods: {
         validateId,
         setNewClaimLink(link) {
             this.newClaimLink = link;
         },
-        isLinkValid() {
-            const isValid = validateIpfsHash(this.newClaimLink);
-            return isValid;
-        },
+
         async submit() {
             const updateClaimActions = [
                 {

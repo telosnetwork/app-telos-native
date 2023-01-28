@@ -18,7 +18,7 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat :label="$t('pages.resolve.submit')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.submit')" @click="submit" :disable="!isSubmitReady" />
             <q-btn flat :label="$t('pages.resolve.cancel')" @click="close" />
         </q-card-actions>
     </q-card>
@@ -39,7 +39,7 @@ export default {
     data() {
         const options = DECISION_CLASS_LIST.map((item, index) => ({
             label: this.$t(item),
-            value: index
+            value: index + 1
         }));
         return {
             category: null,
@@ -50,16 +50,20 @@ export default {
     computed: {
         ...mapGetters({
             account: 'accounts/account'
-        })
+        }),
+        isLinkValid() {
+            const isValid = validateIpfsHash(this.claimLink);
+            return isValid;
+        },
+        isSubmitReady() {
+            if (!this.category || !this.isLinkValid) return false;
+            return true;
+        },
     },
     methods: {
         validateId,
         setClaimLink(link) {
             this.claimLink = link;
-        },
-        isLinkValid() {
-            const isValid = validateIpfsHash(this.claimLink);
-            return isValid;
         },
         async submit() {
             const addClaimActions = [
