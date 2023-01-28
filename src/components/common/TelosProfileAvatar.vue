@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         onError() {
-            console.log('there is error');
+            console.log('Telos profile image load error');
             this.isError = true;
         },
     },
