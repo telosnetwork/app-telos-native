@@ -1,7 +1,7 @@
 <template>
     <q-card class="create-new-case-modal">
         <q-card-section>
-            <div class="text-h6">{{$('pages.resolve.create_case_title')}}</div>
+            <div class="text-h6">{{$t('pages.resolve.create_case_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -9,7 +9,7 @@
                 v-model="account"
                 disable
                 filled
-                :label="$t(pages.resolve.claimant)"
+                :label="$t('pages.resolve.claimant')"
                 bottom-slots
                 :hint="$t('pages.resolve.create_case_account_name')"
                 :error-message="$t('pages.resolve.create_case_account_error')"
@@ -21,7 +21,7 @@
                 v-model="respondant"
                 autofocus
                 filled
-                :label="$t(pages.resolve.respondant)"
+                :label="$t('pages.resolve.respondant')"
                 bottom-slots
                 :hint="$t('pages.resolve.create_case_account_name')"
                 :rules="[
@@ -44,8 +44,8 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat :label="$('pages.resolve.submit')" @click="submit" />
-            <q-btn flat :label="$('pages.resolve.cancel')" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.submit')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>

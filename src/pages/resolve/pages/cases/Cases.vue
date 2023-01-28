@@ -9,7 +9,7 @@
                 <template v-slot:buttons>
                     <q-btn
                         color="primary"
-                        @click="isModalVisible = !isModalVisible"
+                        @click="toggleModal"
                         v-if="isAuthenticated"
                         >{{$t('pages.resolve.create_case_heading')}}</q-btn
                     >

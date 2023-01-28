@@ -18,8 +18,8 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat :label="$('pages.resolve.submit')" @click="submit" />
-            <q-btn flat :label="$('pages.resolve.cancel')" @click="close" />
+            <q-btn flat :label="$t('pages.resolve.submit')" @click="submit" />
+            <q-btn flat :label="$t('pages.resolve.cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>
