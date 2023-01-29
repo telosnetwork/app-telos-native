@@ -698,6 +698,7 @@ export default {
             review_claim_respondant_error: 'Please enter a number greater than 0',
             review_claim_submit: 'Submit',
             review_claim_cancel: 'Cancel',
+            review_claim_no_info_needed: 'If you do not require more info, exit out of this form',
 
             finalize_case_title: 'Finalize Case',
             finalize_case_instructions: 'Upload a document specifying your ruling on this particular case',

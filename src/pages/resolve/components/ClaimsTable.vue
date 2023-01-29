@@ -19,7 +19,7 @@
                         `https://api.dstor.cloud/ipfs/${props.row.claim_summary}`
                     "
                     target="_blank"
-                    >View</a
+                    >{{ $t('pages.resolve.claims_table_view') }}</a
                 >
                 <a
                   :href="getDstorLink(props.row.claim_info_required)"
@@ -31,6 +31,7 @@
                       color="red"
                       label="!"
                       align="top"
+                      class="badge"
                   >
                       <q-tooltip>{{$t('pages.resolve.claims_table_more_info_claimant')}}</q-tooltip>
                   </q-badge>
@@ -43,7 +44,7 @@
                     props.row.claim_info_needed
                         ? new Date(
                               props.row.claimant_limit_time + 'Z'
-                          ).toISOString()
+                          ).toLocaleString()
                         : $t('pages.resolve.not_applicable')
                 }}
             </q-td>
@@ -80,6 +81,7 @@
                       color="red"
                       label="!"
                       align="top"
+                      class="badge"
                   >
                       <q-tooltip>{{$t('pages.resolve.claims_table_more_info_respondant')}}</q-tooltip>
                   </q-badge>
@@ -332,6 +334,9 @@ export default {
     .q-tooltip {
         font-size: 1rem;
         line-height: 1rem;
+    }
+    .badge {
+      margin-left: 6px;
     }
 }
 </style>

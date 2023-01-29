@@ -32,7 +32,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { validateIpfsHash, validateId } from '../util';
 import FileUploadInput from './FileUploadInput.vue';
 
 export default {
