@@ -351,6 +351,7 @@ export default {
             failed: 'Unable to login to the profile service',
         },
         resolve: {
+            not_applicable: 'n/a',
             closed_case: 'closed case',
             accepted: 'accepted',
             rejected: 'rejected',
@@ -602,8 +603,8 @@ export default {
 
             claim_table_title: 'Claims',
             claims_table_view: 'View',
-            claims_table_more_info_claimant: 'More info needed from claimant',
-            claims_table_more_info_respondant: 'More info needed from respondant',
+            claims_table_more_info_claimant: 'Click to view info needed from claimant',
+            claims_table_more_info_respondant: 'Click to view info needed from respondant',
             claims_table_actions: 'Actions',
             claims_table_respond_cta: 'Respond',
             claims_table_request_more: 'Request More Info',
@@ -716,11 +717,12 @@ export default {
             shred_case_delete: 'Delete',
             shred_case_cancel: 'Cancel',
 
-            start_case_title: 'Submit Offer',
+            start_case_title: 'Start Case',
             start_case_label: 'Number days for respondant to respond',
             start_case_error: 'Please enter a number greater than 0',
             start_case_start: 'Start Case',
             start_case_cancel: 'Cancel',
+            start_case_info_request_label: 'Requested Info Link',
 
             update_claim_title: 'Update Claim',
             update_claim_update_cta: 'Update',

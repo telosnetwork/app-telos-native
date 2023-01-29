@@ -21,15 +21,20 @@
                     target="_blank"
                     >View</a
                 >
-                <q-badge
-                    v-if="props.row.claim_info_needed"
-                    rounded
-                    color="red"
-                    label="!"
-                    align="top"
+                <a
+                  :href="getDstorLink(props.row.claim_info_required)"
+                  target="_blank"
                 >
-                    <q-tooltip>{{$t('pages.resolve.claims_table_more_info_claimant')}}</q-tooltip>
-                </q-badge>
+                  <q-badge
+                      v-if="props.row.claim_info_needed"
+                      rounded
+                      color="red"
+                      label="!"
+                      align="top"
+                  >
+                      <q-tooltip>{{$t('pages.resolve.claims_table_more_info_claimant')}}</q-tooltip>
+                  </q-badge>
+                </a>
             </q-td>
         </template>
         <template v-slot:body-cell-claimant_limit_time="props">
@@ -39,7 +44,7 @@
                         ? new Date(
                               props.row.claimant_limit_time + 'Z'
                           ).toISOString()
-                        : 'n/a'
+                        : $t('pages.resolve.not_applicable')
                 }}
             </q-td>
         </template>
@@ -65,15 +70,20 @@
                     target="_blank"
                     >{{$t('pages.resolve.claims_table_view')}}</a
                 >
-                <q-badge
-                    v-if="props.row.response_info_needed"
-                    rounded
-                    color="red"
-                    label="!"
-                    align="top"
+                <a
+                  :href="getDstorLink(props.row.response_info_required)"
+                  target="_blank"
                 >
-                    <q-tooltip>{{$t('pages.resolve.claims_table_more_info_respondant')}}</q-tooltip>
-                </q-badge>
+                  <q-badge
+                      v-if="props.row.response_info_needed"
+                      rounded
+                      color="red"
+                      label="!"
+                      align="top"
+                  >
+                      <q-tooltip>{{$t('pages.resolve.claims_table_more_info_respondant')}}</q-tooltip>
+                  </q-badge>
+                </a>
             </q-td>
         </template>
         <template v-slot:body-cell-respondant_limit_time="props">
@@ -82,8 +92,8 @@
                     props.row.response_info_needed
                         ? new Date(
                               props.row.respondant_limit_time + 'Z'
-                          ).toISOString()
-                        : 'n/a'
+                          ).toLocaleString()
+                        : $t('pages.resolve.not_applicable')
                 }}
             </q-td>
         </template>
@@ -212,6 +222,7 @@ import UpdateClaimForm from './UpdateClaimForm.vue';
 import ReviewClaimForm from './ReviewClaimForm.vue';
 import SettleClaimForm from './SettleClaimForm.vue';
 import { mapGetters } from 'vuex';
+import { getDstorLink } from '../util';
 
 export default {
     props: ['caseId', 'caseFile', 'claims'],
@@ -230,7 +241,8 @@ export default {
             columns: [
                 { name: 'claim_id',
                     label: this.$t('pages.resolve.claims_table_id'),
-                    field: 'claim_id' },
+                    field: 'claim_id'
+                },
                 {
                     name: 'claim_summary',
                     label: this.$t('pages.resolve.claims_table_summary'),
@@ -247,14 +259,14 @@ export default {
                     field: 'claim_category'
                 },
                 {
-                    name: 'decision_link',
-                    label: this.$t('pages.resolve.claims_table_decision'),
-                    field: 'decision_link'
-                },
-                {
                     name: 'response_link',
                     label: this.$t('pages.resolve.claims_table_response'),
                     field: 'response_link'
+                },
+                {
+                    name: 'decision_link',
+                    label: this.$t('pages.resolve.claims_table_decision'),
+                    field: 'decision_link'
                 },
                 {
                     name: 'respondant_limit_time',
@@ -267,6 +279,7 @@ export default {
         };
     },
     methods: {
+        getDstorLink,
         isClaimant() {
             if (!this.caseFile) return false;
             return this.account === this.caseFile.claimant;
@@ -301,7 +314,7 @@ export default {
             this.form = false;
             this.formType = null;
             this.claimId = null;
-        }
+        },
     },
     computed: {
         ...mapGetters({
@@ -309,7 +322,7 @@ export default {
         }),
         isCaseArbitrator() {
             return this.caseFile.arbitrators.includes(this.account);
-        }
+        },
     }
 };
 </script>

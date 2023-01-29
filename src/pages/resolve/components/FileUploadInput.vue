@@ -2,7 +2,7 @@
     <q-input
         filled
         v-model="hash"
-        :label="$t('pages.resolve.file_upload_label')"
+        :label="label || $t('pages.resolve.file_upload_label')"
         bottom-slots
         :hint="$t('pages.resolve.file_upload_hint')"
         :error-message="$t('pages.resolve.file_upload_error')"
@@ -35,6 +35,7 @@ import { mapGetters } from 'vuex';
 import { validateIpfsHash } from '../util';
 
 export default {
+    props: ['label'],
     data() {
         return {
             hash: '',
