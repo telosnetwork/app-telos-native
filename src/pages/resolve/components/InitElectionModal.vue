@@ -42,14 +42,6 @@ export default {
         account_name() {
             return this.$store.state.accounts.account;
         }
-        // dialogNameValue: {
-        //   get () {
-        //     return this.dialogName
-        //   },
-        //   set (newValue) {
-        //     this.dialogName = newValue
-        //   }
-        // }
     },
     methods: {
         setCredentialsLink(link) {

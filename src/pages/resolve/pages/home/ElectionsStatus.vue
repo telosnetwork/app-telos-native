@@ -7,7 +7,6 @@
             :label="$t(currentElectionContent.buttonText)"
             @click="onClickButton(currentElectionContent.buttonRoute)"
         />
-        <!--<q-btn color="primary" label="Vote" /> -->
     </div>
 </template>
 

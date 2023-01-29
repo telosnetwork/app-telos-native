@@ -55,7 +55,6 @@ export default {
             this.response_info_required = link;
         },
         async submit() {
-            // TODO: add response_info_required functionality
             const startCaseActions = [
                 {
                     account: process.env.ARB_CONTRACT,

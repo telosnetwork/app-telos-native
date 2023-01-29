@@ -12,7 +12,6 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-            <!-- <q-checkbox v-model="isAccepted" label="Accept claim" color="primary" /> -->
             <q-option-group
                 v-model="isAccepted"
                 :options="[
@@ -91,7 +90,6 @@ export default {
             try {
                 await this.$store.$api.signTransaction(settleClaimActions);
                 this.close();
-                // setTimeout(this.onSubmit, 5000);
             } catch (err) {
                 console.log('submit error: ', err);
             }

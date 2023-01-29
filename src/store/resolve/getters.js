@@ -68,7 +68,6 @@ export const isPastAddCandidates = ({ elections, config }) => {
     const addCandidatesEndTime =
     new Date(end_add_candidates_ts + 'Z').getTime() / 1000;
     const isPast = nowTimestamp > addCandidatesEndTime;
-    // console.log("isPastAddCandidates", isPast, addCandidatesEndTime);
     return isPast;
 };
 
@@ -81,6 +80,5 @@ export const isPastNomination = ({ elections, config }) => {
     const beginAddCandidatesTime =
     new Date(begin_add_candidates_ts + 'Z').getTime() / 1000;
     const isPast = nowTimestamp > beginAddCandidatesTime;
-    // console.log("isPastNomination", isPast);
     return isPast;
 };

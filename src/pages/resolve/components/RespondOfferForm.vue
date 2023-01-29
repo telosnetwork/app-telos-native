@@ -7,16 +7,6 @@
         <q-card-section class="q-pt-none">
             <p>
                 {{$t('pages.resolve.respond_offer_text')}}
-                <!-- {{
-          {
-            balance: balance,
-            fee: fee,
-            exchangeRate: exchangeRate,
-            deficit: deficit,
-            adjustedDeficit: adjustedDeficit,
-            tlosFee: tlosFee,
-          }
-        }} -->
             </p>
         </q-card-section>
         <q-card-section v-if="deficit > 0">
@@ -60,7 +50,6 @@ export default {
             return this.deficit * 1.01;
         },
         tlosFee() {
-            // todo use strings for math
             return (
                 (this.offer.estimated_hours *
                     parseFloat(this.offer.hourly_rate.replace(' USD', ''))) /

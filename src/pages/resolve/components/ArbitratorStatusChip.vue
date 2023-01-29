@@ -49,7 +49,6 @@ export default {
     },
     methods: {
         getStatusText(status) {
-            // @ts-ignore
             return this.$t(ARBITRATOR_STATUS_LIST[status]);
         },
         getArbitratorStatus: getAvailableArbitratorStatus

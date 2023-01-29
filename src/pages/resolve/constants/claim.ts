@@ -4,14 +4,6 @@ import { Claim } from '../types';
 const NEXT_PUBLIC_ARBITRATION_CONTRACT =
     process.env.NEXT_PUBLIC_ARBITRATION_CONTRACT;
 
-// enum class claim_status : uint8_t
-// {
-// 	FILED            	= 1,
-// 	RESPONDED       	= 2,
-// 	ACCEPTED            = 3,
-// 	DISMISSED           = 4,
-// };
-
 export const CLAIM_STATUS_LIST = [
     '',
     'pages.resolve.claim_filed',

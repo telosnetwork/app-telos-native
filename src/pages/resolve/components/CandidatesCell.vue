@@ -19,13 +19,6 @@
                                 target="_blank"
                                 >{{$t('pages.resolve.candidateS_more_info')}}</a
                             >)
-                            <!--<q-icon
-                v-if="isRemoveCandidateButtonVisible(candidate.name)"
-                name="remove"
-                color="white"
-                size="1rem"
-                class="remove-icon"
-              />-->
                         </div>
                         <div class="text">
                             ({{ getCandidateVotes(candidate.name) }})

@@ -71,7 +71,6 @@ export default {
             try {
                 await this.$store.$api.signTransaction(setRulingActions);
                 this.close();
-                // setTimeout(this.onSubmit, 5000);
             } catch (err) {
                 console.log('submit error: ', err);
             }

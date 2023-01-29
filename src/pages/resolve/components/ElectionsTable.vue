@@ -60,12 +60,6 @@
                             </span><br />
                             <span>{{ props.row.end_voting_ts }}</span>
                         </q-td>
-
-                        <!-- <q-td key="info_url">
-              <ipfs-link :hash="props.row.info_url">
-                {{props.row.info_url}}
-              </ipfs-link>
-            </q-td> -->
                         <q-td key="status">
                             {{ $t(ELECTION_STATUS[props.row.status]) }}
                         </q-td>
@@ -75,7 +69,6 @@
                         class="expanded-row"
                         :props="props"
                     >
-                        <!-- {{JSON.stringify(props.row)}} -->
                         <candidates-cell
                             :election="props.row"
                             colspan="100%"
@@ -91,13 +84,11 @@
 <script>
 import CandidatesCell from './CandidatesCell.vue';
 import { ELECTION_STATUS } from '../constants';
-// import IpfsLink from './IpfsLink.vue'
 import { mapGetters } from 'vuex';
 
 export default {
     components: {
         CandidatesCell
-        // IpfsLink
     },
     data() {
         return {

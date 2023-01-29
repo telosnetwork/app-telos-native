@@ -103,9 +103,7 @@ export default {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
-                        // "Access-Control-Allow-Origin": "*",
                         'Content-Type': 'multipart/form-data',
-                        // "x-dstor-parent-id": 0, // root folder,
                         'x-dstor-comment': `Upload from Resolve by ${this.account}`,
                         'x-dstor-upload-token': uploadToken
                     },

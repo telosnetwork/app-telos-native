@@ -166,9 +166,7 @@ export default {
                     table: 'casefiles',
                     key_type: 'i64',
                     index_position: '1',
-                    // @ts-ignore
                     upper_bound: this.$route.params.id,
-                    // @ts-ignore
                     lower_bound: this.$route.params.id
                 });
                 const [caseFile] = rows;
@@ -222,12 +220,10 @@ export default {
         this.isLoadingHistory = true;
         const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
             this,
-            // @ts-ignore
             this.$route.params.id,
             this.setProgress
         );
         setTimeout(() => (this.isLoadingHistory = false), 2000);
-        // @ts-ignore
         this.caseActionsHistory = actionsHistory;
         this.fetchCaseInterval = setInterval(() => {
             this.fetchCaseFile();

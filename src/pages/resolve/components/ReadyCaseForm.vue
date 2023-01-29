@@ -19,8 +19,6 @@
                 </strong>
             </p>
         </q-card-section>
-        <!-- balance: {{ balance }} fee: {{ fee }} exchangeRate:
-    {{ exchangeRate }} tlosFee: {{ tlosFee }} deficit: {{ deficit }} -->
         <q-card-actions align="right" class="text-primary">
             <q-btn flat :label="$t('pages.resolve.ready_case_ready')" @click="submit" />
             <q-btn flat :label="$t('pages.resolve.ready_case_cancel')" @click="close" />

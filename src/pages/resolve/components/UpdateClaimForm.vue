@@ -20,7 +20,6 @@ import { mapGetters } from 'vuex';
 import { validateIpfsHash, validateId } from '../util';
 import FileUploadInput from './FileUploadInput.vue';
 
-// claimant, claim_link, respondant, claim_category
 export default {
     props: ['close', 'caseId', 'claimId'],
     components: {
@@ -62,7 +61,6 @@ export default {
             try {
                 await this.$store.$api.signTransaction(updateClaimActions);
                 this.close();
-                // setTimeout(this.onSubmit, 5000);
             } catch (err) {
                 console.log('submit error: ', err);
             }

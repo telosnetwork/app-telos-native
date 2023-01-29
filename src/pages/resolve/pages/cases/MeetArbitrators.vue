@@ -43,7 +43,6 @@ export default {
     },
     computed: {
         arbitrators() {
-            // @ts-ignore
             const arbitrators = [...this.$store.state.resolve.arbitrators];
             return arbitrators || [];
         }
