@@ -8,7 +8,7 @@ export const FETCH_DELTAS = async (context: any, params: any) => {
             params: {
                 limit: 200,
                 skip: params.skip,
-                code: 'testtelosarb',
+                code: process.env.ARB_CONTRACT,
                 // track: '',
                 // filter: '',
                 sort: 'desc',
@@ -29,8 +29,8 @@ export const FETCH_ACTIONS = async (context: any, params: any) => {
             params: {
                 limit: 100,
                 skip: params.skip,
-                account: 'testtelosarb',
-                code: 'testtelosarb',
+                account: process.env.ARB_CONTRACT,
+                code: process.env.ARB_CONTRACT,
                 // track: '',
                 // filter: '',
                 sort: 'desc',

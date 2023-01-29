@@ -91,7 +91,7 @@ export default {
         async removeNominee() {
             const unregNomineeActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'unregnominee',
                     data: {
                         nominee: this.account

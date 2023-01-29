@@ -95,7 +95,7 @@ export default {
         async submit() {
             const newCaseActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'filecase',
                     data: {
                         claimant: this.account,

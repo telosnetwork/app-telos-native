@@ -126,7 +126,7 @@ export default {
         async endElection() {
             const endElectionActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'endelection'
                 }
             ];
@@ -140,7 +140,7 @@ export default {
             const { account } = this.$store.state.accounts;
             const removeSelfNominationActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'unregnominee',
                     data: {
                         nominee: account
@@ -159,7 +159,7 @@ export default {
             const { account } = this.$store.state.accounts;
             const registerSelfCandidacyActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'candaddlead',
                     data: {
                         nominee: account
@@ -178,7 +178,7 @@ export default {
             const { account } = this.$store.state.accounts;
             const removeCandidacyActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'candrmvlead',
                     data: {
                         nominee: account

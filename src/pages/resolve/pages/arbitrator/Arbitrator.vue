@@ -46,7 +46,7 @@ export default {
         async changeArbStatus(new_status) {
             const newArbStatusActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'newarbstatus',
                     data: {
                         arbitrator: this.account,

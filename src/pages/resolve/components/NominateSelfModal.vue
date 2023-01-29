@@ -49,7 +49,7 @@ export default {
         async nominateSelf() {
             const nominateSelfActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'regarb',
                     data: {
                         credentials_link: this.credentialsLink,

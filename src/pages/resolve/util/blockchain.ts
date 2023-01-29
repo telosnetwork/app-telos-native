@@ -43,8 +43,8 @@ export const validateIpfsHash = (url: string) => {
 
 export const fetchArbConfig = async (context: any) => {
     const { rows } = await context.$store.$api.getTableRows({
-        code: 'testtelosarb',
-        scope: 'testtelosarb',
+        code: process.env.ARB_CONTRACT,
+        scope: process.env.ARB_CONTRACT,
         table: 'config'
     });
     const [config] = rows;
@@ -53,8 +53,8 @@ export const fetchArbConfig = async (context: any) => {
 
 export const fetchArbitrators = async (context: any) => {
     const { rows } = await context.$store.$api.getTableRows({
-        code: 'testtelosarb',
-        scope: 'testtelosarb',
+        code: process.env.ARB_CONTRACT,
+        scope: process.env.ARB_CONTRACT,
         table: 'arbitrators'
     });
     return rows;
@@ -62,8 +62,8 @@ export const fetchArbitrators = async (context: any) => {
 
 export const fetchElections = async (context: any) => {
     const { rows } = await context.$store.$api.getTableRows({
-        code: 'testtelosarb',
-        scope: 'testtelosarb',
+        code: process.env.ARB_CONTRACT,
+        scope: process.env.ARB_CONTRACT,
         table: 'elections',
         reverse: true
     });
@@ -72,8 +72,8 @@ export const fetchElections = async (context: any) => {
 
 export const fetchNominees = async (context: any) => {
     const { rows } = await context.$store.$api.getTableRows({
-        code: 'testtelosarb',
-        scope: 'testtelosarb',
+        code: process.env.ARB_CONTRACT,
+        scope: process.env.ARB_CONTRACT,
         table: 'nominees'
     });
     return rows;
@@ -81,8 +81,8 @@ export const fetchNominees = async (context: any) => {
 
 export const fetchCaseFiles = async (context: any, case_id?: number) => {
     const { rows } = await context.$store.$api.getTableRows({
-        code: 'testtelosarb',
-        scope: 'testtelosarb',
+        code: process.env.ARB_CONTRACT,
+        scope: process.env.ARB_CONTRACT,
         table: 'casefiles',
         upper_limit: case_id || null,
         lower_limit: case_id || null,
@@ -93,8 +93,8 @@ export const fetchCaseFiles = async (context: any, case_id?: number) => {
 
 export const fetchOffers = async (context: any) => {
     const { rows } = await context.$store.$api.getTableRows({
-        code: 'testtelosarb',
-        scope: 'testtelosarb',
+        code: process.env.ARB_CONTRACT,
+        scope: process.env.ARB_CONTRACT,
         table: 'offers',
         limit: 1000
     });
@@ -103,7 +103,7 @@ export const fetchOffers = async (context: any) => {
 
 export const fetchClaims = async (context: any, id: number) => {
     const { rows } = await context.$store.$api.getTableRows({
-        code: 'testtelosarb',
+        code: process.env.ARB_CONTRACT,
         scope: id,
         table: 'claims'
     });

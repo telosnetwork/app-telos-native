@@ -62,7 +62,7 @@ export default {
         async initElection() {
             const initElectionActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'initelection',
                     data: {
                         content: this.credentialsLink

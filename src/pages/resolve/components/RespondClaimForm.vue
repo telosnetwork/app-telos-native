@@ -48,7 +48,7 @@ export default {
         async submit() {
             const addClaimActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'respond',
                     data: {
                         respondant: this.account,

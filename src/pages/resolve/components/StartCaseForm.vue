@@ -58,7 +58,7 @@ export default {
             // TODO: add response_info_required functionality
             const startCaseActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'startcase',
                     data: {
                         case_id: this.caseId,

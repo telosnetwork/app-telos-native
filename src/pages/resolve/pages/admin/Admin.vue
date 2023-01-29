@@ -115,7 +115,7 @@ export default {
         async endElection() {
             const endElectionActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'endelection',
                     data: {}
                 }

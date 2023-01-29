@@ -235,7 +235,7 @@ export default {
         async startCase() {
             const startCaseActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'startcase',
                     data: {
                         case_id: this.caseFile.case_id,
@@ -252,7 +252,7 @@ export default {
         async validateCase(isProceed) {
             const validateCaseActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'validatecase',
                     data: {
                         case_id: this.caseFile.case_id,
@@ -269,7 +269,7 @@ export default {
         async closeCase() {
             const validateCaseActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'closecase',
                     data: {
                         case_id: this.caseFile.case_id

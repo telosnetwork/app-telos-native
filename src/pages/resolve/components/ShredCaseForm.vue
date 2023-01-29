@@ -29,7 +29,7 @@ export default {
         async submit() {
             const shredCaseActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'shredcase',
                     data: {
                         claimant: this.account,

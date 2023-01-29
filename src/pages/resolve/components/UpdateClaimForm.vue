@@ -49,7 +49,7 @@ export default {
         async submit() {
             const updateClaimActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'updateclaim',
                     data: {
                         claimant: this.account,

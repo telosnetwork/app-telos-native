@@ -128,7 +128,7 @@ export default {
             }
             const reviewClaimActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'reviewclaim',
                     data: {
                         claim_id: this.claimId,

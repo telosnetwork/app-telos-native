@@ -44,7 +44,7 @@ export default {
 
             const dismissOfferActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'dismissoffer',
                     data: {
                         case_id: this.caseId,

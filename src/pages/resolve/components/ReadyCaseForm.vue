@@ -66,14 +66,14 @@ export default {
                     name: 'transfer',
                     data: {
                         from: this.account,
-                        to: 'testtelosarb',
+                        to: process.env.ARB_CONTRACT,
                         quantity: `${this.adjustedDeficit.toFixed(4)} TLOS`,
                         memo: 'For arbitration fee'
                     }
                 });
             }
             actions.push({
-                account: 'testtelosarb',
+                account: process.env.ARB_CONTRACT,
                 name: 'readycase',
                 data: {
                     claimant: this.account,
@@ -93,7 +93,7 @@ export default {
                 let balance = '0.0000 TLOS';
                 const { rows } = await GET_TABLE_ROWS({
                     limit: 1,
-                    code: 'testtelosarb',
+                    code: process.env.ARB_CONTRACT,
                     scope: this.account,
                     table: 'accounts'
                 });

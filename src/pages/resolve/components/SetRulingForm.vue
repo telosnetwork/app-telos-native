@@ -59,7 +59,7 @@ export default {
         async submit() {
             const setRulingActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'setruling',
                     data: {
                         case_id: this.caseId,

@@ -161,8 +161,8 @@ export default {
             if (!id) return;
             try {
                 const { rows } = await GET_TABLE_ROWS({
-                    code: 'testtelosarb',
-                    scope: 'testtelosarb',
+                    code: process.env.ARB_CONTRACT,
+                    scope: process.env.ARB_CONTRACT,
                     table: 'casefiles',
                     key_type: 'i64',
                     index_position: '1',

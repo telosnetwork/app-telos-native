@@ -60,7 +60,7 @@ export default {
         async beginVoting() {
             const beginVotingActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'beginvoting',
                     data: {
                         ballot_name: this.ballot_name,

@@ -77,7 +77,7 @@ export default {
         async submit() {
             const settleClaimActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'settleclaim',
                     data: {
                         case_id: this.caseId,

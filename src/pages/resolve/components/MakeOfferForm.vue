@@ -76,7 +76,7 @@ export default {
 
             const makeOfferActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'makeoffer',
                     data: {
                         case_id: this.caseId,

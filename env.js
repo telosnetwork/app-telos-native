@@ -13,7 +13,7 @@ const sharedEnv = {
   GOOGLE_ANALYTICS: "UA-154600181-2",
   IMGUR_CLIENT_ID: "b6f46df9d1da9d9",
   WEBSERVICES_API_KEY: "XXX",
-  NETWORK_ENV: 'shared'
+  NETWORK_ENV: "shared",
 };
 
 const TESTNET = {
@@ -25,7 +25,8 @@ const TESTNET = {
   WEBSERVICES_URL: "https://api-dev.telos.net",
   HYPERION_URL: "https://testnet.telos.net",
   BLOCKCHAIN_EXPLORER: "https://explorer-test.telos.net",
-  NETWORK_ENV: 'testnet'
+  NETWORK_ENV: "testnet",
+  ARB_CONTRACT: 'testtelosarb',
 };
 
 const MAINNET = {
@@ -37,7 +38,8 @@ const MAINNET = {
   WEBSERVICES_URL: "https://api.telos.net",
   HYPERION_URL: "https://mainnet.telos.net",
   BLOCKCHAIN_EXPLORER: "https://explorer.telos.net",
-  NETWORK_ENV: 'mainnet'
+  NETWORK_ENV: "mainnet",
+  ARB_CONTRACT: 'testtelosarb',
 };
 
 const env = process.env.NETWORK === "mainnet" ? MAINNET : TESTNET;

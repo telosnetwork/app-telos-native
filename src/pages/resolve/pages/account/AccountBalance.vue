@@ -35,7 +35,7 @@ export default {
                 let balance = '0.0000 TLOS';
                 const { rows } = await GET_TABLE_ROWS({
                     limit: 1,
-                    code: 'testtelosarb',
+                    code: process.env.ARB_CONTRACT,
                     scope: this.account,
                     table: 'accounts'
                 });
@@ -50,7 +50,7 @@ export default {
         async withdraw() {
             const withdrawActions = [
                 {
-                    account: 'testtelosarb',
+                    account: process.env.ARB_CONTRACT,
                     name: 'withdraw',
                     data: {
                         owner: this.account
