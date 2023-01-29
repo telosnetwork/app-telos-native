@@ -18,7 +18,7 @@
                 color="primary"
             />
             <file-upload-input
-                class="mb-2"
+              class="mb-2"
               v-if="claim_info_needed"
               @update:hash="setClaimRequiredLink"
               :label="$t('pages.resolve.start_case_info_request_label')"
@@ -144,7 +144,6 @@ export default {
                 }
             ];
             try {
-                console.log('reviewClaimActions', reviewClaimActions);
                 await this.$store.$api.signTransaction(reviewClaimActions);
                 setTimeout(this.close, 2000);
             } catch (err) {
