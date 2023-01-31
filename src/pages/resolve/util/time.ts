@@ -68,3 +68,12 @@ export const secondsToDDHHMMSS = (inputVar: string | number): string => {
 };
 
 export const ZERO_TIME = '1970-01-01T00:00:00';
+
+export const IS_TIME_PASSED = (time: string) => {
+    const newDateString = `${time}Z`;
+    const newDate = new Date(newDateString);
+    const newTime = newDate.getTime();
+    const rightNow = new Date().getTime();
+    if (newTime < rightNow) return true;
+    return false;
+}

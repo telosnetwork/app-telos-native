@@ -107,6 +107,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import NominateSelfModal from '../../components/NominateSelfModal.vue';
+import { IS_TIME_PASSED } from '../../util';
 import { getAvailableArbitratorStatus } from '../../util/blockchain';
 
 export default {
@@ -257,27 +258,11 @@ export default {
                     end_add_candidates_ts
                 } = this.currentElection;
                 if (status === 1) {
-                    const endAddCandidateUnixTimestamp = new Date(
-                        `${end_add_candidates_ts}Z`
-                    ).getTime();
-                    const rightNow = new Date().getTime();
-                    if (endAddCandidateUnixTimestamp > rightNow) {
-                        return 'candidate-registration';
-                    } else {
-                        return 'election-ready';
-                    }
+                    return (IS_TIME_PASSED(end_add_candidates_ts) ? 'election-ready' : 'candidate-registration');
                 }
                 if (status === 2) {
                     // see if voting period has ended
-                    const endVotingUnixTimestamp = new Date(
-                        `${end_voting_ts}Z`
-                    ).getTime();
-                    const rightNow = new Date().getTime();
-                    if (endVotingUnixTimestamp > rightNow) {
-                        return 'voting';
-                    } else {
-                        return 'election-finalization';
-                    }
+                    return (IS_TIME_PASSED(end_voting_ts) ? 'election-finalization' : 'voting');
                 }
                 return status;
             }
