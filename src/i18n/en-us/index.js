@@ -683,7 +683,7 @@ export default {
 
             respond_offer_title: 'Respond',
             respond_offer_text: 'Are you sure that you would like to accept this offer? You will not be able to change your mind.',
-            respond_offer_error: 'Since your balance of { balance } is not enough to cover the fee, this transaction will also include a transfer of { adjustedDeficit } TLOS from your account to the contract.',
+            respond_offer_error: 'Since your balance of { balance } is not enough to cover the {tlosFee} fee, this transaction will also include a transfer of { adjustedDeficit } TLOS from your account to the contract.',
             respond_offer_accept: 'Accept',
             respond_offer_reject: 'Reject',
             respond_offer_cancel: 'Cancel',

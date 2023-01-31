@@ -12,13 +12,12 @@
         <q-card-section v-if="deficit > 0">
             <p class="error">
                 <strong>
-                    {{$t('pages.resolve.respond_offer_error', { balance, adjustedDeficit })}}
+                    {{$t('pages.resolve.respond_offer_error', { balance, adjustedDeficit, tlosFee })}}
                 </strong>
             </p>
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
             <q-btn
-                v-if="deficit < 0"
                 flat
                 :label="$t('pages.resolve.respond_offer_accept')"
                 @click="submit('accept')"
