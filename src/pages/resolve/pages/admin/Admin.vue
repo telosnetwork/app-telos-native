@@ -55,7 +55,7 @@
                 </q-step>
 
                 <q-step :name="'voting'" :title="$t('pages.resolve.admin_step_voting')" icon="add_comment">
-                    {{$t('admin_step_voting_content')}}
+                    {{$t('pages.resolve.admin_step_voting_content')}}
                 </q-step>
 
                 <q-step
