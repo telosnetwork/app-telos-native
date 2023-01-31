@@ -9,12 +9,8 @@
 
 <script>
 import {
-    fetchArbConfig,
-    fetchArbitrators,
-    fetchElections,
-    fetchNominees,
-    fetchCaseFiles,
-    fetchOffers
+    fetchOffers,
+    fetchArbTable
 } from './util';
 
 export default {
@@ -35,7 +31,7 @@ export default {
     methods: {
         async getArbConfig() {
             try {
-                const config = await fetchArbConfig(this);
+                const [config] = await fetchArbTable(this, 'config');
                 this.$store.commit('resolve/setArbConfig', config);
             } catch (err) {
                 console.warn('fetchConfig error: ', err);
@@ -43,7 +39,7 @@ export default {
         },
         async getArbitrators() {
             try {
-                const arbitrators = await fetchArbitrators(this);
+                const arbitrators = await fetchArbTable(this, 'arbitrators');
                 this.$store.commit('resolve/setArbitrators', arbitrators);
             } catch (err) {
                 console.warn('fetchArbitrators error: ', err);
@@ -51,7 +47,7 @@ export default {
         },
         async getElections() {
             try {
-                const elections = await fetchElections(this);
+                const elections = await fetchArbTable(this, 'elections', { reverse: true });
                 this.$store.commit('resolve/setElections', elections);
             } catch (err) {
                 console.warn('getElections error: ', err);
@@ -59,7 +55,7 @@ export default {
         },
         async getNominees() {
             try {
-                const nominees = await fetchNominees(this);
+                const nominees = await fetchArbTable(this, 'nominees');
                 this.$store.commit('resolve/setNominees', nominees);
             } catch (err) {
                 console.warn('getNominees error: ', err);
@@ -67,7 +63,8 @@ export default {
         },
         async getCaseFiles() {
             try {
-                const caseFiles = await fetchCaseFiles(this);
+                const caseFilesConfig = { reverse: true };
+                const caseFiles = await fetchArbTable(this, 'casefiles', caseFilesConfig);
                 this.$store.commit('resolve/setCaseFiles', caseFiles);
             } catch (err) {
                 console.warn('getCaseFiles error: ', err);
@@ -75,7 +72,7 @@ export default {
         },
         async getOffers() {
             try {
-                const offers = await fetchOffers(this);
+                const offers = await fetchArbTable(this, 'offers', { limit: 1000 });
                 this.$store.commit('resolve/setOffers', offers);
             } catch (err) {
                 console.warn('getOffers error: ', err);

@@ -41,71 +41,12 @@ export const validateIpfsHash = (url: string) => {
     return true;
 };
 
-export const fetchArbConfig = async (context: any) => {
+export const fetchArbTable = async (context: any, table: string, options: any = {}) => {
     const { rows } = await context.$store.$api.getTableRows({
         code: process.env.ARB_CONTRACT,
         scope: process.env.ARB_CONTRACT,
-        table: 'config'
-    });
-    const [config] = rows;
-    return config;
-};
-
-export const fetchArbitrators = async (context: any) => {
-    const { rows } = await context.$store.$api.getTableRows({
-        code: process.env.ARB_CONTRACT,
-        scope: process.env.ARB_CONTRACT,
-        table: 'arbitrators'
-    });
-    return rows;
-};
-
-export const fetchElections = async (context: any) => {
-    const { rows } = await context.$store.$api.getTableRows({
-        code: process.env.ARB_CONTRACT,
-        scope: process.env.ARB_CONTRACT,
-        table: 'elections',
-        reverse: true
-    });
-    return rows;
-};
-
-export const fetchNominees = async (context: any) => {
-    const { rows } = await context.$store.$api.getTableRows({
-        code: process.env.ARB_CONTRACT,
-        scope: process.env.ARB_CONTRACT,
-        table: 'nominees'
-    });
-    return rows;
-};
-
-export const fetchCaseFiles = async (context: any, case_id?: number) => {
-    const { rows } = await context.$store.$api.getTableRows({
-        code: process.env.ARB_CONTRACT,
-        scope: process.env.ARB_CONTRACT,
-        table: 'casefiles',
-        upper_limit: case_id || null,
-        lower_limit: case_id || null,
-        reverse: true
-    });
-    return rows;
-};
-
-export const fetchOffers = async (context: any) => {
-    const { rows } = await context.$store.$api.getTableRows({
-        code: process.env.ARB_CONTRACT,
-        scope: process.env.ARB_CONTRACT,
-        table: 'offers',
-        limit: 1000
-    });
-    return rows;
-};
-
-export const fetchClaims = async (context: any, id: number) => {
-    const { rows } = await context.$store.$api.getTableRows({
-        code: process.env.ARB_CONTRACT,
-        scope: id,
-        table: 'claims'
+        table,
+        ...options,
     });
     return rows;
 };

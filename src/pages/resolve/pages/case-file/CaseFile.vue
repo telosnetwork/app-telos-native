@@ -116,7 +116,7 @@ import AddClaimForm from './AddClaimForm.vue';
 import ShredCaseForm from '../../components/ShredCaseForm.vue';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
-import { fetchClaims } from '../../util';
+import { fetchArbTable } from '../../util';
 
 export default {
     components: {
@@ -177,7 +177,9 @@ export default {
         },
         async getClaims() {
             try {
-                const rows = await fetchClaims(this, this.$route.params.id);
+                const rows = await fetchArbTable(this, 'claims', {
+                    scope: this.$route.params.id
+                });
                 this.claims = rows;
             } catch (err) {
                 console.log('getClaims error:', err);
