@@ -34,6 +34,23 @@ export const FETCH_ACTIONS = async (context: any, params: any) => {
     return data;
 };
 
+export const UPDATE_CASE_EARLIEST_BLOCK = (deltas: HyperionDelta[], case_id: number, earliestBlock: number) => {
+    let newEarliestBlock = earliestBlock;
+    deltas.forEach(
+        ({ table, primary_key, block_num }: HyperionDelta) => {
+            if (
+                table === 'casefiles' &&
+                parseInt(primary_key) === case_id
+            ) {
+                if (!newEarliestBlock || newEarliestBlock > block_num) {
+                    newEarliestBlock = block_num;
+                }
+            }
+        }
+    );
+    return newEarliestBlock;
+};
+
 export const FETCH_CASE_ACTIONS_HISTORY = async (
     context: any,
     case_id: number,
@@ -50,18 +67,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
             const { deltas } = await FETCH_DELTAS(context, {
                 skip: skipDeltas
             });
-            deltas.forEach(
-                ({ table, primary_key, block_num }: HyperionDelta) => {
-                    if (
-                        table === 'casefiles' &&
-                        parseInt(primary_key) === case_id
-                    ) {
-                        if (!earliestBlock || earliestBlock > block_num) {
-                            earliestBlock = block_num;
-                        }
-                    }
-                }
-            );
+            earliestBlock = UPDATE_CASE_EARLIEST_BLOCK(deltas, case_id, earliestBlock);
             if (deltas.length === 0) break;
             skipDeltas += 200;
             const newProgress = 5 + (25 * deltaIterator) / (deltaIterator + 1);
@@ -75,18 +81,7 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
             const { actions } = await FETCH_ACTIONS(context, {
                 skip: skipActions
             });
-            actions.forEach(
-                ({ table, primary_key, block_num }: HyperionDelta) => {
-                    if (
-                        table === 'casefiles' &&
-                        parseInt(primary_key) === case_id
-                    ) {
-                        if (!earliestBlock || earliestBlock > block_num) {
-                            earliestBlock = block_num;
-                        }
-                    }
-                }
-            );
+            earliestBlock = UPDATE_CASE_EARLIEST_BLOCK(actions, case_id, earliestBlock);
             totalActions.push(...actions);
             if (actions.block_num < earliestBlock || !actions.length) break;
             skipActions += 100;
