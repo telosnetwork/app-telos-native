@@ -1,3 +1,5 @@
+import { resolveRoutes } from 'src/pages/resolve/routes';
+
 const routes = [
     {
         path: '/login',
@@ -24,7 +26,7 @@ const routes = [
 
     // Elections
     {
-        name: 'Elections',
+        name: 'Elections ',
         path: '/trails/elections/:id?/:hash?',
         component: () => import('pages/trails/ballots/list/BallotsList.vue'),
         meta: { guest: false },
@@ -128,6 +130,14 @@ const routes = [
         path: '/profiles/add/profileLogin',
         component: () => import('pages/profiles/read/ProfileLogin.vue'),
         name: 'profileLogin',
+    },
+
+    // arbitration portal
+    {
+        path: '/resolve',
+        component: () => import('pages/resolve/ResolvePortal.vue'),
+        name: 'resolvePortal',
+        children: [...resolveRoutes],
     },
 ];
 
