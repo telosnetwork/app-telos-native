@@ -178,7 +178,8 @@ export default {
         async getClaims() {
             try {
                 const rows = await fetchArbTable(this, 'claims', {
-                    scope: this.$route.params.id
+                    scope: this.$route.params.id,
+                    limit: 50
                 });
                 this.claims = rows;
             } catch (err) {

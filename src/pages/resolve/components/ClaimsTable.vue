@@ -5,6 +5,7 @@
         :rows="claims"
         :columns="columns"
         row-key="name"
+        :pagination="{rowsPerPage: 50}"
     >
         <template v-slot:body-cell-status="props">
             <q-td :props="props">
