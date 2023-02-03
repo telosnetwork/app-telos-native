@@ -52,7 +52,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { DECISION_CLASS_LIST } from '../../constants';
+import { CLAIM_CATEGORY_LIST } from '../../constants';
 import { validateIpfsHash, validateId } from '../../util';
 import FileUploadInput from '../../components/FileUploadInput.vue';
 
@@ -63,9 +63,9 @@ export default {
         FileUploadInput
     },
     data() {
-        const options = DECISION_CLASS_LIST.map((item, index) => ({
+        const options = CLAIM_CATEGORY_LIST.map((item, index) => ({
             label: this.$t(item),
-            value: index + 1
+            value: index
         }));
         return {
             category: null,
