@@ -1,8 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import { Api, JsonRpc } from 'eosjs';
+import { Notify } from 'quasar';
 
 const signTransaction = async function (actions) {
-
     actions.forEach((action) => {
         if (!action.authorization || !action.authorization.length) {
             action.authorization = [
@@ -24,17 +24,20 @@ const signTransaction = async function (actions) {
                 expireSeconds: 30,
             }
         );
+        Notify.create({ type: 'positive', message: 'Transaction signed' });
     } catch (e) {
         if (e.cause.error) {
-            throw e.cause.error.details[0].message.replace(
+            const msg = e.cause.error.details[0].message.replace(
                 /assertion failure with message: /g,
                 ''
             );
+            Notify.create({ type: 'negative', message: msg });
+            throw msg;
         } else {
+            Notify.create({ type: 'negative', message: e.message });
             throw e;
         }
     }
-
     return transaction;
 };
 
