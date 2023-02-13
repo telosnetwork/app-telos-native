@@ -1,6 +1,6 @@
 <template>
 	<q-expansion-item
-		label="Resolve"
+		:label="$t('menu.resolve')"
 		id="resolve-sidebar-menu"
 		:model-value="isResolveRoute"
 	>
@@ -9,10 +9,27 @@
 			Resolve
 		</q-route-tab>
 	</template>
-		<q-route-tab label="Welcome" to="/resolve" class="aline-left q-my-lg left-menu-tab resolve-route" />
-		<q-route-tab label="Elections" to="/resolve/elections" class="aline-left q-my-lg left-menu-tab resolve-route" />
-		<q-route-tab label="Cases" to="/resolve/cases" class="aline-left q-my-lg left-menu-tab resolve-route" />
-		<q-route-tab v-if="selfArbitrator" label="Arbitrator" to="/resolve/arbitrator" class="aline-left q-my-lg left-menu-tab resolve-route" />
+		<q-route-tab
+      :label="$t('menu.welcome')"
+      to="/resolve"
+      class="aline-left q-my-lg left-menu-tab resolve-route"
+    />
+		<q-route-tab
+      :label="$t('menu.elections')"
+      to="/resolve/elections"
+      class="aline-left q-my-lg left-menu-tab resolve-route"
+    />
+		<q-route-tab
+      :label="$t('menu.elections')"
+      to="/resolve/cases"
+      class="aline-left q-my-lg left-menu-tab resolve-route"
+    />
+		<q-route-tab
+      v-if="selfArbitrator"
+      :label="$t('menu.arbitrator')"
+      to="/resolve/arbitrator"
+      class="aline-left q-my-lg left-menu-tab resolve-route"
+    />
 	</q-expansion-item>
 </template>
 

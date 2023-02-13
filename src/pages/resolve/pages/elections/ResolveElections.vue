@@ -50,7 +50,7 @@
 
 <script>
 import ElectionsTable from '../../components/ElectionsTable.vue';
-import ElectionSteps from './ElectionSteps.vue';
+import ElectionSteps from './ResolveElectionSteps.vue';
 import IntroCard from '../../components/IntroCard.vue';
 import TelosProfileAvatar from 'src/components/common/TelosProfileAvatar.vue';
 import { mapGetters } from 'vuex';

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Intro from './Intro.vue';
+import Intro from './ResolveIntro.vue';
 import ElectionsStatus from './ElectionsStatus.vue';
 
 export default {

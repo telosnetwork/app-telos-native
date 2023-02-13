@@ -1,5 +1,13 @@
 <template>
-	<q-btn-dropdown id="resolve-menu-dropdown" class="header-submenu-tab" :class="{'resolve-dropdown-active': isResolveRoute}" auto-close stretch flat label="Resolve">
+	<q-btn-dropdown
+    id="resolve-menu-dropdown"
+    class="header-submenu-tab"
+    :class="{'resolve-dropdown-active': isResolveRoute}"
+    auto-close
+    stretch
+    flat
+    :label="$t('menu.resolve')"
+  >
 		<q-list>
 			<q-item
 				clickable

@@ -54,7 +54,7 @@ export const UPDATE_CASE_EARLIEST_BLOCK = (deltas: HyperionDelta[], case_id: num
 export const FETCH_CASE_ACTIONS_HISTORY = async (
     context: any,
     case_id: number,
-    setProgress?: (progress: number) => void
+    setProgress?: any
 ) => {
     setProgress && setProgress(5);
     let deltaIterator = 1;
@@ -63,12 +63,16 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
         let skipActions = 0;
         let earliestBlock: number = 99999999999999;
         const totalActions = [];
-        while (true) {
+        let shouldDeltasContinue = true;
+        while (shouldDeltasContinue) {
             const { deltas } = await FETCH_DELTAS(context, {
                 skip: skipDeltas
             });
             earliestBlock = UPDATE_CASE_EARLIEST_BLOCK(deltas, case_id, earliestBlock);
-            if (deltas.length === 0) break;
+            if (deltas.length === 0) {
+                shouldDeltasContinue = false;
+                break;
+            }
             skipDeltas += 200;
             const newProgress = 5 + (25 * deltaIterator) / (deltaIterator + 1);
             setProgress && setProgress(newProgress);
@@ -77,13 +81,17 @@ export const FETCH_CASE_ACTIONS_HISTORY = async (
         setProgress && setProgress(50);
 
         let actionIterator = 1;
-        while (true) {
+        let shouldActionsContinue = true;
+        while (shouldActionsContinue) {
             const { actions } = await FETCH_ACTIONS(context, {
                 skip: skipActions
             });
             earliestBlock = UPDATE_CASE_EARLIEST_BLOCK(actions, case_id, earliestBlock);
             totalActions.push(...actions);
-            if (actions.block_num < earliestBlock || !actions.length) break;
+            if (actions.block_num < earliestBlock || !actions.length) {
+                shouldActionsContinue = false;
+                break;
+            }
             skipActions += 100;
             const newProgress =
                 30 + (70 * actionIterator) / (actionIterator + 1);

@@ -4,7 +4,12 @@
 			<span class="heading">{{$t('pages.resolve.account_balance')}}</span>
 			<span class="balance">{{balance}}</span>
 		</h4>
-		<q-btn :label="$t('pages.resolve.account_balance_withdraw')" @click="withdraw" color="primary" :disable="!canWithdraw" />
+		<q-btn
+      :label="$t('pages.resolve.account_balance_withdraw')"
+      @click="withdraw"
+      color="primary"
+      :disable="!canWithdraw"
+    />
 	</q-card>
 </template>
 

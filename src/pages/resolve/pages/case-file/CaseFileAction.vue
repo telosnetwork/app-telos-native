@@ -63,7 +63,10 @@
         <div v-if="act.name === 'makeoffer'">
             <i18n-t keypath="pages.resolve.case_action_make_offer">
                 <template #actor><strong>{{ authorization[0].actor }}</strong></template>
-                <template #hours><strong>{{ actionData.claim_id }}</strong><strong>{{ actionData.estimated_hours }}</strong></template>
+                <template #hours>
+                  <strong>{{ actionData.claim_id }}</strong>
+                  <strong>{{ actionData.estimated_hours }}</strong>
+                </template>
                 <template #rate><strong>{{ actionData.hourly_rate }}</strong></template>
             </i18n-t>({{
                 action.timestamp
@@ -72,7 +75,9 @@
         <div v-if="act.name === 'respondoffer'">
             <i18n-t keypath="pages.resolve.case_action_respond_offer">
                 <template #actor><strong>{{ authorization[0].actor }}</strong></template>
-                <template #accept>{{ actionData.accept ? $t('pages.resolve.accepted') : $t('pages.resolve.rejected') }}</template>
+                <template #accept>
+                  {{ actionData.accept ? $t('pages.resolve.accepted') : $t('pages.resolve.rejected') }}
+                </template>
                 <template #offer>
                     <span class="underline">
                         <i18n-t keypath="pages.resolve.case_action_respond_offer_inset">
@@ -111,12 +116,17 @@
                 <template #id><strong>{{ actionData.claim_id }}</strong></template>
                 <template #claimInfo>
                     <span v-if="actionData.claim_info_needed">
-                        &nbsp;{{$t('pages.resolve.case_action_review_claim_info', { daysClaimant: actionData.number_days_claimant})}}
+                        &nbsp;{{$t('pages.resolve.case_action_review_claim_info', {
+                          daysClaimant: actionData.number_days_claimant
+                        })}}
                     </span>
                 </template>
                 <template #responseInfo>
                     <span v-if="actionData.response_info_needed">
-                        &nbsp;{{$t('pages.resolve.case_action_review_response_info', { daysResponse: actionData.number_days_respondant})}}
+                        &nbsp;
+                        {{$t('pages.resolve.case_action_review_response_info', {
+                          daysResponse: actionData.number_days_respondant
+                        })}}
                     </span>
                 </template>
             </i18n-t>
@@ -132,17 +142,18 @@
         <div v-if="act.name === 'setruling'">
             <i18n-t keypath="pages.resolve.case_action_set_ruling">
                 <template #actor><strong>{{ authorization[0].actor }}</strong></template>
-                <template #link><a :href="createIpfsLink(actionData.case_ruling)">ruled</a></template>
+                <template #link><strong><a :href="createIpfsLink(actionData.case_ruling)">ruled</a></strong></template>
             </i18n-t>
-            <strong>{{ authorization[0].actor }}</strong> (admin)
-            <a :href="createIpfsLink(actionData.case_ruling)">{{$t('pages.resolve.ruled')}}</a> on case
             ({{ action.timestamp }})
         </div>
         <div v-if="act.name === 'validatecase'">
             <i18n-t keypath="pages.resolve.case_action_validate">
                 <template #actor><strong>{{ authorization[0].actor }}</strong></template>
-                <template #ruling><strong>{{ actionData.proceed ? $t('pages.resolve.validated') : $t('pages.resolve.rejected') }}</strong></template>
-            </i18n-t>({{ action.timestamp }})
+                <template #ruling>
+                  <strong>{{ actionData.proceed ? $t('pages.resolve.validated') : $t('pages.resolve.rejected') }}
+                  </strong>
+                </template>
+            </i18n-t>&nbsp;({{ action.timestamp }})
         </div>
         <div v-if="act.name === 'closecase'">
             <i18n-t keypath="pages.resolve.case_action_close">
