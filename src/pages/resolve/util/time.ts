@@ -76,4 +76,4 @@ export const IS_TIME_PASSED = (time: string) => {
     const rightNow = new Date().getTime();
     if (newTime < rightNow) return true;
     return false;
-}
+};

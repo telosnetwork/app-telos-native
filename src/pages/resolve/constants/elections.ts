@@ -4,7 +4,12 @@ import { Election, Nominee, Arbitrator } from '../types/blockchain';
 const NEXT_PUBLIC_ARBITRATION_CONTRACT =
     process.env.NEXT_PUBLIC_ARBITRATION_CONTRACT;
 
-export const ELECTION_STATUS = ['', 'pages.resolve.election_status_created', 'pages.resolve.election_stauts_live', 'pages.resolve.election_status_ended'];
+export const ELECTION_STATUS = [
+    '',
+    'pages.resolve.election_status_created',
+    'pages.resolve.election_stauts_live',
+    'pages.resolve.election_status_ended'
+];
 
 export const ELECTION_STATUS_MAP = {
     CREATED: 1,
