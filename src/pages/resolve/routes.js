@@ -1,10 +1,10 @@
-import Home from './pages/home/Home.vue';
-import Admin from './pages/admin/Admin.vue';
-import Arbitrator from './pages/arbitrator/Arbitrator.vue';
-import Elections from './pages/elections/Elections.vue';
-import Cases from './pages/cases/Cases.vue';
+import Home from './pages/home/ResolveHome.vue';
+import Admin from './pages/admin/ResolveAdmin.vue';
+import Arbitrator from './pages/arbitrator/ResolveArbitrator.vue';
+import Elections from './pages/elections/ResolveElections.vue';
+import Cases from './pages/cases/ResolveCases.vue';
 import CaseFile from './pages/case-file/CaseFile.vue';
-import Account from './pages/account/Account.vue';
+import Account from './pages/account/ResolveAccount.vue';
 
 export const resolveRoutes = [
     { path: 'admin', component: Admin, name: 'Admin' },

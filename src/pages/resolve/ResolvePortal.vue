@@ -9,7 +9,6 @@
 
 <script>
 import {
-    fetchOffers,
     fetchArbTable
 } from './util';
 
