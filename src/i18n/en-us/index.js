@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export default {
     common: {
         appName: 'Telos Communities',
