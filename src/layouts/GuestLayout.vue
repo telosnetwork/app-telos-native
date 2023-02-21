@@ -1,9 +1,9 @@
 <script>
 export default {
-    name: 'GuestLayout',
+    name: "GuestLayout",
     computed: {
         title() {
-            return this.$t(this.$route.meta.title || 'common.defaultTitle');
+            return this.$t(this.$route.meta.title || "common.defaultTitle");
         },
     },
 };
