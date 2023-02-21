@@ -48,7 +48,9 @@ export default {
                 this.submitting = true;
                 const { success, error } = await this.createAccount(this.form);
                 if (success) {
-                    this.$router.push({ path: '/accounts/add/congratulations' });
+                    this.$router.push({
+                        path: '/accounts/add/congratulations',
+                    });
                 } else {
                     this.error = error;
                 }
@@ -145,12 +147,12 @@ export default {
                   setSuccessMsg($t('pages.accounts.add.keyCopyClipboard'));\
                 }"
               )
-        q-card-section
+        q-card-section.center-content
           q-checkbox(
             v-model="copy"
             label="I have copied my keys somewhere safe"
           )
-        vue-recaptcha(
+        vue-recaptcha.center-content(
           ref='recaptcha'
           :sitekey="'6Ld-_eIZAAAAAF6JsrFudo_uQjRL4eqPAZE40I3o'"
           @verify="onVerify"
@@ -170,29 +172,9 @@ export default {
 </template>
 
 <style lang="sass" scoped>
-.send-otp
-  width: 100%
-  max-width: 550px
-  margin: 0 auto
-  h2
-    color: $primary
-    font-size: 24px
-    text-align: center
-    font-weight: 600
-  .warning
-    color: red
-    font-size: 12px
-    text-align: center
-    font-weight: 0
-    border: 1px solid lightgrey
-    margin: 0 0 20px 0
-  .hint
-    color: #707070
-    font-size: 12px
-    margin: 30px 0 10px 0
-</style>
-
-<style lang="sass" scoped>
+.center-content
+  width: fit-content
+  margin: auto
 .send-otp
   width: 100%
   max-width: 550px
@@ -229,4 +211,7 @@ export default {
           border-radius: 0 4px 4px 0
           &:before
             border-left: none
+@media (min-width: 1024px)
+  .col-9
+    min-width: 25rem
 </style>
