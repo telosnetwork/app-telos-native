@@ -1,9 +1,9 @@
 <script>
 export default {
-    name: 'GuestLayout',
+    name: "GuestLayout",
     computed: {
         title() {
-            return this.$t(this.$route.meta.title || 'common.defaultTitle');
+            return this.$t(this.$route.meta.title || "common.defaultTitle");
         },
     },
 };
@@ -12,17 +12,7 @@ export default {
 <template lang="pug">
 q-layout(view="hHh lpR fFf")
   q-page-container
-    q-page.flex.column.bg-secondary.relative-position
-      q-btn.back(
-        color="primary"
-        icon="fas fa-arrow-left"
-        flat
-        dense
-        size="14px"
-        @click="$router.go(-1)"
-      )
-      .col-2.text-center.content-start
-        h1 {{ title }}
+    q-page.flex.column.relative-position
       .col-10.flex.flex-center.col-grow.q-pa-lg
         router-view
 </template>
