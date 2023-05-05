@@ -85,6 +85,14 @@ export default {
                 return null;
             }
         },
+        shapedDescription() {
+            const urlRegex = /((http|https):\/\/[^\s]+)/g;
+            const shaped = this.ballot.readableDescription.replace(
+                urlRegex,
+                '<a href="$1" rel="noopener noreferrer" target="_blank">$1</a>'
+            );
+            return shaped;
+        },
         iframeUrl() {
             let content = this.ballot.content;
             let file_path = null;
@@ -564,7 +572,7 @@ export default {
                     q-card-section.description-section-wrapper
                         div.description-section
                             div.description-section-title(:class="iframeUrl ? `q-pb-md` : `q-pb-xl q-mb-lg`")
-                                p(v-html="ballot.readableDescription")
+                                p(v-html="shapedDescription")
                             div(
                             v-if="optionData && optionData[0] && optionData[0].hasOwnProperty('imageUrl')"
                             ).q-pb-md.ballot-content-carousel
