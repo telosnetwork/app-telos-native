@@ -157,6 +157,7 @@ export default {
                 },
                 joinDAO: 'Join DAO',
                 joinAndVote: 'Join DAO & Vote',
+                signInToVote: 'Sign in to vote',
                 vote: 'Vote',
                 ends: 'Ends',
                 end: 'End',
