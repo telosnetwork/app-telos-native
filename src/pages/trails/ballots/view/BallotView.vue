@@ -183,6 +183,7 @@ export default {
             return power > 0;
         },
         voteButtonText() {
+            if (!this.isAuthenticated) return 'pages.trails.ballots.signInToVote';
             if (this.isPositiveVotePower) {
                 if (this.isUserRegisteredInTreasury) {
                     return 'pages.trails.ballots.vote';
@@ -215,19 +216,8 @@ export default {
             'fetchVotesForBallot',
             'fetchUserVotesForThisBallot',
             'fetchTreasuriesForUser',
-            'resetUserVotes'
+            'resetUserVotes',
         ]),
-        optionCheckboxClass(ballot, option) {
-            return this.displayWinner(ballot) ?
-                this.displayWinner(ballot) === option.key ? 'visible-checkbox' : '' : '';
-        },
-        optionItemClass(ballot, option) {
-            return this.displayWinner(ballot) ?
-                this.displayWinner(ballot) === option.key ? 'option-winner' : '' : 'option-clear';
-        },
-        debug() {
-            console.log(this.ballot);
-        },
         onBallotOpenedForVoting() {
             this.openBallotDialog = false;
             this.fetchBallot(this.ballot.ballot_name);
@@ -365,12 +355,32 @@ export default {
         openNotice() {
             this.notice = true;
         },
-
-        toggleOption(key) {
-            if (this.ballot.max_options === 1) {
-                this.votes = this.votes.includes(key) ? [key] : [];
+        shouldDisableCheckbox(key) {
+            return (
+                !this.isAuthenticated ||
+                !this.isBallotOpened(this.ballot) ||
+                (this.votes.length === this.ballot.max_options && !this.votes.includes(key))
+            );
+        },
+        displayBallotSelectionText() {
+            if (this.votes.length === 0) {
+                if (this.ballot.max_options > 1) {
+                    return `You can select from ${this.ballot.min_options} to ${this.ballot.max_options} options`;
+                }
+                return 'You can select 1 option only';
             }
-            this.userCanVote = this.votes.length > 0;
+            if (this.votes.length === this.ballot.max_options) {
+                return "You've selected the maximum allowed options";
+            }
+            return `You can select ${this.ballot.max_options - this.votes.length} more options`;
+        },
+        canUserVote() {
+            this.userCanVote =
+                this.votes.length >= this.ballot.min_options && this.votes.length <= this.ballot.max_options;
+            return this.userCanVote;
+        },
+        shouldDisableVoteButton() {
+            return !this.isAuthenticated || !this.canUserVote();
         },
         findLinks(text) {
             const urlRegex =
@@ -414,14 +424,8 @@ export default {
                                 span {{ i.voter }}
                                 span.text-weight-bold {{ getPercentOfNumber(i.value, option.value) }}
             .col-xs.col-sm-auto(style="min-width: 240px;" v-else).popup-left-col-wrapper
-                q-card.popup-left-col.poll-item(
-                :class="ballot.status === 'voting' && isBallotOpened(ballot) ? '' : 'view-poll-ended'"
-                id="ballot-card"
-                flat
-                square
-                bordered
-                )
-                    q-card-section.card-img-section
+                q-scroll-area(:thumb-style="{width: '5px'}").popup-left-col.poll-item(id="ballot-card")
+                    div.card-img-section
                         div.card-img-wrapper
                             template(v-if="ballot.imageUrl")
                                 q-img(:src="ballot.imageUrl").poll-item-image-wrapper
@@ -456,19 +460,16 @@ export default {
                                 q-item.ballot-view-option(
                                 v-for="option in ballot.options"
                                 :key="option.key"
-                                :class="optionItemClass(ballot, option)"
                                 ).no-padding.capitalize.column
                                     div.row.option-item
                                         q-item-section()
                                             q-checkbox(
-                                            size="sm"
-                                            v-model="votes"
-                                            :disable="ballot.status !== 'cancelled' && !isBallotOpened"
-                                            keep-color
-                                            :class="optionCheckboxClass(ballot, option)"
-                                            :color="isBallotOpened(ballot)?'primary':'grey-8'"
-                                            :val="option.key"
-                                            @click.native="toggleOption(option.key)"
+                                                size="sm"
+                                                v-model="votes"
+                                                :disable="shouldDisableCheckbox(option.key)"
+                                                :val="option.key"
+                                                :color="isBallotOpened(this.ballot) ? 'primary' : 'grey-08'"
+                                                @click.native="canUserVote()"
                                             )
                                                 div.checkbox-text.row.space-between
                                                     div {{ option.displayText }}
@@ -478,13 +479,15 @@ export default {
                                         q-linear-progress(
                                             rounded size="6px" :value="getPartOfTotal(option)" color="$primary"
                                         )
+                            div(
+                                  v-if="isAuthenticated && ballot.status !== 'cancelled' && isBallotOpened(this.ballot)"
+                              ).options-disclaimer {{ displayBallotSelectionText() }}
                             q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").options-btn
                                 q-btn(
                                     no-caps
                                     :color="userCanVote ? 'primary' : 'info'"
                                     class="col"
-                                    v-if="isAuthenticated"
-                                    :disable="!userCanVote"
+                                    :disable="shouldDisableVoteButton()"
                                     :label="$t(voteButtonText)"
                                     @click="vote()"
                                 )
@@ -517,7 +520,7 @@ export default {
                                     :label="$t('pages.trails.ballots.openBallotHeader')"
                                     @click="showOpenBallotDialog()"
                                 )
-                    q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-620
+                    div.q-pb-none.cursor-pointer.statics-section.statics-section-620
                         div.text-section.column
                             div(v-if="ballot.total_voters > 0")
                                 span.statistics-title Most voted
@@ -623,19 +626,16 @@ export default {
                                     q-item.ballot-view-option(
                                     v-for="option in ballot.options"
                                     :key="option.key"
-                                    :class="optionItemClass(ballot, option)"
                                     ).no-padding.capitalize.column
                                         div.row.option-item
                                             q-item-section()
                                                 q-checkbox(
-                                                size="sm"
-                                                v-model="votes"
-                                                :disable="ballot.status !== 'cancelled' && !isBallotOpened"
-                                                keep-color
-                                                :class="optionCheckboxClass(ballot, option)"
-                                                :color="isBallotOpened(ballot)?'primary':'grey-8'"
-                                                :val="option.key"
-                                                @click.native="toggleOption(option.key)"
+                                                    size="sm"
+                                                    v-model="votes"
+                                                    :disable="shouldDisableCheckbox(option.key)"
+                                                    :val="option.key"
+                                                    :color="isBallotOpened(this.ballot) ? 'primary' : 'grey-08'"
+                                                    @click.native="canUserVote()"
                                                 )
                                                     div.checkbox-text.row.space-between
                                                         div {{ option.displayText }}
@@ -644,15 +644,17 @@ export default {
                                         div.linear-progress(v-if="displayWinner(ballot)")
                                             q-linear-progress(
                                                 rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
+                                div(
+                                  v-if="isAuthenticated && ballot.status !== 'cancelled' && isBallotOpened(this.ballot)"
+                                ).options-disclaimer span {{ displayBallotSelectionText() }}
                                 q-item(
                                     v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").column.options-btn
                                     q-btn(
                                         no-caps
                                         :color="userCanVote ? 'primary' : 'info'"
-                                        v-if="isAuthenticated"
-                                        :disable="!userCanVote"
+                                        :disable="shouldDisableVoteButton()"
                                         :label="$t(voteButtonText)"
-                                        @click="isAuthenticated ? vote() : openNotice()"
+                                        @click="vote()"
                                     )
                                     q-btn(
                                         no-caps
@@ -814,6 +816,7 @@ embed
 
 .popup-left-col
     width: 268px
+    height: 100%
     & .card-img-wrapper
         margin: 12px
         padding: 16px
@@ -841,7 +844,7 @@ embed
 
 .popup-right-col
     flex-grow: 1
-    max-width: unset
+    max-width: 100%
     display: flex
     flex-direction: column
 
@@ -851,17 +854,6 @@ embed
 .options-list
     padding: 0 24px
 
-.options-wrapper
-    max-height: 200px !important
-    overflow: auto
-    scrollbar-color: #caccce #EFEFF0
-    scrollbar-width: thin
-    &::-webkit-scrollbar
-        width: 6px
-        background-color: #EFEFF0
-    &::-webkit-scrollbar-thumb
-        background-color: #caccce
-        border-radius: 5px
 
 .popup-wrapper .statics-section .text-section
     width: 220px
@@ -931,9 +923,6 @@ embed
     border: 2px solid #F2F3F4
     border-radius: 8px
     margin: 8px 0
-    &.option-winner
-        border: none
-        background: #F4F7FF
     & .option-item
         width: 100%
         padding: 6px 12px 0 12px
