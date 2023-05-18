@@ -365,14 +365,19 @@ export default {
         displayBallotSelectionText() {
             if (this.votes.length === 0) {
                 if (this.ballot.max_options > 1) {
-                    return `You can select from ${this.ballot.min_options} to ${this.ballot.max_options} options`;
+                    return this.$t('pages.trails.ballots.ballotSelection.minAndMax', {
+                        min: this.ballot.min_options,
+                        max: this.ballot.max_options,
+                    });
                 }
-                return 'You can select 1 option only';
+                return this.$t('pages.trails.ballots.ballotSelection.onlyOne');
             }
             if (this.votes.length === this.ballot.max_options) {
-                return "You've selected the maximum allowed options";
+                return this.$t('pages.trails.ballots.ballotSelection.maxAllowed');
             }
-            return `You can select ${this.ballot.max_options - this.votes.length} more options`;
+            return this.$t('pages.trails.ballots.ballotSelection.stillCanSelect', {
+                remaining: this.ballot.max_options - this.votes.length,
+            });
         },
         canUserVote() {
             this.userCanVote =
