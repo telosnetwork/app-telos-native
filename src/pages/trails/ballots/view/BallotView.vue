@@ -38,20 +38,25 @@ export default {
         };
     },
     async mounted() {
-        this.getLoggedUserVotes(this.$route.params.id);
-        this.fetchTreasuriesForUser(this.account);
-        let ballot_ok = await this.fetchBallot(this.$route.params.id);
-        if (!ballot_ok) {
-            this.showAlert(this.$t('notifications.trails.noBallot'));
-            if (this.$route.fullPath.includes('/trails/ballot')) {
-                this.$router.push({ path: '/trails/ballots' });
-            } else {
-                this.$router.push({ path: '/trails/elections' });
+        try {
+            this.getLoggedUserVotes(this.$route.params.id);
+            this.fetchTreasuriesForUser(this.account);
+            let ballot_ok = await this.fetchBallot(this.$route.params.id);
+            if (!ballot_ok) {
+                this.showAlert(this.$t('notifications.trails.noBallot'));
+                if (this.$route.fullPath.includes('/trails/ballot')) {
+                    this.$router.push({ path: '/trails/ballots' });
+                } else {
+                    this.$router.push({ path: '/trails/elections' });
+                }
+                return;
             }
-            return;
+            await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters });
+            window.addEventListener('scroll', this.updateScroll);
+            this.loading = false;
+        } catch (e) {
+            console.error(e);
         }
-        window.addEventListener('scroll', this.updateScroll);
-        this.loading = false;
     },
 
     computed: {
@@ -263,10 +268,7 @@ export default {
             });
         },
         async showVoters() {
-            await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters });
-            this.voters.length > 0
-                ? (this.showDetails = true)
-                : (this.showDetails = false);
+            this.showDetails = this.voters.length > 0;
         },
         getVoters(variant) {
             let newArr = [];
@@ -651,7 +653,7 @@ export default {
                                                 rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
                                 div(
                                   v-if="isAuthenticated && ballot.status !== 'cancelled' && isBallotOpened(this.ballot)"
-                                ).options-disclaimer span {{ displayBallotSelectionText() }}
+                                ).options-disclaimer {{ displayBallotSelectionText() }}
                                 q-item(
                                     v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").column.options-btn
                                     q-btn(
@@ -691,6 +693,12 @@ export default {
                                         span.text-weight-bold
                                             | {{ getRequestAmountRounded(ballot.proposal_info.total_requested) }}&nbsp
                                         span.opacity06 {{ $t('pages.trails.ballots.requestAmount') }}
+                                    q-card-section(v-if="this.voters.length > 0").voters-list-320
+                                        div(v-for="option in getVariants")
+                                            div.text-weight-bold.variant-name {{ option.displayText }}
+                                            div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
+                                                span {{ i.voter }}
+                                                span.text-weight-bold {{ getPercentOfNumber(i.value, option.value) }}
                 div.back-btn.row(v-close-popup :class="{scrolled: scrollPosition > 50}")
                     q-icon(name="fas fa-chevron-left")
                     div Go back
@@ -978,6 +986,8 @@ embed
 
 .sub-title-group-wrapper
     margin-top: 6px
+.voters-list-320
+    display: none
 
 @media screen and (max-width: 1200px), screen and (max-height: 640px)
     .q-dialog__inner
@@ -1009,6 +1019,10 @@ embed
     .close-popup-btn,
     .popup-separator
         display: none
+    .options-disclaimer
+        width: 100%
+    .description-section
+          margin-bottom: 50px
     @media (max-width: 620px)
         .popup-wrapper
             & > .popup-left-col-wrapper,
@@ -1043,6 +1057,7 @@ embed
             display: flex
         .statics-section-320
             padding-top: 24px
+            margin-bottom: 24px
         .list-620,
         .statics-section-620,
         .popup-right-col > .q-card__section > .q-btn-item
@@ -1058,6 +1073,9 @@ embed
         .ballot-view-option,
         .checkbox-text
             max-width: none
+        .voters-list-320
+            display: block !important
+            padding: 0 !important
     @media (max-width: 400px)
         .custom-caption > .caption-text
             max-width: 150px
