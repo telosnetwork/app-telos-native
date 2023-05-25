@@ -39,7 +39,7 @@ const MAINNET = {
   HYPERION_URL: "https://mainnet.telos.net",
   BLOCKCHAIN_EXPLORER: "https://explorer.telos.net",
   NETWORK_ENV: "mainnet",
-  ARB_CONTRACT: 'testtelosarb',
+  ARB_CONTRACT: 'arbitration',
 };
 
 const env = process.env.NETWORK === "mainnet" ? MAINNET : TESTNET;
