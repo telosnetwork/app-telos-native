@@ -57,7 +57,7 @@ export default {
             try {
                 const headers = {
                     'api-key':
-                        'OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg',
+                        'ntogsEAHfUzBao6Sg7y1ZaKY9wKcAVZTfgUkxWNCuIMumS5IGFga2Jakgam2p22U',
                     'x-expiration': new Date().getTime() / 1000 + 3600 * 24
                 };
                 const {
