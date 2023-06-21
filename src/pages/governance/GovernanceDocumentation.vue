@@ -5,19 +5,26 @@ import { getGovernanceHistory, GovernanceData } from './governanceHistory';
 import { QMarkdown } from '@quasar/quasar-ui-qmarkdown';
 
 const router = useRouter();
-
+const loading = ref<boolean>(true);
 const governanceData = ref<Array<GovernanceData>>([]);
-
 const goToProfile = (user: string) => {
     router.push({ path: `/profiles/display/${user}` });
 };
 
 onMounted(async () => {
     governanceData.value = await getGovernanceHistory();
+    loading.value = false;
 });
 </script>
 
 <template>
+  <q-spinner-dots
+    class="fixed-center"
+    color="primary"
+    name="dots"
+    size="60px"
+    v-if="loading"
+  ></q-spinner-dots>
   <div class="governance-container">
     <div v-for="(amendment, index) in governanceData" :key="index">
       <div class="governance-container__amended-by">
@@ -47,13 +54,14 @@ onMounted(async () => {
 <style src="@quasar/quasar-ui-qmarkdown/dist/index.css"></style>
 <style lang="scss">
 .governance-container {
-  margin-top: 2rem;
+  margin: 2rem 1rem;
   &__amended-by {
     margin: 1rem 0;
   }
   a {
     color: blue;
     cursor: pointer;
+    word-wrap: break-word;
   }
 }
 </style>
