@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import { getGovernanceHistory, GovernanceData } from "./governanceHistory";
-import { QMarkdown } from "@quasar/quasar-ui-qmarkdown";
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { getGovernanceHistory, GovernanceData } from './governanceHistory';
+import { QMarkdown } from '@quasar/quasar-ui-qmarkdown';
 
 const router = useRouter();
 
 const governanceData = ref<Array<GovernanceData>>([]);
 
 const goToProfile = (user: string) => {
-  router.push({ path: `/profiles/display/${user}` });
+    router.push({ path: `/profiles/display/${user}` });
 };
 
 onMounted(async () => {
-  governanceData.value = await getGovernanceHistory();
+    governanceData.value = await getGovernanceHistory();
 });
 </script>
 
