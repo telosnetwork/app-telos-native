@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { getGovernanceHistory, GovernanceData } from './governanceHistory';
+import { onMounted, ref } from "vue";
+import { getGovernanceHistory, GovernanceData } from "./governanceHistory";
 
 const governanceData = ref<Array<GovernanceData>>([]);
 
 onMounted(async () => {
-    governanceData.value = await getGovernanceHistory();
+  governanceData.value = await getGovernanceHistory();
 });
 </script>
 
 <template>
   <ol class="c-numbered-list">
-    <li
+    <div
       v-for="(amendment, index) in governanceData"
       :key="index"
       class="c-numbered-list__li"
     >
-      <div class="c-numbered-list__number">
+      <div>
         On {{ amendment.lastAmended }} {{ amendment.amendedBy }} modified
         {{ amendment.sections.length }} sections:
       </div>
       <ol class="c-numbered-list">
-        <li
+        <div
           v-for="section in amendment.sections"
           :key="section.hash"
           class="c-numbered-list__li"
@@ -30,10 +30,8 @@ onMounted(async () => {
             {{ section.number }} {{ section.name }} - {{ section.hash }}
           </div>
           <div>{{ section.text }}</div>
-        </li>
+        </div>
       </ol>
-    </li>
+    </div>
   </ol>
 </template>
-
-<style lang="scss"></style>
