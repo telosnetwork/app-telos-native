@@ -144,8 +144,7 @@ const routes = [
     {
         path: '/governance',
         component: () => import('pages/governance/GovernanceDocumentation.vue'),
-        name: 'resolvePortal',
-        children: [...resolveRoutes],
+        name: 'governance',
     },
 ];
 
