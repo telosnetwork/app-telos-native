@@ -139,6 +139,13 @@ const routes = [
         name: 'resolvePortal',
         children: [...resolveRoutes],
     },
+
+    // IPFS governance documentation
+    {
+        path: '/governance',
+        component: () => import('pages/governance/GovernanceDocumentation.vue'),
+        name: 'governance',
+    },
 ];
 
 // Always leave this as last one
