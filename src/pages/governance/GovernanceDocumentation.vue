@@ -5,13 +5,14 @@ import { getGovernanceHistory, GovernanceData } from './governanceHistory';
 import { QMarkdown } from '@quasar/quasar-ui-qmarkdown';
 
 const router = useRouter();
-const loading = ref<boolean>(true);
+const loading = ref<boolean>(false);
 const governanceData = ref<Array<GovernanceData>>([]);
 const goToProfile = (user: string) => {
     router.push({ path: `/profiles/display/${user}` });
 };
 
 onMounted(async () => {
+    loading.value = true;
     governanceData.value = await getGovernanceHistory();
     loading.value = false;
 });
