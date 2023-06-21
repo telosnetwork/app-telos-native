@@ -11,26 +11,22 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ol class="c-numbered-list">
-    <div
-      v-for="(amendment, index) in governanceData"
-      :key="index"
-      class="c-numbered-list__li"
-    >
+  <ol>
+    <div v-for="(amendment, index) in governanceData" :key="index">
       <div>
         On {{ amendment.lastAmended }} {{ amendment.amendedBy }} modified
         {{ amendment.sections.length }} sections:
       </div>
-      <ol class="c-numbered-list">
-        <div
-          v-for="section in amendment.sections"
-          :key="section.hash"
-          class="c-numbered-list__li"
-        >
-          <div class="c-numbered-list__number">
-            {{ section.number }} {{ section.name }} - {{ section.hash }}
-          </div>
+      <ol>
+        <div v-for="section in amendment.sections" :key="section.hash">
           <q-markdown>{{ section.text }}</q-markdown>
+          <div class="c-numbered-list__number">
+            <a
+              :href="'https://ipfs.telos.net/ipfs/' + section.hash"
+              target="_blank"
+              >{{ section.number }} {{ section.name }} - {{ section.hash }}</a
+            >
+          </div>
         </div>
       </ol>
     </div>
