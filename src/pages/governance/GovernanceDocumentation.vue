@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { getGovernanceHistory, GovernanceData } from "./governanceHistory";
+import { QMarkdown } from "@quasar/quasar-ui-qmarkdown";
 
 const governanceData = ref<Array<GovernanceData>>([]);
 
@@ -29,9 +30,11 @@ onMounted(async () => {
           <div class="c-numbered-list__number">
             {{ section.number }} {{ section.name }} - {{ section.hash }}
           </div>
-          <div>{{ section.text }}</div>
+          <q-markdown>{{ section.text }}</q-markdown>
         </div>
       </ol>
     </div>
   </ol>
 </template>
+
+<style src="@quasar/quasar-ui-qmarkdown/dist/index.css"></style>
