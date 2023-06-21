@@ -20,7 +20,7 @@ onMounted(async () => {
 <template>
   <div class="governance-container">
     <div v-for="(amendment, index) in governanceData" :key="index">
-      <div>
+      <div class="governance-container__amended-by">
         On {{ amendment.lastAmended }}
         <a class="q-markdown--link" @click="goToProfile(amendment.amendedBy)">
           {{ amendment.amendedBy }}
@@ -34,7 +34,8 @@ onMounted(async () => {
             <a
               :href="'https://ipfs.telos.net/ipfs/' + section.hash"
               target="_blank"
-              >{{ section.number }} {{ section.name }} - {{ section.hash }}</a
+            >
+              {{ section.name }} - {{ section.hash }}</a
             >
           </div>
         </div>
@@ -47,6 +48,9 @@ onMounted(async () => {
 <style lang="scss">
 .governance-container {
   margin-top: 2rem;
+  &__amended-by {
+    margin: 1rem 0;
+  }
   a {
     color: blue;
     cursor: pointer;
