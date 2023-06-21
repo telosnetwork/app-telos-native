@@ -84,12 +84,6 @@ export const getGovernanceHistory = async (): Promise<
     });
 
     for (let amendment of orderedAmendments) {
-        console.log('======================');
-        // eslint-disable-next-line max-len
-        console.log(
-            // eslint-disable-next-line max-len
-            `On ${amendment.lastAmended} ${amendment.amendedBy} modified ${amendment.sections.length} sections: `
-        );
         for (let section of amendment.sections) {
             if (
             // eslint-disable-next-line max-len
@@ -97,7 +91,6 @@ export const getGovernanceHistory = async (): Promise<
             ) {
                 continue;
             }
-            console.log(`${section.number} ${section.name} - ${section.hash}`);
             try {
                 const contentData = await getContent(section.hash);
                 section.text = contentData;

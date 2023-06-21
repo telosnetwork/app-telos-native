@@ -1,27 +1,37 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { getGovernanceHistory, GovernanceData } from './governanceHistory';
 
+const governanceData = ref<Array<GovernanceData>>([]);
+
 onMounted(async () => {
-    debugger;
-    const data: GovernanceData[] = await getGovernanceHistory();
-    console.dir(data);
+    governanceData.value = await getGovernanceHistory();
 });
 </script>
 
 <template>
   <ol class="c-numbered-list">
     <li
-      v-for="index in slotCount"
-      :key="`numbered-list-item-${index}`"
+      v-for="(amendment, index) in governanceData"
+      :key="index"
       class="c-numbered-list__li"
     >
       <div class="c-numbered-list__number">
-        {{ index }}
+        On {{ amendment.lastAmended }} {{ amendment.amendedBy }} modified
+        {{ amendment.sections.length }} sections:
       </div>
-      <div>
-        <slot :name="`${index}`"></slot>
-      </div>
+      <ol class="c-numbered-list">
+        <li
+          v-for="section in amendment.sections"
+          :key="section.hash"
+          class="c-numbered-list__li"
+        >
+          <div class="c-numbered-list__number">
+            {{ section.number }} {{ section.name }} - {{ section.hash }}
+          </div>
+          <div>{{ section.text }}</div>
+        </li>
+      </ol>
     </li>
   </ol>
 </template>
