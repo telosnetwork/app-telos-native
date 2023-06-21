@@ -1,31 +1,25 @@
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getGovernanceHistory, GovernanceData } from './governanceHistory';
 import { QMarkdown } from '@quasar/quasar-ui-qmarkdown';
 
 const router = useRouter();
-const loading = ref<boolean>(false);
+const $q = useQuasar();
 const governanceData = ref<Array<GovernanceData>>([]);
 const goToProfile = (user: string) => {
     router.push({ path: `/profiles/display/${user}` });
 };
 
 onMounted(async () => {
-    loading.value = true;
+    $q.loading.show();
     governanceData.value = await getGovernanceHistory();
-    loading.value = false;
+    $q.loading.hide();
 });
 </script>
 
 <template>
-  <q-spinner-dots
-    class="fixed-center"
-    color="primary"
-    name="dots"
-    size="60px"
-    v-if="loading"
-  ></q-spinner-dots>
   <div class="governance-container">
     <div v-for="(amendment, index) in governanceData" :key="index">
       <div class="governance-container__amended-by">
