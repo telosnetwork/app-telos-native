@@ -70,6 +70,16 @@ export default {
             const diffDays = Math.round(Math.abs((today - startDate) / oneDay));
             return diffDays;
         },
+        sortedBallot() {
+            let ballot = JSON.parse(JSON.stringify(this.ballot));
+            ballot.options = ballot.options.sort((a, b) => {
+                let aVotes = parseInt(a.value.split(' ')[0]);
+                let bVotes = parseInt(b.value.split(' ')[0]);
+                return bVotes - aVotes;
+            });
+            debugger;
+            return ballot;
+        },
         getWinner() {
             if (!this.ballot.total_voters) return 'No votes';
             let winnerValue = -1;
@@ -465,8 +475,9 @@ export default {
                         q-list(dense).options-list.list-620
                             div.options-wrapper
                                 q-item.ballot-view-option(
-                                v-for="option in ballot.options"
+                                v-for="option in sortedBallot.options"
                                 :key="option.key"
+                                syle="display: flex; justify-content: center; align-items: center;"
                                 ).no-padding.capitalize.column
                                     div.row.option-item
                                         q-item-section()
@@ -479,7 +490,7 @@ export default {
                                                 @click.native="canUserVote()"
                                             )
                                                 div.checkbox-text.row.space-between
-                                                    div {{ option.displayText }}
+                                                    div {{ option.displayText }}:&nbsp
                                                     div(v-if="getPartOfTotal(option)")
                                                         | {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
@@ -631,7 +642,7 @@ export default {
                             q-list(dense).options-list.list-320
                                 div.options-wrapper
                                     q-item.ballot-view-option(
-                                    v-for="option in ballot.options"
+                                    v-for="option in sortedBallot.options"
                                     :key="option.key"
                                     ).no-padding.capitalize.column
                                         div.row.option-item
