@@ -941,7 +941,8 @@ embed
 
 .ballot-view-option
     max-width: 220px
-    height: 55px
+    flex-direction: column
+    height: 0px
     overflow: hidden
     flex-wrap: nowrap
     border: 2px solid #F2F3F4
@@ -949,7 +950,7 @@ embed
     margin: 8px 0
     & .option-item
         width: 100%
-        padding: 6px 12px 0 12px
+        padding: 5px 6px 0 6px
         & > div
             width: 100%
             & > div
@@ -960,7 +961,7 @@ embed
                         width: 100%
                         justify-content: space-between
     & .linear-progress
-        padding: 0 12px 10px 12px
+        
     &:hover
         border: none
         background: #FFFFFF
