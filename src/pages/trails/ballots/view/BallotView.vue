@@ -1,10 +1,10 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import BallotStatus           from '~/pages/trails/ballots/components/BallotStatus';
-import BallotChip             from '~/pages/trails/ballots/components/BallotChip';
+import BallotStatus from '~/pages/trails/ballots/components/BallotStatus';
+import BallotChip from '~/pages/trails/ballots/components/BallotChip';
 import BallotOpenVotingDialog from '~/pages/trails/ballots/components/BallotOpenVotingDialog';
-import Btn                    from '~/components/CustomButton';
-import { supplyToSymbol }     from '~/utils/assets';
+import Btn from '~/components/CustomButton';
+import { supplyToSymbol } from '~/utils/assets';
 
 const FROM_BOTH = 'both';
 const FROM_LIQUID = 'liquid';
@@ -77,7 +77,6 @@ export default {
                 let bVotes = parseInt(b.value.split(' ')[0]);
                 return bVotes - aVotes;
             });
-            debugger;
             return ballot;
         },
         getWinner() {
@@ -130,10 +129,10 @@ export default {
             } else if (typeof content === 'object') {
                 // prioritize content urls over image urls
                 const r =
-          content.contentUrl ||
-          (content.contentUrls || [])[0] ||
-          content.imageUrl ||
-          (content.imageUrls || [])[0];
+                    content.contentUrl ||
+                    (content.contentUrls || [])[0] ||
+                    content.imageUrl ||
+                    (content.imageUrls || [])[0];
                 return r;
             } else {
                 return false;
@@ -245,9 +244,9 @@ export default {
         },
         getPercentofTotal(option) {
             const total =
-        (Number(option.value.split(' ')[0]) /
-          Number(this.ballot.total_raw_weight.split(' ')[0])) *
-        100;
+                (Number(option.value.split(' ')[0]) /
+                    Number(this.ballot.total_raw_weight.split(' ')[0])) *
+                100;
             return Number.isInteger(total) ? total : +total.toFixed(2);
         },
         async onCastVote({ options, option, ballotName, register }) {
@@ -270,11 +269,11 @@ export default {
             this.$q.notify({
                 icon: this.notifications[0].icon,
                 message:
-          this.notifications[0].status === 'success'
-              ? this.$t('notifications.trails.successSigning')
-              : this.$t('notifications.trails.errorSigning'),
+                    this.notifications[0].status === 'success'
+                        ? this.$t('notifications.trails.successSigning')
+                        : this.$t('notifications.trails.errorSigning'),
                 color:
-          this.notifications[0].status === 'success' ? 'positive' : 'negative',
+                    this.notifications[0].status === 'success' ? 'positive' : 'negative',
             });
         },
         async showVoters() {
@@ -310,7 +309,7 @@ export default {
                     if (this.ballot.treasury.access === 'public') {
                         register = true;
                     } else {
-                    // redirect to treasuties page with filter
+                        // redirect to treasuties page with filter
                         this.$router.push({
                             path: '/trails/treasuries',
                             query: { treasury: this.ballot.treasury.supply.split(' ')[1] },
@@ -322,7 +321,7 @@ export default {
                 if (this.isOfficialSymbol) {
                     this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
                 } else {
-                    this.showAlert('pages.trails.ballots.needPositiveVoteLong.' + this.votingPowerComesFrom );
+                    this.showAlert('pages.trails.ballots.needPositiveVoteLong.' + this.votingPowerComesFrom);
                 }
                 return;
             }
@@ -401,7 +400,7 @@ export default {
         },
         findLinks(text) {
             const urlRegex =
-        /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+                /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
             return text.replace(urlRegex, (url) => `<a href="${url}">${url}</a>`);
         },
         getRequestAmountRounded(requestAmount) {
@@ -417,67 +416,233 @@ export default {
 
 <template lang="pug">
 .row.bg-white.justify-between.popup-wrapper(@scroll="updatePopupScroll" @click="debug")
-        ballot-open-voting-dialog(
-            :show.sync="openBallotDialog"
-            :ballot="ballot"
-            @close="openBallotDialog = false"
-            @done="onBallotOpenedForVoting")
-        template(v-if="!loading && ballot")
-            .col-xs.col-sm-auto.popup-left-col-wrapper(style="min-width: 268px;" v-if="showDetails")
-                q-card(
-                :class="ballot.status === 'voting' && isBallotOpened(ballot) ? '' : 'view-poll-ended'"
-                id="ballot-card"
-                flat
-                square
-                )
-                    q-card-section.header-nav
-                        div(@click="showDetails = false")
-                            img.poll-icon(src="statics/app-icons/back.svg")
-                            span Go Back
-                    q-card-section.body-info
-                        div(v-for="option in getVariants")
-                            div.text-weight-bold.variant-name {{ option.displayText }}
-                            div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
-                                span {{ i.voter }}
-                                span.text-weight-bold {{ getPercentOfNumber(i.value, option.value) }}
-            .col-xs.col-sm-auto(style="min-width: 240px;" v-else).popup-left-col-wrapper
-                q-scroll-area(:thumb-style="{width: '5px'}").popup-left-col.poll-item(id="ballot-card")
-                    div.card-img-section
-                        div.card-img-wrapper
-                            template(v-if="ballot.imageUrl")
-                                q-img(:src="ballot.imageUrl").poll-item-image-wrapper
-                                    template(v-slot:error)
-                                        q-icon(size="lg" name="far fa-image")
+    ballot-open-voting-dialog(
+        :show.sync="openBallotDialog"
+        :ballot="ballot"
+        @close="openBallotDialog = false"
+        @done="onBallotOpenedForVoting")
+    template(v-if="!loading && ballot")
+        .col-xs.col-sm-auto.popup-left-col-wrapper(style="min-width: 268px;" v-if="showDetails")
+            q-card(
+            :class="ballot.status === 'voting' && isBallotOpened(ballot) ? '' : 'view-poll-ended'"
+            id="ballot-card"
+            flat
+            square
+            )
+                q-card-section.header-nav
+                    div(@click="showDetails = false")
+                        img.poll-icon(src="statics/app-icons/back.svg")
+                        span Go Back
+                q-card-section.body-info
+                    div(v-for="option in getVariants")
+                        div.text-weight-bold.variant-name {{ option.displayText }}
+                        div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
+                            span {{ i.voter }}
+                            span.text-weight-bold {{ getPercentOfNumber(i.value, option.value) }}
+        .col-xs.col-sm-auto(style="min-width: 240px;" v-else).popup-left-col-wrapper
+            q-scroll-area(:thumb-style="{width: '5px'}").popup-left-col.poll-item(id="ballot-card")
+                div.card-img-section
+                    div.card-img-wrapper
+                        template(v-if="ballot.imageUrl")
+                            q-img(:src="ballot.imageUrl").poll-item-image-wrapper
+                                template(v-slot:error)
+                                    q-icon(size="lg" name="far fa-image")
+                        template(v-else)
+                            template(v-if="isBallotOpened(ballot) && ballot.status === 'voting'")
+                                img.bgr-icon1(
+                                    :src="`statics/app-icons/${ballot.category.toLowerCase()}-bgr-icon1.png`"
+                                )
+                                img.bgr-icon2(
+                                    :src="`statics/app-icons/${ballot.category.toLowerCase()}-bgr-icon2.png`"
+                                )
                             template(v-else)
-                                template(v-if="isBallotOpened(ballot) && ballot.status === 'voting'")
-                                    img.bgr-icon1(
-                                        :src="`statics/app-icons/${ballot.category.toLowerCase()}-bgr-icon1.png`"
-                                    )
-                                    img.bgr-icon2(
-                                        :src="`statics/app-icons/${ballot.category.toLowerCase()}-bgr-icon2.png`"
-                                    )
-                                template(v-else)
-                                    img(:src="`statics/app-icons/inactive-bgr-icon1.png`").bgr-icon1
-                                    img(:src="`statics/app-icons/inactive-bgr-icon2.png`").bgr-icon2
-                            div.column.items-start.absolute-top-left
-                                ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened(ballot)")
-                                ballot-chip(:type="'voted'",
-                                    :isBallotOpened="isBallotOpened(ballot)",
-                                    :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
-                            ballot-status(
-                            :ballot="ballot"
-                            :isBallotOpened="isBallotOpened(ballot)"
-                            :getEndTime="getEndTime(ballot)"
-                            :startTimeHasPassed="startTimeHasPassed(ballot)"
-                            :getStartTime="getStartTime(ballot)"
-                            )
+                                img(:src="`statics/app-icons/inactive-bgr-icon1.png`").bgr-icon1
+                                img(:src="`statics/app-icons/inactive-bgr-icon2.png`").bgr-icon2
+                        div.column.items-start.absolute-top-left
+                            ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened(ballot)")
+                            ballot-chip(:type="'voted'",
+                                :isBallotOpened="isBallotOpened(ballot)",
+                                :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
+                        ballot-status(
+                        :ballot="ballot"
+                        :isBallotOpened="isBallotOpened(ballot)"
+                        :getEndTime="getEndTime(ballot)"
+                        :startTimeHasPassed="startTimeHasPassed(ballot)"
+                        :getStartTime="getStartTime(ballot)"
+                        )
 
-                        q-list(dense).options-list.list-620
+                    q-list(dense).options-list.list-620
+                        div.options-wrapper
+                            q-item.ballot-view-option(
+                            v-for="option in sortedBallot.options"
+                            :key="option.key"
+                            syle="display: flex; justify-content: center; align-items: center;"
+                            ).no-padding.capitalize.column
+                                div.row.option-item
+                                    q-item-section()
+                                        q-checkbox(
+                                            size="sm"
+                                            v-model="votes"
+                                            :disable="shouldDisableCheckbox(option.key)"
+                                            :val="option.key"
+                                            :color="isBallotOpened(this.ballot) ? 'primary' : 'grey-08'"
+                                            @click.native="canUserVote()"
+                                        )
+                                            div.checkbox-text.row.space-between
+                                                div {{ option.displayText }}:&nbsp
+                                                div(v-if="getPartOfTotal(option)")
+                                                    | {{ getPartOfTotalPercent(option) }}%&nbsp
+                                div.linear-progress(v-if="displayWinner(ballot)")
+                                    q-linear-progress(
+                                        rounded size="6px" :value="getPartOfTotal(option)" color="$primary"
+                                    )
+                        div(
+                            v-if="isAuthenticated && ballot.status !== 'cancelled' && isBallotOpened(this.ballot)"
+).options-disclaimer {{ displayBallotSelectionText() }}
+                        q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").options-btn
+                            q-btn(
+                                no-caps
+                                :color="userCanVote ? 'primary' : 'info'"
+                                class="col"
+                                :disable="shouldDisableVoteButton()"
+                                :label="$t(voteButtonText)"
+                                @click="vote()"
+                            )
+                            q-btn(
+                                no-caps
+                                outline
+                                color="primary"
+                                class="col"
+                                v-if="isAuthenticated && ballot.publisher === account"
+                                :label="$t('common.buttons.cancel')"
+                                @click="cancel()"
+                            )
+                        q-item(v-if="ballot.status === 'setup' && !isBallotOpened(ballot)").options-btn
+                            q-btn(
+                                no-caps
+                                outline
+                                disable
+                                color="primary"
+                                class="col"
+                                v-if="!isAuthenticated || ballot.publisher != account"
+                                :label="$t('pages.trails.ballots.notOpened')"
+                                @click="showOpenBallotDialog()"
+                            )
+                            q-btn(
+                                no-caps
+                                outline
+                                color="primary"
+                                class="col"
+                                v-if="isAuthenticated && ballot.publisher === account"
+                                :label="$t('pages.trails.ballots.openBallotHeader')"
+                                @click="showOpenBallotDialog()"
+                            )
+                div.q-pb-none.cursor-pointer.statics-section.statics-section-620
+                    div.text-section.column
+                        div(v-if="ballot.total_voters > 0")
+                            span.statistics-title Most voted
+                    div.statistics-body(v-if="getWinner.displayText")
+                        span.text-weight-bold  {{ getWinner.displayText }}
+                        span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
+                    div(v-if="ballot.total_voters > 0")
+                        span.statistics-title Number of accounts
+                        div.statistics-body(@click="showVoters()")
+                            span.text-weight-bold  {{ ballot.total_voters }}
+                            div.poll-icon.details
+                    div.statics-section-item(v-else)
+                        span  {{ getWinner }}
+                    div
+                        span.statistics-title Number of tokens
+                    div.statistics-body
+                        span.text-weight-bold {{ onlyNumbers(ballot.total_raw_weight) }}&nbsp
+                        span.text-weight-bold {{ ballot.total_raw_weight.split(" ")[1]  }}&nbsp
+                    div(v-if="ballot.proposal_info")
+                        span.statistics-title Request amount
+                    div.statistics-body(v-if="ballot.proposal_info")
+                        span.text-weight-bold
+                            | {{ getRequestAmountRounded(ballot.proposal_info.total_requested) }}&nbsp
+        .col-xs-12.col-sm.popup-right-col-wrapper
+            q-card(
+            flat
+            square
+            ).popup-right-col
+                q-card-section.description-section-title
+                    q-btn(icon="close" flat v-close-popup).absolute-top-right.gt-xs.close-popup-btn
+                    div.text-section.row.ballot-card-title-wrapper
+                        span.ballot-card-title {{ ballot.title || "Untitled Ballot" }}
+                    div.ballot-card-sub-title-wrapper.row
+                        template(
+                            v-if="ballot.treasury.icon && ballot.treasury.icon !== 'null'")
+                            div.sub-title-card-img-wrapper
+                                q-img(:src="ballot.treasury.icon")
+                            div
+                                div
+                                    span.opacity04 By&nbsp
+                                    a(@click="openUrl(ballot.publisher)").link.cursor-pointer {{ ballot.publisher }}
+                                div.sub-title-group-wrapper
+                                    span.opacity04 in&nbsp
+                                    span.opacity06 {{ ballot.treasury.title || "No treasury" }}
+                        template(v-else)
+                            span.opacity04 By&nbsp
+                            a(@click="openUrl(ballot.publisher)").link.cursor-pointer  {{ ballot.publisher }}
+                            span.opacity04 &nbspin&nbsp
+                            span.opacity06 {{ ballot.treasury.title || "No treasury" }}
+                    q-btn(icon="close" flat v-close-popup).absolute-top-right.lt-sm
+                q-separator.popup-separator
+                q-card-section.description-section-wrapper
+                    div.description-section
+                        div.description-section-title(:class="iframeUrl ? `q-pb-md` : `q-pb-xl q-mb-lg`")
+                            p(v-html="shapedDescription")
+                        div(
+                        v-if="optionData && optionData[0] && optionData[0].hasOwnProperty('imageUrl')"
+                        ).q-pb-md.ballot-content-carousel
+                            q-carousel(
+                            swipeable
+                            animated
+                            v-model="defaultSlide"
+                            infinite
+                            ref="carousel"
+                            )
+                                q-carousel-slide(
+                                v-for="(slide, index) in optionData"
+                                :key="index"
+                                :name="index"
+                                :img-src="slide.imageUrl"
+                                )
+                                    div.absolute-bottom.custom-caption(v-if="slide.displayText")
+                                        div.caption-text {{ slide.displayText }}
+                                template(v-slot:control)
+                                    q-carousel-control(
+                                    position="bottom-left"
+                                    :offset="[18, 18]"
+                                    class="q-gutter-md"
+                                    )
+                                        q-btn.round-btn(
+                                        color="white"
+                                        text-color="black"
+                                        icon="fas fa-chevron-left"
+                                        @click="prevSlide()"
+                                        )
+                                        q-btn.round-btn(
+                                        color="white"
+                                        text-color="black"
+                                        icon="fas fa-chevron-right"
+                                        @click="nextSlide()"
+                                        )
+                        iframe(
+                        height="100%"
+                        width="100%"
+                        v-if="ballot.iframeUrl"
+                        :src="ballot.iframeUrl"
+                        ).kv-preview-data.file-preview-pdf.file-zoom-detail.shadow-1
+                        div(v-else).text-center
+                            img(src="/statics/app-icons/no-pdf.svg" style="width: 60px;")
+                            p(style="color: #a1c1ff").text-caption No PDF found
+                        q-list(dense).options-list.list-320
                             div.options-wrapper
                                 q-item.ballot-view-option(
                                 v-for="option in sortedBallot.options"
                                 :key="option.key"
-                                syle="display: flex; justify-content: center; align-items: center;"
                                 ).no-padding.capitalize.column
                                     div.row.option-item
                                         q-item-section()
@@ -490,21 +655,20 @@ export default {
                                                 @click.native="canUserVote()"
                                             )
                                                 div.checkbox-text.row.space-between
-                                                    div {{ option.displayText }}:&nbsp
+                                                    div {{ option.displayText }}
                                                     div(v-if="getPartOfTotal(option)")
                                                         | {{ getPartOfTotalPercent(option) }}%&nbsp
                                     div.linear-progress(v-if="displayWinner(ballot)")
                                         q-linear-progress(
-                                            rounded size="6px" :value="getPartOfTotal(option)" color="$primary"
-                                        )
+                                            rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
                             div(
-                                  v-if="isAuthenticated && ballot.status !== 'cancelled' && isBallotOpened(this.ballot)"
-                              ).options-disclaimer {{ displayBallotSelectionText() }}
-                            q-item(v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").options-btn
+                                v-if="isAuthenticated && ballot.status !== 'cancelled' && isBallotOpened(this.ballot)"
+                            ).options-disclaimer {{ displayBallotSelectionText() }}
+                            q-item(
+                                v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").column.options-btn
                                 q-btn(
                                     no-caps
                                     :color="userCanVote ? 'primary' : 'info'"
-                                    class="col"
                                     :disable="shouldDisableVoteButton()"
                                     :label="$t(voteButtonText)"
                                     @click="vote()"
@@ -513,216 +677,51 @@ export default {
                                     no-caps
                                     outline
                                     color="primary"
-                                    class="col"
                                     v-if="isAuthenticated && ballot.publisher === account"
                                     :label="$t('common.buttons.cancel')"
                                     @click="cancel()"
                                 )
-                            q-item(v-if="ballot.status === 'setup' && !isBallotOpened(ballot)").options-btn
-                                q-btn(
-                                    no-caps
-                                    outline
-                                    disable
-                                    color="primary"
-                                    class="col"
-                                    v-if="!isAuthenticated || ballot.publisher != account"
-                                    :label="$t('pages.trails.ballots.notOpened')"
-                                    @click="showOpenBallotDialog()"
-                                )
-                                q-btn(
-                                    no-caps
-                                    outline
-                                    color="primary"
-                                    class="col"
-                                    v-if="isAuthenticated && ballot.publisher === account"
-                                    :label="$t('pages.trails.ballots.openBallotHeader')"
-                                    @click="showOpenBallotDialog()"
-                                )
-                    div.q-pb-none.cursor-pointer.statics-section.statics-section-620
-                        div.text-section.column
-                            div(v-if="ballot.total_voters > 0")
-                                span.statistics-title Most voted
-                        div.statistics-body(v-if="getWinner.displayText")
-                            span.text-weight-bold  {{ getWinner.displayText }}
-                            span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
-                        div(v-if="ballot.total_voters > 0")
-                            span.statistics-title Number of accounts
-                            div.statistics-body(@click="showVoters()")
-                                span.text-weight-bold  {{ ballot.total_voters }}
-                                div.poll-icon.details
-                        div.statics-section-item(v-else)
-                            span  {{ getWinner }}
-                        div
-                            span.statistics-title Number of tokens
-                        div.statistics-body
-                            span.text-weight-bold {{ onlyNumbers(ballot.total_raw_weight) }}&nbsp
-                            span.text-weight-bold {{ ballot.total_raw_weight.split(" ")[1]  }}&nbsp
-                        div(v-if="ballot.proposal_info")
-                            span.statistics-title Request amount
-                        div.statistics-body(v-if="ballot.proposal_info")
-                            span.text-weight-bold
-                                | {{ getRequestAmountRounded(ballot.proposal_info.total_requested) }}&nbsp
-            .col-xs-12.col-sm.popup-right-col-wrapper
-                q-card(
-                flat
-                square
-                ).popup-right-col
-                    q-card-section.description-section-title
-                        q-btn(icon="close" flat v-close-popup).absolute-top-right.gt-xs.close-popup-btn
-                        div.text-section.row.ballot-card-title-wrapper
-                            span.ballot-card-title {{ ballot.title || "Untitled Ballot" }}
-                        div.ballot-card-sub-title-wrapper.row
-                            template(
-                                v-if="ballot.treasury.icon && ballot.treasury.icon !== 'null'")
-                                div.sub-title-card-img-wrapper
-                                    q-img(:src="ballot.treasury.icon")
-                                div
-                                    div
-                                        span.opacity04 By&nbsp
-                                        a(@click="openUrl(ballot.publisher)").link.cursor-pointer {{ ballot.publisher }}
-                                    div.sub-title-group-wrapper
-                                        span.opacity04 in&nbsp
-                                        span.opacity06 {{ ballot.treasury.title || "No treasury" }}
-                            template(v-else)
-                                span.opacity04 By&nbsp
-                                a(@click="openUrl(ballot.publisher)").link.cursor-pointer  {{ ballot.publisher }}
-                                span.opacity04 &nbspin&nbsp
-                                span.opacity06 {{ ballot.treasury.title || "No treasury" }}
-                        q-btn(icon="close" flat v-close-popup).absolute-top-right.lt-sm
-                    q-separator.popup-separator
-                    q-card-section.description-section-wrapper
-                        div.description-section
-                            div.description-section-title(:class="iframeUrl ? `q-pb-md` : `q-pb-xl q-mb-lg`")
-                                p(v-html="shapedDescription")
-                            div(
-                            v-if="optionData && optionData[0] && optionData[0].hasOwnProperty('imageUrl')"
-                            ).q-pb-md.ballot-content-carousel
-                                q-carousel(
-                                swipeable
-                                animated
-                                v-model="defaultSlide"
-                                infinite
-                                ref="carousel"
-                                )
-                                    q-carousel-slide(
-                                    v-for="(slide, index) in optionData"
-                                    :key="index"
-                                    :name="index"
-                                    :img-src="slide.imageUrl"
-                                    )
-                                        div.absolute-bottom.custom-caption(v-if="slide.displayText")
-                                            div.caption-text {{ slide.displayText }}
-                                    template(v-slot:control)
-                                        q-carousel-control(
-                                        position="bottom-left"
-                                        :offset="[18, 18]"
-                                        class="q-gutter-md"
-                                        )
-                                            q-btn.round-btn(
-                                            color="white"
-                                            text-color="black"
-                                            icon="fas fa-chevron-left"
-                                            @click="prevSlide()"
-                                            )
-                                            q-btn.round-btn(
-                                            color="white"
-                                            text-color="black"
-                                            icon="fas fa-chevron-right"
-                                            @click="nextSlide()"
-                                            )
-                            iframe(
-                            height="100%"
-                            width="100%"
-                            v-if="ballot.iframeUrl"
-                            :src="ballot.iframeUrl"
-                            ).kv-preview-data.file-preview-pdf.file-zoom-detail.shadow-1
-                            div(v-else).text-center
-                                img(src="/statics/app-icons/no-pdf.svg" style="width: 60px;")
-                                p(style="color: #a1c1ff").text-caption No PDF found
-                            q-list(dense).options-list.list-320
-                                div.options-wrapper
-                                    q-item.ballot-view-option(
-                                    v-for="option in sortedBallot.options"
-                                    :key="option.key"
-                                    ).no-padding.capitalize.column
-                                        div.row.option-item
-                                            q-item-section()
-                                                q-checkbox(
-                                                    size="sm"
-                                                    v-model="votes"
-                                                    :disable="shouldDisableCheckbox(option.key)"
-                                                    :val="option.key"
-                                                    :color="isBallotOpened(this.ballot) ? 'primary' : 'grey-08'"
-                                                    @click.native="canUserVote()"
-                                                )
-                                                    div.checkbox-text.row.space-between
-                                                        div {{ option.displayText }}
-                                                        div(v-if="getPartOfTotal(option)")
-                                                            | {{ getPartOfTotalPercent(option) }}%&nbsp
-                                        div.linear-progress(v-if="displayWinner(ballot)")
-                                            q-linear-progress(
-                                                rounded size="6px" :value="getPartOfTotal(option)" color="$primary")
-                                div(
-                                  v-if="isAuthenticated && ballot.status !== 'cancelled' && isBallotOpened(this.ballot)"
-                                ).options-disclaimer {{ displayBallotSelectionText() }}
-                                q-item(
-                                    v-if="ballot.status !== 'cancelled' && isBallotOpened(ballot)").column.options-btn
-                                    q-btn(
-                                        no-caps
-                                        :color="userCanVote ? 'primary' : 'info'"
-                                        :disable="shouldDisableVoteButton()"
-                                        :label="$t(voteButtonText)"
-                                        @click="vote()"
-                                    )
-                                    q-btn(
-                                        no-caps
-                                        outline
-                                        color="primary"
-                                        v-if="isAuthenticated && ballot.publisher === account"
-                                        :label="$t('common.buttons.cancel')"
-                                        @click="cancel()"
-                                    )
-                            q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-320
-                                div.text-section.column
-                                    div.statics-section-item(v-if="ballot.total_voters > 0")
-                                        span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
-                                        span.opacity06
-                                            | {{ getWinner.displayText }} lead over
-                                            | {{ getLoser.displayText ? ` ${getLoser.displayText}` : ` others` }}
-                                    div.statics-section-item(v-else)
-                                        span  {{ getWinner }}
-                                    div.statics-section-item
-                                        span.text-weight-bold
-                                            | {{ `${ballot.total_voters} Accounts` }}
-                                        span.opacity06 &nbspvoted
-                                    div.statics-section-item
-                                        span.text-weight-bold
-                                            | {{ ballot.total_raw_weight.split(' ')[0].split('.')[0] }}&nbsp
-                                        span.opacity06 {{ ballot.total_raw_weight.split(' ')[1]  }}&nbsp
-                                        span.opacity06 tokens
-                                    div.statics-section-item(v-if="ballot.proposal_info")
-                                        span.text-weight-bold
-                                            | {{ getRequestAmountRounded(ballot.proposal_info.total_requested) }}&nbsp
-                                        span.opacity06 {{ $t('pages.trails.ballots.requestAmount') }}
-                                    q-card-section(v-if="this.voters.length > 0").voters-list-320
-                                        div(v-for="option in getVariants")
-                                            div.text-weight-bold.variant-name {{ option.displayText }}
-                                            div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
-                                                span {{ i.voter }}
-                                                span.text-weight-bold {{ getPercentOfNumber(i.value, option.value) }}
-                div.back-btn.row(v-close-popup :class="{scrolled: scrollPosition > 50}")
-                    q-icon(name="fas fa-chevron-left")
-                    div Go back
-            q-dialog(v-model="notice")
-                q-card.notice
-                    q-card-section.row.no-wrap
-                        div You have to be logged in to vote. If you don't have account please register
-                            q-btn(
-                                flat size="14px" color="primary" label="here" to="/accounts/add" no-caps).register-link
-                    q-card-actions(align="right" class="bg-white")
-                        q-btn(flat label="OK" v-close-popup)
-        q-inner-loading(v-else)
-            q-spinner(size="3em")
+                        q-card-section().q-pb-none.cursor-pointer.statics-section.statics-section-320
+                            div.text-section.column
+                                div.statics-section-item(v-if="ballot.total_voters > 0")
+                                    span.text-weight-bold {{ getPercentofTotal(getWinner) }}%&nbsp
+                                    span.opacity06
+                                        | {{ getWinner.displayText }} lead over
+                                        | {{ getLoser.displayText ? ` ${getLoser.displayText}` : ` others` }}
+                                div.statics-section-item(v-else)
+                                    span  {{ getWinner }}
+                                div.statics-section-item
+                                    span.text-weight-bold
+                                        | {{ `${ballot.total_voters} Accounts` }}
+                                    span.opacity06 &nbspvoted
+                                div.statics-section-item
+                                    span.text-weight-bold
+                                        | {{ ballot.total_raw_weight.split(' ')[0].split('.')[0] }}&nbsp
+                                    span.opacity06 {{ ballot.total_raw_weight.split(' ')[1]  }}&nbsp
+                                    span.opacity06 tokens
+                                div.statics-section-item(v-if="ballot.proposal_info")
+                                    span.text-weight-bold
+                                        | {{ getRequestAmountRounded(ballot.proposal_info.total_requested) }}&nbsp
+                                    span.opacity06 {{ $t('pages.trails.ballots.requestAmount') }}
+                                q-card-section(v-if="this.voters.length > 0").voters-list-320
+                                    div(v-for="option in getVariants")
+                                        div.text-weight-bold.variant-name {{ option.displayText }}
+                                        div.list-voters(v-for="(i, idx) in getVoters(option.key)" :key="idx")
+                                            span {{ i.voter }}
+                                            span.text-weight-bold {{ getPercentOfNumber(i.value, option.value) }}
+            div.back-btn.row(v-close-popup :class="{scrolled: scrollPosition > 50}")
+                q-icon(name="fas fa-chevron-left")
+                div Go back
+        q-dialog(v-model="notice")
+            q-card.notice
+                q-card-section.row.no-wrap
+                    div You have to be logged in to vote. If you don't have account please register
+                        q-btn(
+                            flat size="14px" color="primary" label="here" to="/accounts/add" no-caps).register-link
+                q-card-actions(align="right" class="bg-white")
+                    q-btn(flat label="OK" v-close-popup)
+    q-inner-loading(v-else)
+        q-spinner(size="3em")
 </template>
 <style lang="sass">
 
