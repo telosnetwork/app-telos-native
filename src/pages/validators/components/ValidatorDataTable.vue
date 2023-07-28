@@ -125,7 +125,6 @@
 <script>
 import { mapGetters } from 'vuex';
 import moment from 'moment';
-import * as iso from 'iso-3166-1';
 
 const MAX_VOTE_PRODUCERS = 30;
 
@@ -320,12 +319,7 @@ export default {
         getLink(domain, username) {
             return `https://${domain}/${username}`;
         },
-        getCountry(numeric) {
-            const countryObj = iso.whereNumeric(numeric) ?? { alpha2: '' };
-            return countryObj.alpha2.toLowerCase();
-        },
         getFlag(alpha2) {
-            debugger;
             if (alpha2) {
                 return `flag-icon-${alpha2.toLowerCase()}`;
             }
