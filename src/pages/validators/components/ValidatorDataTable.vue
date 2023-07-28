@@ -170,7 +170,7 @@ export default {
                 {
                     name: 'country',
                     label: 'Country',
-                    field: (row) => this.getCountry(row.location),
+                    field: (row) => row.org?.location?.country,
                     align: 'center',
                     sortable: true,
                 },
@@ -325,8 +325,9 @@ export default {
             return countryObj.alpha2.toLowerCase();
         },
         getFlag(alpha2) {
+            debugger;
             if (alpha2) {
-                return `flag-icon-${alpha2}`;
+                return `flag-icon-${alpha2.toLowerCase()}`;
             }
             return '';
         },
