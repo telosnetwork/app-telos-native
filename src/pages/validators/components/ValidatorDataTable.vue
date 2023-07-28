@@ -30,95 +30,96 @@
       class='testnet-indicator'
     )
       | * = testnet, LPB = lifetime produced blocks, LMB = lifetime missed blocks
-    q-tr( slot="body" slot-scope="props" :props="props")
-      q-td( key="selected" v-if='account')
-        q-checkbox(  v-model='currentVote' :val='props.cols[2].value' )
-      q-td( key="number" class='vote-indicator') {{props.cols[1].value}}
-      q-td( key="owner" ) {{props.cols[2].value }}
-      q-td( key="country" ).flag-column
-        span(:class='getFlag(props.cols[3].value)').flag-icon
-      q-td(v-if='props.cols[4].value' key="social" align="center").no-decoration
-        a(v-if="props.cols[4].value.website" :href="props.cols[4].value.website")
+    template( v-slot:body="props")
+      q-tr( slot="body" slot-scope="props" :props="props")
+        q-td( key="selected" v-if='account')
+          q-checkbox(  v-model='currentVote' :val='props.cols[2].value' )
+        q-td( key="number" class='vote-indicator') {{props.cols[1].value}}
+        q-td( key="owner" ) {{props.cols[2].value }}
+        q-td( key="country" ).flag-column
+          span(:class='getFlag(props.cols[3].value)').flag-icon
+        q-td(v-if='props.cols[4].value' key="social" align="center").no-decoration
+          a(v-if="props.cols[4].value.website" :href="props.cols[4].value.website")
+            q-icon(
+              name="fas fa-globe"
+              size="xs"
+              color='primary'
+            )
+          a(v-if="props.cols[4].value.social.twitter" :href="getLink('twitter.com',props.cols[4].value.social.twitter)")
+            q-icon(
+              name="fab fa-twitter"
+              size="xs"
+              color='primary'
+            )
+          a(v-if="props.cols[4].value.social.github" :href="getLink('github.com',props.cols[4].value.social.github)")
+            q-icon(
+              name="fab fa-github"
+              size="xs"
+              color='primary'
+            )
+          a(v-if="props.cols[4].value.social.telegram" :href="getLink('t.me',props.cols[4].value.social.telegram)")
+            q-icon(
+              name="fab fa-telegram"
+              size="xs"
+              color='primary'
+            )
+        q-td(v-else key="social-none")
+        q-td( key="votes" align="right") {{props.cols[5].value }}
+        q-td( key="sslVerified" align='left')
           q-icon(
-            name="fas fa-globe"
+            v-if="props.cols[6].value === true"
+            name="fas fa-check"
             size="xs"
-            color='primary'
+            color='green'
           )
-        a(v-if="props.cols[4].value.social.twitter" :href="getLink('twitter.com',props.cols[4].value.social.twitter)")
           q-icon(
-            name="fab fa-twitter"
+            v-else
+            name="fas fa-times"
             size="xs"
-            color='primary'
+            color='red'
           )
-        a(v-if="props.cols[4].value.social.github" :href="getLink('github.com',props.cols[4].value.social.github)")
+        q-td( key="apiVerified" align='left')
           q-icon(
-            name="fab fa-github"
+            v-if="props.cols[7].value === true"
+            name="fas fa-check"
             size="xs"
-            color='primary'
+            color='green'
           )
-        a(v-if="props.cols[4].value.social.telegram" :href="getLink('t.me',props.cols[4].value.social.telegram)")
           q-icon(
-            name="fab fa-telegram"
+            v-else
+            name="fas fa-times"
             size="xs"
-            color='primary'
+            color='red'
           )
-      q-td(v-else key="social-none")
-      q-td( key="votes" align="right") {{props.cols[5].value }}
-      q-td( key="sslVerified" align='left')
-        q-icon(
-          v-if="props.cols[6].value === true"
-          name="fas fa-check"
-          size="xs"
-          color='green'
-        )
-        q-icon(
-          v-else
-          name="fas fa-times"
-          size="xs"
-          color='red'
-        )
-      q-td( key="apiVerified" align='left')
-        q-icon(
-          v-if="props.cols[7].value === true"
-          name="fas fa-check"
-          size="xs"
-          color='green'
-        )
-        q-icon(
-          v-else
-          name="fas fa-times"
-          size="xs"
-          color='red'
-        )
-      q-td( key="sslVerifiedTestNet" align='left')
-        q-icon(
-          v-if="props.cols[8].value === true"
-          name="fas fa-check"
-          size="xs"
-          color='green'
-        )
-        q-icon(
-          v-else
-          name="fas fa-times"
-          size="xs"
-          color='red'
-        )
-      q-td( key="apiVerifiedTestNet" align='left')
-        q-icon(
-          v-if="props.cols[9].value === true"
-          name="fas fa-check"
-          size="xs"
-          color='green'
-        )
-        q-icon(
-          v-else
-          name="fas fa-times"
-          size="xs"
-          color='red'
-        )
-      q-td( key="lifetimeProducedBlocks" align='right' ) {{props.cols[10].value }}
-      q-td( key="lifetimeMissedBlocks" align='right') {{props.cols[11].value }}
-      q-td( key='missedBlocksPer' align='left') {{props.cols[12].value }}
+        q-td( key="sslVerifiedTestNet" align='left')
+          q-icon(
+            v-if="props.cols[8].value === true"
+            name="fas fa-check"
+            size="xs"
+            color='green'
+          )
+          q-icon(
+            v-else
+            name="fas fa-times"
+            size="xs"
+            color='red'
+          )
+        q-td( key="apiVerifiedTestNet" align='left')
+          q-icon(
+            v-if="props.cols[9].value === true"
+            name="fas fa-check"
+            size="xs"
+            color='green'
+          )
+          q-icon(
+            v-else
+            name="fas fa-times"
+            size="xs"
+            color='red'
+          )
+        q-td( key="lifetimeProducedBlocks" align='right' ) {{props.cols[10].value }}
+        q-td( key="lifetimeMissedBlocks" align='right') {{props.cols[11].value }}
+        q-td( key='missedBlocksPer' align='left') {{props.cols[12].value }}
 </template>
 
 <script>
