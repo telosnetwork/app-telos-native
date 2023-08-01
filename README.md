@@ -1,7 +1,5 @@
 # Telos App (app-telos-net)
 
-[https://app-telos-native.pages.dev/](https://app-telos-native.pages.dev/)
-
 [Main Net](https://app.telos.net) [![Netlify Status](https://api.netlify.com/api/v1/badges/df3130e3-6286-4f92-8079-47e56acd0abc/deploy-status)](https://app.netlify.com/sites/telos-app-native-mainnet/deploys)
 
 [Test Net](https://app-dev.telos.net) [![Netlify Status](https://api.netlify.com/api/v1/badges/9d23d56c-fa1f-4107-acd1-cbcc6805e445/deploy-status)](https://app.netlify.com/sites/telos-app-native-testnet/deploys)
