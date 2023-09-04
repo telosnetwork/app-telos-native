@@ -29,10 +29,18 @@
                         <q-td key="ballot_name" class="ballot_name">
                             <div class="info">
                                 <div class="ballot-name">
+                                  <a v-if="props.row.ballot_name" :href="`/trails/ballot/${props.row.ballot_name}`">
                                     {{
                                         props.row.ballot_name ||
                                             `${props.row.election_id}`
                                     }}
+                                  </a>
+                                  <span v-else>
+                                    {{
+                                        props.row.ballot_name ||
+                                            `${props.row.election_id}`
+                                    }}
+                                  </span>
                                 </div>
                                 <div class="ballot-subtitle">
                                     <a
@@ -42,7 +50,13 @@
                                         "
                                         target="_blank"
                                         >{{$t('pages.resolve.elections_table_view_info')}}</a
+                                    >&nbsp;&nbsp;
+                                    <a v-if="props.row.ballot_name && props.row.status === 2"
+                                      :href="`/trails/ballot/${props.row.ballot_name}`"
+                                      class="primary"
                                     >
+                                      <strong>{{ $t('pages.resolve.elections_table_vote_now') }}</strong>
+                                    </a>
                                 </div>
                             </div>
                         </q-td>
@@ -153,6 +167,9 @@ export default {
 
 <style lang="scss">
 #elections-table {
+    .primary {
+      color: #571aff;
+    }
     .resolve-table {
         .q-table__top {
             background-color: #571aff;
