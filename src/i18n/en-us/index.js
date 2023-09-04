@@ -634,6 +634,7 @@ export default {
 
             elections_table_title: 'Elections',
             elections_table_view_info: 'View Info',
+            elections_table_vote_now: 'Vote now',
             elections_table_seats: 'Seats',
             elections_table_end_add: 'End Add Candidates',
             elections_table_end_voting: 'End Voting',
