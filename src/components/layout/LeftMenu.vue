@@ -1,47 +1,47 @@
 <script>
-import ResolveSidebarItem from "./ResolveSidebarItem.vue";
+import ResolveSidebarItem from './ResolveSidebarItem.vue';
 
 export default {
-  name: "LeftMenu",
-  components: {
-    ResolveSidebarItem,
-  },
-  data() {
-    return {
-      menuItems: [
-        { label: this.$t("menu.daos"), route: "/trails/treasuries" },
-        { label: this.$t("menu.elections"), route: "/trails/elections" },
-        { label: this.$t("menu.proposals"), route: "/trails/ballots" },
-        { label: this.$t("menu.governance"), route: "/governance" },
-        { label: this.$t("menu.validators"), route: "/validators" },
-      ],
-      clientWidth: 0,
-    };
-  },
-  watch: {
-    clientWidth: function () {
-      if (this.clientWidth > 760) {
-        this.closeMenu();
-      }
+    name: 'LeftMenu',
+    components: {
+        ResolveSidebarItem,
     },
-  },
-  created() {
-    window.addEventListener("resize", this.updateWidth);
-  },
-  beforeUnmount() {
-    window.removeEventListener("resize", this.updateWidth);
-  },
-  methods: {
-    closeMenu: function () {
-      this.$emit("close");
+    data() {
+        return {
+            menuItems: [
+                { label: this.$t('menu.daos'), route: '/trails/treasuries' },
+                { label: this.$t('menu.elections'), route: '/trails/elections' },
+                { label: this.$t('menu.proposals'), route: '/trails/ballots' },
+                { label: this.$t('menu.governance'), route: '/governance' },
+                { label: this.$t('menu.validators'), route: '/validators' },
+            ],
+            clientWidth: 0,
+        };
     },
-    goToHomePage: function () {
-      this.$emit("goToHomePage");
+    watch: {
+        clientWidth: function () {
+            if (this.clientWidth > 760) {
+                this.closeMenu();
+            }
+        },
     },
-    updateWidth() {
-      this.clientWidth = window.innerWidth;
+    created() {
+        window.addEventListener('resize', this.updateWidth);
     },
-  },
+    beforeUnmount() {
+        window.removeEventListener('resize', this.updateWidth);
+    },
+    methods: {
+        closeMenu: function () {
+            this.$emit('close');
+        },
+        goToHomePage: function () {
+            this.$emit('goToHomePage');
+        },
+        updateWidth() {
+            this.clientWidth = window.innerWidth;
+        },
+    },
 };
 </script>
 
