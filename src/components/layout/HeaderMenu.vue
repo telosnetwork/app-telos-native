@@ -1,47 +1,55 @@
 <script>
-import { mapGetters } from 'vuex';
-import ResolveMenu from './ResolveMenu.vue';
+import { mapGetters } from "vuex";
+import ResolveMenu from "./ResolveMenu.vue";
 
 export default {
-    name: 'HeaderMenu',
-    computed: {
-        ...mapGetters('accounts', ['isAuthenticated']),
-    },
-    props: {
-        activeFilter: {},
-    },
-    components: {
-        ResolveMenu,
-    },
-    data() {
-        return {
-            menuItems: [
-                {
-                    label: this.$t('menu.daos'),
-                    route: '/trails/treasuries',
-                },
-                {
-                    label: this.$t('menu.elections'),
-                    route: '/trails/elections',
-                },
-                {
-                    label: this.$t('menu.proposals'),
-                    route: '/trails/ballots',
-                }
-            ],
-            localFileter: this.activeFilter,
-        };
-    },
-    watch: {
-        activeFilter: function () {
-            this.localFileter = this.activeFilter;
+  name: "HeaderMenu",
+  computed: {
+    ...mapGetters("accounts", ["isAuthenticated"]),
+  },
+  props: {
+    activeFilter: {},
+  },
+  components: {
+    ResolveMenu,
+  },
+  data() {
+    return {
+      menuItems: [
+        {
+          label: this.$t("menu.daos"),
+          route: "/trails/treasuries",
         },
-        $route(to) {
-            if (!to.path.includes('/trails/ballots')) {
-                this.localFileter = '';
-            }
+        {
+          label: this.$t("menu.elections"),
+          route: "/trails/elections",
         },
+        {
+          label: this.$t("menu.proposals"),
+          route: "/trails/ballots",
+        },
+        {
+          label: this.$t("menu.governance"),
+          route: "/governance",
+        },
+        {
+          label: this.$t("menu.validators"),
+          route: "/validators",
+        },
+      ],
+      localFileter: this.activeFilter,
+    };
+  },
+  watch: {
+    activeFilter: function () {
+      this.localFileter = this.activeFilter;
     },
+    $route(to) {
+      if (!to.path.includes("/trails/ballots")) {
+        this.localFileter = "";
+      }
+    },
+  },
 };
 </script>
 
@@ -121,7 +129,7 @@ q-tabs(
 @media (max-width: 960px)
   .header-menu-tab
     padding: 0 8px
-@media (max-width: 760px)
+@media (max-width: 1350px)
   .q-tabs
     display: none
 </style>
