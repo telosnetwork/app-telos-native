@@ -1,55 +1,55 @@
 <script>
-import { mapActions, mapMutations, mapGetters } from "vuex";
-import HeaderMenu from "~/components/layout/HeaderMenu";
-import RightMenuAuthenticated from "~/components/layout/RightMenuAuthenticated";
-import RightMenuGuest from "~/components/layout/RightMenuGuest";
+import { mapActions, mapMutations, mapGetters } from 'vuex';
+import HeaderMenu from '~/components/layout/HeaderMenu';
+import RightMenuAuthenticated from '~/components/layout/RightMenuAuthenticated';
+import RightMenuGuest from '~/components/layout/RightMenuGuest';
 
 export default {
-  name: "AppHeader",
-  components: {
-    HeaderMenu,
-    RightMenuAuthenticated,
-    RightMenuGuest,
-  },
-  props: {
-    activeFilter: {},
-  },
-  data() {
-    return {
-      scrollPosition: null,
-      isMenuOpened: false,
-    };
-  },
-  computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-    ...mapGetters("notifications", ["successCount", "errorCount"]),
-  },
-  methods: {
-    ...mapMutations("notifications", [
-      "initNotifications",
-      "unmarkRead",
-      "unmarkNew",
-    ]),
-    ...mapActions("accounts", ["autoLogin"]),
-    openMenu() {
-      this.$emit("open");
+    name: 'AppHeader',
+    components: {
+        HeaderMenu,
+        RightMenuAuthenticated,
+        RightMenuGuest,
     },
-    goToHomePage() {
-      this.$emit("goToHomePage");
+    props: {
+        activeFilter: {},
     },
-    toggleNote() {
-      this.$emit("toggleNote");
+    data() {
+        return {
+            scrollPosition: null,
+            isMenuOpened: false,
+        };
     },
-    updateScroll() {
-      this.scrollPosition = window.scrollY;
+    computed: {
+        ...mapGetters('accounts', ['isAuthenticated']),
+        ...mapGetters('notifications', ['successCount', 'errorCount']),
     },
-    setActiveFilter(filter) {
-      this.$emit("set-active-filter", filter);
+    methods: {
+        ...mapMutations('notifications', [
+            'initNotifications',
+            'unmarkRead',
+            'unmarkNew',
+        ]),
+        ...mapActions('accounts', ['autoLogin']),
+        openMenu() {
+            this.$emit('open');
+        },
+        goToHomePage() {
+            this.$emit('goToHomePage');
+        },
+        toggleNote() {
+            this.$emit('toggleNote');
+        },
+        updateScroll() {
+            this.scrollPosition = window.scrollY;
+        },
+        setActiveFilter(filter) {
+            this.$emit('set-active-filter', filter);
+        },
     },
-  },
-  mounted() {
-    window.addEventListener("scroll", this.updateScroll);
-  },
+    mounted() {
+        window.addEventListener('scroll', this.updateScroll);
+    },
 };
 </script>
 
