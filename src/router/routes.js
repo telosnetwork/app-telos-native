@@ -57,6 +57,22 @@ const routes = [
         meta: { guest: false },
     },
 
+    // Validators
+    {
+        name: 'Validators',
+        path: '/validators',
+        component: () => import('pages/validators/ValidatorData.vue'),
+        meta: { guest: true },
+    },
+
+    // Governance
+    {
+        name: 'Governance',
+        path: '/governance',
+        component: () => import('pages/governance/GovernanceDocumentation.vue'),
+        meta: { guest: true },
+    },
+
     // Trails
     {
         path: '/transfers/add',

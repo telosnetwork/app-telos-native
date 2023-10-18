@@ -1,45 +1,47 @@
 <script>
-import ResolveSidebarItem from './ResolveSidebarItem.vue';
+import ResolveSidebarItem from "./ResolveSidebarItem.vue";
 
 export default {
-    name: 'LeftMenu',
-    components: {
-        ResolveSidebarItem,
+  name: "LeftMenu",
+  components: {
+    ResolveSidebarItem,
+  },
+  data() {
+    return {
+      menuItems: [
+        { label: this.$t("menu.daos"), route: "/trails/treasuries" },
+        { label: this.$t("menu.elections"), route: "/trails/elections" },
+        { label: this.$t("menu.proposals"), route: "/trails/ballots" },
+        { label: this.$t("menu.governance"), route: "/governance" },
+        { label: this.$t("menu.validators"), route: "/validators" },
+      ],
+      clientWidth: 0,
+    };
+  },
+  watch: {
+    clientWidth: function () {
+      if (this.clientWidth > 760) {
+        this.closeMenu();
+      }
     },
-    data() {
-        return {
-            menuItems: [
-                { label: this.$t('menu.daos'),      route: '/trails/treasuries' },
-                { label: this.$t('menu.elections'), route: '/trails/elections' },
-                { label: this.$t('menu.proposals'), route: '/trails/ballots' },
-            ],
-            clientWidth: 0,
-        };
+  },
+  created() {
+    window.addEventListener("resize", this.updateWidth);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.updateWidth);
+  },
+  methods: {
+    closeMenu: function () {
+      this.$emit("close");
     },
-    watch: {
-        clientWidth: function () {
-            if (this.clientWidth > 760) {
-                this.closeMenu();
-            }
-        },
+    goToHomePage: function () {
+      this.$emit("goToHomePage");
     },
-    created() {
-        window.addEventListener('resize', this.updateWidth);
+    updateWidth() {
+      this.clientWidth = window.innerWidth;
     },
-    beforeUnmount() {
-        window.removeEventListener('resize', this.updateWidth);
-    },
-    methods: {
-        closeMenu: function () {
-            this.$emit('close');
-        },
-        goToHomePage: function () {
-            this.$emit('goToHomePage');
-        },
-        updateWidth() {
-            this.clientWidth = window.innerWidth;
-        },
-    },
+  },
 };
 </script>
 
@@ -87,7 +89,7 @@ q-scroll-area.left-menu(style="height: 100%; border-right: 1px solid #ddd")
   .menu-logo-wrapper
     height: 162px
     border-bottom: 1px solid rgba(0, 9, 26, 0.1)
-@media (max-width: 760px)
+@media (max-width: 1350px)
   .left-menu
     .burger-close
       margin: 16px 0 0 24px

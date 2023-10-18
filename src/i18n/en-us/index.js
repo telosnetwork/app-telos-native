@@ -61,6 +61,8 @@ export default {
         daos: 'DAOs',
         elections: 'Elections',
         proposals: 'Proposals',
+        validators: 'Validators',
+        governance: 'Governance',
         workerProposals: 'Worker proposals',
         tokens: 'Tokens',
         trailsTreasuries: 'DAOs',

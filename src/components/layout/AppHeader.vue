@@ -1,55 +1,55 @@
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
-import HeaderMenu from '~/components/layout/HeaderMenu';
-import RightMenuAuthenticated from '~/components/layout/RightMenuAuthenticated';
-import RightMenuGuest from '~/components/layout/RightMenuGuest';
+import { mapActions, mapMutations, mapGetters } from "vuex";
+import HeaderMenu from "~/components/layout/HeaderMenu";
+import RightMenuAuthenticated from "~/components/layout/RightMenuAuthenticated";
+import RightMenuGuest from "~/components/layout/RightMenuGuest";
 
 export default {
-    name: 'AppHeader',
-    components: {
-        HeaderMenu,
-        RightMenuAuthenticated,
-        RightMenuGuest,
+  name: "AppHeader",
+  components: {
+    HeaderMenu,
+    RightMenuAuthenticated,
+    RightMenuGuest,
+  },
+  props: {
+    activeFilter: {},
+  },
+  data() {
+    return {
+      scrollPosition: null,
+      isMenuOpened: false,
+    };
+  },
+  computed: {
+    ...mapGetters("accounts", ["isAuthenticated"]),
+    ...mapGetters("notifications", ["successCount", "errorCount"]),
+  },
+  methods: {
+    ...mapMutations("notifications", [
+      "initNotifications",
+      "unmarkRead",
+      "unmarkNew",
+    ]),
+    ...mapActions("accounts", ["autoLogin"]),
+    openMenu() {
+      this.$emit("open");
     },
-    props: {
-        activeFilter: {},
+    goToHomePage() {
+      this.$emit("goToHomePage");
     },
-    data() {
-        return {
-            scrollPosition: null,
-            isMenuOpened: false,
-        };
+    toggleNote() {
+      this.$emit("toggleNote");
     },
-    computed: {
-        ...mapGetters('accounts', ['isAuthenticated']),
-        ...mapGetters('notifications', ['successCount', 'errorCount']),
+    updateScroll() {
+      this.scrollPosition = window.scrollY;
     },
-    methods: {
-        ...mapMutations('notifications', [
-            'initNotifications',
-            'unmarkRead',
-            'unmarkNew',
-        ]),
-        ...mapActions('accounts', ['autoLogin']),
-        openMenu() {
-            this.$emit('open');
-        },
-        goToHomePage() {
-            this.$emit('goToHomePage');
-        },
-        toggleNote() {
-            this.$emit('toggleNote');
-        },
-        updateScroll() {
-            this.scrollPosition = window.scrollY;
-        },
-        setActiveFilter(filter) {
-            this.$emit('set-active-filter', filter);
-        },
+    setActiveFilter(filter) {
+      this.$emit("set-active-filter", filter);
     },
-    mounted() {
-        window.addEventListener('scroll', this.updateScroll);
-    },
+  },
+  mounted() {
+    window.addEventListener("scroll", this.updateScroll);
+  },
 };
 </script>
 
@@ -109,7 +109,7 @@ q-header(:class="{scrolled: scrollPosition > 50}")
 .scrolled
   height: 64px
 .q-toolbar
-  width: 1366px
+  width: 1400px
   margin: 0 auto
   padding: 0 93px
 .logo-wrapper
@@ -153,8 +153,7 @@ q-header(:class="{scrolled: scrollPosition > 50}")
     width: 80px
   .scrolled
     height: 48px
-@media (max-width: 760px)
-  .q-toolbar__title,
+@media (max-width: 1350px)
   .title-separator
     display: none
   .q-header
