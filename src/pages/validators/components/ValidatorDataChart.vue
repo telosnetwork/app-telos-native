@@ -5,18 +5,8 @@
       :options="chartOptions"
       :update-args="[true, false]"
     />
-    <q-btn
-      class="q-pa-sm"
-      @click="toggleVisible(true)"
-    >
-      Select all
-    </q-btn>
-    <q-btn
-      class="q-pa-sm"
-      @click="toggleVisible(false)"
-    >
-      Deselect all
-    </q-btn>
+    <q-btn class="q-pa-sm" @click="toggleVisible(true)"> Select all </q-btn>
+    <q-btn class="q-pa-sm" @click="toggleVisible(false)"> Deselect all </q-btn>
   </div>
 </template>
 
@@ -33,7 +23,7 @@ export default {
         return {
             chartOptions: {
                 title: {
-                    text: 'Validator CPU Performance',
+                    text: 'Mainnet Validator CPU Performance',
                 },
                 credits: {
                     enabled: false,
