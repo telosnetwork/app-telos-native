@@ -58,7 +58,7 @@ q-scroll-area.left-menu(style="height: 100%; border-right: 1px solid #ddd")
         text-color="black"
       )
     div.wrapper
-      img(@click="goToHomePage" class="img" src="statics/telos-logo-new.svg")
+      img(@click="goToHomePage" class="img" src="statics/telos-logo.svg")
   q-tabs(
       no-caps
       vertical
