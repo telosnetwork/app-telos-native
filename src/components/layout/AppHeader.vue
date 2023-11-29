@@ -66,7 +66,7 @@ q-header(:class="{scrolled: scrollPosition > 50}")
       text-color="black"
     )
     q-toolbar-title.flex.items-center.logo-wrapper(shrink)
-      img.logo(@click="goToHomePage" src="statics/telos-logo.svg")
+      img.logo(@click="goToHomePage" src="branding/telos-logo-dark.png")
     q-separator.title-separator(vertical inset)
     header-menu(@set-active-filter="setActiveFilter" :activeFilter="activeFilter")
     div.right-menu.col-grow.row.justify-end
