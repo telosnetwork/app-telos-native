@@ -54,7 +54,6 @@ export default {
         ballots(ballots) {
             // check once if there is an active election and switch to elections page if so
             if (this.checkForActiveElection) {
-                debugger;
                 const activeElections = ballots.some(
                     (b) =>
                         (b.category === 'eleciton' || b.category === 'leaderboard') &&
@@ -68,7 +67,6 @@ export default {
         },
     },
     async mounted() {
-        debugger;
         this.memoryAutoLogin();
         this.initNotifications();
     },

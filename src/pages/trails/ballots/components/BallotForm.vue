@@ -7,7 +7,6 @@ import moment from 'moment';
 import { ref } from 'vue';
 import { supplyToDecimals, supplyToSymbol } from '~/utils/assets';
 
-
 const TYPE_OF_BALLOT_0 = 'yes.no';
 const TYPE_OF_BALLOT_1 = 'yes.no.abst';
 const TYPE_OF_BALLOT_2 = 'multi.op';
@@ -36,9 +35,9 @@ export default {
                 typeOfBallot: TYPE_OF_BALLOT_0,
                 newOptionLabel: '',
                 newOptionValue: '',
-                defaultLabels:['Yes', 'No', 'Abstain'],
-                optionsLabels:['Yes', 'No'],
-                optionsValues:['yes', 'no'],
+                defaultLabels: ['Yes', 'No', 'Abstain'],
+                optionsLabels: ['Yes', 'No'],
+                optionsValues: ['yes', 'no'],
                 optionsError: '',
                 title: '',
                 category: 'poll',
@@ -52,7 +51,7 @@ export default {
                 initialOptions: [],
                 endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
                 config: 'votestake',
-                file: null
+                file: null,
             },
             prompt: false,
             userBalance: null,
@@ -73,8 +72,13 @@ export default {
         };
     },
     computed: {
-        ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees', 'ballot']),
-        ...mapGetters('accounts', ['account','accountData']),
+        ...mapGetters('trails', [
+            'treasuries',
+            'userTreasury',
+            'ballotFees',
+            'ballot',
+        ]),
+        ...mapGetters('accounts', ['account', 'accountData']),
         tinyDevice() {
             return this.$q.screen.width < 600;
         },
@@ -108,16 +112,20 @@ export default {
         },
         imageHintText() {
             // if we don't have much space. Do not show this text.
-            return this.maximized ?
-                '' :
-                'Upload an image and paste the url here to include it in your poll.';
+            return this.maximized
+                ? ''
+                : 'Upload an image and paste the url here to include it in your poll.';
         },
         filename() {
             if (!this.form.file) return '';
             return this.form.file.name;
         },
         optionsAsText() {
-            return this.form.optionsLabels.join() + this.form.minOptions + this.form.maxOptions;
+            return (
+                this.form.optionsLabels.join() +
+        this.form.minOptions +
+        this.form.maxOptions
+            );
         },
         treasury() {
             if (!this.form.treasurySymbol) return null;
@@ -141,11 +149,13 @@ export default {
             }
 
             if (result.length === 0) {
-                result = [{
-                    label: 'You are not registered to any private DAO',
-                    value: null,
-                    disable: true
-                }];
+                result = [
+                    {
+                        label: 'You are not registered to any private DAO',
+                        value: null,
+                        disable: true,
+                    },
+                ];
             }
 
             return result;
@@ -182,34 +192,33 @@ export default {
             'fetchTreasuriesForUser',
             'fetchFees',
         ]),
-        debug(){
-        },
+        debug() {},
         // auxiliar not-implemented-yet functions
         async nextStep() {
             if (this.step >= 5) return;
             let list = {};
-            switch(this.step) {
+            switch (this.step) {
             case 1: {
-                list = {title:1, description:1, img:1};
+                list = { title: 1, description: 1, img: 1 };
                 break;
             }
             case 2: {
-                list = {treasurySymbol:1};
+                list = { treasurySymbol: 1 };
                 break;
             }
             case 3: {
                 if (this.form.typeOfBallot === this.ballotTypes[0]) {
-                    list = {op_a_1:1,op_a_2:1};
+                    list = { op_a_1: 1, op_a_2: 1 };
                 } else if (this.form.typeOfBallot === this.ballotTypes[1]) {
-                    list = {op_b_1:1,op_b_2:1,op_b_3:1};
+                    list = { op_b_1: 1, op_b_2: 1, op_b_3: 1 };
                 } else if (this.form.typeOfBallot === this.ballotTypes[2]) {
-                    list = {optionsLabels:1, minimun:1, maximun:1};
+                    list = { optionsLabels: 1, minimun: 1, maximun: 1 };
                 }
                 break;
             }
             case 4:
                 if (this.form.openForVoting) {
-                    list = {endTime:1};
+                    list = { endTime: 1 };
                 } else {
                     list = {};
                 }
@@ -231,19 +240,18 @@ export default {
             return text
                 .toLowerCase()
                 .replace(/[^a-z12345]/gi, '')
-                .substring(0,12);
+                .substring(0, 12);
         },
         createContentField() {
-
             // final object
             let final = {
                 version: 'DCMSv2',
-                optionData: {}
+                optionData: {},
             };
 
             // Option display texts
-            this.updateOptionValues().forEach((v,i) => {
-                final.optionData[v] = {displayText:this.form.optionsLabels[i]};
+            this.updateOptionValues().forEach((v, i) => {
+                final.optionData[v] = { displayText: this.form.optionsLabels[i] };
             });
 
             // image
@@ -276,7 +284,11 @@ export default {
             this.form.config = 'votestake';
         },
         isNewOptionRequired(val) {
-            return !this.form.newOptionRequired || !!val || this.$t('forms.errors.required');
+            return (
+                !this.form.newOptionRequired ||
+        !!val ||
+        this.$t('forms.errors.required')
+            );
         },
         addOption() {
             // if not newOptionLabel then alert the error and require the field to be tot empty
@@ -289,17 +301,21 @@ export default {
             }
         },
         deleteOption(index) {
-            this.form.optionsLabels.splice(index,1);
+            this.form.optionsLabels.splice(index, 1);
         },
         cleanOptions() {
             this.form.optionsLabels = [];
         },
         updateOptionValues() {
-            this.form.optionsValues = this.form.optionsLabels.map( t => this.slugify(t) );
+            this.form.optionsValues = this.form.optionsLabels.map((t) =>
+                this.slugify(t)
+            );
             return this.form.optionsValues;
         },
         setDefaultOptions(num) {
-            this.form.optionsLabels = this.form.defaultLabels.map(t => t).filter((_,i) => i<num);
+            this.form.optionsLabels = this.form.defaultLabels
+                .map((t) => t)
+                .filter((_, i) => i < num);
         },
         // empty functions BallotListItem, to use it as preview
         getLoser() {
@@ -310,7 +326,7 @@ export default {
             return false;
         },
         getStartTime() {
-            return moment(new Date()).add(1,'minutes').toDate().getTime();
+            return moment(new Date()).add(1, 'minutes').toDate().getTime();
         },
         async onAddBallot() {
             this.submitting = true;
@@ -323,7 +339,6 @@ export default {
                 setTimeout(() => {
                     this.$router.push(url);
                 }, 1000);
-        
             }
         },
         async openConfirmation() {
@@ -335,9 +350,9 @@ export default {
             this.form = {
                 newOptionLabel: '',
                 newOptionRequired: false,
-                defaultLabels:['Yes', 'No', 'Abstain'],
-                optionsLabels:['Yes', 'No'],
-                optionsValues:['yes', 'no'],
+                defaultLabels: ['Yes', 'No', 'Abstain'],
+                optionsLabels: ['Yes', 'No'],
+                optionsValues: ['yes', 'no'],
                 optionsError: '',
                 title: '',
                 category: 'poll',
@@ -351,7 +366,7 @@ export default {
                 initialOptions: [],
                 endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
                 config: 'votestake',
-                file: null
+                file: null,
             };
             this.rules.setActive(false);
             this.step = 1;
@@ -402,9 +417,9 @@ export default {
                 title: this.form.title,
                 category: this.form.category,
                 description:
-                    this.form.IPFSString && this.form.IPFSString.trim() !== ''
-                        ? `${this.form.description} ${this.form.IPFSString}`
-                        : this.form.description,
+          this.form.IPFSString && this.form.IPFSString.trim() !== ''
+              ? `${this.form.description} ${this.form.IPFSString}`
+              : this.form.description,
                 content: this.createContentField(),
                 treasurySymbol: this.form.treasurySymbol,
                 votingMethod: this.form.votingMethod,
@@ -423,9 +438,10 @@ export default {
             )} ${supplyToSymbol(zero_supply)}`;
             let ballot = {
                 treasury: this.treasury,
-                description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
-                    ? `${this.form.description} ${this.form.IPFSString}`
-                    : this.form.description,
+                description:
+          this.form.IPFSString && this.form.IPFSString.trim() !== ''
+              ? `${this.form.description} ${this.form.IPFSString}`
+              : this.form.description,
                 content: this.createContentField(),
                 publisher: this.account,
                 title: this.form.title,
@@ -433,9 +449,12 @@ export default {
                 status: this.form.openForVoting ? 'voting' : 'setup',
                 ballot_name: this.slugify(this.form.title),
                 total_voters: 0,
-                options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
-                    this.form.optionsLabels.map((key) => ({key, value:zero_supply})),
-                total_raw_weight: zero_supply
+                //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
+                options: this.form.optionsLabels.map((key) => ({
+                    key,
+                    value: zero_supply,
+                })),
+                total_raw_weight: zero_supply,
             };
             this.setBallot(ballot);
         },
@@ -461,7 +480,7 @@ export default {
             try {
                 if (this.$refs.qDateProxy1) this.$refs.qDateProxy1.hide();
                 if (this.$refs.qDateProxy2) this.$refs.qDateProxy2.hide();
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
             }
         },
@@ -482,17 +501,20 @@ export default {
             }
         },
         'form.typeOfBallot'() {
-            switch(this.form.typeOfBallot) {
-            case (TYPE_OF_BALLOT_0):
+            switch (this.form.typeOfBallot) {
+            case TYPE_OF_BALLOT_0:
                 this.setDefaultOptions(2);
                 break;
-            case (TYPE_OF_BALLOT_1):
+            case TYPE_OF_BALLOT_1:
                 this.setDefaultOptions(3);
                 break;
-            case (TYPE_OF_BALLOT_2):
+            case TYPE_OF_BALLOT_2:
                 break;
             default: // ??
-                console.error('ERORR: check consistency! ', [this.form.typeOfBallot, this.ballotTypes]);
+                console.error('ERORR: check consistency! ', [
+                    this.form.typeOfBallot,
+                    this.ballotTypes,
+                ]);
                 break;
             }
         },
@@ -505,7 +527,7 @@ export default {
         },
         optionsAsText() {
             this.rules.setActive(true);
-            this.validate({optionsLabels:1, minimun:1, maximun:1});
+            this.validate({ optionsLabels: 1, minimun: 1, maximun: 1 });
         },
         'form.onlyOneOption'() {
             if (!this.form.onlyOneOption) {
@@ -536,8 +558,8 @@ export default {
         },
         badImage() {
             this.validateImage(this.badImage);
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -695,7 +717,7 @@ q-dialog(
             span
               | What kind of ballot do you want?
             // :dense="radioBtnVertical"
-            dev.flex.no-wrap(:class="radioBtnVertical ? 'row' : 'column'")
+            div.flex.no-wrap(:class="radioBtnVertical ? 'row' : 'column'")
               div.q-mt-sm(:class="radioBtnVertical ? 'col-auto flex column no-wrap' : ''")
                 q-radio.q-mr-md(
                   v-model="form.typeOfBallot"
