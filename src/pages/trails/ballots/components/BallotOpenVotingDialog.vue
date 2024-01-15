@@ -1,13 +1,13 @@
 <script>
 import { mapActions } from 'vuex';
 import moment from 'moment';
-import { validation }         from '~/mixins/validation';
+import { validation } from '~/mixins/validation';
 
 export default {
     name: 'BallotOpenVotingDialog',
     props: {
         show: { type: Boolean, required: true },
-        ballot: { type: Object, required: true }
+        ballot: { required: true },
     },
     mixins: [validation],
     emits: ['close', 'done'],
@@ -16,7 +16,7 @@ export default {
             loading: false,
             form: {
                 endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
-            }
+            },
         };
     },
     watch: {
@@ -24,16 +24,18 @@ export default {
             try {
                 this.$refs.qDateProxy1.hide();
                 this.$refs.qDateProxy2.hide();
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
             }
         },
         show() {
             if (this.show) {
                 this.loading = false;
-                this.form.endTime = moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm');
+                this.form.endTime = moment(new Date())
+                    .add(20, 'days')
+                    .format('YYYY-MM-DD HH:mm');
             }
-        }
+        },
     },
     methods: {
         ...mapActions('trails', ['openBallotForVoting']),
@@ -43,8 +45,8 @@ export default {
             if (!ok) return;
             this.loading = true;
             await this.openBallotForVoting({
-                ballot_name:this.ballot.ballot_name,
-                endTime: this.form.endTime
+                ballot_name: this.ballot.ballot_name,
+                endTime: this.form.endTime,
             });
             this.$emit('done');
             this.loading = false;
