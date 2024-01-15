@@ -63,11 +63,12 @@ export default {
                 if (activeElections) {
                     this.$router.push('trails/elections');
                 }
-                this.checkForActiveElection === false;
+                this.checkForActiveElection = false;
             }
         },
     },
     async mounted() {
+        debugger;
         this.memoryAutoLogin();
         this.initNotifications();
     },
