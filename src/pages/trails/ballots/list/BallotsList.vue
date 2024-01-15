@@ -73,7 +73,10 @@ export default {
             }, 100);
         },
         updateBallots() {
-            this.filteredBallots = this.sortBallots(this.filterBallots(this.ballots), this.sortMode);
+            this.filteredBallots = this.sortBallots(
+                this.filterBallots(this.ballots),
+                this.sortMode
+            );
             this.resumeLoadingBallots();
         },
         async onLoad(_, done) {
@@ -167,10 +170,8 @@ export default {
             this.updateBallots();
         },
         filterBallots(ballots) {
-
             const ballotFilteredByStatuses = ballots.filter((b) => {
                 if (Object.keys(this.statuses || []).length > 0) {
-
                     if (this.statuses.includes('active')) {
                         if (this.isBallotOpened(b)) {
                             return true;
@@ -262,7 +263,7 @@ export default {
             this.treasury = params.treasury;
             this.statuses = params.tatus;
             this.categories = params.type;
-        }
+        },
     },
     computed: {
         ...mapGetters('accounts', ['isAuthenticated', 'account']),
@@ -270,7 +271,7 @@ export default {
             'ballots',
             'ballotsPagination',
             'treasuriesOptions',
-        ])
+        ]),
     },
     watch: {
         $route(to) {
@@ -282,7 +283,7 @@ export default {
         },
         ballots() {
             this.updateBallots();
-        }
+        },
     },
 };
 </script>
