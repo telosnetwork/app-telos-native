@@ -17,10 +17,11 @@ export default {
             right: false,
             miniState: true,
             activeFilter: 'amend-ballots',
+            checkForActiveElection: true,
         };
     },
     computed: {
-        ...mapGetters('accounts', ['isAuthenticated']),
+        ...mapGetters('trails', ['ballots']),
         ...mapGetters('notifications', ['successCount', 'errorCount']),
     },
     methods: {
@@ -47,6 +48,23 @@ export default {
         },
         closeMenu() {
             this.menu = false;
+        },
+    },
+    watch: {
+        ballots(ballots) {
+            // check once if there is an active election and switch to elections page if so
+            if (this.checkForActiveElection) {
+                debugger;
+                const activeElections = ballots.some(
+                    (b) =>
+                        (b.category === 'eleciton' || b.category === 'leaderboard') &&
+            b.status === 'voting'
+                );
+                if (activeElections) {
+                    this.$router.push('trails/elections');
+                }
+                this.checkForActiveElection === false;
+            }
         },
     },
     async mounted() {
