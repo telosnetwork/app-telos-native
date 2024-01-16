@@ -52,7 +52,7 @@ export default {
     },
     watch: {
         ballots(ballots) {
-            // check once if there is an active election and switch to elections page if so
+            // redirect to elections tab during active election
             if (this.checkForActiveElection) {
                 const activeElections = ballots.some(
                     (b) =>
