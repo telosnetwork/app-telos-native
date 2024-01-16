@@ -60,7 +60,7 @@ export default {
             b.status === 'voting' &&
             Date.parse(b.end_time) > Date.now()
                 );
-                if (activeElections && this.$route.path !== '/trails/elections') {
+                if (activeElections && this.$route.path === '/') {
                     this.$router.push('/trails/elections');
                 }
                 this.checkForActiveElection = false;
