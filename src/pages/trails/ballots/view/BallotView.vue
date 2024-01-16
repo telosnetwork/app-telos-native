@@ -51,7 +51,10 @@ export default {
                 }
                 return;
             }
-            await this.fetchVotesForBallot({ name: this.ballot.ballot_name, limit: this.ballot.total_voters });
+            await this.fetchVotesForBallot({
+                name: this.ballot.ballot_name,
+                limit: this.ballot.total_voters,
+            });
             window.addEventListener('scroll', this.updateScroll);
             this.loading = false;
         } catch (e) {
@@ -122,17 +125,12 @@ export default {
             } catch (e) {
                 console.error(e);
             }
-
             if (Array.isArray(file_path)) {
-                const r = 'https://ipfs.io/ipfs/' + file_path[0];
+                const r = 'https://ipfs.telos.net/ipfs/' + file_path[0];
                 return r;
-            } else if (typeof content === 'object') {
-                // prioritize content urls over image urls
-                const r =
-                    content.contentUrl ||
-                    (content.contentUrls || [])[0] ||
-                    content.imageUrl ||
-                    (content.imageUrls || [])[0];
+                // render image seperately from iframe if only available content
+            } else if (typeof content === 'object' && !content.imageUrl) {
+                const r = content.contentUrl || (content.contentUrls || [])[0];
                 return r;
             } else {
                 return false;
@@ -149,14 +147,21 @@ export default {
         },
         isUserRegisteredInTreasury() {
             if (!this.ballot) return false;
-            return this.userTreasury.some(t => t.liquid.split(' ')[1] === this.ballot.treasury.supply.split(' ')[1]);
+            return this.userTreasury.some(
+                (t) =>
+                    t.liquid.split(' ')[1] === this.ballot.treasury.supply.split(' ')[1]
+            );
         },
         isOfficialSymbol() {
             return supplyToSymbol(this.ballot.treasury_symbol) === 'VOTE';
         },
         votingPowerComesFrom() {
-            let voteliquid = this.ballot.settings.some(op => op.key === 'voteliquid' && op.value > 0);
-            let votestake = this.ballot.settings.some(op => op.key === 'votestake' && op.value > 0);
+            let voteliquid = this.ballot.settings.some(
+                (op) => op.key === 'voteliquid' && op.value > 0
+            );
+            let votestake = this.ballot.settings.some(
+                (op) => op.key === 'votestake' && op.value > 0
+            );
             if (voteliquid && votestake) {
                 return FROM_BOTH;
             } else if (voteliquid) {
@@ -174,11 +179,17 @@ export default {
                 if (!this.accountData) return false;
                 if (!this.accountData.self_delegated_bandwidth) return false;
 
-                let cpu_weight = this.accountData.self_delegated_bandwidth.cpu_weight || '0.0000 TLOS';
-                let net_weight = this.accountData.self_delegated_bandwidth.net_weight || '0.0000 TLOS';
-                power = parseFloat(cpu_weight.split(' ')[0]) + parseFloat(net_weight.split(' ')[0]);
+                let cpu_weight =
+          this.accountData.self_delegated_bandwidth.cpu_weight || '0.0000 TLOS';
+                let net_weight =
+          this.accountData.self_delegated_bandwidth.net_weight || '0.0000 TLOS';
+                power =
+          parseFloat(cpu_weight.split(' ')[0]) +
+          parseFloat(net_weight.split(' ')[0]);
             } else {
-                let userTreas = this.userTreasury.find(t => supplyToSymbol(t.liquid) === symbol);
+                let userTreas = this.userTreasury.find(
+                    (t) => supplyToSymbol(t.liquid) === symbol
+                );
                 if (!userTreas) return false;
 
                 let powerComes = this.votingPowerComesFrom;
@@ -244,9 +255,9 @@ export default {
         },
         getPercentofTotal(option) {
             const total =
-                (Number(option.value.split(' ')[0]) /
-                    Number(this.ballot.total_raw_weight.split(' ')[0])) *
-                100;
+        (Number(option.value.split(' ')[0]) /
+          Number(this.ballot.total_raw_weight.split(' ')[0])) *
+        100;
             return Number.isInteger(total) ? total : +total.toFixed(2);
         },
         async onCastVote({ options, option, ballotName, register }) {
@@ -269,11 +280,11 @@ export default {
             this.$q.notify({
                 icon: this.notifications[0].icon,
                 message:
-                    this.notifications[0].status === 'success'
-                        ? this.$t('notifications.trails.successSigning')
-                        : this.$t('notifications.trails.errorSigning'),
+          this.notifications[0].status === 'success'
+              ? this.$t('notifications.trails.successSigning')
+              : this.$t('notifications.trails.errorSigning'),
                 color:
-                    this.notifications[0].status === 'success' ? 'positive' : 'negative',
+          this.notifications[0].status === 'success' ? 'positive' : 'negative',
             });
         },
         async showVoters() {
@@ -296,7 +307,7 @@ export default {
             await this.fetchUserVotesForThisBallot(ballot_name);
             if (!this.userVotes) return;
             if (!this.userVotes[ballot_name]) return;
-            let votes = this.userVotes[ballot_name].weighted_votes.map(v => v.key);
+            let votes = this.userVotes[ballot_name].weighted_votes.map((v) => v.key);
             this.votes = this.votes.concat(votes);
         },
         async vote() {
@@ -321,7 +332,10 @@ export default {
                 if (this.isOfficialSymbol) {
                     this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
                 } else {
-                    this.showAlert('pages.trails.ballots.needPositiveVoteLong.' + this.votingPowerComesFrom);
+                    this.showAlert(
+                        'pages.trails.ballots.needPositiveVoteLong.' +
+              this.votingPowerComesFrom
+                    );
                 }
                 return;
             }
@@ -369,8 +383,9 @@ export default {
         shouldDisableCheckbox(key) {
             return (
                 !this.isAuthenticated ||
-                !this.isBallotOpened(this.ballot) ||
-                (this.votes.length === this.ballot.max_options && !this.votes.includes(key))
+        !this.isBallotOpened(this.ballot) ||
+        (this.votes.length === this.ballot.max_options &&
+          !this.votes.includes(key))
             );
         },
         displayBallotSelectionText() {
@@ -392,7 +407,8 @@ export default {
         },
         canUserVote() {
             this.userCanVote =
-                this.votes.length >= this.ballot.min_options && this.votes.length <= this.ballot.max_options;
+        this.votes.length >= this.ballot.min_options &&
+        this.votes.length <= this.ballot.max_options;
             return this.userCanVote;
         },
         shouldDisableVoteButton() {
@@ -400,7 +416,7 @@ export default {
         },
         findLinks(text) {
             const urlRegex =
-                /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+        /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
             return text.replace(urlRegex, (url) => `<a href="${url}">${url}</a>`);
         },
         getRequestAmountRounded(requestAmount) {
@@ -632,9 +648,11 @@ export default {
                         iframe(
                         height="100%"
                         width="100%"
-                        v-if="ballot.iframeUrl"
-                        :src="ballot.iframeUrl"
+                        v-if="iframeUrl"
+                        :src="iframeUrl"
                         ).kv-preview-data.file-preview-pdf.file-zoom-detail.shadow-1
+                        div(v-else-if="ballot.imageUrl").text-center
+                            img(:src="ballot.imageUrl" style="max-width: 100%;")
                         div(v-else).text-center
                             img(src="/statics/app-icons/no-pdf.svg" style="width: 60px;")
                             p(style="color: #a1c1ff").text-caption No PDF found
@@ -960,7 +978,7 @@ embed
                         width: 100%
                         justify-content: space-between
     & .linear-progress
-        
+
     &:hover
         border: none
         background: #FFFFFF
