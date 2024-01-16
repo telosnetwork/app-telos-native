@@ -56,11 +56,11 @@ export default {
             if (this.checkForActiveElection) {
                 const activeElections = ballots.some(
                     (b) =>
-                        (b.category === 'eleciton' || b.category === 'leaderboard') &&
-            b.status === 'voting'
+                        (b.category === 'election' || b.category === 'leaderboard') &&
+            Date.parse(b.end_time) < Date.now()
                 );
-                if (activeElections) {
-                    this.$router.push('trails/elections');
+                if (activeElections && this.$route.path !== '/trails/elections') {
+                    this.$router.push('/trails/elections');
                 }
                 this.checkForActiveElection = false;
             }
