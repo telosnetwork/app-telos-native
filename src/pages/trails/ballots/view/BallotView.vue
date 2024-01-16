@@ -437,6 +437,13 @@ export default {
         :ballot="ballot"
         @close="openBallotDialog = false"
         @done="onBallotOpenedForVoting")
+    q-spinner-dots(
+      class="fixed-center"
+      color="primary"
+      name="dots"
+      size="60px"
+      v-if="loading"
+    )
     template(v-if="!loading && ballot")
         .col-xs.col-sm-auto.popup-left-col-wrapper(style="min-width: 268px;" v-if="showDetails")
             q-card(
