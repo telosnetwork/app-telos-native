@@ -289,7 +289,7 @@ export default {
 </script>
 
 <template lang="pug">
-q-page(v-if="!renderComponent")
+q-page(v-if="!renderComponent" key="ballots")
   welcome-card(v-if="!isNewUser() && isAuthenticated")
   action-bar(
     ref="actionBar"
