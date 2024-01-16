@@ -58,7 +58,7 @@ export default {
                     (b) =>
                         (b.category === 'election' || b.category === 'leaderboard') &&
             b.status === 'voting' &&
-            Date.parse(b.end_time) < Date.now()
+            Date.parse(b.end_time) > Date.now()
                 );
                 if (activeElections && this.$route.path !== '/trails/elections') {
                     this.$router.push('/trails/elections');
