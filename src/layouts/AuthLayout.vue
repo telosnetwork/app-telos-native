@@ -57,7 +57,8 @@ export default {
                 const activeElections = ballots.some(
                     (b) =>
                         (b.category === 'election' || b.category === 'leaderboard') &&
-            Date.parse(b.end_time) < Date.now()
+            b.status === 'voting' &&
+            Date.parse(b.end_time) > Date.now()
                 );
                 if (activeElections && this.$route.path !== '/trails/elections') {
                     this.$router.push('/trails/elections');
