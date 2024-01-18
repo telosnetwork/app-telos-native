@@ -319,6 +319,9 @@ export default {
         testnetDevelopers: {
             title: 'Get a testnet account or testnet TLOS',
         },
+        testnetEvmFaucet: {
+            title: 'Get testnet EVM TLOS',
+        },
         tokens: {
             title: 'Token management',
         },
