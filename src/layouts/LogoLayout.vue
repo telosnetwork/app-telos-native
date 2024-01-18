@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: 'LogoLayout',
+  name: "LogoLayout",
 };
 </script>
 
