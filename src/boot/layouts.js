@@ -2,6 +2,7 @@ import { boot } from 'quasar/wrappers';
 import AuthLayout from '../layouts/AuthLayout.vue';
 import EmptyLayout from '../layouts/EmptyLayout.vue';
 import GuestLayout from '../layouts/GuestLayout.vue';
+import LogoLayout from '../layouts/LogoLayout.vue';
 import Gravatar from 'vue-gravatar';
 
 // "async" is optional;
@@ -10,5 +11,6 @@ export default boot(({ app }) => {
     app.component('LayoutMain', AuthLayout);
     app.component('LayoutEmpty', EmptyLayout);
     app.component('LayoutGuest', GuestLayout);
+    app.component('LayoutLogo', LogoLayout);
     app.component('v-gravatar', Gravatar);
 });

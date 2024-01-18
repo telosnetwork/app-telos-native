@@ -98,6 +98,15 @@ const routes = [
             guest: true,
         },
     },
+    {
+        path: '/testnet/evm-faucet',
+        component: () => import('pages/testnet/TestnetEvmFaucet.vue'),
+        meta: {
+            layout: 'logo',
+            title: 'pages.testnetEvmFaucet.title',
+            guest: true,
+        },
+    },
 
     // Tokens
     {
