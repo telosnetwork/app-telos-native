@@ -16,6 +16,24 @@ export default {
             submitting: false,
         };
     },
+    computed: {
+    isCreateAccountButtonDisabled() {
+      return (
+        !this.form.account_name ||
+        !this.form.owner_key ||
+        !this.form.active_key ||
+        this.submitting
+      );
+    },
+    isAnyInputInvalid() {
+      return (
+        !this.form.account_name ||
+        !/^EOS[0-9A-Za-z]{50}$/.test(this.form.owner_key) ||
+        !/^EOS[0-9A-Za-z]{50}$/.test(this.form.active_key) 
+       
+      );
+    },
+  },
     methods: {
         ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
         async onFaucet() {
@@ -85,6 +103,7 @@ q-page.flex.flex-center
         ref="owner_key"
         v-model="form.owner_key"
         color="accent"
+        :rules="[ val => /^EOS[0-9A-Za-z]{50}$/.test(val) || 'Please provide a valid Owner key']"
         label="Owner key"
         outlined
       )
@@ -92,6 +111,8 @@ q-page.flex.flex-center
         ref="active_key"
         v-model="form.active_key"
         color="accent"
+        :rules="[ val => /^EOS[0-9A-Za-z]{50}$/.test(val) || 'Please provide a valid Active key']"
+
         label="Active key"
         outlined
       )
@@ -101,6 +122,7 @@ q-page.flex.flex-center
         size="lg"
         unelevated
         :loading="submitting"
+        :disable="isAnyInputInvalid"
         @click="onAccount"
       )
 
