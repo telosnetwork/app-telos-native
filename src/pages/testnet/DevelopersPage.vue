@@ -28,8 +28,15 @@ export default {
     isAnyInputInvalid() {
       return (
         !this.form.account_name ||
-        !/^EOS[0-9A-Za-z]{50}$/.test(this.form.owner_key) ||
-        !/^EOS[0-9A-Za-z]{50}$/.test(this.form.active_key) 
+        (
+      !/^EOS[0-9A-Za-z]{50}$/.test(this.form.owner_key) &&
+      !/^PUB_K1_[0-9A-Za-z]{50}$/.test(this.form.owner_key)
+    ) ||
+    (
+      !/^EOS[0-9A-Za-z]{50}$/.test(this.form.active_key) &&
+      !/^PUB_K1_[0-9A-Za-z]{50}$/.test(this.form.active_key)
+    )
+        
        
       );
     },
@@ -103,7 +110,7 @@ q-page.flex.flex-center
         ref="owner_key"
         v-model="form.owner_key"
         color="accent"
-        :rules="[ val => /^EOS[0-9A-Za-z]{50}$/.test(val) || 'Please provide a valid Owner key']"
+        :rules="[ val => (/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(val)) || 'Please provide a valid Owner key']"
         label="Owner key"
         outlined
       )
@@ -111,7 +118,7 @@ q-page.flex.flex-center
         ref="active_key"
         v-model="form.active_key"
         color="accent"
-        :rules="[ val => /^EOS[0-9A-Za-z]{50}$/.test(val) || 'Please provide a valid Active key']"
+        :rules="[ val => (/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(val)) || 'Please provide a valid Active key']"
 
         label="Active key"
         outlined
