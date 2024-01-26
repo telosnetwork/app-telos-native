@@ -17,30 +17,26 @@ export default {
         };
     },
     computed: {
-    isCreateAccountButtonDisabled() {
-      return (
-        !this.form.account_name ||
-        !this.form.owner_key ||
-        !this.form.active_key ||
-        this.submitting
-      );
+      isCreateAccountButtonDisabled() {
+        return (
+            !this.form.account_name ||
+            !this.form.owner_key ||
+            !this.form.active_key ||
+            this.submitting
+        );
+      },
+      isAnyInputInvalid() {
+        return (
+          !this.form.account_name ||
+          (!/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(
+            this.form.owner_key
+          )) ||
+          (!/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(
+            this.form.active_key
+          ))
+        );
+      },
     },
-    isAnyInputInvalid() {
-      return (
-        !this.form.account_name ||
-        (
-      !/^EOS[0-9A-Za-z]{50}$/.test(this.form.owner_key) &&
-      !/^PUB_K1_[0-9A-Za-z]{50}$/.test(this.form.owner_key)
-    ) ||
-    (
-      !/^EOS[0-9A-Za-z]{50}$/.test(this.form.active_key) &&
-      !/^PUB_K1_[0-9A-Za-z]{50}$/.test(this.form.active_key)
-    )
-        
-       
-      );
-    },
-  },
     methods: {
         ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
         async onFaucet() {
