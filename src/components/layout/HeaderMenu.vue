@@ -90,7 +90,9 @@ q-tabs(
           :class="[el.filter === localFileter ? 'active-tab': '']"
         )
     div.custom-separator
-  ResolveMenu
+  ResolveMenu(
+    @click="$router.push('/resolve')"
+  )
 </template>
 
 <style lang="sass">
