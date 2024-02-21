@@ -1,5 +1,3 @@
-<!-- eslint-disable max-len -->
-<!-- eslint-disable -->
 <script>
 import { mapActions } from 'vuex';
 import { Notify } from 'quasar';
@@ -39,52 +37,41 @@ export default {
     },
     methods: {
         ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
-        async onFaucet() {
-            this.submitting = true;
-            const result = await this.faucet(this.form.send_to);
-            console.log('result', result);
-            if (result) {
+        handleAnswer(answer, success_message) {
+            if (typeof answer === 'string') {
                 Notify.create({
-                    message: result,
+                    message: answer,
+                    position: 'top',
+                    color: 'negative',
+                    textColor: 'white',
+                    actions: [{ label: 'Dismiss', color: 'white' }],
+                });
+            } else if (typeof answer === 'object') {
+                Notify.create({
+                    message: success_message,
                     position: 'top',
                     color: 'primary',
                     textColor: 'white',
                     actions: [{ label: 'Dismiss', color: 'white' }],
                 });
-                this.transactionId = result.transactionId;
             }
+        },
+        async onFaucet() {
+            this.submitting = true;
+            const result = await this.faucet(this.form.send_to);
+            this.handleAnswer(result, 'TLOS sent successfully');
             this.submitting = false;
         },
         async onEvmFaucet() {
             this.submitting = true;
             const result = await this.evmFaucet(this.form.send_to_evm);
-            console.log('result', result);
-            if (result) {
-                Notify.create({
-                    message: result,
-                    position: 'top',
-                    color: 'primary',
-                    textColor: 'white',
-                    actions: [{ label: 'Dismiss', color: 'white' }],
-                });
-                this.transactionId = result.transactionId;
-            }
+            this.handleAnswer(result, 'TLOS sent successfully');
             this.submitting = false;
         },
         async onAccount() {
             this.submitting = true;
             const result = await this.account(this.form);
-            console.log('result', result);
-            if (result) {
-                Notify.create({
-                    message: result,
-                    position: 'top',
-                    color: 'primary',
-                    textColor: 'white',
-                    actions: [{ label: 'Dismiss', color: 'white' }],
-                });
-                this.transactionId = result.transactionId;
-            }
+            this.handleAnswer(result, 'Account created successfully');
             this.submitting = false;
         },
         checkTabFromUrl() {
@@ -248,8 +235,9 @@ export default {
     flex-grow: 1;
 }
 .p-dev-page {
+    flex-direction: column;
     &__main-card, &__title-card {
-        margin: 0 auto;
+        margin: 20px auto 0px auto;
         width: 90%;
         max-width: 1000px;
         padding: 0 93px;
