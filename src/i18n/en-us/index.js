@@ -723,7 +723,7 @@ export default {
             finalize_case_instructions:
         'Upload a document specifying your ruling on this particular case',
             finalize_case_submit: 'Submit',
-            finalize_case_cancel: 'Cance',
+            finalize_case_cancel: 'Cancel',
 
             settle_claim_title: 'Settle Claim',
             settle_claim_instructions:
