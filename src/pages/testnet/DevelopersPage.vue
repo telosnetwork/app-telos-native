@@ -17,25 +17,25 @@ export default {
         };
     },
     computed: {
-      isCreateAccountButtonDisabled() {
-        return (
-            !this.form.account_name ||
-            !this.form.owner_key ||
-            !this.form.active_key ||
-            this.submitting
-        );
-      },
-      isAnyInputInvalid() {
-        return (
-          !this.form.account_name ||
-          (!/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(
+        isCreateAccountButtonDisabled() {
+            return (
+                !this.form.account_name ||
+        !this.form.owner_key ||
+        !this.form.active_key ||
+        this.submitting
+            );
+        },
+        isAnyInputInvalid() {
+            return (
+                !this.form.account_name ||
+        !/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(
             this.form.owner_key
-          )) ||
-          (!/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(
+        ) ||
+        !/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(
             this.form.active_key
-          ))
-        );
-      },
+        )
+            );
+        },
     },
     methods: {
         ...mapActions('testnet', ['faucet', 'evmFaucet', 'account']),
@@ -115,7 +115,6 @@ q-page.flex.flex-center
         v-model="form.active_key"
         color="accent"
         :rules="[ val => (/^EOS[0-9A-Za-z]{50}$|^PUB_K1_[0-9A-Za-z]{50}$/i.test(val)) || 'Please provide a valid Active key']"
-
         label="Active key"
         outlined
       )
