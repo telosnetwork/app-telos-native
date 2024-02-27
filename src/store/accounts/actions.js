@@ -96,11 +96,15 @@ export const autoLogin = async function ({ dispatch, commit }, returnUrl) {
     const { authenticator, idx } = getAuthenticator(this.$ual);
     if (authenticator) {
         commit('setAutoLogin', true);
-        await dispatch('login', {
-            idx,
-            returnUrl,
-            account: localStorage.getItem('account'),
-        });
+        try {
+            await dispatch('login', {
+                idx,
+                returnUrl,
+                account: localStorage.getItem('account'),
+            });
+        } catch (e) {
+            console.log('Auto login error: ', e);
+        }
         commit('setAutoLogin', false);
     }
 };

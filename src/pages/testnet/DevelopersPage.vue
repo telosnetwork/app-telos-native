@@ -257,12 +257,8 @@ checkTabFromUrl();
 <template>
 <q-page class="p-dev-page flex flex-center">
     <div class="p-dev-page__title-card">
-        <div class="p-dev-page__title">Testnet Developers Tools</div>
-        <div class="text-subtitle2">
-            Use the following tools to create a new account,
-            send TLOS tokens to a Telos native account,
-            or send TLOS tokens to an EVM compatible address.
-        </div>
+        <div class="p-dev-page__title">{{ $t('pages.testnet_developers.page_title') }}</div>
+        <div class="text-subtitle2">{{ $t('pages.testnet_developers.page_subtitle') }}</div>
     </div>
     <q-card class="p-dev-page__main-card">
         <q-tabs class="p-dev-page__tabs-tabs text-primary shadow-2" align="justify" v-model="tab" dense>
@@ -274,11 +270,8 @@ checkTabFromUrl();
         <q-tab-panels class="p-dev-page__panels" v-model="tab" animated>
             <q-tab-panel class="p-dev-page__panel" name="create">
                 <q-card-section class="p-dev-page__panel-section">
-                    <div class="text-h6">Create a New Testnet Account</div>
-                    <div class="text-subtitle2">
-                        Here you can create a new account by providing a unique
-                        name and public keys for owner and active permissions.
-                    </div>
+                    <div class="text-h6">{{ $t('pages.testnet_developers.create_new_account_title') }}</div>
+                    <div class="text-subtitle2">{{ $t('pages.testnet_developers.create_new_account_subtitle') }}</div>
                 </q-card-section>
                 <q-input
                     class="q-mb-lg"
@@ -333,8 +326,8 @@ checkTabFromUrl();
     
             <q-tab-panel class="p-dev-page__panel" name="tlos-native">
                 <q-card-section class="p-dev-page__panel-section">
-                    <div class="text-h6">Send TLOS to Telos Account</div>
-                    <div class="text-subtitle2">Use this tab to send TLOS tokens to a Telos native account.</div>
+                    <div class="text-h6">{{ $t('pages.testnet_developers.send_tlos_telos_title') }}</div>
+                    <div class="text-subtitle2">{{ $t('pages.testnet_developers.send_tlos_telos_subtitle') }}</div>
                 </q-card-section>
                 <!-- we need to ensure the account does not exist with a rule -->
                 <q-input
@@ -363,16 +356,13 @@ checkTabFromUrl();
                     v-if="transactionId"
                     class="p-dev-page__panel-btn p-dev-page__trx-id"
                     color="secondary"
-                    :disable="is"
                 ><a href="#" targe="_blank">{{ transactionId }}</a></q-btn>
             </q-tab-panel>
     
             <q-tab-panel class="p-dev-page__panel" name="tlos-evm">
                 <q-card-section class="p-dev-page__panel-section">
-                    <div class="text-h6">Send TLOS to EVM Address</div>
-                    <div class="text-subtitle2">
-                        Send TLOS tokens to an EVM compatible address with this option.
-                    </div>
+                    <div class="text-h6">{{ $t('pages.testnet_developers.send_tlos_evm_title') }}</div>
+                    <div class="text-subtitle2">{{ $t('pages.testnet_developers.send_tlos_evm_subtitle') }}</div>
                 </q-card-section>
                 <!-- Inputs and button for sending TLOS to EVM address -->
                 <q-input
