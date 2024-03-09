@@ -11,8 +11,5 @@
     "javascriptreact",
     "typescript",
     "vue"
-  ],
-  "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  }
+  ]
 }
