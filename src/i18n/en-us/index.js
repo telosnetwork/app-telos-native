@@ -316,8 +316,15 @@ export default {
         testnetRotation: {
             title: 'Add your testnet BP to the schedule',
         },
-        testnetDevelopers: {
-            title: 'Get a testnet account or testnet TLOS',
+        testnet_developers: {
+            page_title: 'Testnet Developers Tools',
+            page_subtitle: 'Use the following tools to create a new account, send TLOS tokens to a Telos native account, or send TLOS tokens to an EVM compatible address.',
+            create_new_account_title: 'Create a New Testnet Account',
+            create_new_account_subtitle: 'Here you can create a new account by providing a unique name and public keys for owner and active permissions.',
+            send_tlos_telos_title: 'Send TLOS to Telos Account',
+            send_tlos_telos_subtitle: 'Use this tab to send TLOS tokens to a Telos native account.',
+            send_tlos_evm_title: 'Send TLOS to EVM Address',
+            send_tlos_evm_subtitle: 'Send TLOS tokens to an EVM compatible address with this option.',
         },
         testnetEvmFaucet: {
             title: 'Get testnet EVM TLOS',

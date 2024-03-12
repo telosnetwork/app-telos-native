@@ -2,13 +2,15 @@ import { boot } from 'quasar/wrappers';
 import { Api, JsonRpc } from 'eosjs';
 import { Notify } from 'quasar';
 
+
+
 const signTransaction = async function (actions) {
     actions.forEach((action) => {
         if (!action.authorization || !action.authorization.length) {
             action.authorization = [
                 {
                     actor: this.state.accounts.account,
-                    permission: 'active',
+                    permission: this.state.accounts.user.requestPermission || this.state.accounts.user.permission,
                 },
             ];
         }
