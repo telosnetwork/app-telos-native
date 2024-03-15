@@ -10,6 +10,8 @@ const $q = useQuasar();
 const route = useRoute();
 const router = useRouter();
 
+const TRANSACTION_RESPONSE_LENGTH = 64;
+
 // proxy functions for vuex actions
 function faucet(send_to: string) {
     return store.dispatch('testnet/faucet', send_to);
@@ -50,19 +52,22 @@ const tlosEvmLabel = computed(() => {
 
 // Result Notifications
 async function handleAnswer(answer: string | object, successMessage: string) {
-    if (typeof answer === 'string') {
-        Notify.create({
-            message: answer,
-            position: 'top',
-            color: 'negative',
-            textColor: 'white',
-            actions: [{ label: 'Dismiss', color: 'white' }],
-        });
-    } else if (typeof answer === 'object') {
+    if (
+        typeof answer === 'object' ||
+    answer.length === TRANSACTION_RESPONSE_LENGTH
+    ) {
         Notify.create({
             message: successMessage,
             position: 'top',
             color: 'primary',
+            textColor: 'white',
+            actions: [{ label: 'Dismiss', color: 'white' }],
+        });
+    } else if (typeof answer === 'string') {
+        Notify.create({
+            message: answer,
+            position: 'top',
+            color: 'negative',
             textColor: 'white',
             actions: [{ label: 'Dismiss', color: 'white' }],
         });
@@ -92,13 +97,18 @@ function checkAccountAvailability(account_name: string) {
     }
 
     return getAccount(account_name)
-        .then(() => {
-            createAccountForm.value.available = false;
-            return 'Account already exists';
+        .then((response) => {
+            if (response.status === 200) {
+                // 200 indicates account is available
+                createAccountForm.value.available = true;
+                return true;
+            } else {
+                createAccountForm.value.available = false;
+                return 'Account already exists';
+            }
         })
-        .catch(() => {
-            createAccountForm.value.available = true;
-            return true;
+        .catch((e) => {
+            console.log(e);
         })
         .finally(() => {
             createAccountForm.value.checking_account = false;
@@ -139,13 +149,18 @@ const sendTlosForm = ref({
 
 function checkAccountExists(account: string) {
     return getAccount(account)
-        .then(() => {
-            sendTlosForm.value.account_exists = true;
-            return true;
+        .then((response) => {
+            if (response.status === 200) {
+                // 200 indicates account is available
+                sendTlosForm.value.account_exists = false;
+                return 'Account does not exist';
+            } else {
+                sendTlosForm.value.account_exists = true;
+                return true;
+            }
         })
-        .catch(() => {
-            sendTlosForm.value.account_exists = false;
-            return 'Account does not exist';
+        .catch((e) => {
+            console.log(e);
         })
         .finally(() => {
             sendTlosForm.value.checking_account = false;
@@ -202,7 +217,7 @@ async function onAccount() {
             owner_key: createAccountForm.value.owner_key,
             active_key: createAccountForm.value.active_key,
         });
-        handleAnswer(result, 'Account created successfully');
+        handleAnswer(result, `Account created successfully! txn: ${result}`);
         submitting.value = false;
     } else {
         if (!createAccountForm.value.available) {
