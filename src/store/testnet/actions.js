@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const FAIL_MESSAGE = 'Failed to call API';
 
 export const produce = async function (context, accountName) {
@@ -38,6 +40,17 @@ export const account = async function (context, form) {
             activeKey: form.active_key,
             accountName: form.account_name,
         });
+        return response;
+    } catch (e) {
+        return e.message ? e.message : FAIL_MESSAGE;
+    }
+};
+
+export const getAccount = async function (context, account) {
+    try {
+        const response = await axios.get(
+            `https://api-dev.telos.net/v1/accounts/${account}`
+        );
         return response;
     } catch (e) {
         return e.message ? e.message : FAIL_MESSAGE;
