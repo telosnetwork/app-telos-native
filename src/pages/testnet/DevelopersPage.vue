@@ -87,7 +87,7 @@ function checkAccountAvailability(account_name: string) {
     // allowed characters are lowercase letters and numbers from 1 to 5
     if (!/^[a-z1-5]+$/.test(account_name)) {
         createAccountForm.value.available = false;
-        return 'uso only lowercase letters and numbers from 1 to 5';
+        return 'use only lowercase letters and numbers from 1 to 5';
     }
 
     // check first that the account name is 12 characters long
