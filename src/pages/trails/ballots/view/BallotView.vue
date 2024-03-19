@@ -35,6 +35,7 @@ export default {
             scrollPosition: null,
             notice: false,
             showDetails: false,
+            showVotedChip: false,
         };
     },
     async mounted() {
@@ -268,6 +269,14 @@ export default {
                 options: options || [option],
             });
             this.voting = false;
+            console.log('vote',ballotName)
+            // Check if the voting was successful, then update voted chip visibility
+            if (this.userVotes[ballotName]) {
+                this.updateVotedChipVisibility();
+            
+       
+             
+            }
         },
         showAlert(message) {
             this.$q.notify({
@@ -279,13 +288,13 @@ export default {
         showNotification() {
             this.$q.notify({
                 icon: this.notifications[0].icon,
-                message:
-          this.notifications[0].status === 'success'
-              ? this.$t('notifications.trails.successSigning')
-              : this.$t('notifications.trails.errorSigning'),
-                color:
-          this.notifications[0].status === 'success' ? 'positive' : 'negative',
+                message:this.notifications[0].status === 'success'?this.$t('notifications.trails.successSigning'): this.$t('notifications.trails.errorSigning'),
+                color:this.notifications[0].status === 'success' ? 'positive' : 'negative',
+          
             });
+            if (this.notifications[0].status === 'success') {
+                this.userVotes[this.ballot.ballot_name] = true;
+            }         
         },
         async showVoters() {
             this.showDetails = this.voters.length > 0;
@@ -316,10 +325,12 @@ export default {
             if (this.isPositiveVotePower) {
                 if (this.isUserRegisteredInTreasury) {
                     register = false;
-                } else {
+                } 
+                else {
                     if (this.ballot.treasury.access === 'public') {
                         register = true;
-                    } else {
+                    } 
+                    else {
                         // redirect to treasuties page with filter
                         this.$router.push({
                             path: '/trails/treasuries',
@@ -328,15 +339,18 @@ export default {
                         return; // Do not Cast Vote
                     }
                 }
-            } else {
+            } 
+            else {
                 if (this.isOfficialSymbol) {
                     this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
-                } else {
+                } 
+                else {
                     this.showAlert(
-                        'pages.trails.ballots.needPositiveVoteLong.' +
-              this.votingPowerComesFrom
+                    'pages.trails.ballots.needPositiveVoteLong.' +
+                        this.votingPowerComesFrom
                     );
                 }
+
                 return;
             }
 
@@ -349,6 +363,11 @@ export default {
             await this.resetUserVotes();
 
             this.showNotification();
+            this.userVotes[this.ballot.ballot_name] = true;
+        },
+  
+        updateVotedChipVisibility() {
+            this.showVotedChip = true;
         },
         async cancel() {
             await this.cancelBallot(this.ballot);
@@ -383,10 +402,10 @@ export default {
         shouldDisableCheckbox(key) {
             return (
                 !this.isAuthenticated ||
-        !this.isBallotOpened(this.ballot) ||
-        (this.votes.length === this.ballot.max_options &&
-          !this.votes.includes(key))
-            );
+                !this.isBallotOpened(this.ballot) ||
+                (this.votes.length === this.ballot.max_options &&
+                !this.votes.includes(key))
+                );
         },
         displayBallotSelectionText() {
             if (this.votes.length === 0) {
@@ -407,8 +426,8 @@ export default {
         },
         canUserVote() {
             this.userCanVote =
-        this.votes.length >= this.ballot.min_options &&
-        this.votes.length <= this.ballot.max_options;
+            this.votes.length >= this.ballot.min_options &&
+            this.votes.length <= this.ballot.max_options;
             return this.userCanVote;
         },
         shouldDisableVoteButton() {
@@ -485,7 +504,7 @@ export default {
                             ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened(ballot)")
                             ballot-chip(:type="'voted'",
                                 :isBallotOpened="isBallotOpened(ballot)",
-                                :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
+                                :class="{ 'hidden': !userVotes[ballot.ballot_name] }")
                         ballot-status(
                         :ballot="ballot"
                         :isBallotOpened="isBallotOpened(ballot)"
