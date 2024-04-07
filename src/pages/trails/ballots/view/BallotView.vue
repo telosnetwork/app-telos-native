@@ -269,13 +269,15 @@ export default {
                 options: options || [option],
             });
             this.voting = false;
-            console.log('vote',ballotName)
             // Check if the voting was successful, then update voted chip visibility
             if (this.userVotes[ballotName]) {
                 this.updateVotedChipVisibility();
-            
-       
-             
+                await this.fetchBallot(this.$route.params.id);
+                this.getLoggedUserVotes(this.$route.params.id);
+                await this.fetchVotesForBallot({
+                    name: this.ballot.ballot_name,
+                    limit: this.ballot.total_voters,
+                });   
             }
         },
         showAlert(message) {
@@ -294,6 +296,7 @@ export default {
             });
             if (this.notifications[0].status === 'success') {
                 this.userVotes[this.ballot.ballot_name] = true;
+                this.updateVotedChipVisibility();
             }         
         },
         async showVoters() {
@@ -317,7 +320,7 @@ export default {
             if (!this.userVotes) return;
             if (!this.userVotes[ballot_name]) return;
             let votes = this.userVotes[ballot_name].weighted_votes.map((v) => v.key);
-            this.votes = this.votes.concat(votes);
+            this.votes = this.votes.concat(votes);  
         },
         async vote() {
             let register = false;
@@ -363,11 +366,12 @@ export default {
             await this.resetUserVotes();
 
             this.showNotification();
-            this.userVotes[this.ballot.ballot_name] = true;
+            
         },
-  
-        updateVotedChipVisibility() {
+        async updateVotedChipVisibility() {
             this.showVotedChip = true;
+            await this.fetchBallot(this.$route.params.id); 
+            const vote = await this.fetchVotersForBallot(this.$route.params.id);
         },
         async cancel() {
             await this.cancelBallot(this.ballot);
