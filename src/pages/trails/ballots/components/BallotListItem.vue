@@ -80,12 +80,12 @@ export default {
             return this.trunc(total, 2);
         },
         updateVotedChipVisibility() {
-          this.$nextTick(() => {
-            const votedChip = this.$refs.votedChip;
-            if (votedChip) {
-              votedChip.style.display = this.userVotes[this.ballot.ballot_name] ? 'flex' : 'none';
-            }
-          });
+            this.$nextTick(() => {
+              const votedChip = this.$refs.votedChip;
+              if (votedChip) {
+                votedChip.style.display = this.userVotes[this.ballot.ballot_name] ? 'flex' : 'none';
+              }
+            });
         },
         async onCastVote({ options, option, ballotName }) {
             this.voting = true;

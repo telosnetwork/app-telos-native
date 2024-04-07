@@ -277,7 +277,7 @@ export default {
                 await this.fetchVotesForBallot({
                     name: this.ballot.ballot_name,
                     limit: this.ballot.total_voters,
-                });   
+                });
             }
         },
         showAlert(message) {
@@ -297,7 +297,7 @@ export default {
             if (this.notifications[0].status === 'success') {
                 this.userVotes[this.ballot.ballot_name] = true;
                 this.updateVotedChipVisibility();
-            }         
+            }
         },
         async showVoters() {
             this.showDetails = this.voters.length > 0;
@@ -320,7 +320,7 @@ export default {
             if (!this.userVotes) return;
             if (!this.userVotes[ballot_name]) return;
             let votes = this.userVotes[ballot_name].weighted_votes.map((v) => v.key);
-            this.votes = this.votes.concat(votes);  
+            this.votes = this.votes.concat(votes);
         },
         async vote() {
             let register = false;
@@ -328,11 +328,11 @@ export default {
             if (this.isPositiveVotePower) {
                 if (this.isUserRegisteredInTreasury) {
                     register = false;
-                } 
+                }
                 else {
                     if (this.ballot.treasury.access === 'public') {
                         register = true;
-                    } 
+                    }
                     else {
                         // redirect to treasuties page with filter
                         this.$router.push({
@@ -342,14 +342,14 @@ export default {
                         return; // Do not Cast Vote
                     }
                 }
-            } 
+            }
             else {
                 if (this.isOfficialSymbol) {
                     this.showAlert('pages.trails.ballots.stakeBeforeVotingLong');
-                } 
+                }
                 else {
                     this.showAlert(
-                    'pages.trails.ballots.needPositiveVoteLong.' +
+                        'pages.trails.ballots.needPositiveVoteLong.' +
                         this.votingPowerComesFrom
                     );
                 }
@@ -370,8 +370,8 @@ export default {
         },
         async updateVotedChipVisibility() {
             this.showVotedChip = true;
-            await this.fetchBallot(this.$route.params.id); 
-            const vote = await this.fetchVotersForBallot(this.$route.params.id);
+            await this.fetchBallot(this.$route.params.id);
+            await this.fetchVotersForBallot(this.$route.params.id);
         },
         async cancel() {
             await this.cancelBallot(this.ballot);
@@ -409,7 +409,7 @@ export default {
                 !this.isBallotOpened(this.ballot) ||
                 (this.votes.length === this.ballot.max_options &&
                 !this.votes.includes(key))
-                );
+            );
         },
         displayBallotSelectionText() {
             if (this.votes.length === 0) {
