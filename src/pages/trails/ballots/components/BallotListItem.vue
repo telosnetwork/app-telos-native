@@ -83,7 +83,7 @@ export default {
             this.$nextTick(() => {
                 const votedChip = this.$refs.votedChip;
                 if (votedChip) {
-                  votedChip.style.display = this.userVotes[this.ballot.ballot_name] ? 'flex' : 'none';
+                    votedChip.style.display = this.userVotes[this.ballot.ballot_name] ? 'flex' : 'none';
                 }
             });
         },
