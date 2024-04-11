@@ -286,7 +286,7 @@ export default {
                 .utc(this.lastUpdated)
                 .local()
                 .format('YYYY-MM-DD HH:mm');
-            return `${isMainnet ? 'Mainnet' : 'Testnet'} Validators (${localTime})`;;
+            return `${isMainnet ? 'Mainnet' : 'Testnet'} Validators (${localTime})`;
         },
         maxSelected() {
             return this.currentVote.length === MAX_VOTE_PRODUCERS;
