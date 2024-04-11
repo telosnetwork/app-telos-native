@@ -14,6 +14,8 @@
 import { Chart } from 'highcharts-vue';
 import { mapActions, mapState } from 'vuex';
 
+const isMainnet = process.env.NETWORK_ENV === 'mainnet';
+
 export default {
     name: 'ValidatorDataChart',
     components: {
@@ -23,7 +25,7 @@ export default {
         return {
             chartOptions: {
                 title: {
-                    text: 'Mainnet Validator CPU Performance',
+                    text: `${isMainnet ? 'Mainnet' : 'Testnet'} Validator CPU Performance`,
                 },
                 credits: {
                     enabled: false,

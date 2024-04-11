@@ -127,6 +127,7 @@ import { mapGetters } from 'vuex';
 import moment from 'moment';
 
 const MAX_VOTE_PRODUCERS = 30;
+const isMainnet = process.env.NETWORK_ENV === 'mainnet';
 
 export default {
     name: 'ValidatorDataTable',
@@ -285,7 +286,7 @@ export default {
                 .utc(this.lastUpdated)
                 .local()
                 .format('YYYY-MM-DD HH:mm');
-            return `Mainnet Validators (${localTime})`;
+            return `${isMainnet ? 'Mainnet' : 'Testnet'} Validators (${localTime})`;
         },
         maxSelected() {
             return this.currentVote.length === MAX_VOTE_PRODUCERS;
