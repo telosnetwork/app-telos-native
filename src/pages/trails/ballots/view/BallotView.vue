@@ -52,15 +52,11 @@ export default {
                 return;
             }
             await this.fetchVotesForBallot({
-              name: this.ballot.ballot_name,
-              limit: this.ballot.total_voters,
+                name: this.ballot.ballot_name,
+                limit: this.ballot.total_voters,
             });
             window.addEventListener('scroll', this.updateScroll);
             this.loading = false;
-            console.log('Ballot:', this.ballot); // FIXME: remove
-            console.log('iframeUrl:', this.iframeUrl); // FIXME: remove
-            console.log('optionData:', this.optionData); // FIXME: remove
-            console.log('shapedDescription:', this.shapedDescription); // FIXME: remove
         } catch (e) {
             console.error(e);
         }
