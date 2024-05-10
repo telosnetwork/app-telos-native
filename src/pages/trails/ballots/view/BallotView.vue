@@ -103,11 +103,32 @@ export default {
             }
         },
         shapedDescription() {
+            // first, try to parse the description as an url
             const urlRegex = /((http|https):\/\/[^\s]+)/g;
             const shaped = this.ballot.readableDescription.replace(
                 urlRegex,
                 '<a href="$1" rel="noopener noreferrer" target="_blank">$1</a>'
             );
+            if (shaped === this.ballot.readableDescription) {
+                // if no urls were found, try something else
+                // "<label with spaces>: <link> <label>: <link> ... <CID>"
+                // ej: "Medium Article: https://bit.ly/3UBwzFE Amended Section #10: https://bit.ly/3JPtTQ2 Amended Section #44: https://bit.ly/3wqd76Y Amended Section #49: https://bit.ly/3WrULgu"
+                // final string should be:
+                // "<ul><li>Medium Article: <a href='https://bit.ly/3UBwzFE'>https://bit.ly/3UBwzFE</a></li><li>Amended Section #10: <a href='https://bit.ly/3JPtTQ2'>https://bit.ly/3JPtTQ2</a></li><li>Amended Section #44: <a href='https://bit.ly/3wqd76Y'>https://bit.ly/3wqd76Y</a></li><li>Amended Section #49: <a href='https://bit.ly/3WrULgu'>https://bit.ly/3WrULgu</a></li></ul>";
+                const completeFormatRegex = /(.+: (http|https):\/\/[^\s]+ )+/;
+                if (completeFormatRegex.test(this.ballot.description)) {
+                    const linksRegex = /(.+?: .+? )/g;
+                    const links = this.ballot.description.match(linksRegex);
+                    let result = '<ul>';
+                    links.forEach((link) => {
+                        const [label, _url] = link.split(': ');
+                        const url = _url.trim();
+                        result += `<li>${label}: <a target='_blank' href='${url}'>${url}</a></li>`;
+                    });
+                    result += '</ul>';
+                    return result;
+                }
+            }
             return shaped;
         },
         iframeUrl() {
