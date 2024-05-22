@@ -171,6 +171,11 @@ const routes = [
         component: () => import('pages/governance/GovernanceDocumentation.vue'),
         name: 'governance',
     },
+    // Bad Routes
+    {
+        path: '/:pathMatch(.*)*',
+        redirect: '/',
+    },
 ];
 
 // Always leave this as last one
