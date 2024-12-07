@@ -33,6 +33,17 @@ export const evmFaucet = async function (conntext, evmAddress) {
     }
 };
 
+export const zkEvmFaucet = async function (context, zkEvmAddress) {
+    try {
+        const response = await this.$axios.get(
+            `/v1/testnet/zkEvmFaucet/${zkEvmAddress}`
+        );
+        return response;
+    } catch (e) {
+        return e.message ? e.message : FAIL_MESSAGE;
+    }
+};
+
 export const account = async function (context, form) {
     try {
         const response = await this.$axios.post('/v1/testnet/account', {

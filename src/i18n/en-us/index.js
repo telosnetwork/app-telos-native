@@ -325,6 +325,8 @@ export default {
             send_tlos_telos_subtitle: 'Use this tab to send TLOS tokens to a Telos native account.',
             send_tlos_evm_title: 'Send TLOS to EVM Address',
             send_tlos_evm_subtitle: 'Send TLOS tokens to an EVM compatible address with this option.',
+            send_tlos_zkevm_title: 'Send zTLOS to zkEVM Address',
+            send_tlos_zkevm_subtitle: 'Send zTLOS tokens to a zkEVM compatible address with this option.',
         },
         testnetEvmFaucet: {
             title: 'Get testnet EVM TLOS',

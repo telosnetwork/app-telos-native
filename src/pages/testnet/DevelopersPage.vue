@@ -19,6 +19,9 @@ function faucet(send_to: string) {
 function evmFaucet(send_to_evm: string) {
     return store.dispatch('testnet/evmFaucet', send_to_evm);
 }
+function zkEvmFaucet(send_to_evm: string) {
+    return store.dispatch('testnet/zkEvmFaucet', send_to_evm);
+}
 function createAccount(form: {
   account_name: string;
   owner_key: string;
@@ -30,7 +33,7 @@ function getAccount(account: string) {
     return store.dispatch('testnet/getAccount', account);
 }
 
-const availableTabs = ['create', 'tlos-native', 'tlos-evm'];
+const availableTabs = ['create', 'tlos-native', 'tlos-evm', 'tlos-zkevm'];
 const defaultTab = 'create';
 
 const transactionId = ref('');
@@ -48,6 +51,10 @@ const tlosNativeLabel = computed(() => {
 
 const tlosEvmLabel = computed(() => {
     return $q.screen.gt.sm ? 'Send TLOS (EVM)' : 'EVM TLOS';
+});
+
+const tlosZkEvmLabel = computed(() => {
+    return $q.screen.gt.sm ? 'Send TLOS (ZK-EVM)' : 'ZK-EVM TLOS';
 });
 
 // Result Notifications
@@ -209,6 +216,23 @@ async function onEvmFaucet() {
     }
 }
 
+async function onZkEvmFaucet() {
+    if (isValidEvmAddress()) {
+        submitting.value = true;
+        const result = await zkEvmFaucet(sendTlosForm.value.send_to_evm);
+        handleAnswer(result, '50.0 zTLOS were sent successfully');
+        submitting.value = false;
+    } else {
+        Notify.create({
+            message: 'Please provide a valid EVM address',
+            position: 'top',
+            color: 'negative',
+            textColor: 'white',
+            actions: [{ label: 'Dismiss', color: 'white' }],
+        });
+    }
+}
+
 async function onAccount() {
     if (!isCreateAccountButtonDisabled()) {
         submitting.value = true;
@@ -323,6 +347,11 @@ checkTabFromUrl();
           class="p-dev-page__tabs-tab"
           name="tlos-evm"
           :label="tlosEvmLabel"
+        />
+        <q-tab
+          class="p-dev-page__tabs-tab"
+          name="tlos-zkevm"
+          :label="tlosZkEvmLabel"
         />
       </q-tabs>
 
@@ -473,6 +502,49 @@ checkTabFromUrl();
             ><a href="#" targe="_blank">{{ transactionId }}</a></q-btn
           >
         </q-tab-panel>
+
+        <q-tab-panel class="p-dev-page__panel" name="tlos-zkevm">
+          <q-card-section class="p-dev-page__panel-section">
+            <div class="text-h6">
+              {{ $t("pages.testnet_developers.send_tlos_zkevm_title") }}
+            </div>
+            <div class="text-subtitle2">
+              {{ $t("pages.testnet_developers.send_tlos_zkevm_subtitle") }}
+            </div>
+          </q-card-section>
+          <!-- Inputs and button for sending zTLOS to zkEVM address -->
+          <q-input
+            class="q-mb-lg"
+            ref="send_to_evm"
+            v-model="sendTlosForm.send_to_evm"
+            color="primary"
+            label="Send to zkEVM address"
+            :rules="[
+              (val) =>
+                /^0x[a-fA-F0-9]{40}$/.test(val) ||
+                'Please provide a valid EVM address with 0x prefix',
+            ]"
+            outlined="outlined"
+          ></q-input>
+          <div class="p-dev-page__expand"></div>
+          <q-btn
+            v-if="!transactionId"
+            class="p-dev-page__panel-btn"
+            color="primary"
+            label="Send testnet zkEVM zTLOS"
+            size="lg"
+            unelevated="unelevated"
+            :loading="submitting"
+            @click="onZkEvmFaucet"
+          ></q-btn>
+          <q-btn
+            v-if="transactionId"
+            class="p-dev-page__panel-btn p-dev-page__trx-id"
+            color="secondary"
+            ><a href="#" targe="_blank">{{ transactionId }}</a></q-btn
+          >
+        </q-tab-panel>
+
       </q-tab-panels>
     </q-card>
   </q-page>
