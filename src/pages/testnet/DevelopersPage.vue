@@ -54,7 +54,7 @@ const tlosEvmLabel = computed(() => {
 });
 
 const tlosZkEvmLabel = computed(() => {
-    return $q.screen.gt.sm ? 'Send TLOS (ZK-EVM)' : 'ZK-EVM TLOS';
+    return $q.screen.gt.sm ? 'Send zTLOS (ZK-EVM)' : 'ZK-EVM zTLOS';
 });
 
 // Result Notifications
