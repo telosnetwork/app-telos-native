@@ -414,11 +414,6 @@ checkTabFromUrl();
             :disable="isCreateAccountButtonDisabled"
             @click="onAccount"
           ></q-btn>
-          <q-btn
-            v-if="transactionId"
-            class="p-dev-page__panel-btn p-dev-page__trx-id"
-            color="secondary"
-            ><a href="#" targe="_blank">{{ transactionId }}</a></q-btn
           >
         </q-tab-panel>
 
@@ -453,11 +448,6 @@ checkTabFromUrl();
             :loading="submitting"
             @click="onFaucet"
           ></q-btn>
-          <q-btn
-            v-if="transactionId"
-            class="p-dev-page__panel-btn p-dev-page__trx-id"
-            color="secondary"
-            ><a href="#" targe="_blank">{{ transactionId }}</a></q-btn
           >
         </q-tab-panel>
 
@@ -495,12 +485,6 @@ checkTabFromUrl();
             :loading="submitting"
             @click="onEvmFaucet"
           ></q-btn>
-          <q-btn
-            v-if="transactionId"
-            class="p-dev-page__panel-btn p-dev-page__trx-id"
-            color="secondary"
-            ><a href="#" targe="_blank">{{ transactionId }}</a></q-btn
-          >
         </q-tab-panel>
 
         <q-tab-panel class="p-dev-page__panel" name="tlos-zkevm">
@@ -541,7 +525,7 @@ checkTabFromUrl();
             v-if="transactionId"
             class="p-dev-page__panel-btn p-dev-page__trx-id"
             color="secondary"
-            ><a href="#" targe="_blank">{{ transactionId }}</a></q-btn
+            ><a href="#" target="_blank">{{ transactionId }}</a></q-btn
           >
         </q-tab-panel>
 
