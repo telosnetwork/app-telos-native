@@ -54,7 +54,7 @@ const tlosEvmLabel = computed(() => {
 });
 
 const tlosZkEvmLabel = computed(() => {
-    return $q.screen.gt.sm ? 'Send zTLOS (ZK-EVM)' : 'ZK-EVM zTLOS';
+    return $q.screen.gt.sm ? 'Send tTLOS (ZK-EVM)' : 'ZK-EVM tTLOS';
 });
 
 // Result Notifications
@@ -220,7 +220,7 @@ async function onZkEvmFaucet() {
     if (isValidEvmAddress()) {
         submitting.value = true;
         const result = await zkEvmFaucet(sendTlosForm.value.send_to_evm);
-        handleAnswer(result, '50.0 zTLOS were sent successfully');
+        handleAnswer(result, '50.0 tTLOS were sent successfully');
         submitting.value = false;
     } else {
         Notify.create({
@@ -496,7 +496,7 @@ checkTabFromUrl();
               {{ $t("pages.testnet_developers.send_tlos_zkevm_subtitle") }}
             </div>
           </q-card-section>
-          <!-- Inputs and button for sending zTLOS to zkEVM address -->
+          <!-- Inputs and button for sending tTLOS to zkEVM address -->
           <q-input
             class="q-mb-lg"
             ref="send_to_evm"
@@ -515,7 +515,7 @@ checkTabFromUrl();
             v-if="!transactionId"
             class="p-dev-page__panel-btn"
             color="primary"
-            label="Send testnet zkEVM zTLOS"
+            label="Send testnet zkEVM tTLOS"
             size="lg"
             unelevated="unelevated"
             :loading="submitting"
