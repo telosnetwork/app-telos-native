@@ -79,6 +79,14 @@ export default {
         100;
             return this.trunc(total, 2);
         },
+        updateVotedChipVisibility() {
+            this.$nextTick(() => {
+                const votedChip = this.$refs.votedChip;
+                if (votedChip) {
+                    votedChip.style.display = this.userVotes[this.ballot.ballot_name] ? 'flex' : 'none';
+                }
+            });
+        },
         async onCastVote({ options, option, ballotName }) {
             this.voting = true;
             await this.castVote({
@@ -109,9 +117,12 @@ div
           img(:src="`statics/app-icons/inactive-bgr-icon2.png`").bgr-icon2
     div.column.items-start.absolute-top-left
       ballot-chip(:type="ballot.category", :isBallotOpened="isBallotOpened")
-      ballot-chip(:type="'voted'",
-        :isBallotOpened="isBallotOpened",
-        :class="userVotes[ballot.ballot_name] ? '' : 'hidden'")
+      ballot-chip(
+        :type="'voted'"
+        :isBallotOpened="isBallotOpened"
+        :class="userVotes[ballot.ballot_name] ? '' : 'hidden'"
+        v-if="isBallotOpened"
+      )
 
     q-separator.card-separator-vertical(vertical inset)
 
