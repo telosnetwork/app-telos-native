@@ -23,8 +23,10 @@ import { mapGetters } from 'vuex';
 import ValidatorDataChart from './components/ValidatorDataChart.vue';
 import ValidatorDataTable from './components/ValidatorDataTable.vue';
 
-const BUCKET_URL = 'https://telos-producer-validation.s3.amazonaws.com';
-
+const MAINNET_BUCKET_URL = 'https://telos-producer-validation.s3.amazonaws.com';
+const TESTNET_BUCKET_URL = 'https://telos-testnet-producer-validation.s3.amazonaws.com';
+const isMainnet = process.env.NETWORK_ENV === 'mainnet';
+const BUCKET_URL = isMainnet ? MAINNET_BUCKET_URL : TESTNET_BUCKET_URL;
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
     name: 'Validator',
