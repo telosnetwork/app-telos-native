@@ -23,7 +23,7 @@ export default {
         return {
             chartOptions: {
                 title: {
-                    text: 'Mainnet Validator CPU Performance',
+                    text: `${process.env.NETWORK_ENV === 'testnet' ? 'Testnet' : 'Mainnet'} Validator CPU Performance`,
                 },
                 credits: {
                     enabled: false,

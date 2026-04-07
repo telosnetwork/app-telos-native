@@ -285,7 +285,8 @@ export default {
                 .utc(this.lastUpdated)
                 .local()
                 .format('YYYY-MM-DD HH:mm');
-            return `Mainnet Validators (${localTime})`;
+            const networkLabel = process.env.NETWORK_ENV === 'testnet' ? 'Testnet' : 'Mainnet';
+            return `${networkLabel} Validators (${localTime})`;
         },
         maxSelected() {
             return this.currentVote.length === MAX_VOTE_PRODUCERS;
