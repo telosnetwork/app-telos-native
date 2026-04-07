@@ -1,66 +1,114 @@
-const moment = require('moment');
+const moment = require("moment");
+
+const BENCHMARK_FILTER = "eosmechanics:cpu";
+const HYPERION_ACTIONS_PATH = "v2/history/get_actions";
+
+function getActionTimestamp(action) {
+  return action.timestamp || action["@timestamp"];
+}
+
+function getActionPoint(action) {
+  const producer = action.producer;
+  const cpuUs = Number(action.cpu_usage_us);
+  const timestamp = getActionTimestamp(action);
+
+  if (!producer || Number.isNaN(cpuUs) || !timestamp) {
+    return null;
+  }
+
+  return {
+    producer,
+    point: [moment(timestamp).valueOf(), cpuUs],
+  };
+}
 
 export async function loadBenchmarks({ commit }, { days }) {
-    // TODO: Paginate...
-    //   get the global sequence of the last action, use it in globalsequence filter on the next request
-    //   for the globalsequence filter, do $LAST_ACTION_SEQUENCE-Integer.max
-    //   until we get back less than the limit, which indicates the end
+  try {
+    const latestBenchmarks = await this.$hyperion.get(HYPERION_ACTIONS_PATH, {
+      params: {
+        filter: BENCHMARK_FILTER,
+        limit: 1,
+        sort: "desc",
+      },
+    });
+
+    const latestAction = latestBenchmarks.data.actions[0];
+
+    if (!latestAction) {
+      commit("validators/setBenchmarks", [], { root: true });
+      return {
+        benchmarks: [],
+        latestTimestamp: null,
+      };
+    }
+
+    // The live benchmark stream can pause for long stretches. Anchor the
+    // display window to the latest available benchmark so the graph keeps
+    // rendering useful data instead of an empty recent range.
     let haveMore = true;
-    let batch = 0;
     let params = {
-        filter: 'eosmechanics:cpu',
-        after: moment
-            .utc()
-            .subtract(days, 'days')
-            .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
-        limit: 1000,
-        sort: 'asc',
+      filter: BENCHMARK_FILTER,
+      after: moment
+        .utc(getActionTimestamp(latestAction))
+        .subtract(days, "days")
+        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      limit: 1000,
+      sort: "asc",
     };
     let bpMap = {};
+
     while (haveMore) {
-        console.log(`Doing query with ${JSON.stringify(params)}`);
-        const benchmarks = await this.$hyperion.get('v2/history/get_actions', {
-            params,
-        });
-        let acts = benchmarks.data.actions;
-        let batchCount = acts.length;
-        haveMore = params.limit === batchCount;
-        console.log(
-            `Batch ${++batch} had ${batchCount} actions and is at global_sequence ${
-                params.global_sequence
-            }`
-        );
-        let biggest = 0;
-        for (let i = 0; i < acts.length; i++) {
-            if (acts[i].global_sequence > biggest) {
-                biggest = acts[i].global_sequence;
-            }
-            const action = acts[i];
-            const producer = action.producer;
-            const cpuUs = action.cpu_usage_us;
-            const timestamp = action.timestamp;
-            const momentTimestamp = moment(timestamp);
-            const point = [momentTimestamp.valueOf(), cpuUs];
-            if (!bpMap.hasOwnProperty(producer)) {
-                bpMap[producer] = [point];
-            } else {
-                bpMap[producer].push(point);
-            }
+      const benchmarks = await this.$hyperion.get(HYPERION_ACTIONS_PATH, {
+        params,
+      });
+      let acts = benchmarks.data.actions || [];
+      let biggest = 0;
+
+      acts.forEach((action) => {
+        if (action.global_sequence > biggest) {
+          biggest = action.global_sequence;
         }
+
+        const benchmarkPoint = getActionPoint(action);
+
+        if (!benchmarkPoint) {
+          return;
+        }
+
+        const { producer, point } = benchmarkPoint;
+
+        if (!Object.prototype.hasOwnProperty.call(bpMap, producer)) {
+          bpMap[producer] = [point];
+        } else {
+          bpMap[producer].push(point);
+        }
+      });
+
+      haveMore = acts.length === params.limit && biggest > 0;
+
+      if (haveMore) {
         params.global_sequence = `${biggest}-${Number.MAX_SAFE_INTEGER}`;
         if (params.after) {
-            delete params.after;
+          delete params.after;
         }
+      }
     }
 
-    let seriesArray = [];
+    let seriesArray = Object.keys(bpMap)
+      .sort((left, right) => left.localeCompare(right))
+      .map((bp) => ({
+        name: bp,
+        data: bpMap[bp].sort((left, right) => left[0] - right[0]),
+      }));
 
-    for (const bp in bpMap) {
-        seriesArray.push({
-            name: bp,
-            data: bpMap[bp],
-        });
-    }
+    commit("validators/setBenchmarks", seriesArray, { root: true });
 
-    commit('validators/setBenchmarks', seriesArray, { root: true });
+    return {
+      benchmarks: seriesArray,
+      latestTimestamp: getActionTimestamp(latestAction),
+    };
+  } catch (error) {
+    commit("validators/setBenchmarks", [], { root: true });
+    throw error;
+  }
 }
