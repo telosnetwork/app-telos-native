@@ -23,7 +23,8 @@ import { mapGetters } from 'vuex';
 import ValidatorDataChart from './components/ValidatorDataChart.vue';
 import ValidatorDataTable from './components/ValidatorDataTable.vue';
 
-const BUCKET_URL = 'https://telos-producer-validation.s3.amazonaws.com';
+// Live API — replaces stale S3 bucket telos-producer-validation
+const VALIDATORS_API = 'https://telos-wallet-og.netlify.app/.netlify/functions/validators';
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
@@ -57,22 +58,13 @@ export default {
     methods: {
         async getData() {
             try {
-                const objectList = await axios.get(BUCKET_URL);
-                const lastKey = this.getLastKey(objectList);
-                this.producerData = (await axios.get(`${BUCKET_URL}/${lastKey}`)).data;
+                const response = await axios.get(VALIDATORS_API);
+                this.producerData = response.data;
+                this.lastUpdated = new Date().toISOString();
                 await this.getVotes();
             } catch (err) {
                 console.log('Error', err);
             }
-        },
-        getLastKey(objectList) {
-            const parser = new DOMParser();
-            const contentsArray = parser
-                .parseFromString(objectList.data, 'text/xml')
-                .getElementsByTagName('Contents');
-            const lastEntry = contentsArray[contentsArray.length - 1];
-            this.lastUpdated = lastEntry.childNodes[1].textContent;
-            return lastEntry.childNodes[0].textContent;
         },
         async getVotes() {
             if (this.account) {
