@@ -24,7 +24,8 @@ import ValidatorDataChart from './components/ValidatorDataChart.vue';
 import ValidatorDataTable from './components/ValidatorDataTable.vue';
 
 // Live API — replaces stale S3 bucket telos-producer-validation
-const VALIDATORS_API = 'https://telos-wallet-og.netlify.app/.netlify/functions/validators';
+// Set via VALIDATORS_API env var (mainnet + testnet builds)
+const VALIDATORS_API = process.env.VALIDATORS_API;
 
 export default {
     // eslint-disable-next-line vue/multi-word-component-names

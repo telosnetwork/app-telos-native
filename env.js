@@ -26,6 +26,7 @@ const TESTNET = {
   HYPERION_URL: "https://testnet.telos.net",
   BLOCKCHAIN_EXPLORER: "https://explorer-test.telos.net",
   NETWORK_ENV: "testnet",
+  VALIDATORS_API: "https://telos-wallet-og.netlify.app/.netlify/functions/validators?network=testnet",
   ARB_CONTRACT: 'testtelosarb',
 };
 
@@ -39,6 +40,7 @@ const MAINNET = {
   HYPERION_URL: "https://mainnet.telos.net",
   BLOCKCHAIN_EXPLORER: "https://explorer.telos.net",
   NETWORK_ENV: "mainnet",
+  VALIDATORS_API: "https://telos-wallet-og.netlify.app/.netlify/functions/validators",
   ARB_CONTRACT: 'arbitration',
 };
 
