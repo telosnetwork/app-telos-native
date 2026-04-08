@@ -61,11 +61,16 @@ export async function loadBenchmarks({ commit }, { days }) {
 
     const latestAction = latestBenchmarks.data.actions[0];
 
-    if (!latestAction) {
+    const latestTs = latestAction ? moment(getActionTimestamp(latestAction)) : null;
+    const isStale = latestTs && moment().diff(latestTs, "days") > 7;
+
+    if (!latestAction || isStale) {
+      // Hyperion data is stale (last eosmechanics action >7 days old).
+      // Return empty chart rather than misleading stale data.
       commit("validators/setBenchmarks", [], { root: true });
       return {
         benchmarks: [],
-        latestTimestamp: null,
+        latestTimestamp: latestTs ? latestTs.toISOString() : null,
       };
     }
 
