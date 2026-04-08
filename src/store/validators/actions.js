@@ -22,8 +22,35 @@ function getActionPoint(action) {
   };
 }
 
+// Use our own benchmark API as primary (Hyperion eosmechanics data is stale)
+// Falls back to Hyperion if the benchmark API is unavailable
 export async function loadBenchmarks({ commit }, { days }) {
   try {
+    // Try our live benchmark API first
+    try {
+      const benchmarkResp = await fetch(process.env.BENCHMARK_API);
+      const latestBenchmark = await benchmarkResp.json();
+      if (latestBenchmark && latestBenchmark.gas_used) {
+        const ts = latestBenchmark.timestamp
+          ? moment(latestBenchmark.timestamp).valueOf()
+          : Date.now();
+        // Build a single-series Highcharts-compatible array from the live benchmark
+        const seriesData = [[ts, latestBenchmark.gas_used]];
+        const seriesArray = [{
+          name: "EVM CPU (gas)",
+          data: seriesData,
+        }];
+        commit("validators/setBenchmarks", seriesArray, { root: true });
+        return {
+          benchmarks: seriesArray,
+          latestTimestamp: latestBenchmark.timestamp,
+        };
+      }
+    } catch (benchErr) {
+      console.warn("Benchmark API failed, falling back to Hyperion:", benchErr);
+    }
+
+    // Fall back to Hyperion (original behavior)
     const latestBenchmarks = await this.$hyperion.get(HYPERION_ACTIONS_PATH, {
       params: {
         filter: BENCHMARK_FILTER,

@@ -41,6 +41,7 @@ const MAINNET = {
   BLOCKCHAIN_EXPLORER: "https://explorer.telos.net",
   NETWORK_ENV: "mainnet",
   VALIDATORS_API: "https://telos-wallet-og.netlify.app/.netlify/functions/validators",
+  BENCHMARK_API: "https://telos-wallet-og.netlify.app/.netlify/functions/cpu-benchmark",
   ARB_CONTRACT: 'arbitration',
 };
 
